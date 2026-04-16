@@ -1,0 +1,18 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC008/intent>
+  a icm:Intent .
+
+<http://example.org/tio-instance/TC008/throughput-expectation>
+  a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC008/target> ;
+  rdfs:comment "Uplink throughput should be at least 500 Mbps."@en .
+
+<http://example.org/tio-instance/TC008/target>
+  a icm:Target ;
+  rdfs:comment "Medical image upload service."@en .
+
+<http://example.org/tio-instance/TC008/target-property-values>
+  icm:valuesOfTargetProperty rdf:value .

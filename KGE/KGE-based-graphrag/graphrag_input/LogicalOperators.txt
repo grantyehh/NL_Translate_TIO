@@ -1,0 +1,10 @@
+--- Ontology Module: LogicalOperators ---
+
+### Classes Defined in this Module:
+Class: http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/Condition
+  Label: Condition Class
+  Description: The class log:Condition expresses that its instance is specifying a condition statement with a boolean result.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/IntentElement
+
+
+### Properties Defined in this Module:

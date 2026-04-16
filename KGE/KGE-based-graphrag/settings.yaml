@@ -1,0 +1,89 @@
+### GraphRAG 3.0 Settings File for TIO Project
+
+### LLM settings ###
+completion_models:
+  default_completion_model:
+    model_provider: openai
+    model: gpt-4o
+    auth_method: api_key
+    api_key: ${GRAPHRAG_API_KEY}
+    parallelization:
+      stagger: 0.3
+      num_threads: 2
+    retry:
+      type: exponential_backoff
+
+embedding_models:
+  default_embedding_model:
+    model_provider: openai
+    # 換成最穩定的 ada-002，維度固定為 1536，避免 3-small 的動態維度問題
+    model: text-embedding-ada-002
+    auth_method: api_key
+    api_key: ${GRAPHRAG_API_KEY}
+    batch_size: 16
+    parallelization:
+      stagger: 0.3
+      num_threads: 2
+    retry:
+      type: exponential_backoff
+
+### Document processing settings ###
+input:
+  type: text
+
+chunking:
+  type: tokens
+  size: 800
+  overlap: 100
+  encoding_model: cl100k_base # ada-002 使用的編碼
+
+### Storage settings ###
+input_storage:
+  type: file
+  base_dir: "graphrag_input"
+
+output_storage:
+  type: file
+  base_dir: "output"
+
+reporting:
+  type: file
+  base_dir: "logs"
+
+cache:
+  type: json
+  storage:
+    type: file
+    base_dir: "cache"
+    
+vector_store:
+  type: lancedb
+  db_uri: output/lancedb
+  vector_size: 1536  # use vector_size, not dimension (unknown keys are ignored)
+
+### Workflow settings ###
+embed_text:
+  embedding_model_id: default_embedding_model
+
+extract_graph:
+  completion_model_id: default_completion_model
+  entity_types: [Intent, Expectation, Target, Metric, Context]
+  max_gleanings: 1
+
+summarize_descriptions:
+  completion_model_id: default_completion_model
+  max_length: 500
+
+cluster_graph:
+  max_cluster_size: 10
+
+extract_claims:
+  enabled: false
+
+community_reports:
+  completion_model_id: default_completion_model
+  max_length: 1000
+
+snapshots:
+  graphml: false
+  embeddings: false

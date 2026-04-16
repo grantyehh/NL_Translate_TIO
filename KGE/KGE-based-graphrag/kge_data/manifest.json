@@ -1,0 +1,8 @@
+{
+  "model": "TransE",
+  "embedding_dim": 128,
+  "num_entities": 348,
+  "num_triples": 930,
+  "epochs": 80,
+  "text_embedding_model": "text-embedding-ada-002"
+}

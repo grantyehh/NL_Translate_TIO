@@ -1,0 +1,23 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC002/intent>
+  a icm:Intent .
+
+<http://example.org/tio-instance/TC002/target>
+  a icm:Target ;
+  rdfs:comment "Target container for gamer users."@en .
+
+<http://example.org/tio-instance/TC002/throughput-expectation>
+  a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC002/target> ;
+  rdfs:comment "Downlink throughput should be greater than 100 Mbps."@en .
+
+<http://example.org/tio-instance/TC002/latency-expectation>
+  a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC002/target> ;
+  rdfs:comment "Latency should be lower than 10 ms."@en .
+
+<http://example.org/tio-instance/TC002/target-property-values>
+  icm:valuesOfTargetProperty rdf:value .

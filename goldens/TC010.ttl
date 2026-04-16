@@ -1,0 +1,14 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC010/intent>
+  a icm:Intent .
+
+<http://example.org/tio-instance/TC010/availability-expectation>
+  a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC010/target> ;
+  rdfs:comment "Availability should remain at or above 99.95 percent all year."@en .
+
+<http://example.org/tio-instance/TC010/target>
+  a icm:Target ;
+  rdfs:comment "Taichung metro monitoring network."@en .

@@ -1,0 +1,11 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC015/intent> a icm:Intent .
+<http://example.org/tio-instance/TC015/exp-prop> a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC015/tgt-vip> ;
+  rdfs:comment "VIP users' media service download speed should be at least twice that of regular users."@en .
+<http://example.org/tio-instance/TC015/tgt-vip> a icm:Target ;
+  rdfs:comment "VIP users' media service."@en .
+<http://example.org/tio-instance/TC015/tgt-regular> a icm:Target ;
+  rdfs:comment "Regular users' media service."@en .

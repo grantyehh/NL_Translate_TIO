@@ -1,0 +1,9 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC006/intent> a icm:Intent .
+<http://example.org/tio-instance/TC006/exp-prop> a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC006/tgt> ;
+  rdfs:comment "Latency should stay below 5 ms for automated crane control traffic."@en .
+<http://example.org/tio-instance/TC006/tgt> a icm:Target ;
+  rdfs:comment "Automated crane control traffic at Kaohsiung Port."@en .

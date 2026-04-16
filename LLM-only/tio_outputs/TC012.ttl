@@ -1,0 +1,12 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC012/intent> a icm:Intent .
+<http://example.org/tio-instance/TC012/cond> a log:Condition ;
+  rdfs:comment "Data center primary link is down."@en .
+<http://example.org/tio-instance/TC012/exp-del> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC012/tgt> ;
+  rdfs:comment "Switch traffic to backup line within 30 seconds."@en .
+<http://example.org/tio-instance/TC012/tgt> a icm:Target ;
+  rdfs:comment "Traffic routing to backup line."@en .

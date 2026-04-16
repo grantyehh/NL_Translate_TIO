@@ -1,0 +1,42 @@
+[
+  {
+    "id": "TC001",
+    "category": "Connectivity",
+    "complexity": "Simple",
+    "nl_intent": "在台北和台中之間建立一個 5G 切片服務。",
+    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
+    "description": "測試基本的交付需求（DeliveryExpectation）與地理目標（Target）。"
+  },
+  {
+    "id": "TC002",
+    "category": "Performance",
+    "complexity": "Medium",
+    "nl_intent": "保證所有電競用戶的下行速度高於 100Mbps 且延遲小於 10ms。",
+    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target", "icm:valuesOfTargetProperty"],
+    "description": "測試屬性需求（PropertyExpectation）與多個指標（Metric）的映射。"
+  },
+  {
+    "id": "TC003",
+    "category": "Reliability",
+    "complexity": "Medium",
+    "nl_intent": "確保新竹園區的企業專網可用性達到 99.99%。",
+    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target"],
+    "description": "測試百分比指標與特定企業資源目標的關聯。"
+  },
+  {
+    "id": "TC004",
+    "category": "Contextual",
+    "complexity": "Complex",
+    "nl_intent": "在平日上班時間（08:00-18:00），將辦公大樓的頻寬優先級設為最高。",
+    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:Expectation"],
+    "description": "測試時間上下文（Context）對意圖執行的影響。"
+  },
+  {
+    "id": "TC005",
+    "category": "Conditional",
+    "complexity": "Complex",
+    "nl_intent": "如果基站負載超過 80%，則自動限制非必要影音串流的頻寬。",
+    "expected_tio_elements": ["icm:Intent", "log:Condition", "icm:PropertyExpectation"],
+    "description": "測試以 log:Condition 表達觸發條件，並以 icm:PropertyExpectation 等表達頻寬限制（本體中條件類為 LogicalOperators 的 log:Condition；icm:ConditionReport 屬報告側，不適合當成「若…則…」需求的主軸）。"
+  }
+]

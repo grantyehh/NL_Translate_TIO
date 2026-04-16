@@ -1,0 +1,111 @@
+Phase-2 Summary
+---------------
+
+Experiment   | Parse OK | Golden cases | must_have ok | must_not ok | expected_values ok | avg structural
+------------------------------------------------------------------------------------------------------------
+LLM-only     |     20/20 |         20/20 |         17/20 |        20/20 |               14/20 |         0.8833
+GraphRag     |     19/20 |         20/20 |          9/20 |        19/20 |               11/20 |         0.7281
+KGE-hybrid   |     19/20 |         20/20 |         10/20 |        19/20 |               13/20 |         0.7690
+
+Per-Golden-Case
+---------------
+
+TC001
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- KGE-hybrid: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+
+TC002
+- LLM-only: parse_ok=True, coverage=0.6666666666666666, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=0.3333333333333333, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+- KGE-hybrid: parse_ok=True, coverage=0.6666666666666666, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+
+TC003
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=0.5, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+- KGE-hybrid: parse_ok=True, coverage=0.5, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+
+TC004
+- LLM-only: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+- GraphRag: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=False, structural_score=0.5
+- KGE-hybrid: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+
+TC005
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.8333333333333334
+- GraphRag: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=False, structural_score=0.5
+- KGE-hybrid: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=False, structural_score=0.5
+
+TC006
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- KGE-hybrid: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+
+TC007
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.6666666666666666
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.6666666666666666
+- KGE-hybrid: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.6666666666666666
+
+TC008
+- LLM-only: parse_ok=True, coverage=0.6666666666666666, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=0.3333333333333333, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+- KGE-hybrid: parse_ok=True, coverage=0.6666666666666666, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+
+TC009
+- LLM-only: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+- GraphRag: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=False, structural_score=0.3333333333333333
+- KGE-hybrid: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=False, structural_score=0.3333333333333333
+
+TC010
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- KGE-hybrid: parse_ok=True, coverage=0.5, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+
+TC011
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+- KGE-hybrid: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+
+TC012
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.8333333333333334
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.8333333333333334
+- KGE-hybrid: parse_ok=False, coverage=None, must_have=None, must_not=None, expected_values=None, structural_score=None
+
+TC013
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- KGE-hybrid: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+
+TC014
+- LLM-only: parse_ok=True, coverage=0.75, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=0.5, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+- KGE-hybrid: parse_ok=True, coverage=0.75, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+
+TC015
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- KGE-hybrid: parse_ok=True, coverage=0.6666666666666666, must_have=False, must_not=True, expected_values=True, structural_score=0.6666666666666666
+
+TC016
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.6666666666666666
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.6666666666666666
+- KGE-hybrid: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.6666666666666666
+
+TC017
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=False, coverage=None, must_have=None, must_not=None, expected_values=None, structural_score=None
+- KGE-hybrid: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+
+TC018
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=False, structural_score=0.8888888888888888
+- GraphRag: parse_ok=True, coverage=0.75, must_have=False, must_not=True, expected_values=False, structural_score=0.5555555555555555
+- KGE-hybrid: parse_ok=True, coverage=0.75, must_have=False, must_not=True, expected_values=False, structural_score=0.5555555555555555
+
+TC019
+- LLM-only: parse_ok=True, coverage=0.75, must_have=False, must_not=True, expected_values=False, structural_score=0.4444444444444444
+- GraphRag: parse_ok=True, coverage=0.75, must_have=False, must_not=True, expected_values=False, structural_score=0.4444444444444444
+- KGE-hybrid: parse_ok=True, coverage=0.75, must_have=False, must_not=True, expected_values=False, structural_score=0.5555555555555555
+
+TC020
+- LLM-only: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- GraphRag: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0
+- KGE-hybrid: parse_ok=True, coverage=1.0, must_have=True, must_not=True, expected_values=True, structural_score=1.0

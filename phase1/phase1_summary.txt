@@ -1,0 +1,11 @@
+Three-Way Summary
+-----------------
+
+Experiment     | Cases | Parse OK   | Avg coverage | Avg triples | Intent URI OK
+----------------------------------------------------------------------------------
+LLM-only       |    20 |     90.00% |       0.7550 |        7.65 |        90.00%
+GraphRag       |    20 |    100.00% |       0.7167 |        8.55 |       100.00%
+KGE-hybrid     |    20 |     90.00% |       0.6250 |        8.10 |        90.00%
+
+Best average coverage : LLM-only (0.7550)
+Fewest average triples: LLM-only (7.65)

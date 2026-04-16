@@ -1,0 +1,41 @@
+--- Ontology Module: ProposalBestIntent ---
+
+### Classes Defined in this Module:
+Class: http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/BestProposalExpectation
+  Label: Best Proposal Expectation Class
+  Description: The class pbi:BestProposalExpectation is used to request proposals of best intent. It is a subclass of icm:ReportingExpectation, which also implies that the proposal is communicated through an intent report.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/ReportingExpectation
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/BestProposalReport
+  Label: Best Proposal Report Class
+  Description: The class pbi:BestProposalReport is used to provide the proposals corresponding to a best proposal expectation in the intent. It is a subclass of icm:ExpectationReport.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/ExpectationReport
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/Proposal
+  Label: Proposal Class
+  Description: The class pbi:Proposal is used to provide an individual proposal. Typically, there a proposal created for every requirement in scope of a best proposal expectation as stated by its target.
+
+
+### Properties Defined in this Module:
+Property: http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/proposal
+  Label: Proposal Property
+  Description: The property pbi:Proposal refers to the best intent proposals contained in the intent report.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/IntentReport
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/BestProposalReport
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/proposed
+  Label: Proposed Property
+  Description: The property pbi:proposed is used in the domain of a best proposal report to refer to an individual proposal.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/BestProposalReport
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/Proposal
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/proposedFor
+  Label: Proposed For Property
+  Description: The property pbi:proposedFor is used to state what requirement object from the intent the proposal is made for.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/Proposal
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/proposedBest
+  Label: Proposed Best
+  Description: The property pbi:proposedBest refers to an object that states the proposed values.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/Proposal
+

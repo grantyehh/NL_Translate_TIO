@@ -1,0 +1,46 @@
+--- Ontology Module: MathFunctions ---
+
+### Classes Defined in this Module:
+
+### Properties Defined in this Module:
+Property: http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsc
+  Label: Vertical Offset Parameter
+  Description: The property mf:c assigns a vertical offset to a function.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/Quantity
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionscoefficients
+  Label: Coefficients Parameter
+  Description: The property mf:coefficients specifies the list of coefficients that define a polynomial function.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/Quantity
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsinput
+  Label: Function Input
+  Description: The property mf:input specifies the input value within a function argument.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsk
+  Label: Logistic Growth Parameter
+  Description: The property mf:k specifies the logistic growth of a logistic function.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/Quantity
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsl
+  Label: Vertical Stretch Parameter
+  Description: The property mf:l assigns a vertical stretch to a function.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/Quantity
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsmap
+  Label: Value Mapping Parameter
+  Description: The property mf:map defines the mapping of input to result values applied in a mapping function. The range is a list with entries that are lists as well which represent individual mapping. The individual mapping lists have the result value as first entry and all other entries are values that are supposed to be mapped into this result.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+  Value type (Range): http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsx0
+  Label: Horizontal Shift Parameter
+  Description: The property mf:x0 assigns a horizontal shift to a function.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/Quantity
+

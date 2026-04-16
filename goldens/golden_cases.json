@@ -1,0 +1,465 @@
+[
+  {
+    "id": "TC001",
+    "nl_intent": "在台北和台中之間建立一個 5G 切片服務。",
+    "golden_ttl_file": "goldens/TC001.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:DeliveryExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?delivery_exp", "predicate": "rdf:type", "object": "icm:DeliveryExpectation"},
+      {"subject": "?delivery_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "5g slice service", "operator": "deliver", "value": "5G slice", "unit": null, "keywords": ["5g", "slice", "service", "taipei", "taichung"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "最基本的 delivery 型 intent。"
+  },
+  {
+    "id": "TC003",
+    "nl_intent": "確保新竹園區的企業專網可用性達到 99.99%。",
+    "golden_ttl_file": "goldens/TC003.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "availability target", "operator": ">=", "value": 99.99, "unit": "%", "keywords": ["availability", "enterprise", "network"]}
+    ],
+    "must_not_have_predicates": ["icm:hasValue"],
+    "notes": "重點是 availability 百分比目標與正確的 property expectation 結構。"
+  },
+  {
+    "id": "TC002",
+    "nl_intent": "保證所有電競用戶的下行速度高於 100Mbps 且延遲小於 10ms。",
+    "golden_ttl_file": "goldens/TC002.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?expectation1", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?expectation1", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "downlink throughput", "operator": ">", "value": 100, "unit": "Mbps", "keywords": ["downlink", "throughput", "speed"]},
+      {"label": "latency", "operator": "<", "value": 10, "unit": "ms", "keywords": ["latency"]}
+    ],
+    "must_not_have_predicates": ["icm:hasProperty", "icm:hasValue"],
+    "notes": "允許不同合法建模方式，但必須正確表達 target、throughput、latency 與比較方向。"
+  },
+  {
+    "id": "TC004",
+    "nl_intent": "在平日上班時間（08:00-18:00），將辦公大樓的頻寬優先級設為最高。",
+    "golden_ttl_file": "goldens/TC004.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:Context",
+      "icm:Expectation"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?intent", "predicate": "icm:context", "object": "?context"},
+      {"subject": "?context", "predicate": "rdf:type", "object": "icm:Context"},
+      {"subject": "?expectation", "predicate": "rdf:type", "object": "icm:Expectation"},
+      {"subject": "?expectation", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "workday time window", "operator": "during", "value": "08:00-18:00", "unit": null, "keywords": ["08:00", "18:00", "office", "workday"]},
+      {"label": "bandwidth priority", "operator": "=", "value": "highest", "unit": null, "keywords": ["priority", "highest", "bandwidth"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "第一版只要求 context 存在且 expectation 綁到 target；時間細節仍保留人工審查。"
+  },
+  {
+    "id": "TC005",
+    "nl_intent": "如果基站負載超過 80%，則自動限制非必要影音串流的頻寬。",
+    "golden_ttl_file": "goldens/TC005.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "log:Condition",
+      "icm:PropertyExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?condition", "predicate": "rdf:type", "object": "log:Condition"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "base station load threshold", "operator": ">", "value": 80, "unit": "%", "keywords": ["load", "base station"]},
+      {"label": "streaming bandwidth", "operator": "limit", "value": "reduced", "unit": null, "keywords": ["streaming", "bandwidth", "limit"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "這題先驗證 condition 與 property expectation 是否同時存在，不強綁條件連接用法。"
+  },
+  {
+    "id": "TC006",
+    "nl_intent": "讓高雄港自動化吊車控制流量的延遲低於 5ms。",
+    "golden_ttl_file": "goldens/TC006.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "control latency", "operator": "<", "value": 5, "unit": "ms", "keywords": ["latency", "port", "crane", "control"]}
+    ],
+    "must_not_have_predicates": ["icm:hasProperty"],
+    "notes": "單一低延遲性能題。"
+  },
+  {
+    "id": "TC007",
+    "nl_intent": "為台南科學園區新增室內 5G 覆蓋服務。",
+    "golden_ttl_file": "goldens/TC007.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:DeliveryExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?delivery_exp", "predicate": "rdf:type", "object": "icm:DeliveryExpectation"},
+      {"subject": "?delivery_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "indoor 5g coverage", "operator": "deliver", "value": "indoor coverage", "unit": null, "keywords": ["indoor", "5g", "coverage", "tainan"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "coverage / delivery 類簡單題。"
+  },
+  {
+    "id": "TC008",
+    "nl_intent": "確保醫療影像上傳服務的上行吞吐量至少 500Mbps。",
+    "golden_ttl_file": "goldens/TC008.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "uplink throughput", "operator": ">=", "value": 500, "unit": "Mbps", "keywords": ["upload", "uplink", "throughput", "medical"]}
+    ],
+    "must_not_have_predicates": ["icm:hasValue"],
+    "notes": "單一 throughput 題。"
+  },
+  {
+    "id": "TC009",
+    "nl_intent": "讓消防與救護單位的通訊流量永遠優先於一般民眾流量。",
+    "golden_ttl_file": "goldens/TC009.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:Expectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?exp", "predicate": "rdf:type", "object": "icm:Expectation"},
+      {"subject": "?exp", "predicate": "icm:target", "object": "?target1"},
+      {"subject": "?target1", "predicate": "rdf:type", "object": "icm:Target"},
+      {"subject": "?target2", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "emergency priority", "operator": "=", "value": "high", "unit": null, "keywords": ["fire", "rescue", "priority", "general"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "相對優先權題，目前仍用一般 expectation 表達。"
+  },
+  {
+    "id": "TC010",
+    "nl_intent": "要求台中捷運監控網路全年可用度不低於 99.95%。",
+    "golden_ttl_file": "goldens/TC010.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "yearly availability", "operator": ">=", "value": 99.95, "unit": "%", "keywords": ["availability", "metro", "monitoring"]}
+    ],
+    "must_not_have_predicates": ["icm:hasValue"],
+    "notes": "與 TC003 類似，但數值與目標域不同，用來測試另一個 availability 類題型。"
+  },
+  {
+    "id": "TC011",
+    "nl_intent": "在大型演唱會舉辦期間，將小巨蛋周邊行動網路容量提升到平常的兩倍。",
+    "golden_ttl_file": "goldens/TC011.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:Context",
+      "icm:PropertyExpectation"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?intent", "predicate": "icm:context", "object": "?context"},
+      {"subject": "?context", "predicate": "rdf:type", "object": "icm:Context"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "concert event context", "operator": "during", "value": "concert", "unit": null, "keywords": ["concert", "event", "arena"]},
+      {"label": "capacity boost", "operator": ">=", "value": 2, "unit": "x", "keywords": ["double", "capacity", "2"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "這題主要驗 context 與容量倍數要求是否同時出現。"
+  },
+  {
+    "id": "TC012",
+    "nl_intent": "若資料中心主鏈路中斷，則在 30 秒內將流量切換到備援專線。",
+    "golden_ttl_file": "goldens/TC012.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "log:Condition",
+      "icm:DeliveryExpectation"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?condition", "predicate": "rdf:type", "object": "log:Condition"},
+      {"subject": "?delivery_exp", "predicate": "rdf:type", "object": "icm:DeliveryExpectation"},
+      {"subject": "?delivery_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "main link failure", "operator": "if", "value": "interruption", "unit": null, "keywords": ["main", "link", "interruption", "failure"]},
+      {"label": "switch deadline", "operator": "<=", "value": 30, "unit": "seconds", "keywords": ["30", "backup", "switch"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "條件和交付型動作都要存在，且要能看出 30 秒內切換備援。"
+  },
+  {
+    "id": "TC013",
+    "nl_intent": "每晚 23:00 到隔天 06:00 期間，將企業備份流量限制在 200Mbps 以下。",
+    "golden_ttl_file": "goldens/TC013.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:Context",
+      "icm:PropertyExpectation"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?intent", "predicate": "icm:context", "object": "?context"},
+      {"subject": "?context", "predicate": "rdf:type", "object": "icm:Context"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "night window", "operator": "during", "value": "23:00-06:00", "unit": null, "keywords": ["23:00", "06:00", "night", "backup"]},
+      {"label": "bandwidth ceiling", "operator": "<=", "value": 200, "unit": "Mbps", "keywords": ["200", "Mbps", "limit"]}
+    ],
+    "must_not_have_predicates": ["icm:hasProperty"],
+    "notes": "測試跨日時間 context 與頻寬上限同時建模。"
+  },
+  {
+    "id": "TC014",
+    "nl_intent": "為自駕車控制服務提供延遲低於 10ms、抖動低於 2ms、封包遺失率低於 0.1% 的連線品質。",
+    "golden_ttl_file": "goldens/TC014.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?exp1", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?exp2", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?exp3", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?exp1", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?exp2", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?exp3", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "latency", "operator": "<", "value": 10, "unit": "ms", "keywords": ["latency"]},
+      {"label": "jitter", "operator": "<", "value": 2, "unit": "ms", "keywords": ["jitter"]},
+      {"label": "packet loss", "operator": "<", "value": 0.1, "unit": "%", "keywords": ["packet", "loss"]}
+    ],
+    "must_not_have_predicates": ["icm:hasProperty", "icm:hasValue"],
+    "notes": "至少要有三個 property expectations 指向同一個 target，才算接近這題的多重約束結構。"
+  },
+  {
+    "id": "TC015",
+    "nl_intent": "讓 VIP 用戶的影音服務下載速度至少是一般用戶的兩倍。",
+    "golden_ttl_file": "goldens/TC015.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?vip_target"},
+      {"subject": "?vip_target", "predicate": "rdf:type", "object": "icm:Target"},
+      {"subject": "?general_target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "vip relative speed", "operator": ">=", "value": 2, "unit": "x", "keywords": ["vip", "download", "twice", "general"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "相對比較題，先只要求兩個 target 與一個 property expectation。"
+  },
+  {
+    "id": "TC016",
+    "nl_intent": "要求金融交易 API 流量只能經過具備加密保護的專用切片傳輸。",
+    "golden_ttl_file": "goldens/TC016.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:DeliveryExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?delivery_exp", "predicate": "rdf:type", "object": "icm:DeliveryExpectation"},
+      {"subject": "?delivery_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "encrypted dedicated slice", "operator": "deliver", "value": "encrypted slice", "unit": null, "keywords": ["financial", "api", "encrypted", "dedicated", "slice"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "帶安全語意的 delivery 題。"
+  },
+  {
+    "id": "TC017",
+    "nl_intent": "讓智慧電表資料每天至少成功回傳一次。",
+    "golden_ttl_file": "goldens/TC017.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:DeliveryExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?delivery_exp", "predicate": "rdf:type", "object": "icm:DeliveryExpectation"},
+      {"subject": "?delivery_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "daily successful return", "operator": ">=", "value": 1, "unit": "day", "keywords": ["smart", "meter", "daily", "once", "successful"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "週期性交付題。"
+  },
+  {
+    "id": "TC018",
+    "nl_intent": "如果工廠無線感測器的封包遺失率連續 5 分鐘高於 3%，就立刻提升該區域無線資源配置。",
+    "golden_ttl_file": "goldens/TC018.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "log:Condition",
+      "icm:PropertyExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?condition", "predicate": "rdf:type", "object": "log:Condition"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "packet loss threshold", "operator": ">", "value": 3, "unit": "%", "keywords": ["packet", "loss", "sensor"]},
+      {"label": "continuous duration", "operator": "during", "value": 5, "unit": "minutes", "keywords": ["5", "minutes", "continuous"]},
+      {"label": "resource boost", "operator": "maintain", "value": "increase", "unit": null, "keywords": ["increase", "wireless", "resources"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "條件 + 持續時間 + 資源調整複合題。"
+  },
+  {
+    "id": "TC019",
+    "nl_intent": "在凌晨 01:00 到 05:00 之間，如果沒有高優先級業務，則將商辦區小型基地台切換到節能模式。",
+    "golden_ttl_file": "goldens/TC019.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:Context",
+      "log:Condition",
+      "icm:Expectation"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?context", "predicate": "rdf:type", "object": "icm:Context"},
+      {"subject": "?condition", "predicate": "rdf:type", "object": "log:Condition"},
+      {"subject": "?expectation", "predicate": "rdf:type", "object": "icm:Expectation"},
+      {"subject": "?expectation", "predicate": "icm:target", "object": "?target"},
+      {"subject": "?target", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "night energy-saving window", "operator": "during", "value": "01:00-05:00", "unit": null, "keywords": ["01:00", "05:00", "night"]},
+      {"label": "no high-priority business", "operator": "if", "value": "not present", "unit": null, "keywords": ["high", "priority", "not"]},
+      {"label": "energy saving mode", "operator": "=", "value": "energy-saving", "unit": null, "keywords": ["energy", "saving", "small", "cell"]}
+    ],
+    "must_not_have_predicates": ["icm:condition"],
+    "notes": "時間 context + condition + mode switch 複合題。"
+  },
+  {
+    "id": "TC020",
+    "nl_intent": "當遠距手術進行中時，必須同時保障控制訊號延遲低於 5ms，並確保 8K 影像串流不中斷。",
+    "golden_ttl_file": "goldens/TC020.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:Context",
+      "icm:PropertyExpectation",
+      "icm:DeliveryExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {"subject": "?intent", "predicate": "rdf:type", "object": "icm:Intent"},
+      {"subject": "?intent", "predicate": "icm:context", "object": "?context"},
+      {"subject": "?context", "predicate": "rdf:type", "object": "icm:Context"},
+      {"subject": "?prop_exp", "predicate": "rdf:type", "object": "icm:PropertyExpectation"},
+      {"subject": "?delivery_exp", "predicate": "rdf:type", "object": "icm:DeliveryExpectation"},
+      {"subject": "?prop_exp", "predicate": "icm:target", "object": "?target1"},
+      {"subject": "?delivery_exp", "predicate": "icm:target", "object": "?target2"},
+      {"subject": "?target1", "predicate": "rdf:type", "object": "icm:Target"},
+      {"subject": "?target2", "predicate": "rdf:type", "object": "icm:Target"}
+    ],
+    "expected_values": [
+      {"label": "control signal latency", "operator": "<", "value": 5, "unit": "ms", "keywords": ["control", "latency"]},
+      {"label": "8K video continuity", "operator": "maintain", "value": "uninterrupted", "unit": null, "keywords": ["8k", "video", "stream", "uninterrupted"]}
+    ],
+    "must_not_have_predicates": ["icm:condition", "icm:expectation"],
+    "notes": "這題重點是 event-like context 與兩種 expectation 並存。golden turtle 只給最小結構。"
+  }
+]

@@ -1,0 +1,9 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC016/intent> a icm:Intent .
+<http://example.org/tio-instance/TC016/exp-del> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC016/tgt> ;
+  rdfs:comment "Require that financial transaction API traffic can only be transmitted via encrypted dedicated slices."@en .
+<http://example.org/tio-instance/TC016/tgt> a icm:Target ;
+  rdfs:comment "Financial transaction API traffic."@en .

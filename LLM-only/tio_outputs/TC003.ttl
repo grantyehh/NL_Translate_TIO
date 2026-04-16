@@ -1,0 +1,9 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC003/intent> a icm:Intent .
+<http://example.org/tio-instance/TC003/exp-prop> a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC003/tgt> ;
+  rdfs:comment "Ensure enterprise private network availability reaches 99.99%."@en .
+<http://example.org/tio-instance/TC003/tgt> a icm:Target ;
+  rdfs:comment "Enterprise private network in Hsinchu campus."@en .

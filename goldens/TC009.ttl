@@ -1,0 +1,18 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC009/intent>
+  a icm:Intent .
+
+<http://example.org/tio-instance/TC009/priority-expectation>
+  a icm:Expectation ;
+  icm:target <http://example.org/tio-instance/TC009/emergency-target> ;
+  rdfs:comment "Emergency traffic should always have higher priority than general traffic."@en .
+
+<http://example.org/tio-instance/TC009/emergency-target>
+  a icm:Target ;
+  rdfs:comment "Fire and rescue communication flows."@en .
+
+<http://example.org/tio-instance/TC009/general-target>
+  a icm:Target ;
+  rdfs:comment "General public traffic."@en .

@@ -1,0 +1,15 @@
+--- Ontology Module: IntentProbing ---
+
+### Classes Defined in this Module:
+
+### Properties Defined in this Module:
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/expectedObservation
+  Label: Expected Observation Property
+  Description: The property pro:expectedObservation states predicted values for metrics rather than actually observed ones.
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Observation
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/expectedResult
+  Label: Expexted Result Property
+  Description: The property pro:expectedResult is used to state the predicted evaluation result for a probed intent.
+  Applies to (Domain): http://www.w3.org/2001/XMLSchema#Boolean
+

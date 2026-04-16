@@ -1,0 +1,12 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC002/intent> a icm:Intent .
+<http://example.org/tio-instance/TC002/exp-downlink> a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC002/tgt-gaming-users> ;
+  rdfs:comment "Downlink speed should be above 100 Mbps."@en .
+<http://example.org/tio-instance/TC002/exp-latency> a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC002/tgt-gaming-users> ;
+  rdfs:comment "Latency should be below 10 ms."@en .
+<http://example.org/tio-instance/TC002/tgt-gaming-users> a icm:Target ;
+  rdfs:comment "All gaming users."@en .

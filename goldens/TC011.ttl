@@ -1,0 +1,19 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC011/intent>
+  a icm:Intent ;
+  icm:context <http://example.org/tio-instance/TC011/context> .
+
+<http://example.org/tio-instance/TC011/context>
+  a icm:Context ;
+  rdfs:comment "Large concert event is in progress near Taipei Arena."@en .
+
+<http://example.org/tio-instance/TC011/capacity-expectation>
+  a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC011/target> ;
+  rdfs:comment "Mobile network capacity should be doubled."@en .
+
+<http://example.org/tio-instance/TC011/target>
+  a icm:Target ;
+  rdfs:comment "Traffic around Taipei Arena."@en .

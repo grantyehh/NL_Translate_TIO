@@ -1,0 +1,162 @@
+[
+  {
+    "id": "TC001",
+    "category": "Connectivity",
+    "complexity": "Simple",
+    "nl_intent": "在台北和台中之間建立一個 5G 切片服務。",
+    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
+    "description": "測試基本的交付需求（DeliveryExpectation）與地理目標（Target）。"
+  },
+  {
+    "id": "TC002",
+    "category": "Performance",
+    "complexity": "Medium",
+    "nl_intent": "保證所有電競用戶的下行速度高於 100Mbps 且延遲小於 10ms。",
+    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target", "icm:valuesOfTargetProperty"],
+    "description": "測試屬性需求（PropertyExpectation）與多個指標的映射。"
+  },
+  {
+    "id": "TC003",
+    "category": "Reliability",
+    "complexity": "Medium",
+    "nl_intent": "確保新竹園區的企業專網可用性達到 99.99%。",
+    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target"],
+    "description": "測試百分比指標與特定企業資源目標的關聯。"
+  },
+  {
+    "id": "TC004",
+    "category": "Contextual",
+    "complexity": "Complex",
+    "nl_intent": "在平日上班時間（08:00-18:00），將辦公大樓的頻寬優先級設為最高。",
+    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:Expectation"],
+    "description": "測試時間上下文（Context）對意圖執行的影響。"
+  },
+  {
+    "id": "TC005",
+    "category": "Conditional",
+    "complexity": "Complex",
+    "nl_intent": "如果基站負載超過 80%，則自動限制非必要影音串流的頻寬。",
+    "expected_tio_elements": ["icm:Intent", "log:Condition", "icm:PropertyExpectation"],
+    "description": "測試以 log:Condition 表達觸發條件，並以 PropertyExpectation 表達頻寬限制。"
+  },
+  {
+    "id": "TC006",
+    "category": "Performance",
+    "complexity": "Simple",
+    "nl_intent": "讓高雄港自動化吊車控制流量的延遲低於 5ms。",
+    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target"],
+    "description": "測試單一低延遲需求是否能映射到明確 target 與 property expectation。"
+  },
+  {
+    "id": "TC007",
+    "category": "Coverage",
+    "complexity": "Simple",
+    "nl_intent": "為台南科學園區新增室內 5G 覆蓋服務。",
+    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
+    "description": "測試交付型需求對於新增服務或覆蓋能力的表達。"
+  },
+  {
+    "id": "TC008",
+    "category": "Performance",
+    "complexity": "Medium",
+    "nl_intent": "確保醫療影像上傳服務的上行吞吐量至少 500Mbps。",
+    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target", "icm:valuesOfTargetProperty"],
+    "description": "測試上行吞吐量等單一性能屬性的映射。"
+  },
+  {
+    "id": "TC009",
+    "category": "Priority",
+    "complexity": "Medium",
+    "nl_intent": "讓消防與救護單位的通訊流量永遠優先於一般民眾流量。",
+    "expected_tio_elements": ["icm:Intent", "icm:Target", "icm:Expectation"],
+    "description": "測試優先權與資源區分的自然語言描述。"
+  },
+  {
+    "id": "TC010",
+    "category": "Reliability",
+    "complexity": "Medium",
+    "nl_intent": "要求台中捷運監控網路全年可用度不低於 99.95%。",
+    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target"],
+    "description": "測試長時間尺度下的可用度要求。"
+  },
+  {
+    "id": "TC011",
+    "category": "Contextual",
+    "complexity": "Complex",
+    "nl_intent": "在大型演唱會舉辦期間，將小巨蛋周邊行動網路容量提升到平常的兩倍。",
+    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:PropertyExpectation"],
+    "description": "測試事件型上下文與容量擴充需求的結合。"
+  },
+  {
+    "id": "TC012",
+    "category": "Conditional",
+    "complexity": "Complex",
+    "nl_intent": "若資料中心主鏈路中斷，則在 30 秒內將流量切換到備援專線。",
+    "expected_tio_elements": ["icm:Intent", "log:Condition", "icm:DeliveryExpectation"],
+    "description": "測試故障觸發條件與交付型動作的結合。"
+  },
+  {
+    "id": "TC013",
+    "category": "Scheduling",
+    "complexity": "Complex",
+    "nl_intent": "每晚 23:00 到隔天 06:00 期間，將企業備份流量限制在 200Mbps 以下。",
+    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:PropertyExpectation"],
+    "description": "測試跨日時間區間與頻寬上限的結合。"
+  },
+  {
+    "id": "TC014",
+    "category": "Multi-Constraint",
+    "complexity": "Complex",
+    "nl_intent": "為自駕車控制服務提供延遲低於 10ms、抖動低於 2ms、封包遺失率低於 0.1% 的連線品質。",
+    "expected_tio_elements": ["icm:Intent", "icm:PropertyExpectation", "icm:Target", "icm:valuesOfTargetProperty"],
+    "description": "測試同一 target 上多個性能約束同時出現時的表達。"
+  },
+  {
+    "id": "TC015",
+    "category": "Segmented Users",
+    "complexity": "Medium",
+    "nl_intent": "讓 VIP 用戶的影音服務下載速度至少是一般用戶的兩倍。",
+    "expected_tio_elements": ["icm:Intent", "icm:Target", "icm:PropertyExpectation"],
+    "description": "測試不同使用者群組之間的相對性能要求。"
+  },
+  {
+    "id": "TC016",
+    "category": "Security",
+    "complexity": "Medium",
+    "nl_intent": "要求金融交易 API 流量只能經過具備加密保護的專用切片傳輸。",
+    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
+    "description": "測試帶有安全性描述的交付型需求。"
+  },
+  {
+    "id": "TC017",
+    "category": "IoT",
+    "complexity": "Simple",
+    "nl_intent": "讓智慧電表資料每天至少成功回傳一次。",
+    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
+    "description": "測試週期性交付或回傳需求的簡單表達。"
+  },
+  {
+    "id": "TC018",
+    "category": "Conditional",
+    "complexity": "Complex",
+    "nl_intent": "如果工廠無線感測器的封包遺失率連續 5 分鐘高於 3%，就立刻提升該區域無線資源配置。",
+    "expected_tio_elements": ["icm:Intent", "log:Condition", "icm:PropertyExpectation", "icm:Target"],
+    "description": "測試條件、持續時間與資源調整需求的組合。"
+  },
+  {
+    "id": "TC019",
+    "category": "Energy Saving",
+    "complexity": "Complex",
+    "nl_intent": "在凌晨 01:00 到 05:00 之間，如果沒有高優先級業務，則將商辦區小型基地台切換到節能模式。",
+    "expected_tio_elements": ["icm:Intent", "icm:Context", "log:Condition", "icm:Expectation"],
+    "description": "測試時間上下文與條件觸發的複合 intent。"
+  },
+  {
+    "id": "TC020",
+    "category": "Cross-Domain",
+    "complexity": "Complex",
+    "nl_intent": "當遠距手術進行中時，必須同時保障控制訊號延遲低於 5ms，並確保 8K 影像串流不中斷。",
+    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:PropertyExpectation", "icm:DeliveryExpectation", "icm:Target"],
+    "description": "測試同時包含事件上下文、控制流低延遲與高品質媒體交付的複合需求。"
+  }
+]

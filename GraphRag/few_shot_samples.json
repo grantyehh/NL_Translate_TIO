@@ -1,0 +1,35 @@
+{
+  "description": "Few-shot examples for nl_to_tio.py. Scenarios and IDs differ from test cases. Learn official prefixes, stable graph structure, and how numeric/time hints appear near the relevant expectation. Do not invent unofficial predicates such as icm:hasValue, icm:hasProperty, icm:condition, or icm:expectation.",
+  "examples": [
+    {
+      "pattern": "delivery_expectation",
+      "nl_intent": "在高雄與屏東之間提供企業專用 5G 切片服務。",
+      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n<http://example.org/tio-instance/FS-D01/intent> a icm:Intent .\n<http://example.org/tio-instance/FS-D01/exp-del> a icm:DeliveryExpectation ;\n  icm:target <http://example.org/tio-instance/FS-D01/tgt> ;\n  rdfs:comment \"Deliver an enterprise 5G slice service.\"@en .\n<http://example.org/tio-instance/FS-D01/tgt> a icm:Target ;\n  rdfs:comment \"Connectivity scope between Kaohsiung and Pingtung.\"@en ."
+    },
+    {
+      "pattern": "property_expectation_with_value_hint",
+      "nl_intent": "確保視訊會議流量的延遲低於 20ms。",
+      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n<http://example.org/tio-instance/FS-P01/intent> a icm:Intent .\n<http://example.org/tio-instance/FS-P01/exp-prop> a icm:PropertyExpectation ;\n  icm:target <http://example.org/tio-instance/FS-P01/tgt> ;\n  rdfs:comment \"Latency should stay below 20 ms for video conferencing traffic.\"@en .\n<http://example.org/tio-instance/FS-P01/tgt> a icm:Target ;\n  rdfs:comment \"Video conferencing traffic.\"@en ."
+    },
+    {
+      "pattern": "context_plus_expectation",
+      "nl_intent": "在週末晚間時段，將園區備份流量限制在 300Mbps 以下。",
+      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n<http://example.org/tio-instance/FS-C01/intent> a icm:Intent ;\n  icm:context <http://example.org/tio-instance/FS-C01/ctx> .\n<http://example.org/tio-instance/FS-C01/ctx> a icm:Context ;\n  rdfs:comment \"Weekend evening time window.\"@en .\n<http://example.org/tio-instance/FS-C01/exp-prop> a icm:PropertyExpectation ;\n  icm:target <http://example.org/tio-instance/FS-C01/tgt> ;\n  rdfs:comment \"Backup traffic should stay below 300 Mbps.\"@en .\n<http://example.org/tio-instance/FS-C01/tgt> a icm:Target ;\n  rdfs:comment \"Backup traffic in the campus network.\"@en ."
+    },
+    {
+      "pattern": "condition_plus_property_expectation",
+      "nl_intent": "若回程延遲超過 15ms，則降低背景同步流量的優先權。",
+      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n<http://example.org/tio-instance/FS-L01/intent> a icm:Intent .\n<http://example.org/tio-instance/FS-L01/cond> a log:Condition ;\n  rdfs:comment \"Backhaul latency is greater than 15 ms.\"@en .\n<http://example.org/tio-instance/FS-L01/exp-prop> a icm:PropertyExpectation ;\n  icm:target <http://example.org/tio-instance/FS-L01/tgt> ;\n  rdfs:comment \"Background synchronization traffic should use lower priority.\"@en .\n<http://example.org/tio-instance/FS-L01/tgt> a icm:Target ;\n  rdfs:comment \"Background synchronization traffic.\"@en ."
+    },
+    {
+      "pattern": "multi_constraint_same_target",
+      "nl_intent": "為控制系統提供延遲低於 10ms 且抖動低於 2ms 的連線品質。",
+      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n<http://example.org/tio-instance/FS-M01/intent> a icm:Intent .\n<http://example.org/tio-instance/FS-M01/exp-latency> a icm:PropertyExpectation ;\n  icm:target <http://example.org/tio-instance/FS-M01/tgt> ;\n  rdfs:comment \"Latency should stay below 10 ms.\"@en .\n<http://example.org/tio-instance/FS-M01/exp-jitter> a icm:PropertyExpectation ;\n  icm:target <http://example.org/tio-instance/FS-M01/tgt> ;\n  rdfs:comment \"Jitter should stay below 2 ms.\"@en .\n<http://example.org/tio-instance/FS-M01/tgt> a icm:Target ;\n  rdfs:comment \"Industrial control traffic.\"@en ."
+    },
+    {
+      "pattern": "context_plus_property_and_delivery",
+      "nl_intent": "在遠端維運期間，確保控制信號延遲低於 5ms，並維持監控影像串流不中斷。",
+      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n<http://example.org/tio-instance/FS-X01/intent> a icm:Intent ;\n  icm:context <http://example.org/tio-instance/FS-X01/ctx> .\n<http://example.org/tio-instance/FS-X01/ctx> a icm:Context ;\n  rdfs:comment \"Remote maintenance is in progress.\"@en .\n<http://example.org/tio-instance/FS-X01/exp-prop> a icm:PropertyExpectation ;\n  icm:target <http://example.org/tio-instance/FS-X01/tgt-control> ;\n  rdfs:comment \"Control signal latency should stay below 5 ms.\"@en .\n<http://example.org/tio-instance/FS-X01/exp-del> a icm:DeliveryExpectation ;\n  icm:target <http://example.org/tio-instance/FS-X01/tgt-video> ;\n  rdfs:comment \"Monitoring video stream should remain uninterrupted.\"@en .\n<http://example.org/tio-instance/FS-X01/tgt-control> a icm:Target ;\n  rdfs:comment \"Control signaling.\"@en .\n<http://example.org/tio-instance/FS-X01/tgt-video> a icm:Target ;\n  rdfs:comment \"Monitoring video stream.\"@en ."
+    }
+  ]
+}

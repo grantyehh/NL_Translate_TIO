@@ -1,0 +1,112 @@
+[
+  {
+    "id": "TC002",
+    "nl_intent": "保證所有電競用戶的下行速度高於 100Mbps 且延遲小於 10ms。",
+    "golden_ttl_file": "goldens/TC002.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "must_have_triples": [
+      {
+        "subject": "?intent",
+        "predicate": "rdf:type",
+        "object": "icm:Intent"
+      },
+      {
+        "subject": "?expectation1",
+        "predicate": "rdf:type",
+        "object": "icm:PropertyExpectation"
+      },
+      {
+        "subject": "?expectation1",
+        "predicate": "icm:target",
+        "object": "?target"
+      },
+      {
+        "subject": "?target",
+        "predicate": "rdf:type",
+        "object": "icm:Target"
+      }
+    ],
+    "expected_values": [
+      {
+        "label": "downlink throughput",
+        "operator": ">",
+        "value": 100,
+        "unit": "Mbps"
+      },
+      {
+        "label": "latency",
+        "operator": "<",
+        "value": 10,
+        "unit": "ms"
+      }
+    ],
+    "must_not_have_predicates": [
+      "icm:hasProperty",
+      "icm:hasValue"
+    ],
+    "notes": "允許不同合法建模方式，但必須正確表達 target、throughput、latency 與比較方向。"
+  },
+  {
+    "id": "TC020",
+    "nl_intent": "當遠距手術進行中時，必須同時保障控制訊號延遲低於 5ms，並確保 8K 影像串流不中斷。",
+    "golden_ttl_file": "goldens/TC020.ttl",
+    "must_have_elements": [
+      "icm:Intent",
+      "icm:Context",
+      "icm:PropertyExpectation",
+      "icm:DeliveryExpectation",
+      "icm:Target"
+    ],
+    "must_have_triples": [
+      {
+        "subject": "?intent",
+        "predicate": "rdf:type",
+        "object": "icm:Intent"
+      },
+      {
+        "subject": "?intent",
+        "predicate": "icm:context",
+        "object": "?context"
+      },
+      {
+        "subject": "?context",
+        "predicate": "rdf:type",
+        "object": "icm:Context"
+      },
+      {
+        "subject": "?prop_exp",
+        "predicate": "rdf:type",
+        "object": "icm:PropertyExpectation"
+      },
+      {
+        "subject": "?delivery_exp",
+        "predicate": "rdf:type",
+        "object": "icm:DeliveryExpectation"
+      }
+    ],
+    "expected_values": [
+      {
+        "label": "control signal latency",
+        "operator": "<",
+        "value": 5,
+        "unit": "ms"
+      },
+      {
+        "label": "8K video continuity",
+        "operator": "maintain",
+        "value": "uninterrupted",
+        "unit": null
+      }
+    ],
+    "must_not_have_predicates": [
+      "icm:condition",
+      "icm:expectation"
+    ],
+    "notes": "這題重點是 event-like context 與兩種 expectation 並存。golden turtle 只給最小結構。"
+  }
+]

@@ -1,0 +1,19 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC014/intent> a icm:Intent .
+
+<http://example.org/tio-instance/TC014/exp-latency> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC014/tgt> ;
+  rdfs:comment "Latency should stay below 10 ms."@en .
+
+<http://example.org/tio-instance/TC014/exp-jitter> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC014/tgt> ;
+  rdfs:comment "Jitter should stay below 2 ms."@en .
+
+<http://example.org/tio-instance/TC014/exp-packet-loss> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC014/tgt> ;
+  rdfs:comment "Packet loss rate should stay below 0.1%."@en .
+
+<http://example.org/tio-instance/TC014/tgt> a icm:Target ;
+  rdfs:comment "Autonomous vehicle control service."@en .

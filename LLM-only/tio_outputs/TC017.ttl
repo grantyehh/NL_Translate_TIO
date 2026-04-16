@@ -1,0 +1,9 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC017/intent> a icm:Intent .
+<http://example.org/tio-instance/TC017/exp-del> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC017/tgt> ;
+  rdfs:comment "Ensure smart meter data is successfully transmitted at least once per day."@en .
+<http://example.org/tio-instance/TC017/tgt> a icm:Target ;
+  rdfs:comment "Smart meter data transmission."@en .

@@ -1,0 +1,53 @@
+--- Ontology Module: IntentValidityOntology ---
+
+### Classes Defined in this Module:
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/Validity
+  Label: Validty Context Class
+  Description: The class iv:Validity is a subclass of icm:Context. It represents and determines the validity of resources it is associated with using the property iv:validIf .
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/ValidityChange
+  Label: Validity Change Event
+  Description: The class iv:ValidityChange is a subclass of imo:intentHandlingEvent and represents events issued if the validity status of a resource is changing.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/ValidityChangeInvalid
+  Label: Change to Invalid Event
+  Description: The class iv:ValidityChange is a subclass of iv:ValidityChange and represents events issued if the validity status of a resource is changing to invalid.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/ValidityChange
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/ValidityChangeValid
+  Label: Change to Valid Event
+  Description: The class iv:ValidityChange is a subclass of iv:ValidityChange and represents events issued if the validity status of a resource is changing to valid.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/ValidityChange
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/ValidityReport
+  Label: Validity Report Class
+  Description: Instances of class iv:ValidityReport are used in intent reports to provide reporting about validity context.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/ContextReport
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/ValidityReportingExpectation
+  Label: Validity Reporting Expectation Class
+  Description: A validity reporting expectation is an instance of class iv:ValidityReportingExpectation within an intent. A validity reporting expectation is chosen to request an intent report, if the intent report shall explicitly state the validity of intent elements.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/ReportingExpectation
+
+
+### Properties Defined in this Module:
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/isValid
+  Label: Is Valid Property
+  Description: The property iv:isValid is used to state the validity status of its object. It is used in intent reports. This means it states the validity at the time of report generation. The range of iv:isValid contains a Boolean literal value. It is set to true, if the object is valid and false if not.
+  Value type (Range): http://www.w3.org/2001/XMLSchema#Boolean
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/sameValidityAs
+  Label: Same Validity As Property
+  Description: The property iv:sameValidityAs specifies that the validity of the subject shall be the same as the validity of the object.
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/validIf
+  Label: Valid If Property
+  Description: The property iv:validIf assigns validity context to objects.
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/Validity
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/valueIfNotValid
+  Label: Value If Not Valid Property
+  Description: The property iv:valueIfNotValid allows specifying a function result that shall be provided as a default for invalid functions.
+

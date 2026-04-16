@@ -1,0 +1,19 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC018/intent>
+  a icm:Intent .
+
+<http://example.org/tio-instance/TC018/packet-loss-condition>
+  a log:Condition ;
+  rdfs:comment "Packet loss remains above 3 percent for 5 minutes."@en .
+
+<http://example.org/tio-instance/TC018/resource-expectation>
+  a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC018/target> ;
+  rdfs:comment "Increase wireless resource allocation for the area."@en .
+
+<http://example.org/tio-instance/TC018/target>
+  a icm:Target ;
+  rdfs:comment "Factory wireless sensor area."@en .

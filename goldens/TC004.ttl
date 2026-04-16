@@ -1,0 +1,19 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC004/intent>
+  a icm:Intent ;
+  icm:context <http://example.org/tio-instance/TC004/context> .
+
+<http://example.org/tio-instance/TC004/context>
+  a icm:Context ;
+  rdfs:comment "Weekday working hours 08:00-18:00."@en .
+
+<http://example.org/tio-instance/TC004/priority-expectation>
+  a icm:Expectation ;
+  icm:target <http://example.org/tio-instance/TC004/target> ;
+  rdfs:comment "Bandwidth priority should be highest."@en .
+
+<http://example.org/tio-instance/TC004/target>
+  a icm:Target ;
+  rdfs:comment "Office building traffic."@en .

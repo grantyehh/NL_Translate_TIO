@@ -1,0 +1,875 @@
+[
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC001.ttl",
+    "case_id": "TC001",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 4,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:DeliveryExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/DeliveryExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC002.ttl",
+    "case_id": "TC002",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 12,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/condition",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/property"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.6666666666666666,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC003.ttl",
+    "case_id": "TC003",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 6,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/PropertyExpectation"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 0.5,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC004.ttl",
+    "case_id": "TC004",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 11,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/condition",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/expectation"
+    ],
+    "unknown_types": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Condition"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:Expectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Expectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.6666666666666666,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC005.ttl",
+    "case_id": "TC005",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 10,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/action",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/metric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/operator",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/service",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/threshold"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "log:Condition",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/Condition"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.6666666666666666,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC006.ttl",
+    "case_id": "TC006",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 8,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/unit",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Condition"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 0.5,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC007.ttl",
+    "case_id": "TC007",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 4,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:DeliveryExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/DeliveryExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC008.ttl",
+    "case_id": "TC008",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 6,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/minimumThroughput",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/serviceType"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.3333333333333333,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC009.ttl",
+    "case_id": "TC009",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 4,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Expectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Expectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.6666666666666666,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC010.ttl",
+    "case_id": "TC010",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 5,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/threshold"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC011.ttl",
+    "case_id": "TC011",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 5,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Condition"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.3333333333333333,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC012.ttl",
+    "case_id": "TC012",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 10,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/condition",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/description",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/expectation",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/timeConstraint"
+    ],
+    "unknown_types": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Condition"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "log:Condition",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/Condition"
+      },
+      {
+        "curie": "icm:DeliveryExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/DeliveryExpectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.6666666666666666,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC013.ttl",
+    "case_id": "TC013",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 16,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/hasProperty",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/unit"
+    ],
+    "unknown_types": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Property"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.6666666666666666,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC014.ttl",
+    "case_id": "TC014",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 14,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/unit"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.5,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC015.ttl",
+    "case_id": "TC015",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 8,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.6666666666666666,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC016.ttl",
+    "case_id": "TC016",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 4,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:DeliveryExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/DeliveryExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC017.ttl",
+    "case_id": "TC017",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 4,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:DeliveryExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/DeliveryExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC018.ttl",
+    "case_id": "TC018",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 8,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/duration",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/threshold"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "log:Condition",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/Condition"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 0.75,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC019.ttl",
+    "case_id": "TC019",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 23,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/condition",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/expectation",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/property",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/state",
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/timeInterval"
+    ],
+    "unknown_types": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/State"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "log:Condition",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/Condition"
+      },
+      {
+        "curie": "icm:Expectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Expectation"
+      }
+    ],
+    "expected_coverage_ratio": 0.75,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/GraphRag/tio_outputs/TC020.ttl",
+    "case_id": "TC020",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 9,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:DeliveryExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/DeliveryExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
+  }
+]

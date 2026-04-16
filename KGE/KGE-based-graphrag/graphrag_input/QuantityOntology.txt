@@ -1,0 +1,20 @@
+--- Ontology Module: QuantityOntology ---
+
+### Classes Defined in this Module:
+Class: http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/MonetaryQuantity
+  Label: Monetary Quantity Class
+  Description: The class quan:MonetaryQuantity refers to a quantity with currency based units.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/quantity
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/Quantity
+  Label: Quantity Class
+  Description: The class quan:Quantity defines a structured datatype for representing a numerical value in combination with a unit expression.
+
+
+### Properties Defined in this Module:
+Property: http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/unit
+  Label: Unit Property
+  Description: The property quan:unit assigns a unit to a quantity.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/Quantity
+  Value type (Range): http://www.w3.org/2001/XMLSchema#string
+

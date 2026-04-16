@@ -1,0 +1,108 @@
+--- Ontology Module: PreferenceOfHandlingOutcomes ---
+
+### Classes Defined in this Module:
+Class: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/JudgementRequest
+  Label: Judgement Request Class
+  Description: The class pre:JudgementRequest represents a request from the intent handler to an intent owner to provide its preference regarding the expected results of available solution options on the intent requirements. It is a subclass of rdfs:Container with members that refer to intent reports requesting the expected outcomes for available options.
+  Subclass of: http://www.w3.org/2000/01/rdf-schema#Container
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+  Label: Preference Class
+  Description: The class pre:Preference represents preferences of an intent owner with respect to the options presented in a judgement request.
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/PreferenceScore
+  Label: Preference Score Property
+  Description: An instance of class pre:PreferenceScore is added to the preference object within the intent by the intent owner to present its preferences regarding an option and quantify its preference with a numerical score.
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/ScoreInterpretation
+  Label: Score Interpretation Class
+  Description: An instance of class pre:ScoreInterpretation is added to the preference object within the intent by the intent owner to provide further information about the interpretation of scores used when specifying preferences.
+  Subclass of: http://www.w3.org/2000/01/rdf-schema#Container
+
+
+### Properties Defined in this Module:
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/about
+  Label: About Property
+  Description: The property pre:about is a reference to the judgement request instance stated in the intent reports that are part of the judgement request.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/JudgementRequest
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/aboutOption
+  Label: About Option Property
+  Description: The property pre:aboutOption refers to the intent report, for which this preference score object states the score.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/PreferenceScore
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/IntentReport
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/judgementRequest
+  Label: Judgement Request Property
+  Description: The property pre:judgementRequest associates a judgement request of class pre:JudgementRequest with an intent report.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/IntentReport
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/JudgementRequest
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/maxScore
+  Label: Max Score Property
+  Description: The property pre:maxScore states the maximum value or full score used in providing preference scores. If not provided, the highest sore used within the preferences of this intent owner within this judgement request is considered to be the maximum score.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/ScoreInterpretation
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/minScore
+  Label: Min Score Property
+  Description: The property pre:minScore states the minimum score value used in providing preference scores. If not provided, a minimum score of 0 is assumed by default.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/ScoreInterpretation
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/neutral
+  Label: Neutral Property
+  Description: The property pre:neutral refers to an intent report the intent owner does not mind, but also does not express an explicit preference for. This is the assumed default for options without a dedicated preference statement. It is also assumed if the intent owner does not provide a preference statement before the preference deadline.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/IntentReport
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/objected
+  Label: Objected Property
+  Description: The property pre:objected refers to an intent report the intent owner considers problematic from its perspective. The respective solution should not be chosen by the intent handler.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/IntentReport
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/objectedThreshold
+  Label: Objected Threshold Property
+  Description: The property pre:objectedThreshold defines the maximum score for objected options. An option with lower than this score should be avoided.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/ScoreInterpretation
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/preference
+  Label: Preference Property
+  Description: The property pre:preference associates a preference provided by an intent owner to an intent.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/preferenceDeadline
+  Label: Preference Deadline Property
+  Description: The property pre:preferenceDeadline states the point in time until the preference needs to be provided. The intent handler waits for a preference statement provided by the intent owner until this point in time. If until then none or incomplete preference statements are received, the intent handler will proceed and select a solution with the information available.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/JudgementRequest
+  Value type (Range): http://www.w3.org/2006/time#Instant
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/preferred
+  Label: Preferred Property
+  Description: The property pre:preferred refers to an intent report the intent owner considers preferential. It is referring to an intent report presented by the judgement request.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/IntentReport
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/preferredThreshold
+  Label: Preferred Threshold Property
+  Description: The property pre:preferredThreshold defines the minimum score value for preferred options. An option with at least this score is considered to be preferred.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/ScoreInterpretation
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/score
+  Label: Score Property
+  Description: The property pre:score associates a preference score to a preference.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/PreferenceScore
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/scoreInterpretation
+  Label: Score Interpretation Property
+  Description: A score interpretation is associated with a preference using the property pre:scoreInterpretation.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/Preference
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/ScoreInterpretation
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/scoreValue
+  Label: Score Value Property
+  Description: The property pre:scoreValue assigns a numerical value to the preference score object. This is the numerical score associated with an option.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/PreferenceScore
+

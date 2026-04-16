@@ -1,0 +1,22 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC020/intent> a icm:Intent ;
+  icm:context <http://example.org/tio-instance/TC020/ctx> .
+
+<http://example.org/tio-instance/TC020/ctx> a icm:Context ;
+  rdfs:comment "Remote surgery is in progress."@en .
+
+<http://example.org/tio-instance/TC020/exp-prop> a icm:PropertyExpectation ;
+  icm:target <http://example.org/tio-instance/TC020/tgt-control> ;
+  rdfs:comment "Control signal latency should stay below 5 ms."@en .
+
+<http://example.org/tio-instance/TC020/exp-del> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC020/tgt-video> ;
+  rdfs:comment "8K video stream should remain uninterrupted."@en .
+
+<http://example.org/tio-instance/TC020/tgt-control> a icm:Target ;
+  rdfs:comment "Control signaling."@en .
+
+<http://example.org/tio-instance/TC020/tgt-video> a icm:Target ;
+  rdfs:comment "8K video stream."@en .

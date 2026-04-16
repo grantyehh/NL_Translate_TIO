@@ -1,0 +1,14 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC001/intent>
+  a icm:Intent .
+
+<http://example.org/tio-instance/TC001/delivery-expectation>
+  a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC001/target> ;
+  rdfs:comment "Deliver a 5G slice service between Taipei and Taichung."@en .
+
+<http://example.org/tio-instance/TC001/target>
+  a icm:Target ;
+  rdfs:comment "Connectivity scope between Taipei and Taichung."@en .

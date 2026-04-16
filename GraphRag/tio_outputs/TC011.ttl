@@ -1,0 +1,15 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC011/intent> a icm:Intent ;
+  icm:context <http://example.org/tio-instance/TC011/ctx> .
+
+<http://example.org/tio-instance/TC011/ctx> a icm:Context ;
+  rdfs:comment "During the period of a large concert."@en .
+
+<http://example.org/tio-instance/TC011/exp-del> a icm:DeliveryExpectation ;
+  icm:target <http://example.org/tio-instance/TC011/tgt> ;
+  rdfs:comment "Increase mobile network capacity to twice the usual around Taipei Arena."@en .
+
+<http://example.org/tio-instance/TC011/tgt> a icm:Target ;
+  rdfs:comment "Mobile network around Taipei Arena."@en .

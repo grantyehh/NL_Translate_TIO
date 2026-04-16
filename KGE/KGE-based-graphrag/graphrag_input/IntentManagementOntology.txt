@@ -1,0 +1,165 @@
+--- Ontology Module: IntentManagementOntology ---
+
+### Classes Defined in this Module:
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/BaseOntologyModel
+  Label: Base Ontology Model Class
+  Description: The class imo:BaseOntologyModel is a subclass of imo:TIOmodel. Its instances are models within the TM Forum Intent Ontology. Intent common models and intent extension models rely on the fundamental vocabulary and semantics defined by a base ontology model.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/TIOmodel
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Complies
+  Label: Complies Class
+  Description: The class imo:Complies represents a state transition event in the intent handling state machine. It indicates that the system got compliant to the requirements expressed by the Intent.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Degrades
+  Label: Degrades Class
+  Description: The class imo:Degrades represents a state transition event in the intent handling state machine. It indicates that the system lost its compliance to the requirements expressed by the Intent.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Event
+  Label: Event Class
+  Description: The class imo:Event represents an event of intent management within an intent management function. An event is also a subclass of t:Instance from the time ontology. This means it represents the point in time the event instance was issued by the intent manager.
+  Subclass of: http://www.w3.org/2006/time#Instant
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Handler
+  Label: Handler Class
+  Description: The class imo:Handler expresses that its instance has the role of intent handler in intent life-cycle management.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/LCMrole
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/HandlingEnded
+  Label: Handling Ended Event
+  Description: The class imo:HandlingEnded represents a state transition event in the intent handling state machine. It indicates that the intent handler has finished all tasks associated with the removal of the intent. This is typically the last event generated for an intent.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentAccepted
+  Label: Intent Accepted Event
+  Description: The class imo:IntentAccepted represents a state transition event in the intent handling state machine. It indicates that the intent is accepted by the intent handler.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentCommonModel
+  Label: Intent Common Model Class
+  Description: The class imo:IntentCommonModel is a subclass of imo:TIOmodel. Its instances are intent common models within the TM Forum Intent Ontology.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/TIOmodel
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentExtensionModel
+  Label: Intent Extension Model Class
+  Description: The class imo:IntentExtensionModel is a subclass of imo:TIOmodel. Its instances are an intent extension model within the TM Forum Intent Ontology.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/TIOmodel
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+  Label: Intent Handling Event Class
+  Description: The class imo:intentHandlingEvent represents events of the intent handling and intent update state machines.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Event
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingState
+  Label: Intent Handling State Class
+  Description: The class imo:IntentHandlingState is the class of all individuals that represent states of the intent handler.
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentManager
+  Label: Intent Manager Class
+  Description: The class imo:IntentManager expresses that its instance is an Intent Management Function.
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentReceived
+  Label: Intent Received Event
+  Description: The class imo:IntentReceived represents a state transition event in the intent handling state machine. It indicates that a new intent was received and that handling of this intent is starting.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentRejected
+  Label: Intent Rejected Event
+  Description: The class imo:IntentRejected represents a state transition event in the intent handling state machine. It indicates that the intent handler has rejected the intent.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentRemoval
+  Label: Intent Removal Event
+  Description: The class imo:IntentRemoval represents a state transition event in the intent handling state machine. It indicates that the intent owner has ordered a removal of the intent.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/LCMrole
+  Label: LCM Role Class
+  Description: The class imo:LCMrole expresses that its instance has a role in intent life-cycle management. Its subclasses specify which role that is.
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Owner
+  Label: Owner Class
+  Description: The class imo:Owner expresses that its instance has the role of intent owner in intent life-cycle management.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/LCMrole
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/TIOmodel
+  Label: TIO Model Class
+  Description: The class imo:TIOmodel expresses that its instance is an ontology model within the TM Forum Intent Ontology
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/UpdateAccepted
+  Label: Update Accepted Event
+  Description: The class imo:UpdateAccepted represents a state transition event in the intent update state machine. This event indicates that the update was accepted and the intent handler proceeds with replacing the intent content. The update state imo:StateUpdating is reached.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/UpdateFinished
+  Label: Update Finished Event
+  Description: The class imo:UpdateFinished represents a state transition event in the intent update state machine. This event indicates that the intent handler has finished executing a successful update. The update state machine returns to its waiting state imo:StateNoUpdate.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/UpdateReceived
+  Label: Update Received Event
+  Description: The class imo:UpdateReceived represents a state transition event in the intent update state machine. This event indicates that update handling is initiated, and the intent handler is assessing if it can accept the update. The update state machine has entered the state imo:StateUpdateReceived.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Class: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/UpdateRejected
+  Label: Update Received Event
+  Description: The class imo:UpdateRejected represents a state transition event in the intent update state machine. This event indicates that the update was rejected, and the intent handler continues with the previous version of the intent. The new version of the intent is discarded and the update state returns to imo:StateNoUpdate.
+  Subclass of: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+
+### Properties Defined in this Module:
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/associatedValueCombination
+  Label: Associated Value Combination Property
+  Description: The property imo:associatedValueCombination specifies the combination function to be applied if multiple contributors to the associated value of an instance a class are used.
+  Applies to (Domain): http://www.w3.org/2000/01/rdf-schema#Class
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/Function
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/associatedValueType
+  Label: Associated Value Type Property
+  Description: The property imo:associatedValueType specifies the type of the associated value of instances of a class. If this property is used in the definition of a class, instances of this class have associated values.
+  Applies to (Domain): http://www.w3.org/2000/01/rdf-schema#Class
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/event
+  Label: Event Property
+  Description: The property imo:event can be used to assign an intent handling event.
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingEvent
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/eventFor
+  Label: Event For Property
+  Description: The property imo:eventFor is used in the class definition of subclasses of imo:Event. It is therefore part of the defintion of new event types. It specifies the Intent instance the event of this class is supposed to be issued for. This intent instance will be reflected by the imo:eventIssuedFor property used with event instances.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Event
+  Value type (Range): http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/eventIssuedBy
+  Label: Event Issued By Property
+  Description: The property imo:eventIssuedBy refers to the instance of the intent management function that has issued the intent.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Event
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentManager
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/eventIssuedFor
+  Label: Event Issued For Property
+  Description: The property imo:eventIssuedFor refers to the resource the event is generated for. This can for example be the intent instance the event was issued from the handling procedure for this intent and because of a situation reached concerning this intent.
+  Applies to (Domain): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/Event
+  Value type (Range): http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/handler
+  Label: Handler Property
+  Description: The property imo:handler expresses that the resource of type imo:IntentManager in its object has the role of an intent handler for the subject. The subject is typically an intent or associated intent report.
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentManager
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/handlingState
+  Label: Handling State Property
+  Description: The property imo:handlingState can be used to assign an intent handling state.
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingState
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/owner
+  Label: Owner Property
+  Description: The property imo:owner expresses that the resource of type imo:IntentManager in its object has the role of an intent owner for the subject. The subject is typically an intent or associated intent report.
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentManager
+
+Property: http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/updateState
+  Label: update State Property
+  Description: The property imo:updateState can be used to assign an intent update state
+  Value type (Range): http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/IntentHandlingState
+

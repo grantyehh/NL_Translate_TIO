@@ -1,0 +1,24 @@
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/tio-instance/TC019/intent>
+  a icm:Intent ;
+  icm:context <http://example.org/tio-instance/TC019/context> .
+
+<http://example.org/tio-instance/TC019/context>
+  a icm:Context ;
+  rdfs:comment "Between 01:00 and 05:00."@en .
+
+<http://example.org/tio-instance/TC019/no-priority-condition>
+  a log:Condition ;
+  rdfs:comment "No high-priority business is active."@en .
+
+<http://example.org/tio-instance/TC019/energy-saving-expectation>
+  a icm:Expectation ;
+  icm:target <http://example.org/tio-instance/TC019/target> ;
+  rdfs:comment "Switch small cells to energy-saving mode."@en .
+
+<http://example.org/tio-instance/TC019/target>
+  a icm:Target ;
+  rdfs:comment "Small cells in business office area."@en .
