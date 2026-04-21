@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from rdflib import Graph, RDF, RDFS, SKOS, Namespace
 from rdflib.namespace import DCTERMS
 
@@ -72,11 +73,11 @@ def parse_ttl_to_narrative(ttl_file, output_dir):
             f.write("\n")
 
 def main():
-    input_dir = "TM Forum Intent Ontology"
-    output_dir = "graphrag_input"
+    project_root = Path(__file__).resolve().parent.parent
+    input_dir = project_root / "TM Forum Intent Ontology"
+    output_dir = project_root / "graphrag_input"
     
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     for filename in os.listdir(input_dir):
         if filename.endswith(".ttl"):

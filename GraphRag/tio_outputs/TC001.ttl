@@ -1,11 +1,10 @@
 @prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:   <http://example.org/tio-instance/TC001/> .
 
-<http://example.org/tio-instance/TC001/intent> a icm:Intent .
-<http://example.org/tio-instance/TC001/exp-del> a icm:DeliveryExpectation ;
-  icm:target <http://example.org/tio-instance/TC001/tgt-taipei>, <http://example.org/tio-instance/TC001/tgt-taichung> ;
+ex:intent a icm:Intent .
+ex:exp-del a icm:DeliveryExpectation ;
+  icm:target ex:tgt ;
   rdfs:comment "Establish a 5G slice service."@en .
-<http://example.org/tio-instance/TC001/tgt-taipei> a icm:Target ;
-  rdfs:comment "Taipei."@en .
-<http://example.org/tio-instance/TC001/tgt-taichung> a icm:Target ;
-  rdfs:comment "Taichung."@en .
+ex:tgt a icm:Target ;
+  rdfs:comment "Connectivity scope between Taipei and Taichung."@en .

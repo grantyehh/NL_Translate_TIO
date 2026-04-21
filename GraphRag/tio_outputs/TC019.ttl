@@ -1,19 +1,22 @@
 @prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:   <http://example.org/tio-instance/TC019/> .
 
-<http://example.org/tio-instance/TC019/intent> a icm:Intent ;
-  icm:context <http://example.org/tio-instance/TC019/ctx> .
+ex:intent a icm:Intent ;
+  icm:context ex:ctx ;
+  icm:condition ex:cond ;
+  icm:expectation ex:exp-del .
 
-<http://example.org/tio-instance/TC019/ctx> a icm:Context ;
-  rdfs:comment "Time window between 01:00 AM and 05:00 AM."@en .
+ex:ctx a icm:Context ;
+  rdfs:comment "Time window from 01:00 to 05:00."@en .
 
-<http://example.org/tio-instance/TC019/cond> a log:Condition ;
-  rdfs:comment "No high-priority business is ongoing."@en .
+ex:cond a log:Condition ;
+  rdfs:comment "No high-priority business is active."@en .
 
-<http://example.org/tio-instance/TC019/exp-del> a icm:DeliveryExpectation ;
-  icm:target <http://example.org/tio-instance/TC019/tgt> ;
-  rdfs:comment "Switch small base stations to energy-saving mode."@en .
+ex:tgt a icm:Target ;
+  rdfs:comment "Small cell base stations in the business district."@en .
 
-<http://example.org/tio-instance/TC019/tgt> a icm:Target ;
-  rdfs:comment "Small base stations in the commercial office area."@en .
+ex:exp-del a icm:DeliveryExpectation ;
+  icm:target ex:tgt ;
+  rdfs:comment "Switch to energy-saving mode."@en .

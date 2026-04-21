@@ -23,6 +23,14 @@ if not api_key:
 client = OpenAI(api_key=api_key)
 
 
+def default_test_cases_path(root: Path) -> Path:
+    return (root.parent / "test_cases_20.json").resolve()
+
+
+def default_few_shot_path(root: Path) -> Path:
+    return (root.parent / "few_shot_samples.json").resolve()
+
+
 def load_few_shot_samples(path: Path) -> list[dict]:
     if not path.is_file():
         return []
@@ -71,9 +79,13 @@ def generate_turtle_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str
 @prefix t:    <http://www.w3.org/2006/time#> .
 
 【實例 URI（個體／範例資源）】
-僅「實例節點」（具名個體，如某筆 Intent、Expectation）可使用與詞彙不同的 base；請統一使用：
-<http://example.org/tio-instance/{tc_id}/...>
-其中 {tc_id} 為本次測試案例 ID，路徑須含該 ID 以便區分案例。勿將實例 URI 的 path 當成 TIO 類別或屬性名稱。
+僅「實例節點」（具名個體，如某筆 Intent、Expectation、Target、Context、Condition）可使用與詞彙不同的 base。
+請優先使用下列 instance prefix，讓輸出保持緊湊且可讀：
+
+@prefix ex:   <http://example.org/tio-instance/{tc_id}/> .
+
+也就是說，請優先寫成 `ex:intent`、`ex:tgt`、`ex:exp-latency` 這類形式，而不是每次都展開完整 URI。
+`ex:` 僅用於實例節點，不可用來表達 TIO 詞彙本身。勿將實例 URI 的 local name 當成 TIO 類別或屬性名稱。
 
 【Few-shot 使用方式】
 若使用者訊息中提供 few-shot 範例，其情境與當前題目不同；請只學習前綴、CURIE 與圖結構，不要複製範例中的文字或個體內容。
@@ -121,14 +133,14 @@ def main() -> None:
     parser.add_argument(
         "--test-cases",
         type=Path,
-        default=Path("test_cases.json"),
-        help="Test cases JSON (default: test_cases.json)",
+        default=default_test_cases_path(root),
+        help="Test cases JSON (default: ../test_cases_20.json)",
     )
     parser.add_argument(
         "--few-shot",
         type=Path,
-        default=Path("few_shot_samples.json"),
-        help="Few-shot NL+Turtle examples JSON (default: few_shot_samples.json); omit file to disable",
+        default=default_few_shot_path(root),
+        help="Few-shot NL+Turtle examples JSON (default: ../few_shot_samples.json); omit file to disable",
     )
     parser.add_argument(
         "--no-few-shot",
@@ -137,8 +149,10 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    test_cases_path = (root / args.test_cases).resolve()
-    few_shot_path = (root / args.few_shot).resolve()
+    test_cases_path = (
+        args.test_cases.resolve() if args.test_cases.is_absolute() else (root / args.test_cases).resolve()
+    )
+    few_shot_path = args.few_shot.resolve() if args.few_shot.is_absolute() else (root / args.few_shot).resolve()
 
     with open(test_cases_path, encoding="utf-8") as f:
         test_cases = json.load(f)

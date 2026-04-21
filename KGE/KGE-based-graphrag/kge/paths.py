@@ -1,9 +1,10 @@
-"""Paths and filenames for KGE artifacts (relative to project root)."""
+"""Paths and filenames for KGE artifacts (relative to the shared CHT root)."""
 
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-KGE_DATA_DIR = PROJECT_ROOT / "kge_data"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+EXPERIMENT_ROOT = Path(__file__).resolve().parent.parent
+KGE_DATA_DIR = EXPERIMENT_ROOT / "kge_data"
 ONTOLOGY_DIR = PROJECT_ROOT / "TM Forum Intent Ontology"
 
 TRIPLES_TSV = KGE_DATA_DIR / "triples.tsv"

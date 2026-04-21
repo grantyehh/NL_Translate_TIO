@@ -16,7 +16,7 @@
 
 | 項目 | 作用 |
 |------|------|
-| `test_cases.json` | 每題 `id`、`nl_intent`、`expected_tio_elements` 等；供生成迴圈與 **evaluate_ttl.py** 離線檢查。**不**含 rubric。 |
+| `../test_cases_20.json` | 根目錄共用測資；每題 `id`、`nl_intent`、`expected_tio_elements` 等；供生成迴圈與 **evaluate_ttl.py** 離線檢查。**不**含 rubric。 |
 | `few_shot_samples.json` | 與測資**不同情境**的 NL + Turtle 範例；**僅**由 `nl_to_tio.py` 讀入並組進 prompt。 |
 | `nl_to_tio.py` | 對每題：GraphRAG 查上下文 → 呼叫 LLM → 寫入 `tio_outputs/<id>.ttl`。 |
 | `TM Forum Intent Ontology/*.ttl` | 官方本體檔，作為詞彙與型別的 ground truth。 |
@@ -27,7 +27,7 @@
 
 ## 3. 生成流程（`nl_to_tio.py`）
 
-1. 讀取 `test_cases.json`，逐題處理。
+1. 預設讀取根目錄 `../test_cases_20.json`，逐題處理。
 2. （預設）讀取 `few_shot_samples.json`，將範例組進 **user message**（提示僅學結構與前綴，勿抄寫範例內容）。
 3. 以 **GraphRAG** `local` 模式查詢，取得與該 NL 相關的 TIO 脈絡文字。
 4. 呼叫 **OpenAI**（需環境變數 `OPENAI_API_KEY` 或 `GRAPHRAG_API_KEY`），依 system + user 產生**純 Turtle**（不含 markdown code fence）。
@@ -37,14 +37,14 @@
 
 - `--few-shot`：few-shot JSON 路徑（預設 `few_shot_samples.json`）
 - `--no-few-shot`：不使用 few-shot 檔
-- `--test-cases`：測資路徑（預設 `test_cases.json`）
+- `--test-cases`：測資路徑（預設 `../test_cases_20.json`）
 
 ---
 
 ## 4. 評測流程（`evaluate_ttl.py`）
 
 1. 從 `TM Forum Intent Ontology` 載入參考詞彙（classes、properties，含 `fun:Function` 作為 predicate）。
-2. 依 `test_cases.json` 中的每個 `id`，讀取 `tio_outputs/<id>.ttl`（若缺檔則標為錯誤）。
+2. 依共用測資中的每個 `id`，讀取 `tio_outputs/<id>.ttl`（若缺檔則標為錯誤）。
 3. 檢查項目包含：
    - Turtle **語法**（rdflib 解析；若內容含 \`\`\` 會先剝除 fence）
    - **前綴**是否與官方 namespace 一致

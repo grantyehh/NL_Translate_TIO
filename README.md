@@ -8,10 +8,11 @@
 
 三條線現在都使用相同的：
 
-- `test_cases.json`
+- `test_cases_20.json`
 - `few_shot_samples.json`
 - `evaluate_ttl.py` 評估口徑
-- GraphRAG ontology input 與 TIO ontology 檔
+- `graphrag_input/`（加工後的 GraphRAG 文字化輸入）
+- `TM Forum Intent Ontology/`（原始 TIO ontology 檔）
 
 目前唯一設計上的主要差別是：`KGE` 版會多注入 `kge_context`。
 
@@ -125,8 +126,8 @@ python nl_to_tio.py
 
 ```bash
 python nl_to_tio.py --no-few-shot
-python nl_to_tio.py --few-shot few_shot_samples.json
-python nl_to_tio.py --test-cases test_cases.json
+python nl_to_tio.py --few-shot ../few_shot_samples.json
+python nl_to_tio.py --test-cases ../test_cases_20.json
 ```
 
 3. 用根目錄共用 evaluator 評估輸出：
@@ -169,8 +170,8 @@ python nl_to_tio.py
 
 ```bash
 python nl_to_tio.py --no-few-shot
-python nl_to_tio.py --few-shot few_shot_samples.json
-python nl_to_tio.py --test-cases test_cases.json
+python nl_to_tio.py --few-shot ../few_shot_samples.json
+python nl_to_tio.py --test-cases ../test_cases_20.json
 ```
 
 5. 用根目錄共用 evaluator 評估輸出：
@@ -229,8 +230,8 @@ python nl_to_tio.py
 
 ```bash
 python nl_to_tio.py --no-few-shot
-python nl_to_tio.py --few-shot few_shot_samples.json
-python nl_to_tio.py --test-cases test_cases.json
+python nl_to_tio.py --few-shot ../../few_shot_samples.json
+python nl_to_tio.py --test-cases ../../test_cases_20.json
 ```
 
 6. 用根目錄共用 evaluator 評估輸出：
@@ -299,11 +300,11 @@ python run_all_experiments.py --phase phase2 --eval-only
 - 你改了 `goldens/`
 - 你只想重算報告，不想再次呼叫 LLM 或 GraphRAG
 
-如果你想改用另一份共用測資：
+如果你想改用另一份測資檔：
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT
-python run_all_experiments.py --test-cases GraphRag/test_cases.json
+python run_all_experiments.py --test-cases /path/to/custom_test_cases.json
 ```
 
 如果你想指定評估階段：
@@ -414,7 +415,8 @@ python evaluate_ttl_phase2.py \
 
 - `test_cases_20.json`
 - `goldens/golden_cases.json`
-- `GraphRag/TM Forum Intent Ontology`
+- `TM Forum Intent Ontology`
+- `graphrag_input`
 
 目前 phase-2 會自動檢查：
 
@@ -426,17 +428,15 @@ python evaluate_ttl_phase2.py \
 ## 5. 各檔案角色
 
 - `LLM-only/nl_to_tio.py`: LLM-only baseline 生成器
+- `few_shot_samples.json`: 三條實驗線共用的 few-shot 範例
 - `evaluate_ttl.py`: 根目錄共用的 phase-1 evaluator
-- `LLM-only/few_shot_samples.json`: LLM-only few-shot 範例
-- `LLM-only/test_cases.json`: LLM-only 測資
 - `phase1/`: phase-1 JSON 報告、compare 文字檔與 `phase1_summary.txt`
 - `GraphRag/nl_to_tio.py`: baseline 生成器
-- `GraphRag/few_shot_samples.json`: baseline few-shot 範例
-- `GraphRag/test_cases.json`: baseline 測資
+- `graphrag_input/`: GraphRAG 與 KGE-baseline 共用的文字化 ontology 輸入
+- `test_cases_20.json`: 三條實驗線共用的 20 題測資
 - `KGE/KGE-based-graphrag/nl_to_tio.py`: KGE-hybrid 生成器
 - `KGE/KGE-based-graphrag/kge/train.py`: 產生 KGE 與 text embedding artifacts
 - `KGE/KGE-based-graphrag/kge/retrieve.py`: 注入 KGE hybrid retrieval term hints
-- `KGE/KGE-based-graphrag/few_shot_samples.json`: KGE 版 few-shot 範例
 - `compare_reports.py`: 比較任兩份 phase-1 報告
 - `evaluate_ttl_phase2.py`: 吃 `goldens/` 的 phase-2 evaluator
 - `phase2/`: phase-2 JSON 報告與 `phase2_summary.txt`

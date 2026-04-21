@@ -1,12 +1,13 @@
 @prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:   <http://example.org/tio-instance/TC005/> .
 
-<http://example.org/tio-instance/TC005/intent> a icm:Intent .
-<http://example.org/tio-instance/TC005/cond> a log:Condition ;
+ex:intent a icm:Intent .
+ex:cond a log:Condition ;
   rdfs:comment "Base station load exceeds 80%."@en .
-<http://example.org/tio-instance/TC005/exp-act> a icm:Expectation ;
-  icm:target <http://example.org/tio-instance/TC005/tgt> ;
-  rdfs:comment "Automatically limit bandwidth of non-essential video streaming."@en .
-<http://example.org/tio-instance/TC005/tgt> a icm:Target ;
+ex:tgt a icm:Target ;
   rdfs:comment "Non-essential video streaming."@en .
+ex:exp-prop a icm:PropertyExpectation ;
+  icm:target ex:tgt ;
+  rdfs:comment "Automatically limit the bandwidth of non-essential video streaming."@en .

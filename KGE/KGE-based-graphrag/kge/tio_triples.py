@@ -15,6 +15,7 @@ if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
 from evaluate_ttl import ONTOLOGY_PREFIX_PREAMBLE  # noqa: E402
+from kge.paths import ONTOLOGY_DIR  # noqa: E402
 
 TIO_BASE = "http://tio.models.tmforum.org/tio/v3.6.0/"
 
@@ -38,7 +39,7 @@ def _should_skip_predicate(p: str) -> bool:
 def load_merged_ontology_graph(ontology_dir: Path | None = None) -> Graph:
     """Load all *.ttl under TM Forum Intent Ontology with a shared prefix preamble."""
     g = Graph()
-    base = ontology_dir or (_PROJECT_ROOT / "TM Forum Intent Ontology")
+    base = ontology_dir or ONTOLOGY_DIR
     for path in sorted(base.glob("*.ttl")):
         with open(path, "r", encoding="utf-8") as f:
             content = f.read()

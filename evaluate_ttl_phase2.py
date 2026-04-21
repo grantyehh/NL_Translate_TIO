@@ -461,8 +461,8 @@ def main() -> int:
     parser.add_argument(
         "--ontology-dir",
         type=Path,
-        default=Path("GraphRag/TM Forum Intent Ontology"),
-        help="Directory with official TIO .ttl modules (default: GraphRag/TM Forum Intent Ontology)",
+        default=Path("TM Forum Intent Ontology"),
+        help="Directory with official TIO .ttl modules (default: TM Forum Intent Ontology)",
     )
     parser.add_argument(
         "--outputs-dir",

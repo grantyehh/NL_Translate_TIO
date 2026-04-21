@@ -1,22 +1,26 @@
 @prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:   <http://example.org/tio-instance/TC020/> .
 
-<http://example.org/tio-instance/TC020/intent> a icm:Intent ;
-  icm:context <http://example.org/tio-instance/TC020/ctx> .
+ex:intent a icm:Intent ;
+  icm:context ex:ctx .
 
-<http://example.org/tio-instance/TC020/ctx> a icm:Context ;
+ex:ctx a icm:Context ;
   rdfs:comment "Remote surgery is in progress."@en .
 
-<http://example.org/tio-instance/TC020/exp-prop> a icm:PropertyExpectation ;
-  icm:target <http://example.org/tio-instance/TC020/tgt-control> ;
-  rdfs:comment "Control signal latency should stay below 5 ms."@en .
-
-<http://example.org/tio-instance/TC020/exp-del> a icm:DeliveryExpectation ;
-  icm:target <http://example.org/tio-instance/TC020/tgt-video> ;
-  rdfs:comment "8K video stream should remain uninterrupted."@en .
-
-<http://example.org/tio-instance/TC020/tgt-control> a icm:Target ;
+ex:tgt-control a icm:Target ;
   rdfs:comment "Control signaling."@en .
 
-<http://example.org/tio-instance/TC020/tgt-video> a icm:Target ;
+ex:tgt-video a icm:Target ;
   rdfs:comment "8K video stream."@en .
+
+ex:exp-prop a icm:PropertyExpectation ;
+  icm:target ex:tgt-control ;
+  rdfs:comment "Control signal latency should stay below 5 ms."@en .
+
+ex:exp-del a icm:DeliveryExpectation ;
+  icm:target ex:tgt-video ;
+  rdfs:comment "8K video stream should remain uninterrupted."@en .
+
+ex:target-property-values icm:valuesOfTargetProperty rdf:value .

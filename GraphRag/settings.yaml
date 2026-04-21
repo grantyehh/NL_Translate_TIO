@@ -40,7 +40,7 @@ chunking:
 ### Storage settings ###
 input_storage:
   type: file
-  base_dir: "graphrag_input"
+  base_dir: "../graphrag_input"
 
 output_storage:
   type: file
