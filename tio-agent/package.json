@@ -1,0 +1,21 @@
+{
+  "name": "grant",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-skill": "bun run scripts/ttl-to-skills.ts",
+    "mcp:network-env": "bun run mcps/network-env/src/index.ts",
+    "agent": "bun run agent/src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "n3": "^2.0.3",
+    "openai": "^6.34.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/n3": "^1.26.1",
+    "@types/node": "^25.6.0"
+  }
+}

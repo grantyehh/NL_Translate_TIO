@@ -1,35 +1,217 @@
 {
-  "description": "Few-shot examples for nl_to_tio.py. Learn official prefixes, stable TIO graph structure, explicit Expectation-to-Target binding, decomposition of multiple requirements, and when to introduce Context, Condition, or icm:valuesOfTargetProperty. Use an ex: prefix for instance resources so the output stays compact and readable. Use comments only as supplemental text, not as the only carrier of core intent semantics. Do not invent unofficial predicates such as icm:hasValue, icm:hasProperty, icm:condition, or icm:expectation.",
+  "description": "Few-shot examples for nl_to_tio.py. Learn the API-friendly TIO JSON-LD payload shape: top-level Intent metadata, intentExpectation array, structured expectationObject, structured expectationTarget with targetProperty/matchCondition/targetValue, optional intentContext, and intentReport. Core intent semantics must be represented as JSON fields, not only in description.",
   "examples": [
     {
       "pattern": "delivery_expectation",
       "nl_intent": "在高雄與屏東之間提供企業專用 5G 切片服務。",
-      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix ex:   <http://example.org/tio-instance/FS-D01/> .\n\nex:intent a icm:Intent .\nex:exp-del a icm:DeliveryExpectation ;\n  icm:target ex:tgt ;\n  rdfs:comment \"Deliver an enterprise 5G slice service.\"@en .\nex:tgt a icm:Target ;\n  rdfs:comment \"Connectivity scope between Kaohsiung and Pingtung.\"@en ."
+      "jsonld": {
+        "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+        "@type": "Intent",
+        "id": "intent-fs-d01",
+        "name": "Enterprise 5G Slice Delivery Intent",
+        "description": "Provide a dedicated enterprise 5G slice between Kaohsiung and Pingtung.",
+        "intentOwner": {
+          "id": "ops-manager-01",
+          "name": "Network Operations Center"
+        },
+        "intentExpectation": [
+          {
+            "id": "exp-delivery-01",
+            "name": "5G Slice Delivery",
+            "description": "Deliver an enterprise 5G slice service for the requested geographic scope.",
+            "@type": "DeliveryExpectation",
+            "expectationObject": {
+              "id": "service-enterprise-5g-slice",
+              "name": "Enterprise 5G Slice Service",
+              "@type": "Service"
+            },
+            "expectationTarget": [
+              {
+                "name": "Connectivity Scope",
+                "targetProperty": "connectivity",
+                "matchCondition": "EQUALS",
+                "targetValue": {
+                  "from": "Kaohsiung",
+                  "to": "Pingtung"
+                }
+              }
+            ]
+          }
+        ],
+        "intentContext": [
+          {
+            "id": "ctx-location-01",
+            "name": "Geographic Scope",
+            "@type": "LocationContext",
+            "value": "Kaohsiung_to_Pingtung"
+          }
+        ],
+        "intentReport": {
+          "reportingInterval": "PT5M",
+          "handlerResponse": "Continuous"
+        }
+      }
     },
     {
-      "pattern": "property_expectation_with_target_property_values",
+      "pattern": "property_expectation_latency",
       "nl_intent": "確保視訊會議流量的延遲低於 20ms。",
-      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix ex:   <http://example.org/tio-instance/FS-P01/> .\n\nex:intent a icm:Intent .\nex:tgt a icm:Target ;\n  rdfs:comment \"Video conferencing traffic.\"@en .\nex:exp-latency a icm:PropertyExpectation ;\n  icm:target ex:tgt ;\n  rdfs:comment \"Latency should stay below 20 ms.\"@en .\nex:target-property-values icm:valuesOfTargetProperty rdf:value ."
+      "jsonld": {
+        "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+        "@type": "Intent",
+        "id": "intent-fs-p01",
+        "name": "Video Conferencing Latency Intent",
+        "description": "Ensure video conferencing traffic latency stays below 20 ms.",
+        "intentOwner": {
+          "id": "ops-manager-01",
+          "name": "Network Operations Center"
+        },
+        "intentExpectation": [
+          {
+            "id": "exp-latency-01",
+            "name": "Latency Expectation",
+            "description": "The end-to-end latency must be kept below 20 ms.",
+            "@type": "PropertyExpectation",
+            "expectationObject": {
+              "id": "service-video-conference",
+              "name": "Video Conferencing Traffic",
+              "@type": "Service"
+            },
+            "expectationTarget": [
+              {
+                "name": "End-to-End Latency",
+                "targetProperty": "latency",
+                "matchCondition": "LESS_THAN",
+                "targetValue": {
+                  "value": 20,
+                  "unit": "ms"
+                }
+              }
+            ]
+          }
+        ],
+        "intentContext": [],
+        "intentReport": {
+          "reportingInterval": "PT5M",
+          "handlerResponse": "Continuous"
+        }
+      }
     },
     {
-      "pattern": "multi_property_same_target",
+      "pattern": "multi_property_same_object",
       "nl_intent": "保證企業備援連線的下載速度高於 200Mbps 且延遲低於 15ms。",
-      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix ex:   <http://example.org/tio-instance/FS-MP01/> .\n\nex:intent a icm:Intent .\nex:tgt a icm:Target ;\n  rdfs:comment \"Enterprise backup connectivity.\"@en .\nex:exp-throughput a icm:PropertyExpectation ;\n  icm:target ex:tgt ;\n  rdfs:comment \"Downlink throughput should be greater than 200 Mbps.\"@en .\nex:exp-latency a icm:PropertyExpectation ;\n  icm:target ex:tgt ;\n  rdfs:comment \"Latency should stay below 15 ms.\"@en .\nex:target-property-values icm:valuesOfTargetProperty rdf:value ."
+      "jsonld": {
+        "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+        "@type": "Intent",
+        "id": "intent-fs-mp01",
+        "name": "Enterprise Backup Link Performance Intent",
+        "description": "Ensure the enterprise backup link meets throughput and latency requirements.",
+        "intentOwner": {
+          "id": "ops-manager-01",
+          "name": "Network Operations Center"
+        },
+        "intentExpectation": [
+          {
+            "id": "exp-throughput-01",
+            "name": "Download Throughput Expectation",
+            "description": "Download throughput must be greater than 200 Mbps.",
+            "@type": "PropertyExpectation",
+            "expectationObject": {
+              "id": "service-enterprise-backup-link",
+              "name": "Enterprise Backup Link",
+              "@type": "Service"
+            },
+            "expectationTarget": [
+              {
+                "name": "Download Throughput",
+                "targetProperty": "throughput",
+                "matchCondition": "GREATER_THAN",
+                "targetValue": {
+                  "value": 200,
+                  "unit": "Mbps"
+                }
+              }
+            ]
+          },
+          {
+            "id": "exp-latency-01",
+            "name": "Latency Expectation",
+            "description": "Latency must be below 15 ms.",
+            "@type": "PropertyExpectation",
+            "expectationObject": {
+              "id": "service-enterprise-backup-link",
+              "name": "Enterprise Backup Link",
+              "@type": "Service"
+            },
+            "expectationTarget": [
+              {
+                "name": "End-to-End Latency",
+                "targetProperty": "latency",
+                "matchCondition": "LESS_THAN",
+                "targetValue": {
+                  "value": 15,
+                  "unit": "ms"
+                }
+              }
+            ]
+          }
+        ],
+        "intentContext": [],
+        "intentReport": {
+          "reportingInterval": "PT5M",
+          "handlerResponse": "Continuous"
+        }
+      }
     },
     {
-      "pattern": "context_plus_expectation",
+      "pattern": "context_plus_property_expectation",
       "nl_intent": "在週末晚間時段，將園區備份流量限制在 300Mbps 以下。",
-      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix ex:   <http://example.org/tio-instance/FS-C01/> .\n\nex:intent a icm:Intent ;\n  icm:context ex:ctx .\nex:ctx a icm:Context ;\n  rdfs:comment \"Weekend evening time window.\"@en .\nex:tgt a icm:Target ;\n  rdfs:comment \"Backup traffic in the campus network.\"@en .\nex:exp-prop a icm:PropertyExpectation ;\n  icm:target ex:tgt ;\n  rdfs:comment \"Backup traffic should stay below 300 Mbps.\"@en .\nex:target-property-values icm:valuesOfTargetProperty rdf:value ."
-    },
-    {
-      "pattern": "condition_plus_property_expectation",
-      "nl_intent": "如果回程延遲超過 15ms，則降低背景同步流量的優先權。",
-      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .\n@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix ex:   <http://example.org/tio-instance/FS-L01/> .\n\nex:intent a icm:Intent .\nex:cond a log:Condition ;\n  rdfs:comment \"Backhaul latency is greater than 15 ms.\"@en .\nex:tgt a icm:Target ;\n  rdfs:comment \"Background synchronization traffic.\"@en .\nex:exp-prop a icm:PropertyExpectation ;\n  icm:target ex:tgt ;\n  rdfs:comment \"Background synchronization traffic should use lower priority.\"@en .\nex:target-property-values icm:valuesOfTargetProperty rdf:value ."
-    },
-    {
-      "pattern": "context_plus_property_and_delivery",
-      "nl_intent": "在遠端維運期間，確保控制信號延遲低於 5ms，並維持監控影像串流不中斷。",
-      "turtle": "@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .\n@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix ex:   <http://example.org/tio-instance/FS-X01/> .\n\nex:intent a icm:Intent ;\n  icm:context ex:ctx .\nex:ctx a icm:Context ;\n  rdfs:comment \"Remote maintenance is in progress.\"@en .\nex:tgt-control a icm:Target ;\n  rdfs:comment \"Control signaling.\"@en .\nex:tgt-video a icm:Target ;\n  rdfs:comment \"Monitoring video stream.\"@en .\nex:exp-prop a icm:PropertyExpectation ;\n  icm:target ex:tgt-control ;\n  rdfs:comment \"Control signal latency should stay below 5 ms.\"@en .\nex:exp-del a icm:DeliveryExpectation ;\n  icm:target ex:tgt-video ;\n  rdfs:comment \"Monitoring video stream should remain uninterrupted.\"@en .\nex:target-property-values icm:valuesOfTargetProperty rdf:value ."
+      "jsonld": {
+        "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+        "@type": "Intent",
+        "id": "intent-fs-c01",
+        "name": "Campus Backup Traffic Throttle Intent",
+        "description": "Limit campus backup traffic bandwidth during weekend evenings.",
+        "intentOwner": {
+          "id": "ops-manager-01",
+          "name": "Network Operations Center"
+        },
+        "intentExpectation": [
+          {
+            "id": "exp-bandwidth-limit-01",
+            "name": "Backup Traffic Bandwidth Limit",
+            "description": "Backup traffic must stay below 300 Mbps during the specified time window.",
+            "@type": "PropertyExpectation",
+            "expectationObject": {
+              "id": "service-campus-backup-traffic",
+              "name": "Campus Backup Traffic",
+              "@type": "Service"
+            },
+            "expectationTarget": [
+              {
+                "name": "Bandwidth Limit",
+                "targetProperty": "bandwidth",
+                "matchCondition": "LESS_THAN",
+                "targetValue": {
+                  "value": 300,
+                  "unit": "Mbps"
+                }
+              }
+            ]
+          }
+        ],
+        "intentContext": [
+          {
+            "id": "ctx-weekend-evening-01",
+            "name": "Weekend Evening Window",
+            "@type": "TimeContext",
+            "value": "weekend_evening"
+          }
+        ],
+        "intentReport": {
+          "reportingInterval": "PT5M",
+          "handlerResponse": "Continuous"
+        }
+      }
     }
   ]
 }

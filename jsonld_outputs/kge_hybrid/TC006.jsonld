@@ -1,0 +1,40 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc006",
+  "name": "Kaohsiung Port Crane Control Latency Intent",
+  "description": "Ensure the latency of automated crane control traffic at Kaohsiung Port stays below 5 ms.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-latency-01",
+      "name": "Crane Control Latency Expectation",
+      "description": "The latency for automated crane control traffic must be kept below 5 ms.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-crane-control",
+        "name": "Automated Crane Control Traffic",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "End-to-End Latency",
+          "targetProperty": "latency",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 5,
+            "unit": "ms"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc003",
+  "name": "Hsinchu Campus Enterprise Network Availability Intent",
+  "description": "Ensure the availability of the enterprise private network in Hsinchu campus reaches 99.99%.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-availability-01",
+      "name": "Network Availability Expectation",
+      "description": "The availability of the enterprise private network must reach 99.99%.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-hsinchu-enterprise-network",
+        "name": "Hsinchu Campus Enterprise Network",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Network Availability",
+          "targetProperty": "availability",
+          "matchCondition": "GREATER_THAN_OR_EQUAL",
+          "targetValue": {
+            "value": 99.99,
+            "unit": "%"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-location-hsinchu",
+      "name": "Hsinchu Campus",
+      "@type": "LocationContext",
+      "value": "Hsinchu"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

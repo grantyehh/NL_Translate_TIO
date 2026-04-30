@@ -1,0 +1,40 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc015",
+  "name": "VIP User Media Service Download Speed Intent",
+  "description": "Ensure that the download speed for VIP users' media services is at least twice that of regular users.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-download-speed-01",
+      "name": "VIP User Download Speed Expectation",
+      "description": "The download speed for VIP users must be at least twice that of regular users.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-vip-media",
+        "name": "VIP Media Service",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Download Speed Ratio",
+          "targetProperty": "throughput",
+          "matchCondition": "GREATER_THAN_OR_EQUAL",
+          "targetValue": {
+            "value": 2,
+            "unit": "times"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

@@ -1,0 +1,42 @@
+Reports
+-------
+LLM-only  : /Users/grantyeh/Grant/Project/CHT/phase1/phase1_llm_only.json
+GraphRag  : /Users/grantyeh/Grant/Project/CHT/phase1/phase1_graphrag.json
+KGE-hybrid: /Users/grantyeh/Grant/Project/CHT/phase1/phase1_kge_hybrid.json
+Test cases: /Users/grantyeh/Grant/Project/CHT/test_cases_20.json
+
+Three-Way Summary
+-----------------
+Experiment     | Cases | Parse OK   | Avg coverage | Avg JSON nodes | Intent ID OK
+----------------------------------------------------------------------------------
+LLM-only       |    20 |     95.00% |       0.8983 |          39.50 |       100.00%
+GraphRag       |    20 |     90.00% |       0.8942 |          36.30 |        95.00%
+KGE-hybrid     |    20 |     95.00% |       0.9708 |          38.40 |       100.00%
+
+Best average coverage  : KGE-hybrid (0.9708)
+Fewest average JSON nodes: GraphRag (36.30)
+
+Per-Case Three-Way Comparison
+-----------------------------
+case_id  | LLM cov | Graph cov | KGE cov | winner     | LLM nodes | Graph nodes | KGE nodes | difficulty
+----------------------------------------------------------------------------------------------------------------
+TC001    |  1.0000 |    1.0000 |  1.0000 | tie        |        36 |          36 |        36 | Simple    
+TC002    |  1.0000 |    1.0000 |  1.0000 | tie        |        48 |          48 |        48 | Medium    
+TC003    |  1.0000 |    1.0000 |  1.0000 | tie        |        36 |          31 |        36 | Medium    
+TC004    |  1.0000 |    1.0000 |  1.0000 | tie        |        36 |          36 |        36 | Complex   
+TC005    |  0.6667 |    0.0000 |  0.6667 | tie        |        48 |           0 |        48 | Complex   
+TC006    |  1.0000 |    1.0000 |  1.0000 | tie        |        31 |          31 |        31 | Simple    
+TC007    |  1.0000 |    1.0000 |  1.0000 | tie        |        35 |          35 |        35 | Simple    
+TC008    |  1.0000 |    1.0000 |  1.0000 | tie        |        31 |          31 |        31 | Medium    
+TC009    |  1.0000 |    1.0000 |  1.0000 | tie        |        48 |          30 |        31 | Medium    
+TC010    |  1.0000 |    1.0000 |  1.0000 | tie        |        31 |          31 |        31 | Medium    
+TC011    |  1.0000 |    0.6667 |  1.0000 | tie        |        41 |          41 |        36 | Complex   
+TC012    |  0.6667 |    1.0000 |  1.0000 | tie        |        36 |          36 |        36 | Complex   
+TC013    |  1.0000 |    1.0000 |  1.0000 | tie        |        36 |          36 |        36 | Complex   
+TC014    |  1.0000 |    1.0000 |  1.0000 | tie        |        65 |          65 |        65 | Complex   
+TC015    |  1.0000 |    0.6667 |  1.0000 | tie        |        31 |          31 |        31 | Medium    
+TC016    |  0.6667 |    1.0000 |  1.0000 | tie        |        31 |          38 |        31 | Medium    
+TC017    |  0.6667 |    1.0000 |  1.0000 | tie        |        31 |          31 |        31 | Simple    
+TC018    |  0.7500 |    0.7500 |  0.7500 | tie        |        46 |          46 |        46 | Complex   
+TC019    |  0.7500 |    1.0000 |  1.0000 | tie        |        40 |          40 |        40 | Complex   
+TC020    |  0.8000 |    0.8000 |  1.0000 | KGE-hybrid |        53 |          53 |        53 | Complex   

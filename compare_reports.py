@@ -3,10 +3,18 @@ import argparse
 import io
 import json
 import sys
-from collections import Counter
 from contextlib import redirect_stdout
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
+
+
+ROOT = Path(__file__).resolve().parent
+PHASE1_DIR = ROOT / "phase1"
+DEFAULT_REPORTS = [
+    ("LLM-only", PHASE1_DIR / "phase1_llm_only.json"),
+    ("GraphRag", PHASE1_DIR / "phase1_graphrag.json"),
+    ("KGE-hybrid", PHASE1_DIR / "phase1_kge_hybrid.json"),
+]
 
 
 def load_report(path: Path) -> List[dict]:
@@ -21,9 +29,8 @@ def index_by_case(items: List[dict]) -> Dict[str, dict]:
     indexed = {}
     for row in items:
         case_id = row.get("case_id")
-        if not case_id:
-            continue
-        indexed[case_id] = row
+        if case_id:
+            indexed[str(case_id)] = row
     return indexed
 
 
@@ -35,12 +42,8 @@ def load_difficulty_map(path: Path) -> Dict[str, str]:
 
     result: Dict[str, str] = {}
     for row in data:
-        if not isinstance(row, dict):
-            continue
-        case_id = row.get("id")
-        if not case_id:
-            continue
-        result[str(case_id)] = str(row.get("complexity", "N/A"))
+        if isinstance(row, dict) and row.get("id"):
+            result[str(row["id"])] = str(row.get("complexity", "N/A"))
     return result
 
 
@@ -60,34 +63,28 @@ def coerce_float(value, default: float = 0.0) -> float:
 
 def aggregate_metrics(items: List[dict]) -> dict:
     parse_ok = [bool(x.get("parse_ok")) for x in items]
-    triple_count = [int(x.get("triple_count", 0)) for x in items]
+    node_count = [int(x.get("json_node_count", x.get("triple_count", 0))) for x in items]
     coverage = [coerce_float(x.get("expected_coverage_ratio", 0.0)) for x in items]
     intent_uri_ok = [bool(x.get("intent_uri_contains_case_id")) for x in items]
     return {
         "count": len(items),
         "parse_ok_rate": ratio_true(parse_ok),
-        "avg_triple_count": mean(triple_count),
+        "avg_triple_count": mean(node_count),
         "avg_coverage_ratio": mean(coverage),
         "intent_uri_ok_rate": ratio_true(intent_uri_ok),
     }
-
-
-def collect_unknowns(items: List[dict], field: str) -> Counter:
-    c = Counter()
-    for row in items:
-        for uri in row.get(field, []) or []:
-            c[uri] += 1
-    return c
 
 
 def fmt_pct(v: float) -> str:
     return f"{v * 100:.2f}%"
 
 
-def fmt_delta(v: float, percent: bool = False) -> str:
-    if percent:
-        return f"{v * 100:+.2f} pp"
-    return f"{v:+.4f}"
+def coverage(row: dict | None) -> float:
+    return coerce_float((row or {}).get("expected_coverage_ratio", 0.0))
+
+
+def node_count(row: dict | None) -> int:
+    return int((row or {}).get("json_node_count", (row or {}).get("triple_count", 0)))
 
 
 def print_header(title: str) -> None:
@@ -96,111 +93,72 @@ def print_header(title: str) -> None:
     print("-" * len(title))
 
 
-def print_overall(base_metrics: dict, target_metrics: dict, base_name: str, target_name: str) -> None:
-    print_header("Overall Summary")
-    rows = [
-        ("Cases", base_metrics["count"], target_metrics["count"], target_metrics["count"] - base_metrics["count"], False),
-        (
-            "Parse OK rate",
-            fmt_pct(base_metrics["parse_ok_rate"]),
-            fmt_pct(target_metrics["parse_ok_rate"]),
-            target_metrics["parse_ok_rate"] - base_metrics["parse_ok_rate"],
-            True,
-        ),
-        (
-            "Avg coverage ratio",
-            f"{base_metrics['avg_coverage_ratio']:.4f}",
-            f"{target_metrics['avg_coverage_ratio']:.4f}",
-            target_metrics["avg_coverage_ratio"] - base_metrics["avg_coverage_ratio"],
-            False,
-        ),
-        (
-            "Avg triple count",
-            f"{base_metrics['avg_triple_count']:.2f}",
-            f"{target_metrics['avg_triple_count']:.2f}",
-            target_metrics["avg_triple_count"] - base_metrics["avg_triple_count"],
-            False,
-        ),
-        (
-            "Intent URI contains case_id",
-            fmt_pct(base_metrics["intent_uri_ok_rate"]),
-            fmt_pct(target_metrics["intent_uri_ok_rate"]),
-            target_metrics["intent_uri_ok_rate"] - base_metrics["intent_uri_ok_rate"],
-            True,
-        ),
-    ]
-
-    print(f"{'Metric':36} | {base_name:14} | {target_name:14} | {'Delta(target-base)':17}")
-    print("-" * 92)
-    for metric, b, t, d, is_percent in rows:
-        d_text = fmt_delta(d, percent=is_percent)
-        print(f"{metric:36} | {str(b):14} | {str(t):14} | {d_text:17}")
-
-
-def compare_cases(base_by_case: Dict[str, dict], target_by_case: Dict[str, dict], difficulty_map: Dict[str, str]) -> None:
-    print_header("Per-Case Comparison")
-    all_cases = sorted(set(base_by_case) | set(target_by_case))
-    print(
-        f"{'case_id':8} | {'base_cov':8} | {'target_cov':10} | {'delta_cov':9} | {'base_triples':12} | "
-        f"{'target_triples':14} | {'delta_triples':12} | {'winner':8} | {'difficulty':10}"
-    )
-    print("-" * 122)
-    for case_id in all_cases:
-        b = base_by_case.get(case_id)
-        t = target_by_case.get(case_id)
-        difficulty = difficulty_map.get(case_id, "N/A")
-        if not b or not t:
-            side = "target_only" if t else "base_only"
-            print(
-                f"{case_id:8} | {'-':8} | {'-':10} | {'-':9} | {'-':12} | {'-':14} | {'-':12} | "
-                f"{side:8} | {difficulty:10}"
-            )
-            continue
-
-        b_cov = coerce_float(b.get("expected_coverage_ratio", 0.0))
-        t_cov = coerce_float(t.get("expected_coverage_ratio", 0.0))
-        d_cov = t_cov - b_cov
-        b_tri = int(b.get("triple_count", 0))
-        t_tri = int(t.get("triple_count", 0))
-        d_tri = t_tri - b_tri
-
-        if d_cov > 0:
-            winner = "target"
-        elif d_cov < 0:
-            winner = "base"
-        else:
-            winner = "tie"
-
+def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
+    print_header("Three-Way Summary")
+    print(f"{'Experiment':14} | {'Cases':5} | {'Parse OK':10} | {'Avg coverage':12} | {'Avg JSON nodes':14} | {'Intent ID OK':12}")
+    print("-" * 82)
+    rows: list[tuple[str, dict]] = []
+    for name, _, items in reports:
+        metrics = aggregate_metrics(items)
+        rows.append((name, metrics))
         print(
-            f"{case_id:8} | {b_cov:8.4f} | {t_cov:10.4f} | {d_cov:+9.4f} | {b_tri:12d} | "
-            f"{t_tri:14d} | {d_tri:+12d} | {winner:8} | {difficulty:10}"
+            f"{name:14} | "
+            f"{metrics['count']:5d} | "
+            f"{metrics['parse_ok_rate'] * 100:9.2f}% | "
+            f"{metrics['avg_coverage_ratio']:12.4f} | "
+            f"{metrics['avg_triple_count']:14.2f} | "
+            f"{metrics['intent_uri_ok_rate'] * 100:12.2f}%"
+        )
+
+    best_coverage = max(rows, key=lambda item: item[1]["avg_coverage_ratio"])
+    fewest_nodes = min(rows, key=lambda item: item[1]["avg_triple_count"])
+    print()
+    print(f"Best average coverage  : {best_coverage[0]} ({best_coverage[1]['avg_coverage_ratio']:.4f})")
+    print(f"Fewest average JSON nodes: {fewest_nodes[0]} ({fewest_nodes[1]['avg_triple_count']:.2f})")
+
+
+def print_case_matrix(reports: list[tuple[str, Path, List[dict]]], difficulty_map: Dict[str, str]) -> None:
+    print_header("Per-Case Three-Way Comparison")
+    indexed = [(name, index_by_case(items)) for name, _, items in reports]
+    all_cases = sorted(set().union(*(set(rows.keys()) for _, rows in indexed)))
+
+    print(
+        f"{'case_id':8} | {'LLM cov':7} | {'Graph cov':9} | {'KGE cov':7} | "
+        f"{'winner':10} | {'LLM nodes':9} | {'Graph nodes':11} | {'KGE nodes':9} | {'difficulty':10}"
+    )
+    print("-" * 112)
+    for case_id in all_cases:
+        rows = {name: by_case.get(case_id) for name, by_case in indexed}
+        covs = {
+            "LLM-only": coverage(rows.get("LLM-only")),
+            "GraphRag": coverage(rows.get("GraphRag")),
+            "KGE-hybrid": coverage(rows.get("KGE-hybrid")),
+        }
+        best = max(covs.values())
+        winners = [name for name, value in covs.items() if value == best]
+        winner = "tie" if len(winners) > 1 else winners[0]
+        print(
+            f"{case_id:8} | "
+            f"{covs['LLM-only']:7.4f} | "
+            f"{covs['GraphRag']:9.4f} | "
+            f"{covs['KGE-hybrid']:7.4f} | "
+            f"{winner:10} | "
+            f"{node_count(rows.get('LLM-only')):9d} | "
+            f"{node_count(rows.get('GraphRag')):11d} | "
+            f"{node_count(rows.get('KGE-hybrid')):9d} | "
+            f"{difficulty_map.get(case_id, 'N/A'):10}"
         )
 
 
-def print_unknown_diffs(base_items: List[dict], target_items: List[dict], field: str, top_n: int = 15) -> None:
-    base_counter = collect_unknowns(base_items, field)
-    target_counter = collect_unknowns(target_items, field)
-    all_uris = set(base_counter) | set(target_counter)
-    diffs: List[Tuple[str, int, int, int]] = []
-    for uri in all_uris:
-        b = base_counter.get(uri, 0)
-        t = target_counter.get(uri, 0)
-        diffs.append((uri, b, t, t - b))
-    diffs.sort(key=lambda x: (abs(x[3]), x[0]), reverse=True)
+def emit_report(reports: list[tuple[str, Path, List[dict]]], test_cases_path: Path) -> None:
+    print("Reports")
+    print("-------")
+    for name, path, _ in reports:
+        print(f"{name:10}: {path}")
+    print(f"Test cases: {test_cases_path}")
 
-    print_header(f"Top {top_n} Delta in {field}")
-    print(f"{'delta':7} | {'base_count':10} | {'target_count':12} | uri")
-    print("-" * 90)
-    shown = 0
-    for uri, b, t, d in diffs:
-        if d == 0:
-            continue
-        print(f"{d:+7d} | {b:10d} | {t:12d} | {uri}")
-        shown += 1
-        if shown >= top_n:
-            break
-    if shown == 0:
-        print("No difference.")
+    print_overall(reports)
+    print_case_matrix(reports, load_difficulty_map(test_cases_path))
 
 
 class Tee(io.TextIOBase):
@@ -217,87 +175,35 @@ class Tee(io.TextIOBase):
             stream.flush()
 
 
-def emit_report(
-    base_path: Path,
-    target_path: Path,
-    test_cases_path: Path,
-    base_items: List[dict],
-    target_items: List[dict],
-    base_name: str,
-    target_name: str,
-    top_n: int,
-) -> None:
-    base_metrics = aggregate_metrics(base_items)
-    target_metrics = aggregate_metrics(target_items)
-    base_by_case = index_by_case(base_items)
-    target_by_case = index_by_case(target_items)
-    difficulty_map = load_difficulty_map(test_cases_path)
-
-    print(f"Base report   : {base_path}")
-    print(f"Target report : {target_path}")
-    print(f"Test cases    : {test_cases_path}")
-
-    print_overall(base_metrics, target_metrics, base_name, target_name)
-    compare_cases(base_by_case, target_by_case, difficulty_map)
-    print_unknown_diffs(base_items, target_items, "unknown_predicates", top_n=top_n)
-    print_unknown_diffs(base_items, target_items, "unknown_types", top_n=top_n)
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Compare two GraphRAG evaluation reports (JSON arrays) and print terminal tables."
+        description="Compare three phase1 reports for LLM-only, GraphRag, and KGE-hybrid."
     )
-    parser.add_argument("--base", required=True, help="Path to baseline report JSON (e.g., GraphRag/report.json)")
-    parser.add_argument("--target", required=True, help="Path to target report JSON (e.g., report_kge.json)")
-    parser.add_argument("--base-name", default="base", help="Display name for baseline report")
-    parser.add_argument("--target-name", default="target", help="Display name for target report")
     parser.add_argument(
         "--test-cases",
-        default="GraphRag/test_cases.json",
-        help="Path to test cases JSON with id->complexity mapping",
+        default=None,
+        help="Path to test cases JSON with id->complexity mapping (default: test_cases_20.json)",
     )
-    parser.add_argument("--top-n", type=int, default=15, help="Top N rows for unknown deltas")
     parser.add_argument(
         "--out",
-        default=None,
-        help="If set, also write the comparison text report to this file",
+        default=str(PHASE1_DIR / "compare_three_way.txt"),
+        help="Output text report path (default: phase1/compare_three_way.txt)",
     )
     args = parser.parse_args()
 
-    base_path = Path(args.base).expanduser().resolve()
-    target_path = Path(args.target).expanduser().resolve()
-    test_cases_path = Path(args.test_cases).expanduser().resolve()
-    base_items = load_report(base_path)
-    target_items = load_report(target_path)
+    test_cases_path = Path(args.test_cases).expanduser().resolve() if args.test_cases else ROOT / "test_cases_20.json"
     out_path = Path(args.out).expanduser().resolve() if args.out else None
+    reports = [(name, path, load_report(path)) for name, path in DEFAULT_REPORTS]
 
     if out_path is None:
-        emit_report(
-            base_path,
-            target_path,
-            test_cases_path,
-            base_items,
-            target_items,
-            args.base_name,
-            args.target_name,
-            args.top_n,
-        )
+        emit_report(reports, test_cases_path)
         return
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     buffer = io.StringIO()
     tee = Tee(sys.stdout, buffer)
     with redirect_stdout(tee):
-        emit_report(
-            base_path,
-            target_path,
-            test_cases_path,
-            base_items,
-            target_items,
-            args.base_name,
-            args.target_name,
-            args.top_n,
-        )
+        emit_report(reports, test_cases_path)
 
     out_path.write_text(buffer.getvalue(), encoding="utf-8")
     print(f"\nSaved comparison report to: {out_path}")

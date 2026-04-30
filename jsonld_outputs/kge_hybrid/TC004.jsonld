@@ -1,0 +1,47 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc004",
+  "name": "Office Bandwidth Priority Intent",
+  "description": "Set the bandwidth priority to the highest for the office building during weekdays from 08:00 to 18:00.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-priority-01",
+      "name": "Bandwidth Priority Expectation",
+      "description": "The bandwidth priority for the office building must be set to the highest during specified hours.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "resource-office-building-bandwidth",
+        "name": "Office Building Bandwidth",
+        "@type": "Resource"
+      },
+      "expectationTarget": [
+        {
+          "name": "Highest Bandwidth Priority",
+          "targetProperty": "priority",
+          "matchCondition": "EQUALS",
+          "targetValue": {
+            "value": "highest",
+            "unit": ""
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-weekday-working-hours-01",
+      "name": "Weekday Working Hours",
+      "@type": "TimeContext",
+      "value": "08:00-18:00"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

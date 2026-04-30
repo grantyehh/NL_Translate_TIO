@@ -1,0 +1,69 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc020",
+  "name": "Remote Surgery Performance Intent",
+  "description": "Ensure control signal latency is below 5ms and 8K video streaming remains uninterrupted during remote surgery.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-latency-01",
+      "name": "Control Signal Latency Expectation",
+      "description": "Control signal latency must be below 5ms during remote surgery.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-control-signal",
+        "name": "Control Signal",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Control Signal Latency",
+          "targetProperty": "latency",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 5,
+            "unit": "ms"
+          }
+        }
+      ]
+    },
+    {
+      "id": "exp-video-continuity-01",
+      "name": "8K Video Streaming Continuity Expectation",
+      "description": "8K video streaming must remain uninterrupted during remote surgery.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-8k-video-streaming",
+        "name": "8K Video Streaming",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Video Streaming Continuity",
+          "targetProperty": "availability",
+          "matchCondition": "EQUALS",
+          "targetValue": {
+            "value": 100,
+            "unit": "percent"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-remote-surgery-01",
+      "name": "Remote Surgery Context",
+      "@type": "EventContext",
+      "value": "remote_surgery"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

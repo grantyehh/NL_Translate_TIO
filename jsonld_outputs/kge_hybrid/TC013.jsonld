@@ -1,0 +1,47 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc013",
+  "name": "Enterprise Backup Traffic Bandwidth Limit Intent",
+  "description": "Limit enterprise backup traffic bandwidth to below 200 Mbps every night from 23:00 to 06:00.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-bandwidth-limit-01",
+      "name": "Backup Traffic Bandwidth Limit",
+      "description": "Backup traffic must stay below 200 Mbps during the specified time window.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-enterprise-backup-traffic",
+        "name": "Enterprise Backup Traffic",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Bandwidth Limit",
+          "targetProperty": "bandwidth",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 200,
+            "unit": "Mbps"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-night-time-01",
+      "name": "Night Time Window",
+      "@type": "TimeContext",
+      "value": "23:00_to_06:00"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

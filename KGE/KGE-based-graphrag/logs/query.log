@@ -2824,3 +2824,682 @@
   "tokens_per_response": 0.0,
   "cost_per_response": 0.0
 }
+2026-04-29 16:17:32.0164 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:17:38.0674 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 1.8840219974517822,
+  "compute_duration_per_response_seconds": 1.8840219974517822,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 286,
+  "total_tokens": 286,
+  "tokens_per_response": 286.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:17:38.0674 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:17:47.0678 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:17:57.0820 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.3456118106842041,
+  "compute_duration_per_response_seconds": 0.3456118106842041,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 299,
+  "total_tokens": 299,
+  "tokens_per_response": 299.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:17:57.0820 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:18:06.0735 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:18:18.0834 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.3395659923553467,
+  "compute_duration_per_response_seconds": 0.3395659923553467,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 294,
+  "total_tokens": 294,
+  "tokens_per_response": 294.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:18:18.0834 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:18:26.0706 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:18:53.0402 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.39833974838256836,
+  "compute_duration_per_response_seconds": 0.39833974838256836,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 307,
+  "total_tokens": 307,
+  "tokens_per_response": 307.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:18:53.0402 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:19:00.0910 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:19:28.0793 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.5550112724304199,
+  "compute_duration_per_response_seconds": 0.5550112724304199,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 296,
+  "total_tokens": 296,
+  "tokens_per_response": 296.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:19:28.0793 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:19:38.0479 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:20:04.0487 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.7191753387451172,
+  "compute_duration_per_response_seconds": 0.7191753387451172,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 296,
+  "total_tokens": 296,
+  "tokens_per_response": 296.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:20:04.0487 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:20:11.0874 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:20:41.0058 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.3692290782928467,
+  "compute_duration_per_response_seconds": 0.3692290782928467,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 293,
+  "total_tokens": 293,
+  "tokens_per_response": 293.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:20:41.0058 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:20:48.0840 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:21:15.0064 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.36366891860961914,
+  "compute_duration_per_response_seconds": 0.36366891860961914,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 294,
+  "total_tokens": 294,
+  "tokens_per_response": 294.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:21:15.0064 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:21:23.0280 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:21:50.0917 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.30394506454467773,
+  "compute_duration_per_response_seconds": 0.30394506454467773,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 302,
+  "total_tokens": 302,
+  "tokens_per_response": 302.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:21:50.0917 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:21:58.0883 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:22:25.0128 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.4729187488555908,
+  "compute_duration_per_response_seconds": 0.4729187488555908,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 295,
+  "total_tokens": 295,
+  "tokens_per_response": 295.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:22:25.0128 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:22:32.0752 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:23:01.0347 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.3532280921936035,
+  "compute_duration_per_response_seconds": 0.3532280921936035,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 309,
+  "total_tokens": 309,
+  "tokens_per_response": 309.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:23:01.0347 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:23:09.0037 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:23:37.0850 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.37653517723083496,
+  "compute_duration_per_response_seconds": 0.37653517723083496,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 308,
+  "total_tokens": 308,
+  "tokens_per_response": 308.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:23:37.0850 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:24:11.0213 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.38225293159484863,
+  "compute_duration_per_response_seconds": 0.38225293159484863,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 303,
+  "total_tokens": 303,
+  "tokens_per_response": 303.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:24:11.0213 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:24:18.0218 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:24:48.0866 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.3424229621887207,
+  "compute_duration_per_response_seconds": 0.3424229621887207,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 329,
+  "total_tokens": 329,
+  "tokens_per_response": 329.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:24:48.0866 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:24:58.0782 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:25:25.0043 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.5525939464569092,
+  "compute_duration_per_response_seconds": 0.5525939464569092,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 296,
+  "total_tokens": 296,
+  "tokens_per_response": 296.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:25:25.0043 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:25:32.0153 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:25:59.0031 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.33914804458618164,
+  "compute_duration_per_response_seconds": 0.33914804458618164,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 305,
+  "total_tokens": 305,
+  "tokens_per_response": 305.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:25:59.0031 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:26:07.0449 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:26:34.0021 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.5045719146728516,
+  "compute_duration_per_response_seconds": 0.5045719146728516,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 287,
+  "total_tokens": 287,
+  "tokens_per_response": 287.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:26:34.0021 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:26:40.0761 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:27:10.0995 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.3026008605957031,
+  "compute_duration_per_response_seconds": 0.3026008605957031,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 320,
+  "total_tokens": 320,
+  "tokens_per_response": 320.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:27:10.0995 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:27:21.0948 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:27:47.0036 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.3623349666595459,
+  "compute_duration_per_response_seconds": 0.3623349666595459,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 323,
+  "total_tokens": 323,
+  "tokens_per_response": 323.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:27:47.0036 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:27:56.0318 - WARNING - graphrag.query.structured_search.local_search.mixed_context - Reached token limit - reverting to previous context state
+2026-04-29 16:28:21.0497 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/text-embedding-ada-002: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0.5058629512786865,
+  "compute_duration_per_response_seconds": 0.5058629512786865,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 0,
+  "responses_with_tokens": 1,
+  "prompt_tokens": 323,
+  "total_tokens": 323,
+  "tokens_per_response": 323.0,
+  "cost_per_response": 0.0
+}
+2026-04-29 16:28:21.0497 - INFO - graphrag_llm.metrics.log_metrics_writer - Metrics for openai/gpt-4o: {
+  "attempted_request_count": 1,
+  "successful_response_count": 1,
+  "failed_response_count": 0,
+  "failure_rate": 0.0,
+  "requests_with_retries": 0,
+  "retries": 0,
+  "retry_rate": 0.0,
+  "compute_duration_seconds": 0,
+  "compute_duration_per_response_seconds": 0.0,
+  "cache_hit_rate": 0.0,
+  "streaming_responses": 1,
+  "tokens_per_response": 0.0,
+  "cost_per_response": 0.0
+}

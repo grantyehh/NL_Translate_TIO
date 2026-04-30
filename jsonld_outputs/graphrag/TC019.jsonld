@@ -1,0 +1,52 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc019",
+  "name": "Energy Saving Mode for Small Cells Intent",
+  "description": "Switch small cells in the business district to energy-saving mode between 01:00 and 05:00 if no high-priority business is present.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-energy-mode-01",
+      "name": "Energy Saving Mode Activation",
+      "description": "Activate energy-saving mode for small cells if no high-priority business is detected.",
+      "@type": "DeliveryExpectation",
+      "expectationObject": {
+        "id": "resource-small-cell-business-district",
+        "name": "Business District Small Cells",
+        "@type": "Resource"
+      },
+      "expectationTarget": [
+        {
+          "name": "Energy Mode",
+          "targetProperty": "energyMode",
+          "matchCondition": "EQUALS",
+          "targetValue": {
+            "value": "energy-saving"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-time-01",
+      "name": "Early Morning Time Window",
+      "@type": "TimeContext",
+      "value": "01:00-05:00"
+    },
+    {
+      "id": "ctx-condition-01",
+      "name": "No High-Priority Business Condition",
+      "@type": "ConditionContext",
+      "value": "no_high_priority_business"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc005",
+  "name": "Base Station Load and Video Streaming Bandwidth Control Intent",
+  "description": "Automatically restrict non-essential video streaming bandwidth if the base station load exceeds 80%.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-condition-01",
+      "name": "Base Station Load Condition",
+      "description": "Condition where the base station load exceeds 80%.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "resource-base-station",
+        "name": "Base Station",
+        "@type": "Resource"
+      },
+      "expectationTarget": [
+        {
+          "name": "Base Station Load",
+          "targetProperty": "load",
+          "matchCondition": "GREATER_THAN",
+          "targetValue": {
+            "value": 80,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "id": "exp-action-01",
+      "name": "Video Streaming Bandwidth Restriction",
+      "description": "Restrict bandwidth for non-essential video streaming when the condition is met.",
+      "@type": "DeliveryExpectation",
+      "expectationObject": {
+        "id": "service-non-essential-video-streaming",
+        "name": "Non-Essential Video Streaming",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Bandwidth Restriction",
+          "targetProperty": "bandwidth",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 0,
+            "unit": "Mbps"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

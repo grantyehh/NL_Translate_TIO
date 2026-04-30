@@ -1,0 +1,46 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc007",
+  "name": "Tainan Science Park 5G Indoor Coverage Intent",
+  "description": "Deploy new indoor 5G coverage services in the Tainan Science Park.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-delivery-01",
+      "name": "5G Indoor Coverage Deployment",
+      "description": "Deliver indoor 5G coverage service in the Tainan Science Park.",
+      "@type": "DeliveryExpectation",
+      "expectationObject": {
+        "id": "service-5g-indoor-coverage",
+        "name": "5G Indoor Coverage Service",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Deployment Location",
+          "targetProperty": "location",
+          "matchCondition": "EQUALS",
+          "targetValue": {
+            "value": "Tainan Science Park"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-location-01",
+      "name": "Tainan Science Park",
+      "@type": "LocationContext",
+      "value": "Tainan Science Park"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

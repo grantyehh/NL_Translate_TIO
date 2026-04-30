@@ -1,0 +1,59 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc018",
+  "name": "Factory Sensor Packet Loss Mitigation Intent",
+  "description": "Immediately enhance wireless resource allocation if factory sensor packet loss exceeds 3% for 5 consecutive minutes.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-packet-loss-01",
+      "name": "Packet Loss Monitoring",
+      "description": "Monitor packet loss rate of factory wireless sensors.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "resource-factory-wireless-sensors",
+        "name": "Factory Wireless Sensors",
+        "@type": "Resource"
+      },
+      "expectationTarget": [
+        {
+          "name": "Packet Loss Rate",
+          "targetProperty": "packetLoss",
+          "matchCondition": "GREATER_THAN",
+          "targetValue": {
+            "value": 3,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "id": "exp-resource-enhancement-01",
+      "name": "Wireless Resource Enhancement",
+      "description": "Enhance wireless resource allocation in the affected area.",
+      "@type": "DeliveryExpectation",
+      "expectationObject": {
+        "id": "resource-enhancement-action",
+        "name": "Wireless Resource Enhancement Action",
+        "@type": "Action"
+      },
+      "expectationTarget": []
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-time-01",
+      "name": "Consecutive Monitoring Duration",
+      "@type": "TimeContext",
+      "value": "PT5M"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

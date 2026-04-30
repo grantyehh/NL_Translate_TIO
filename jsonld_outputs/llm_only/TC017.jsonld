@@ -1,0 +1,40 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc017",
+  "name": "Smart Meter Data Daily Success Intent",
+  "description": "Ensure smart meter data is successfully reported at least once daily.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-daily-report-01",
+      "name": "Daily Data Reporting Expectation",
+      "description": "Smart meter data must be successfully reported at least once every day.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-smart-meter-data",
+        "name": "Smart Meter Data Service",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Daily Reporting Success",
+          "targetProperty": "reportingFrequency",
+          "matchCondition": "GREATER_THAN_OR_EQUAL",
+          "targetValue": {
+            "value": 1,
+            "unit": "times_per_day"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

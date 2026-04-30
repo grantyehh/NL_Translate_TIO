@@ -1,0 +1,62 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc002",
+  "name": "Gaming User Performance Intent",
+  "description": "Ensure all gaming users have a download speed greater than 100 Mbps and latency less than 10 ms.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-throughput-01",
+      "name": "Download Speed Expectation",
+      "description": "Ensure download speed is greater than 100 Mbps for all gaming users.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-gaming-users",
+        "name": "Gaming Users",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Download Speed",
+          "targetProperty": "throughput",
+          "matchCondition": "GREATER_THAN",
+          "targetValue": {
+            "value": 100,
+            "unit": "Mbps"
+          }
+        }
+      ]
+    },
+    {
+      "id": "exp-latency-01",
+      "name": "Latency Expectation",
+      "description": "Ensure latency is less than 10 ms for all gaming users.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-gaming-users",
+        "name": "Gaming Users",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Latency",
+          "targetProperty": "latency",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 10,
+            "unit": "ms"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

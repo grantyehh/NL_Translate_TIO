@@ -14,10 +14,30 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
-from evaluate_ttl import ONTOLOGY_PREFIX_PREAMBLE  # noqa: E402
 from kge.paths import ONTOLOGY_DIR  # noqa: E402
 
 TIO_BASE = "http://tio.models.tmforum.org/tio/v3.6.0/"
+ONTOLOGY_PREFIX_PREAMBLE = """
+@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix fun:  <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix math: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions/> .
+@prefix mf:   <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions> .
+@prefix set:  <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix met:  <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix ig:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix pbi:  <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix pro:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix t:    <http://www.w3.org/2006/time#> .
+"""
 
 # Skip metadata predicates that add noise / external IRIs for structural KGE
 SKIP_PREDICATE_PREFIXES = (

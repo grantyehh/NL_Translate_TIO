@@ -1,0 +1,40 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc016",
+  "name": "Financial Transaction API Traffic Encryption Intent",
+  "description": "Ensure financial transaction API traffic is transmitted only through dedicated slices with encryption protection.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-delivery-01",
+      "name": "Encrypted Dedicated Slice Delivery",
+      "description": "Deliver financial transaction API traffic through dedicated slices with encryption.",
+      "@type": "DeliveryExpectation",
+      "expectationObject": {
+        "id": "service-financial-transaction-api",
+        "name": "Financial Transaction API Traffic",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Dedicated Slice with Encryption",
+          "targetProperty": "encryption",
+          "matchCondition": "EQUALS",
+          "targetValue": {
+            "value": true,
+            "unit": "boolean"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

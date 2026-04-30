@@ -18,7 +18,6 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
-from evaluate_ttl import TIO_PREFIXES  # noqa: E402
 from kge.paths import (  # noqa: E402
     ENTITY_IDS_JSON,
     ENTITY_KGE_EMB_NPY,
@@ -28,6 +27,22 @@ from kge.paths import (  # noqa: E402
 from kge.tio_triples import entity_text_description, load_merged_ontology_graph  # noqa: E402
 
 load_dotenv(_PROJECT_ROOT / ".env")
+
+TIO_PREFIXES = {
+    "icm": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+    "imo": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+    "fun": "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/",
+    "log": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+    "math": "http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions/",
+    "mf": "http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions",
+    "set": "http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/",
+    "met": "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/",
+    "quan": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+    "ig": "http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/",
+    "insp": "http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/",
+    "pbi": "http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/",
+    "pro": "http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/",
+}
 
 # Retrieval hyperparameters (tuned for ontology size)
 TEXT_TOP_SEED = 8

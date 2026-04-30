@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "network-env": {
+      "command": "bun",
+      "args": ["run", "mcps/network-env/src/index.ts"]
+    },
+    "tio-validator": {
+      "command": "bun",
+      "args": ["run", "mcps/tio-validator/src/index.ts"]
+    }
+  }
+}

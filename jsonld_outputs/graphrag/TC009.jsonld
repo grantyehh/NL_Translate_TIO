@@ -1,0 +1,39 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc009",
+  "name": "Emergency Services Traffic Priority Intent",
+  "description": "Ensure that communication traffic for fire and rescue units always has priority over general public traffic.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-priority-01",
+      "name": "Emergency Services Traffic Priority",
+      "description": "Fire and rescue communication traffic must always have higher priority than general public traffic.",
+      "@type": "DeliveryExpectation",
+      "expectationObject": {
+        "id": "service-emergency-communication",
+        "name": "Emergency Communication Traffic",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Traffic Priority",
+          "targetProperty": "priority",
+          "matchCondition": "GREATER_THAN",
+          "targetValue": {
+            "value": "general-public-traffic"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

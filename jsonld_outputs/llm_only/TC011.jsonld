@@ -1,0 +1,53 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc011",
+  "name": "Concert Network Capacity Boost Intent",
+  "description": "Double the mobile network capacity around Taipei Arena during large concerts.",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-capacity-boost-01",
+      "name": "Network Capacity Boost",
+      "description": "Increase the mobile network capacity to twice the normal level during large concerts.",
+      "@type": "PropertyExpectation",
+      "expectationObject": {
+        "id": "service-mobile-network-taipei-arena",
+        "name": "Taipei Arena Mobile Network",
+        "@type": "Service"
+      },
+      "expectationTarget": [
+        {
+          "name": "Capacity Boost",
+          "targetProperty": "capacity",
+          "matchCondition": "EQUALS",
+          "targetValue": {
+            "value": 2,
+            "unit": "times_normal"
+          }
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "ctx-event-01",
+      "name": "Large Concert Event",
+      "@type": "EventContext",
+      "value": "large_concert"
+    },
+    {
+      "id": "ctx-location-01",
+      "name": "Taipei Arena Surroundings",
+      "@type": "LocationContext",
+      "value": "taipei_arena_surroundings"
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

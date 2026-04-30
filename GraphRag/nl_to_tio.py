@@ -45,12 +45,64 @@ def format_few_shot_block(examples: list[dict]) -> str:
     parts: list[str] = []
     for i, ex in enumerate(examples, 1):
         pat = ex.get("pattern", "")
+        jsonld = ex.get("jsonld", {})
+        if not isinstance(jsonld, str):
+            jsonld = json.dumps(jsonld, ensure_ascii=False, indent=2)
         parts.append(
             f"--- Example {i} ({pat}) ---\n"
             f"Natural language:\n{ex.get('nl_intent', '')}\n\n"
-            f"Turtle:\n{ex.get('turtle', '')}"
+            f"JSON-LD:\n{jsonld}"
         )
     return "\n\n".join(parts)
+
+
+def output_path_for_case(root: Path, tc_id: str) -> Path:
+    return root.parent / "jsonld_outputs" / "graphrag" / f"{tc_id}.jsonld"
+
+
+def build_system_prompt(tc_id: str) -> str:
+    return f"""你是一位資深的電信意圖 (Intent) 專家，精通 TM Forum Intent Ontology (TIO)、GraphRAG 檢索上下文與 JSON-LD API payload 設計。
+你的任務是將自然語言意圖轉換為 API-friendly TIO JSON-LD，不是 Turtle。
+
+【輸出目標】
+輸出一個完整 JSON object，可被 json.loads 解析，並作為下游 intent API / compiler 的輸入。
+不要輸出 Markdown、code fence、前言或後記。
+
+【必要 top-level 欄位】
+- "@context": 使用 "https://tmforum.org/schemas/intent-ontology/v1.jsonld"
+- "@type": "Intent"
+- "id": 使用可追蹤 ID，例如 "intent-{tc_id.lower()}"
+- "name": 簡短英文名稱
+- "description": 英文描述
+- "intentOwner": 物件，至少包含 id 與 name；未知時使用 ops-manager-01 / Network Operations Center
+- "intentExpectation": array，至少一個 expectation
+- "intentContext": array；沒有明確 context 時可為 []
+- "intentReport": 物件；沒有明確回報需求時使用 reportingInterval "PT5M" 與 handlerResponse "Continuous"
+
+【Expectation 結構】
+每個 intentExpectation 必須包含：
+- "id", "name", "description"
+- "@type": "DeliveryExpectation" 或 "PropertyExpectation"
+- "expectationObject": 被意圖作用的 service / traffic class / resource，至少包含 id, name, "@type"
+- "expectationTarget": array
+
+【PropertyExpectation target 結構】
+若是 latency、throughput、availability、bandwidth、priority 等屬性要求，expectationTarget 內每個 target 必須結構化表示：
+- "name"
+- "targetProperty": 例如 "latency", "throughput", "availability", "priority"
+- "matchCondition": enum，例如 "LESS_THAN", "LESS_THAN_OR_EQUAL", "GREATER_THAN", "GREATER_THAN_OR_EQUAL", "EQUALS"
+- "targetValue": 物件，數值型門檻使用 {{ "value": number, "unit": string }}
+
+【GraphRAG 使用方式】
+- GraphRAG 上下文用來協助選擇 TIO/intent 類型與欄位語意，但最終輸出仍必須是 JSON-LD。
+- 若上下文提供可用 service/resource id，優先放入 expectationObject.id。
+- 不要把檢索文字整段塞進 description；只抽取必要結構。
+
+【建模原則】
+- 核心語意必須放在 JSON 欄位，不可只寫在 description。
+- 若自然語言中有多個核心 requirement，拆成多個 intentExpectation。
+- 若有地點、時間、事件條件，放入 intentContext。
+"""
 
 
 def query_graphrag_local(query_text):
@@ -71,80 +123,19 @@ def query_graphrag_local(query_text):
         return None
 
 
-def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
+def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
     """
-    利用 LLM 將 NL Intent 和 GraphRAG Context 轉化為 Turtle 代碼。
-    few_shot_block: optional text of NL+Turtle examples (not from test_cases).
+    利用 LLM 將 NL Intent 和 GraphRAG Context 轉化為 TIO JSON-LD。
+    few_shot_block: optional text of NL+JSON-LD examples (not from test_cases).
     """
-    print(f"--- Step 2: Translating to TIO Turtle format for {tc_id} ---")
+    print(f"--- Step 2: Translating to TIO JSON-LD format for {tc_id} ---")
 
-    system_prompt = f"""你是一位資深的電信意圖 (Intent) 專家，精通 TM Forum Intent Ontology (TIO) v3.6.0。
-你的任務是將自然語言意圖轉換為符合 TIO 標準的 Turtle (RDF) 格式。
-
-【命名空間 — 必須與官方 TIO Turtle 模組一致】
-所有 TIO 詞彙（類別、屬性、函式等）必須使用下列 @prefix 所綁定的官方 IRI，字元級相同，不得改用其他 base、不得自創 namespace、不得把 icm:/imo:/fun: 指到 example.org 或 tmforum.org/ontologies 等非官方路徑：
-
-@prefix icm:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix imo:  <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix fun:  <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix log:  <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix math: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions/> .
-@prefix set:  <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix met:  <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix dct:  <http://purl.org/dc/terms/> .
-@prefix t:    <http://www.w3.org/2006/time#> .
-
-【實例 URI（個體／範例資源）】
-僅「實例節點」（具名個體，如某筆 Intent、Expectation、Target、Context、Condition）可使用與詞彙不同的 base。
-請優先使用下列 instance prefix，讓輸出保持緊湊且可讀：
-
-@prefix ex:   <http://example.org/tio-instance/{tc_id}/> .
-
-也就是說，請優先寫成 `ex:intent`、`ex:tgt`、`ex:exp-latency` 這類形式，而不是每次都展開完整 URI。
-`ex:` 僅用於實例節點，不可用來表達 TIO 詞彙本身。勿將實例 URI 的 local name 當成 TIO 類別或屬性名稱。
-
-【建模原則】
-你的輸出應採用中高粒度的 TIO 表示：
-- 核心語意必須結構化，補充語意才可寫入 rdfs:comment。
-- 每題都應有頂層 icm:Intent。
-- 每個核心 requirement 應建立對應的 Expectation。
-- 每個 Expectation 應透過 icm:target 連到明確的 icm:Target。
-- 若自然語言中有多個核心 requirement，應拆成多個 expectation，不要把多個核心約束全部塞進單一 comment。
-- 若自然語言中有時間窗口、事件進行中、門檻觸發等語意，優先建立 icm:Context 或 log:Condition 節點，而非只寫成 comment。
-
-【Expectation 類型選擇】
-- 交付、提供、新增服務或能力：優先使用 icm:DeliveryExpectation。
-- latency、throughput、availability、priority、bandwidth limit 等屬性要求：優先使用 icm:PropertyExpectation。
-- 若 GraphRAG 上下文不足以支撐更細分類，才退回較一般的 icm:Expectation。
-
-【值與門檻的表達】
-- 對高頻性能題型，優先顯式表達關鍵 target、expectation 與必要的值相關結構，不要只把閾值藏在 comment 中。
-- 若 testcase 或上下文明確暗示 target property values，優先考慮使用 icm:valuesOfTargetProperty。
-- 可使用 log:/quan:/met: 的高粒度 pattern，但只在語意明確且結構穩定時使用；不要為了看起來複雜而強行加入函式結構。
-- 若沒有足夠把握，寧可輸出穩定、合法、可解析的中高粒度圖結構，再用 comment 補充細節。
-
-【Few-shot 使用方式】
-若使用者訊息中提供 few-shot 範例，其情境與當前題目不同；請只學習前綴、CURIE、節點拆分、target 綁定、context/condition 用法與值表達方式，不要複製範例中的文字或個體內容。
-
-【禁止事項】
-- 禁止輸出 Markdown 或 code fence（例如 ```turtle）。
-- 禁止在 Turtle 中使用非上列官方前綴來表達 TIO 已定義的類別與屬性。
-- 禁止自行發明非官方 predicate，例如 icm:hasValue、icm:hasProperty、icm:condition、icm:expectation。
-- 禁止把所有核心語意都只放在 rdfs:comment。
-- 不要只因某個 ontology 模組中存在某詞，就在沒有明確語意依據時強行使用該詞。
-
-【輸出格式】
-僅輸出完整、可解析的 Turtle；第一行即可為 @prefix，不要任何前言或後記。"""
+    system_prompt = build_system_prompt(tc_id)
 
     few_shot_section = ""
     if few_shot_block.strip():
         few_shot_section = (
-            "【Few-shot 範例（與本題不同情境；請學結構，勿抄內容）】\n"
+            "【Few-shot JSON-LD 範例（與本題不同情境；請學結構，勿抄內容）】\n"
             f"{few_shot_block}\n\n"
         )
 
@@ -155,7 +146,7 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
 相關 TIO 知識上下文：
 {context}
 
-請生成對應的 Turtle 代碼：
+請生成對應的 TIO JSON-LD：
 """
 
     try:
@@ -167,16 +158,18 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
             ],
             temperature=0,
         )
-        turtle_code = response.choices[0].message.content.strip()
-        return turtle_code
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         return None
 
 
+generate_turtle_code = generate_jsonld_code
+
+
 def main() -> None:
     root = Path(__file__).resolve().parent
-    parser = argparse.ArgumentParser(description="NL to TIO Turtle via GraphRAG + OpenAI.")
+    parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via GraphRAG + OpenAI.")
     parser.add_argument(
         "--test-cases",
         type=Path,
@@ -187,7 +180,7 @@ def main() -> None:
         "--few-shot",
         type=Path,
         default=default_few_shot_path(root),
-        help="Few-shot NL+Turtle examples JSON (default: ../few_shot_samples.json); omit file to disable",
+        help="Few-shot NL+JSON-LD examples JSON (default: ../few_shot_samples.json); omit file to disable",
     )
     parser.add_argument(
         "--no-few-shot",
@@ -213,7 +206,7 @@ def main() -> None:
         else:
             print(f"No few-shot examples loaded (missing or empty: {few_shot_path})")
 
-    output_dir = root / "tio_outputs"
+    output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for tc in test_cases:
@@ -231,19 +224,19 @@ def main() -> None:
         tio_context = query_graphrag_local(query_text)
 
         if tio_context:
-            turtle_result = generate_turtle_code(
+            jsonld_result = generate_jsonld_code(
                 tc["nl_intent"],
                 tio_context,
                 tc["id"],
                 few_shot_block,
             )
 
-            if turtle_result:
-                file_path = output_dir / f"{tc['id']}.ttl"
-                file_path.write_text(turtle_result, encoding="utf-8")
-                print(f"Successfully saved Turtle to: {file_path}")
+            if jsonld_result:
+                file_path = output_path_for_case(root, tc["id"])
+                file_path.write_text(jsonld_result, encoding="utf-8")
+                print(f"Successfully saved JSON-LD to: {file_path}")
                 print("-" * 30)
-                print(turtle_result)
+                print(jsonld_result)
                 print("-" * 30)
 
 
