@@ -4,6 +4,7 @@ import subprocess
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 
 os.environ.setdefault("OPENAI_API_KEY", "test-key")
@@ -33,6 +34,11 @@ class TestKgePaths(unittest.TestCase):
         root = Path("/tmp/example/CHT/KGE/KGE-based-graphrag")
         expected = Path("/tmp/example/CHT/few_shot_samples.json").resolve()
         self.assertEqual(nl_to_tio.default_few_shot_path(root), expected)
+
+    def test_shared_graphrag_root_points_to_graph_rag_index(self) -> None:
+        root = Path("/tmp/example/CHT/KGE/KGE-based-graphrag")
+        expected = Path("/tmp/example/CHT/GraphRag").resolve()
+        self.assertEqual(nl_to_tio.shared_graphrag_root(root), expected)
 
     def test_format_few_shot_block_uses_json_ld_examples(self) -> None:
         examples = [
@@ -79,6 +85,19 @@ class TestKgePaths(unittest.TestCase):
         )
 
         self.assertEqual(result.stdout.strip(), "icm:Intent")
+
+    def test_query_graphrag_local_uses_shared_graph_rag_root(self) -> None:
+        shared_root = Path("/tmp/example/CHT/GraphRag")
+        completed = Mock(stdout="context")
+
+        with patch.object(nl_to_tio.subprocess, "run", return_value=completed) as run:
+            result = nl_to_tio.query_graphrag_local("query text", shared_root)
+
+        self.assertEqual(result, "context")
+        args = run.call_args.args[0]
+        self.assertEqual(args[:4], ["graphrag", "query", "--root", str(shared_root)])
+        self.assertIn("--method", args)
+        self.assertIn("local", args)
 
 
 if __name__ == "__main__":

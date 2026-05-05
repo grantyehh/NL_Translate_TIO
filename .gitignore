@@ -3,3 +3,12 @@
 __pycache__/
 *.py[cod]
 .DS_Store
+
+# GraphRAG generated artifacts
+GraphRag/cache/
+GraphRag/output/
+GraphRag/logs/
+graphrag_term_input/
+
+# KGE generated artifacts
+KGE/KGE-based-graphrag/kge_data/

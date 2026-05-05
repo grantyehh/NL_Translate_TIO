@@ -40,7 +40,7 @@ chunking:
 ### Storage settings ###
 input_storage:
   type: file
-  base_dir: "../graphrag_input"
+  base_dir: "../graphrag_term_input"
 
 output_storage:
   type: file
@@ -67,7 +67,7 @@ embed_text:
 
 extract_graph:
   completion_model_id: default_completion_model
-  entity_types: [Intent, Expectation, Target, Metric, Context]
+  entity_types: [Intent, Expectation, Target, Metric, Context, Tenant, Service, Topology, Site, Scope, Statistic, MeasurementMethod, TimeWindow]
   max_gleanings: 1
 
 summarize_descriptions:

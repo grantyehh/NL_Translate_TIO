@@ -32,6 +32,12 @@ def default_test_cases_path(root: Path) -> Path:
 def default_few_shot_path(root: Path) -> Path:
     return (root.parent.parent / "few_shot_samples.json").resolve()
 
+
+def shared_graphrag_root(root: Path) -> Path:
+    """Return the shared GraphRAG index root used by both GraphRAG and KGE-hybrid."""
+    return (root.parent.parent / "GraphRag").resolve()
+
+
 def load_few_shot_samples(path: Path) -> list[dict]:
     if not path.is_file():
         return []
@@ -103,14 +109,15 @@ def build_system_prompt(tc_id: str) -> str:
 - 若有地點、時間、事件條件，放入 intentContext。
 """
 
-def query_graphrag_local(query_text):
+def query_graphrag_local(query_text, graph_root: Path | None = None):
     """
-    呼叫 GraphRAG 的 local search 獲取 TIO 相關的 Schema 上下文。
+    呼叫共用 GraphRAG local search 獲取 TIO 相關的 Schema 上下文。
     """
     print(f"--- Step 1: Querying GraphRAG for TIO context ---")
+    root_arg = str(graph_root or shared_graphrag_root(Path(__file__).resolve().parent))
     try:
         result = subprocess.run(
-            ["graphrag", "query", "--root", ".", "--method", "local", query_text],
+            ["graphrag", "query", "--root", root_arg, "--method", "local", query_text],
             capture_output=True,
             text=True,
             check=True
@@ -213,6 +220,7 @@ def main() -> None:
 
     output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
+    graph_root = shared_graphrag_root(root)
 
     if not kge_hybrid_ready():
         print(
@@ -234,7 +242,7 @@ def main() -> None:
             "不要自行發明 Java 風格的 hasX 名稱，除非本體中確實定義該名稱。\n"
             "- 簡要說明各術語在意圖中的角色，以及建議的個體／關聯方向。"
         )
-        tio_context = query_graphrag_local(query_text)
+        tio_context = query_graphrag_local(query_text, graph_root)
 
         kge_context = format_kge_context_for_prompt(tc["nl_intent"])
 

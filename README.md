@@ -38,13 +38,17 @@ export GRAPHRAG_API_KEY=your_key_here
 export OPENAI_API_KEY=your_key_here
 ```
 
-`GraphRag/` 與 `KGE/KGE-based-graphrag/` 需要已有 GraphRAG index。如果沒有，先在各自目錄執行：
+`GraphRag/` 與 `KGE/KGE-based-graphrag/` 共用同一份 GraphRAG index。TTL 變更後先用 RDF parser 產生 term-level GraphRAG input，再只在 `GraphRag/` 建一次 index：
 
 ```bash
+python3 GraphRag/build_graphrag_input.py
+cd /Users/grantyeh/Grant/Project/CHT/GraphRag
 graphrag index --root .
 ```
 
-KGE 線如果要重建 KGE artifacts，先執行：
+`GraphRag/build_graphrag_input.py` 會讀取 `TM Forum Intent Ontology/*.ttl`，保留 `rdfs:comment`、`rdfs:subClassOf`、`rdfs:domain`、`rdfs:range` 等 RDF 結構，輸出到 `graphrag_term_input/`。
+
+KGE 線會查詢上面這份共用 GraphRAG index，另外只需要自己的 KGE artifacts。如果 ontology 有變更或 artifacts 不存在，再執行：
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT/KGE/KGE-based-graphrag

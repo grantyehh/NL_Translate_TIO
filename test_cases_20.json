@@ -1,162 +1,1401 @@
 [
   {
     "id": "TC001",
-    "category": "Connectivity",
+    "category": "Hub-Spoke SLA",
     "complexity": "Simple",
-    "nl_intent": "在台北和台中之間建立一個 5G 切片服務。",
-    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
-    "description": "測試基本的交付需求（DeliveryExpectation）與地理目標（Target）。"
+    "tenant": "星河銀行",
+    "scope": {
+      "hub": "台北總部",
+      "spokes": [
+        "新竹分行",
+        "台中分行",
+        "高雄分行"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 50,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試租戶、總部到多個分點、延遲門檻與95%時間遵循率。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "星河銀行 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC002",
-    "category": "Performance",
-    "complexity": "Medium",
-    "nl_intent": "保證所有電競用戶的下行速度高於 100Mbps 且延遲小於 10ms。",
-    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target", "icm:valuesOfTargetProperty"],
-    "description": "測試屬性需求（PropertyExpectation）與多個指標的映射。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Simple",
+    "tenant": "遠東製造",
+    "scope": {
+      "hub": "桃園總廠",
+      "spokes": [
+        "新竹廠",
+        "台中廠",
+        "台南廠"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 0.1,
+          "unit": "%"
+        },
+        "compliance_window": {
+          "percentage": 99,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:packetLoss",
+        "statistic": "evsla:p99",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保遠東製造Hub與各Spoke間封包遺失率低於0.1%（99%時間）。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試租戶、Hub到各Spoke、封包遺失率門檻與99%時間遵循率。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "遠東製造 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:p99",
+      "evsla:packetLoss",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC003",
-    "category": "Reliability",
-    "complexity": "Medium",
-    "nl_intent": "確保新竹園區的企業專網可用性達到 99.99%。",
-    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target"],
-    "description": "測試百分比指標與特定企業資源目標的關聯。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Simple",
+    "tenant": "宏海物流",
+    "scope": {
+      "hub": "台北營運中心",
+      "spokes": [
+        "高雄倉儲中心"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "operator": "GREATER_THAN_OR_EQUAL",
+        "threshold": {
+          "value": 100,
+          "unit": "Mbps"
+        },
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "statistic": "evsla:minimum",
+        "scope": "evsla:specificSpoke",
+        "measurement_method": "evsla:activeMeasurement",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "提供宏海物流總部至高雄倉儲中心100Mbps以上保證頻寬。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試指定單一分點的保證頻寬門檻。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "宏海物流 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:activeMeasurement",
+      "evsla:fiveMinuteWindow",
+      "evsla:guaranteedBandwidth",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:minimum",
+      "evsla:specificSpoke"
+    ]
   },
   {
     "id": "TC004",
-    "category": "Contextual",
-    "complexity": "Complex",
-    "nl_intent": "在平日上班時間（08:00-18:00），將辦公大樓的頻寬優先級設為最高。",
-    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:Expectation"],
-    "description": "測試時間上下文（Context）對意圖執行的影響。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "康健醫療",
+    "scope": {
+      "hub": "台北醫療雲中心",
+      "spokes": [
+        "林口院區",
+        "台中院區",
+        "高雄院區"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 30,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保康健醫療台北醫療雲中心至所有院區分點之延遲在95%的時間內低於30ms。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試醫療租戶多院區的低延遲 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "康健醫療 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC005",
-    "category": "Conditional",
-    "complexity": "Complex",
-    "nl_intent": "如果基站負載超過 80%，則自動限制非必要影音串流的頻寬。",
-    "expected_tio_elements": ["icm:Intent", "log:Condition", "icm:PropertyExpectation"],
-    "description": "測試以 log:Condition 表達觸發條件，並以 PropertyExpectation 表達頻寬限制。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "晨星零售",
+    "scope": {
+      "hub": "台北資料中心",
+      "spokes": [
+        "板橋旗艦店",
+        "台中公益店",
+        "台南西門店",
+        "高雄夢時代店"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 0.05,
+          "unit": "%"
+        },
+        "compliance_window": {
+          "percentage": 99,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:packetLoss",
+        "statistic": "evsla:p99",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保晨星零售Hub與各Spoke間封包遺失率低於0.05%（99%時間）。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試零售租戶多門市的封包遺失率 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "晨星零售 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:p99",
+      "evsla:packetLoss",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC006",
-    "category": "Performance",
+    "category": "Hub-Spoke SLA",
     "complexity": "Simple",
-    "nl_intent": "讓高雄港自動化吊車控制流量的延遲低於 5ms。",
-    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target"],
-    "description": "測試單一低延遲需求是否能映射到明確 target 與 property expectation。"
+    "tenant": "北辰證券",
+    "scope": {
+      "hub": "信義交易中心",
+      "spokes": [
+        "台中交易室"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "operator": "GREATER_THAN_OR_EQUAL",
+        "threshold": {
+          "value": 500,
+          "unit": "Mbps"
+        },
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "statistic": "evsla:minimum",
+        "scope": "evsla:specificSpoke",
+        "measurement_method": "evsla:activeMeasurement",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "提供北辰證券總部至台中交易室500Mbps以上保證頻寬。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試金融交易場域到指定分點的保證頻寬。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "北辰證券 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:activeMeasurement",
+      "evsla:fiveMinuteWindow",
+      "evsla:guaranteedBandwidth",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:minimum",
+      "evsla:specificSpoke"
+    ]
   },
   {
     "id": "TC007",
-    "category": "Coverage",
-    "complexity": "Simple",
-    "nl_intent": "為台南科學園區新增室內 5G 覆蓋服務。",
-    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
-    "description": "測試交付型需求對於新增服務或覆蓋能力的表達。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "海港航運",
+    "scope": {
+      "hub": "高雄港營運中心",
+      "spokes": [
+        "基隆港站",
+        "台中港站",
+        "花蓮港站"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 80,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保海港航運高雄港營運中心至所有港站分點之延遲在95%的時間內低於80ms。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試跨港站廣域場景的延遲 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "海港航運 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC008",
-    "category": "Performance",
+    "category": "Hub-Spoke SLA",
     "complexity": "Medium",
-    "nl_intent": "確保醫療影像上傳服務的上行吞吐量至少 500Mbps。",
-    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target", "icm:valuesOfTargetProperty"],
-    "description": "測試上行吞吐量等單一性能屬性的映射。"
+    "tenant": "晶耀半導體",
+    "scope": {
+      "hub": "新竹研發總部",
+      "spokes": [
+        "竹南封測廠",
+        "台中晶圓廠",
+        "台南先進製程廠"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 0.01,
+          "unit": "%"
+        },
+        "compliance_window": {
+          "percentage": 99,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:packetLoss",
+        "statistic": "evsla:p99",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保晶耀半導體Hub與各Spoke間封包遺失率低於0.01%（99%時間）。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試半導體租戶高可靠資料同步的封包遺失率 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "晶耀半導體 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:p99",
+      "evsla:packetLoss",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC009",
-    "category": "Priority",
-    "complexity": "Medium",
-    "nl_intent": "讓消防與救護單位的通訊流量永遠優先於一般民眾流量。",
-    "expected_tio_elements": ["icm:Intent", "icm:Target", "icm:Expectation"],
-    "description": "測試優先權與資源區分的自然語言描述。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Simple",
+    "tenant": "綠能電力",
+    "scope": {
+      "hub": "台北調度中心",
+      "spokes": [
+        "彰濱風場"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "operator": "GREATER_THAN_OR_EQUAL",
+        "threshold": {
+          "value": 200,
+          "unit": "Mbps"
+        },
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "statistic": "evsla:minimum",
+        "scope": "evsla:specificSpoke",
+        "measurement_method": "evsla:activeMeasurement",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "提供綠能電力總部至彰濱風場200Mbps以上保證頻寬。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試能源租戶到指定場站的保證頻寬。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "綠能電力 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:activeMeasurement",
+      "evsla:fiveMinuteWindow",
+      "evsla:guaranteedBandwidth",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:minimum",
+      "evsla:specificSpoke"
+    ]
   },
   {
     "id": "TC010",
-    "category": "Reliability",
+    "category": "Hub-Spoke SLA",
     "complexity": "Medium",
-    "nl_intent": "要求台中捷運監控網路全年可用度不低於 99.95%。",
-    "expected_tio_elements": ["icm:PropertyExpectation", "icm:Target"],
-    "description": "測試長時間尺度下的可用度要求。"
+    "tenant": "迅捷遊戲",
+    "scope": {
+      "hub": "台北遊戲雲中心",
+      "spokes": [
+        "板橋節點",
+        "台中節點",
+        "高雄節點"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 20,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保迅捷遊戲總部至所有分點之延遲在95%的時間內低於20ms。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試遊戲租戶低延遲 hub-spoke SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "迅捷遊戲 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC011",
-    "category": "Contextual",
-    "complexity": "Complex",
-    "nl_intent": "在大型演唱會舉辦期間，將小巨蛋周邊行動網路容量提升到平常的兩倍。",
-    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:PropertyExpectation"],
-    "description": "測試事件型上下文與容量擴充需求的結合。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "城市交通局",
+    "scope": {
+      "hub": "台北交通控制中心",
+      "spokes": [
+        "信義監控站",
+        "南港監控站",
+        "北投監控站"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 0.2,
+          "unit": "%"
+        },
+        "compliance_window": {
+          "percentage": 99,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:packetLoss",
+        "statistic": "evsla:p99",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保城市交通局Hub與各Spoke間封包遺失率低於0.2%（99%時間）。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試公共交通監控租戶的封包遺失率 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "城市交通局 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:p99",
+      "evsla:packetLoss",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC012",
-    "category": "Conditional",
-    "complexity": "Complex",
-    "nl_intent": "若資料中心主鏈路中斷，則在 30 秒內將流量切換到備援專線。",
-    "expected_tio_elements": ["icm:Intent", "log:Condition", "icm:DeliveryExpectation"],
-    "description": "測試故障觸發條件與交付型動作的結合。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Simple",
+    "tenant": "藍海保險",
+    "scope": {
+      "hub": "台北總公司",
+      "spokes": [
+        "花蓮服務中心"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "operator": "GREATER_THAN_OR_EQUAL",
+        "threshold": {
+          "value": 150,
+          "unit": "Mbps"
+        },
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "statistic": "evsla:minimum",
+        "scope": "evsla:specificSpoke",
+        "measurement_method": "evsla:activeMeasurement",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "提供藍海保險總部至花蓮服務中心150Mbps以上保證頻寬。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試保險租戶到指定服務中心的保證頻寬。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "藍海保險 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:activeMeasurement",
+      "evsla:fiveMinuteWindow",
+      "evsla:guaranteedBandwidth",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:minimum",
+      "evsla:specificSpoke"
+    ]
   },
   {
     "id": "TC013",
-    "category": "Scheduling",
-    "complexity": "Complex",
-    "nl_intent": "每晚 23:00 到隔天 06:00 期間，將企業備份流量限制在 200Mbps 以下。",
-    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:PropertyExpectation"],
-    "description": "測試跨日時間區間與頻寬上限的結合。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "雲端教育",
+    "scope": {
+      "hub": "台北教學平台中心",
+      "spokes": [
+        "新竹校區",
+        "台中校區",
+        "嘉義校區",
+        "高雄校區"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 60,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保雲端教育總部至所有校區分點之延遲在95%的時間內低於60ms。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試教育租戶多校區視訊教學延遲 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "雲端教育 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC014",
-    "category": "Multi-Constraint",
-    "complexity": "Complex",
-    "nl_intent": "為自駕車控制服務提供延遲低於 10ms、抖動低於 2ms、封包遺失率低於 0.1% 的連線品質。",
-    "expected_tio_elements": ["icm:Intent", "icm:PropertyExpectation", "icm:Target", "icm:valuesOfTargetProperty"],
-    "description": "測試同一 target 上多個性能約束同時出現時的表達。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "聯合媒體",
+    "scope": {
+      "hub": "內湖製播中心",
+      "spokes": [
+        "台中攝影棚",
+        "高雄攝影棚",
+        "宜蘭外景站"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 0.05,
+          "unit": "%"
+        },
+        "compliance_window": {
+          "percentage": 99,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:packetLoss",
+        "statistic": "evsla:p99",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保聯合媒體Hub與各Spoke間封包遺失率低於0.05%（99%時間）。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試媒體租戶製播傳輸的封包遺失率 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "聯合媒體 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:p99",
+      "evsla:packetLoss",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC015",
-    "category": "Segmented Users",
-    "complexity": "Medium",
-    "nl_intent": "讓 VIP 用戶的影音服務下載速度至少是一般用戶的兩倍。",
-    "expected_tio_elements": ["icm:Intent", "icm:Target", "icm:PropertyExpectation"],
-    "description": "測試不同使用者群組之間的相對性能要求。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Simple",
+    "tenant": "亞洲航空維修",
+    "scope": {
+      "hub": "桃園維修總部",
+      "spokes": [
+        "小港機棚"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "operator": "GREATER_THAN_OR_EQUAL",
+        "threshold": {
+          "value": 300,
+          "unit": "Mbps"
+        },
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "statistic": "evsla:minimum",
+        "scope": "evsla:specificSpoke",
+        "measurement_method": "evsla:activeMeasurement",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "提供亞洲航空維修總部至小港機棚300Mbps以上保證頻寬。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試航空維修租戶到指定機棚的保證頻寬。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "亞洲航空維修 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:activeMeasurement",
+      "evsla:fiveMinuteWindow",
+      "evsla:guaranteedBandwidth",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:minimum",
+      "evsla:specificSpoke"
+    ]
   },
   {
     "id": "TC016",
-    "category": "Security",
+    "category": "Hub-Spoke SLA",
     "complexity": "Medium",
-    "nl_intent": "要求金融交易 API 流量只能經過具備加密保護的專用切片傳輸。",
-    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
-    "description": "測試帶有安全性描述的交付型需求。"
+    "tenant": "智慧農業",
+    "scope": {
+      "hub": "雲林農業資料中心",
+      "spokes": [
+        "斗六農場",
+        "虎尾農場",
+        "西螺農場"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 100,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保智慧農業Hub至所有Spoke之延遲在95%的時間內低於100ms。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試農業 IoT 場域的 hub-spoke 延遲 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "智慧農業 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC017",
-    "category": "IoT",
-    "complexity": "Simple",
-    "nl_intent": "讓智慧電表資料每天至少成功回傳一次。",
-    "expected_tio_elements": ["icm:Intent", "icm:DeliveryExpectation", "icm:Target"],
-    "description": "測試週期性交付或回傳需求的簡單表達。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "國際會展",
+    "scope": {
+      "hub": "南港會展網管中心",
+      "spokes": [
+        "台北館",
+        "台中館",
+        "高雄館"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 0.15,
+          "unit": "%"
+        },
+        "compliance_window": {
+          "percentage": 99,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:packetLoss",
+        "statistic": "evsla:p99",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保國際會展Hub與各Spoke間封包遺失率低於0.15%（99%時間）。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試會展租戶多館場網路的封包遺失率 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "國際會展 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:p99",
+      "evsla:packetLoss",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC018",
-    "category": "Conditional",
-    "complexity": "Complex",
-    "nl_intent": "如果工廠無線感測器的封包遺失率連續 5 分鐘高於 3%，就立刻提升該區域無線資源配置。",
-    "expected_tio_elements": ["icm:Intent", "log:Condition", "icm:PropertyExpectation", "icm:Target"],
-    "description": "測試條件、持續時間與資源調整需求的組合。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Simple",
+    "tenant": "東岸觀光",
+    "scope": {
+      "hub": "台東營運總部",
+      "spokes": [
+        "綠島服務站"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "operator": "GREATER_THAN_OR_EQUAL",
+        "threshold": {
+          "value": 80,
+          "unit": "Mbps"
+        },
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "statistic": "evsla:minimum",
+        "scope": "evsla:specificSpoke",
+        "measurement_method": "evsla:activeMeasurement",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "提供東岸觀光總部至綠島服務站80Mbps以上保證頻寬。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試觀光租戶到離島指定分點的保證頻寬。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "東岸觀光 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:activeMeasurement",
+      "evsla:fiveMinuteWindow",
+      "evsla:guaranteedBandwidth",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:minimum",
+      "evsla:specificSpoke"
+    ]
   },
   {
     "id": "TC019",
-    "category": "Energy Saving",
-    "complexity": "Complex",
-    "nl_intent": "在凌晨 01:00 到 05:00 之間，如果沒有高優先級業務，則將商辦區小型基地台切換到節能模式。",
-    "expected_tio_elements": ["icm:Intent", "icm:Context", "log:Condition", "icm:Expectation"],
-    "description": "測試時間上下文與條件觸發的複合 intent。"
+    "category": "Hub-Spoke SLA",
+    "complexity": "Medium",
+    "tenant": "安全監控",
+    "scope": {
+      "hub": "台北監控中心",
+      "spokes": [
+        "士林站",
+        "文山站",
+        "大安站",
+        "松山站"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 40,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保安全監控總部至所有分點之延遲在95%的時間內低於40ms。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試安全影像監控租戶多站點延遲 SLA。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "安全監控 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:twamp"
+    ]
   },
   {
     "id": "TC020",
-    "category": "Cross-Domain",
+    "category": "Hub-Spoke SLA",
     "complexity": "Complex",
-    "nl_intent": "當遠距手術進行中時，必須同時保障控制訊號延遲低於 5ms，並確保 8K 影像串流不中斷。",
-    "expected_tio_elements": ["icm:Intent", "icm:Context", "icm:PropertyExpectation", "icm:DeliveryExpectation", "icm:Target"],
-    "description": "測試同時包含事件上下文、控制流低延遲與高品質媒體交付的複合需求。"
+    "tenant": "精準醫材",
+    "scope": {
+      "hub": "台北研發總部",
+      "spokes": [
+        "竹北實驗室",
+        "台南製造廠"
+      ]
+    },
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 35,
+          "unit": "ms"
+        },
+        "compliance_window": {
+          "percentage": 95,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:latency",
+        "statistic": "evsla:p95",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      },
+      {
+        "metric": "packet_loss",
+        "operator": "LESS_THAN",
+        "threshold": {
+          "value": 0.05,
+          "unit": "%"
+        },
+        "compliance_window": {
+          "percentage": 99,
+          "unit": "percent_of_time"
+        },
+        "ontology_term": "evsla:packetLoss",
+        "statistic": "evsla:p99",
+        "scope": "evsla:hubToAllSpokes",
+        "measurement_method": "evsla:twamp",
+        "time_window": "evsla:fiveMinuteWindow"
+      }
+    ],
+    "nl_intent": "確保精準醫材台北研發總部至竹北實驗室與台南製造廠之延遲在95%的時間內低於35ms，且Hub與各Spoke間封包遺失率低於0.05%（99%時間）。",
+    "expected_tio_elements": [
+      "icm:Intent",
+      "icm:PropertyExpectation",
+      "icm:Target",
+      "icm:Context",
+      "icm:valuesOfTargetProperty"
+    ],
+    "description": "測試同一租戶、同一 hub-spoke 範圍下多個效能指標與門檻。",
+    "target": {
+      "@type": "evsla:EnterpriseVpnService",
+      "name": "精準醫材 Enterprise VPN Service"
+    },
+    "topology": {
+      "@type": "evsla:HubAndSpokeTopology",
+      "hub_type": "evsla:HubSite",
+      "spoke_type": "evsla:SpokeSite"
+    },
+    "ontology_terms": [
+      "evsla:EnterpriseVpnService",
+      "evsla:EnterpriseVpnSlaIntent",
+      "evsla:HubAndSpokeTopology",
+      "evsla:HubSite",
+      "evsla:SlaExpectation",
+      "evsla:SpokeSite",
+      "evsla:Tenant",
+      "evsla:fiveMinuteWindow",
+      "evsla:hasMeasurementMethod",
+      "evsla:hasMetric",
+      "evsla:hasScope",
+      "evsla:hasStatistic",
+      "evsla:hasThreshold",
+      "evsla:hasTimeWindow",
+      "evsla:hubToAllSpokes",
+      "evsla:latency",
+      "evsla:p95",
+      "evsla:p99",
+      "evsla:packetLoss",
+      "evsla:twamp"
+    ]
   }
 ]
