@@ -1,7 +1,6 @@
 #!/usr/bin/env bun
-// tio-validator MCP: validate a chunk of Turtle against the TIO ontology
-// loaded from ~/grant/ttls/. Surfaces parse errors, blacklisted predicates,
-// unknown TIO predicates/classes, expectation structural rules, and orphans.
+// tio-validator MCP: validate API-friendly TIO JSON-LD payloads, with a
+// legacy/debug Turtle validator retained for ontology snippets.
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -24,7 +23,7 @@ const server = new McpServer({ name: "tio-validator", version: "0.1.0" });
 
 server.tool(
   "validate_ttl",
-  "Validate a Turtle (.ttl) intent against the TIO ontology. Returns structured errors + warnings. You MUST call this on every TTL you produce before finalizing; if it returns errors, fix them and call again.",
+  "Legacy/debug only: validate a Turtle (.ttl) ontology snippet against the TIO ontology. Do NOT use this for final agent output. Final answers must be JSON-LD and validated with validate_jsonld.",
   {
     ttl: z.string().describe("the Turtle text to validate"),
   },

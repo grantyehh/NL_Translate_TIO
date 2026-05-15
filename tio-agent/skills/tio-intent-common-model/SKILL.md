@@ -1,15 +1,20 @@
 ---
 name: tio-intent-common-model
-description: ALWAYS load when emitting ANY TIO Turtle. Core TIO classes (icm:Intent, icm:Expectation with DeliveryExpectation/PropertyExpectation/ReportingExpectation subclasses, icm:Target, icm:Context), canonical turtle patterns, and the hallucination blacklist.
+description: ALWAYS load when producing TIO JSON-LD. Core TIO classes (icm:Intent, icm:Expectation with DeliveryExpectation/PropertyExpectation/ReportingExpectation subclasses, icm:Target, icm:Context), JSON-LD modeling guidance, and the hallucination blacklist. Turtle-derived vocabulary is reference only.
 ---
 
 # IntentCommonModel (icm)
 
-_Auto-generated from `~/grant/ttls/*.ttl`. Regenerate with `bun run scripts/ttl-to-skills.ts`._
+_Auto-generated from `~/grant/ttls/*.ttl`. Regenerate with `bun run scripts/ttl-to-skills.ts`. Vocabulary is TTL-derived reference material; final output must be JSON-LD._
+
+## JSON-LD Output Rule
+
+This skill is generated from TTL ontology sources, so it uses prefix names such as `icm:Intent` and `met:Metric` as vocabulary references. Final agent output must still be the API-friendly JSON-LD object defined in `CLAUDE.md`. Do not output Turtle, RDF triples, TTL code fences, or a Turtle conversion.
+
 
 ## Hallucination Blacklist
 
-These predicates look plausible but **do not exist in TIO**. Never emit them:
+These predicates look plausible but **do not exist in TIO**. Never use them:
 
 - `icm:hasValue` ❌ — use `icm:valuesOfTargetProperty` with a paired values resource
 - `icm:hasProperty` ❌ — target properties are modeled implicitly via `icm:PropertyExpectation`
@@ -20,7 +25,7 @@ If a predicate you want isn't listed in a TIO skill, **it does not exist**. Re-m
 
 ## Prefixes
 
-```turtle
+```text
 @prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
 @prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
@@ -36,6 +41,7 @@ If a predicate you want isn't listed in a TIO skill, **it does not exist**. Re-m
 @prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
 @prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix ut: <http://tio.models.tmforum.org/tio/v3.6.0/Utility/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
@@ -132,52 +138,93 @@ _Modeled as instances of `fun:Function`. Use in condition expressions or whereve
 - **icm:valuesOfTargetProperty** — returns: <http://www.w3.org/2001/XMLSchema#boolean>
   - The function icm:valuesOfTargetProperty represents a container of all values that are assigned to members of the target container with the properties specified as function argument. If multiple properties are specified as arguments the result is a superset of all values from all specified properties.
 
-## Canonical Patterns
+## Canonical JSON-LD Patterns
 
 ### 1. Delivery — "Provide service X"
-```turtle
-ex:intent a icm:Intent .
-ex:exp-del a icm:DeliveryExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Deliver an enterprise 5G slice service."@en .
-ex:tgt a icm:Target ;
-  rdfs:comment "Connectivity scope between Kaohsiung and Pingtung."@en .
+```json
+{
+  "@type": "DeliveryExpectation",
+  "id": "exp-delivery-01",
+  "name": "Deliver Enterprise Service",
+  "description": "Deliver an enterprise connectivity service.",
+  "expectationObject": {
+    "id": "svc:example",
+    "name": "Example Service",
+    "@type": "Service"
+  }
+}
 ```
 
 ### 2. Property — "Ensure metric X < Y on target Z"
-```turtle
-ex:tgt a icm:Target ;
-  rdfs:comment "Video conferencing traffic."@en .
-ex:exp-latency a icm:PropertyExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Latency should stay below 20 ms."@en .
-ex:target-property-values icm:valuesOfTargetProperty rdf:value .
+```json
+{
+  "@type": "PropertyExpectation",
+  "id": "exp-latency-01",
+  "name": "Latency Constraint",
+  "description": "Latency should stay below 20 ms.",
+  "expectationObject": {
+    "id": "svc:example",
+    "name": "Example Service",
+    "@type": "Service"
+  },
+  "expectationTarget": [
+    {
+      "name": "Latency",
+      "targetProperty": "latency",
+      "matchCondition": "LESS_THAN",
+      "targetValue": {
+        "value": 20,
+        "unit": "ms"
+      }
+    }
+  ]
+}
 ```
 
 ### 3. Multiple properties on one target
-```turtle
-ex:tgt a icm:Target ;
-  rdfs:comment "Enterprise backup connectivity."@en .
-ex:exp-throughput a icm:PropertyExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Downlink throughput should be greater than 200 Mbps."@en .
-ex:exp-latency a icm:PropertyExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Latency should stay below 15 ms."@en .
-ex:target-property-values icm:valuesOfTargetProperty rdf:value .
+```json
+{
+  "@type": "PropertyExpectation",
+  "id": "exp-sla-01",
+  "name": "SLA Constraints",
+  "description": "Throughput should exceed 200 Mbps and latency should stay below 15 ms.",
+  "expectationObject": {
+    "id": "svc:example",
+    "name": "Example Service",
+    "@type": "Service"
+  },
+  "expectationTarget": [
+    {
+      "name": "Throughput",
+      "targetProperty": "throughput",
+      "matchCondition": "GREATER_THAN",
+      "targetValue": {
+        "value": 200,
+        "unit": "Mbps"
+      }
+    },
+    {
+      "name": "Latency",
+      "targetProperty": "latency",
+      "matchCondition": "LESS_THAN",
+      "targetValue": {
+        "value": 15,
+        "unit": "ms"
+      }
+    }
+  ]
+}
 ```
 
 ### 4. Context — "During time window X, do Y"
-```turtle
-ex:intent a icm:Intent ;
-  icm:context ex:ctx .
-ex:ctx a icm:Context ;
-  rdfs:comment "Weekend evening time window."@en .
-```
-
-### 5. Condition — "If X, then Y" (needs `tio-logical-operators`)
-```turtle
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-ex:cond a log:Condition ;
-  rdfs:comment "Backhaul latency is greater than 15 ms."@en .
+```json
+{
+  "intentContext": [
+    {
+      "@type": "Context",
+      "name": "Weekend Evening",
+      "description": "Weekend evening time window."
+    }
+  ]
+}
 ```

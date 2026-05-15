@@ -11,6 +11,7 @@ import { stdin as input, stdout as output } from "node:process";
 
 import { Agent, type TraceEvent } from "./agent.js";
 import { buildSystemPrompt } from "./prompt.js";
+import { formatAgentAnswer } from "./format.js";
 import { listSkills, readSkill } from "./skills.js";
 import { connectMcps, loadMcpConfig } from "./mcp.js";
 
@@ -26,7 +27,7 @@ async function main() {
     console.error(RED("OPENAI_API_KEY is required. export it or put it in ~/grant/.env"));
     process.exit(1);
   }
-  const model = process.env.OPENAI_MODEL ?? "gpt-4o";
+  const model = process.env.OPENAI_MODEL ?? "gpt-5.4";
   // Any OpenAI-compatible endpoint works: Ollama, OpenRouter, Groq, Together, etc.
   const baseURL = process.env.OPENAI_BASE_URL;
   const cwd = process.cwd();
@@ -129,7 +130,7 @@ async function main() {
 
     try {
       const answer = await agent.send(trimmed);
-      console.log(GREEN("agent>"), answer, "\n");
+      console.log(GREEN("agent>"), formatAgentAnswer(answer), "\n");
     } catch (e) {
       console.error(RED(`agent error: ${(e as Error).message}`));
     }

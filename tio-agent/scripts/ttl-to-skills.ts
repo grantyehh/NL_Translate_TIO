@@ -2,7 +2,9 @@
 // Convert TIO .ttl files in ../ttls into ONE skill PER module at
 // ../skills/tio-<module-slug>/SKILL.md, with each skill's description
 // narrowly targeted so the agent only loads what's relevant (progressive
-// disclosure). Symlinks each into ../.claude/skills/ for Claude Code.
+// disclosure). The generated skills expose ontology vocabulary as reference
+// material for JSON-LD output; Turtle snippets must not become final output.
+// Symlinks each into ../.claude/skills/ for Claude Code.
 
 import { Parser, Store } from "n3";
 import * as fs from "node:fs";
@@ -39,6 +41,7 @@ const NS_PREFIX: Record<string, string> = {
   "http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/": "pbi",
   "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/": "quan",
   "http://tio.models.tmforum.org/tio/v3.6.0/Utility/": "ut",
+  "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/": "evsla",
 };
 // Sort longest-first so startsWith matching picks the most specific namespace
 // (protects against one namespace being a substring of another).
@@ -59,7 +62,7 @@ const MODULES: ModuleMeta[] = [
     title: "IntentCommonModel (icm)",
     isCore: true,
     description:
-      "ALWAYS load when emitting ANY TIO Turtle. Core TIO classes (icm:Intent, icm:Expectation with DeliveryExpectation/PropertyExpectation/ReportingExpectation subclasses, icm:Target, icm:Context), canonical turtle patterns, and the hallucination blacklist.",
+      "ALWAYS load when producing TIO JSON-LD. Core TIO classes (icm:Intent, icm:Expectation with DeliveryExpectation/PropertyExpectation/ReportingExpectation subclasses, icm:Target, icm:Context), JSON-LD modeling guidance, and the hallucination blacklist. Turtle-derived vocabulary is reference only.",
   },
   {
     prefix: "log",
@@ -123,6 +126,13 @@ const MODULES: ModuleMeta[] = [
     title: "IntentGuaranteeOntology (ig)",
     description:
       "Load when the intent carries SLA-style guarantees, service-level commitments, or assurance semantics beyond plain expectations.",
+  },
+  {
+    prefix: "evsla",
+    slug: "tio-enterprise-vpn-sla",
+    title: "EnterpriseVpnSlaOntology (evsla)",
+    description:
+      "ALWAYS load for this agent's core task: enterprise VPN hub-and-spoke SLA assurance intents. Vocabulary for evsla:EnterpriseVpnSlaIntent, evsla:EnterpriseVpnService, evsla:Tenant, evsla:HubAndSpokeTopology, hub/spoke sites, SLA metrics, thresholds, statistics, measurement methods, and monitoring windows.",
   },
   {
     prefix: "pro",
@@ -259,7 +269,7 @@ for (const f of funcSet) {
 // Render fragments
 // ------------------------------------------------------------------
 function prefixBlock(): string {
-  const lines = ["```turtle"];
+  const lines = ["```text"];
   for (const [ns, pfx] of Object.entries(NS_PREFIX)) lines.push(`@prefix ${pfx}: <${ns}> .`);
   lines.push("@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .");
   lines.push("@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .");
@@ -270,7 +280,7 @@ function prefixBlock(): string {
 
 const BLACKLIST = `## Hallucination Blacklist
 
-These predicates look plausible but **do not exist in TIO**. Never emit them:
+These predicates look plausible but **do not exist in TIO**. Never use them:
 
 - \`icm:hasValue\` ❌ — use \`icm:valuesOfTargetProperty\` with a paired values resource
 - \`icm:hasProperty\` ❌ — target properties are modeled implicitly via \`icm:PropertyExpectation\`
@@ -280,54 +290,101 @@ These predicates look plausible but **do not exist in TIO**. Never emit them:
 If a predicate you want isn't listed in a TIO skill, **it does not exist**. Re-model instead of inventing.
 `;
 
-const PATTERNS = `## Canonical Patterns
+const JSONLD_RULE = `## JSON-LD Output Rule
+
+This skill is generated from TTL ontology sources, so it uses prefix names such as \`icm:Intent\` and \`met:Metric\` as vocabulary references. Final agent output must still be the API-friendly JSON-LD object defined in \`CLAUDE.md\`. Do not output Turtle, RDF triples, TTL code fences, or a Turtle conversion.
+
+`;
+
+const PATTERNS = `## Canonical JSON-LD Patterns
 
 ### 1. Delivery — "Provide service X"
-\`\`\`turtle
-ex:intent a icm:Intent .
-ex:exp-del a icm:DeliveryExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Deliver an enterprise 5G slice service."@en .
-ex:tgt a icm:Target ;
-  rdfs:comment "Connectivity scope between Kaohsiung and Pingtung."@en .
+\`\`\`json
+{
+  "@type": "DeliveryExpectation",
+  "id": "exp-delivery-01",
+  "name": "Deliver Enterprise Service",
+  "description": "Deliver an enterprise connectivity service.",
+  "expectationObject": {
+    "id": "svc:example",
+    "name": "Example Service",
+    "@type": "Service"
+  }
+}
 \`\`\`
 
 ### 2. Property — "Ensure metric X < Y on target Z"
-\`\`\`turtle
-ex:tgt a icm:Target ;
-  rdfs:comment "Video conferencing traffic."@en .
-ex:exp-latency a icm:PropertyExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Latency should stay below 20 ms."@en .
-ex:target-property-values icm:valuesOfTargetProperty rdf:value .
+\`\`\`json
+{
+  "@type": "PropertyExpectation",
+  "id": "exp-latency-01",
+  "name": "Latency Constraint",
+  "description": "Latency should stay below 20 ms.",
+  "expectationObject": {
+    "id": "svc:example",
+    "name": "Example Service",
+    "@type": "Service"
+  },
+  "expectationTarget": [
+    {
+      "name": "Latency",
+      "targetProperty": "latency",
+      "matchCondition": "LESS_THAN",
+      "targetValue": {
+        "value": 20,
+        "unit": "ms"
+      }
+    }
+  ]
+}
 \`\`\`
 
 ### 3. Multiple properties on one target
-\`\`\`turtle
-ex:tgt a icm:Target ;
-  rdfs:comment "Enterprise backup connectivity."@en .
-ex:exp-throughput a icm:PropertyExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Downlink throughput should be greater than 200 Mbps."@en .
-ex:exp-latency a icm:PropertyExpectation ;
-  icm:target ex:tgt ;
-  rdfs:comment "Latency should stay below 15 ms."@en .
-ex:target-property-values icm:valuesOfTargetProperty rdf:value .
+\`\`\`json
+{
+  "@type": "PropertyExpectation",
+  "id": "exp-sla-01",
+  "name": "SLA Constraints",
+  "description": "Throughput should exceed 200 Mbps and latency should stay below 15 ms.",
+  "expectationObject": {
+    "id": "svc:example",
+    "name": "Example Service",
+    "@type": "Service"
+  },
+  "expectationTarget": [
+    {
+      "name": "Throughput",
+      "targetProperty": "throughput",
+      "matchCondition": "GREATER_THAN",
+      "targetValue": {
+        "value": 200,
+        "unit": "Mbps"
+      }
+    },
+    {
+      "name": "Latency",
+      "targetProperty": "latency",
+      "matchCondition": "LESS_THAN",
+      "targetValue": {
+        "value": 15,
+        "unit": "ms"
+      }
+    }
+  ]
+}
 \`\`\`
 
 ### 4. Context — "During time window X, do Y"
-\`\`\`turtle
-ex:intent a icm:Intent ;
-  icm:context ex:ctx .
-ex:ctx a icm:Context ;
-  rdfs:comment "Weekend evening time window."@en .
-\`\`\`
-
-### 5. Condition — "If X, then Y" (needs \`tio-logical-operators\`)
-\`\`\`turtle
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-ex:cond a log:Condition ;
-  rdfs:comment "Backhaul latency is greater than 15 ms."@en .
+\`\`\`json
+{
+  "intentContext": [
+    {
+      "@type": "Context",
+      "name": "Weekend Evening",
+      "description": "Weekend evening time window."
+    }
+  ]
+}
 \`\`\`
 `;
 
@@ -420,9 +477,10 @@ for (const m of MODULES) {
   parts.push(`# ${m.title}`);
   parts.push("");
   parts.push(
-    `_Auto-generated from \`~/grant/ttls/*.ttl\`. Regenerate with \`bun run scripts/ttl-to-skills.ts\`._`
+    `_Auto-generated from \`~/grant/ttls/*.ttl\`. Regenerate with \`bun run scripts/ttl-to-skills.ts\`. Vocabulary is TTL-derived reference material; final output must be JSON-LD._`
   );
   parts.push("");
+  parts.push(JSONLD_RULE);
   if (!m.isCore) {
     parts.push(
       `> Always combine with the \`tio-intent-common-model\` skill — that skill owns the core Intent/Expectation/Target vocabulary this module extends.`

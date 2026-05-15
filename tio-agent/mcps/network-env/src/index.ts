@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-// network-env MCP server (fake PoC data).
+// network-env MCP server (fake Enterprise VPN SLA PoC data).
 // Tools: list_topologies, describe_topology, list_service_targets,
 //        resolve_target, get_live_metrics.
 
@@ -9,7 +9,7 @@ import { z } from "zod";
 import { topologies, resolveTarget, fakeMetrics } from "./topologies.js";
 
 const server = new McpServer({
-  name: "network-env-fake",
+  name: "enterprise-vpn-sla-env-fake",
   version: "0.1.0",
 });
 
@@ -24,7 +24,7 @@ const asError = (msg: string) => ({
 
 server.tool(
   "list_topologies",
-  "List every known network topology (fake PoC data). Returns name, description, and service_count.",
+  "List every known Enterprise VPN SLA topology (fake PoC data). Returns name, description, and service_count.",
   {},
   async () =>
     asJson(
@@ -38,7 +38,7 @@ server.tool(
 
 server.tool(
   "describe_topology",
-  "Return the full topology: nodes, links, and services.",
+  "Return the full Enterprise VPN SLA topology: hub/spoke sites, links, tenant services, and supported metrics.",
   { name: z.string().describe("topology name as returned by list_topologies") },
   async ({ name }) => {
     const t = topologies[name];
@@ -49,7 +49,7 @@ server.tool(
 
 server.tool(
   "list_service_targets",
-  "List service targets in a topology — these are the concrete IDs you can bind an icm:Target to.",
+  "List Enterprise VPN service targets in a topology — these are the concrete IDs you can bind an SLA expectation to.",
   { topology: z.string() },
   async ({ topology }) => {
     const t = topologies[topology];
@@ -60,7 +60,7 @@ server.tool(
 
 server.tool(
   "resolve_target",
-  "Given a natural language hint (e.g. '備份連線', 'Kaohsiung-Pingtung 5G'), return candidate service targets in a topology.",
+  "Given an Enterprise VPN SLA hint (e.g. '星河銀行總部至所有分點'), return candidate tenant VPN service targets in a topology.",
   {
     topology: z.string(),
     hint: z.string().describe("natural-language fragment to match against service names/types/attrs"),
@@ -70,7 +70,7 @@ server.tool(
 
 server.tool(
   "get_live_metrics",
-  "Return current (fake) live metrics — latency_ms, throughput_mbps, packet_loss_pct — for a target service, link, or the topology summary.",
+  "Return current (fake) Enterprise VPN SLA metrics — latency_ms, throughput_mbps, packet_loss_pct, sla_compliance_pct — for a target service, link, or topology summary.",
   {
     topology: z.string(),
     target_id: z
@@ -87,4 +87,4 @@ server.tool(
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
-console.error("[network-env-fake] mcp server ready on stdio");
+console.error("[enterprise-vpn-sla-env-fake] mcp server ready on stdio");

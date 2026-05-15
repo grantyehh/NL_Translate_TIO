@@ -1,5 +1,5 @@
-// Validate a chunk of Turtle against the TIO ontology. Returns structured
-// errors + warnings the agent can read and iterate on.
+// Validate TIO payloads against the ontology/API contract. The Turtle path is
+// retained for legacy/debug ontology snippets; final agent output uses JSON-LD.
 
 import { Parser, Store } from "n3";
 import type { Ontology } from "./ontology.js";
@@ -245,6 +245,99 @@ function requireString(obj: Record<string, unknown>, key: string, errors: Issue[
   }
 }
 
+function requireLiteral(
+  obj: Record<string, unknown>,
+  key: string,
+  expected: string,
+  code: string,
+  errors: Issue[],
+  subject: string
+) {
+  if (obj[key] !== expected) {
+    errors.push(issue(code, `${subject}.${key} must be "${expected}".`, subject));
+  }
+}
+
+function validateEnterpriseVpnSlaShape(doc: Record<string, unknown>, errors: Issue[]) {
+  requireLiteral(doc, "ontologyType", "evsla:EnterpriseVpnSlaIntent", "JSONLD_EVSLA_INTENT_TYPE", errors, "$");
+
+  if (!isObject(doc.tenant)) {
+    errors.push(issue("JSONLD_EVSLA_TENANT", "$.tenant must be an evsla:Tenant object.", "$.tenant"));
+  } else {
+    requireString(doc.tenant, "id", errors, "$.tenant");
+    requireString(doc.tenant, "name", errors, "$.tenant");
+    requireLiteral(doc.tenant, "@type", "evsla:Tenant", "JSONLD_EVSLA_TENANT", errors, "$.tenant");
+  }
+
+  const expectations = Array.isArray(doc.intentExpectation) ? doc.intentExpectation : [];
+  expectations.forEach((raw, idx) => {
+    if (!isObject(raw)) return;
+    const subject = `$.intentExpectation[${idx}]`;
+    requireLiteral(raw, "ontologyType", "evsla:SlaExpectation", "JSONLD_EVSLA_EXPECTATION_TYPE", errors, subject);
+
+    if (isObject(raw.expectationObject)) {
+      requireLiteral(
+        raw.expectationObject,
+        "ontologyType",
+        "evsla:EnterpriseVpnService",
+        "JSONLD_EVSLA_SERVICE_TARGET",
+        errors,
+        `${subject}.expectationObject`
+      );
+    }
+
+    const targets = Array.isArray(raw.expectationTarget) ? raw.expectationTarget : [];
+    targets.forEach((target, targetIdx) => {
+      if (!isObject(target)) return;
+      const targetSubject = `${subject}.expectationTarget[${targetIdx}]`;
+      for (const key of [
+        "evsla:hasMetric",
+        "evsla:hasThreshold",
+        "evsla:hasStatistic",
+        "evsla:hasScope",
+        "evsla:hasMeasurementMethod",
+        "evsla:hasTimeWindow",
+      ]) {
+        if (!(key in target)) {
+          errors.push(issue("JSONLD_EVSLA_TARGET_FIELD", `${targetSubject}.${key} is required.`, targetSubject));
+        }
+      }
+      if (typeof target.targetProperty === "string" && !target.targetProperty.startsWith("evsla:")) {
+        errors.push(
+          issue("JSONLD_EVSLA_TARGET_PROPERTY", `${targetSubject}.targetProperty must use evsla vocabulary.`, targetSubject)
+        );
+      }
+      if (!isObject(target["evsla:hasThreshold"])) {
+        errors.push(
+          issue("JSONLD_EVSLA_THRESHOLD", `${targetSubject}.evsla:hasThreshold must be a quantity object.`, targetSubject)
+        );
+      }
+    });
+  });
+
+  const contexts = Array.isArray(doc.intentContext) ? doc.intentContext : [];
+  const topologyContext = contexts.find(
+    (context) => isObject(context) && context.ontologyType === "evsla:HubAndSpokeTopology"
+  );
+  if (!isObject(topologyContext)) {
+    errors.push(
+      issue(
+        "JSONLD_EVSLA_TOPOLOGY_CONTEXT",
+        "$.intentContext must include an evsla:HubAndSpokeTopology context.",
+        "$.intentContext"
+      )
+    );
+    return;
+  }
+
+  if (!isObject(topologyContext["evsla:hasHub"])) {
+    errors.push(issue("JSONLD_EVSLA_HUB", "Hub-and-spoke context must include evsla:hasHub.", "$.intentContext"));
+  }
+  if (!Array.isArray(topologyContext["evsla:hasSpoke"]) || topologyContext["evsla:hasSpoke"].length === 0) {
+    errors.push(issue("JSONLD_EVSLA_SPOKE", "Hub-and-spoke context must include evsla:hasSpoke.", "$.intentContext"));
+  }
+}
+
 export function validateJsonLd(text: string): JsonLdValidationReport {
   const errors: Issue[] = [];
   const warnings: Issue[] = [];
@@ -352,6 +445,8 @@ export function validateJsonLd(text: string): JsonLdValidationReport {
   if (!isObject(doc.intentReport)) {
     errors.push(issue("JSONLD_INTENT_REPORT", "$.intentReport must be an object.", "$.intentReport"));
   }
+
+  validateEnterpriseVpnSlaShape(doc, errors);
 
   return {
     ok: errors.length === 0,

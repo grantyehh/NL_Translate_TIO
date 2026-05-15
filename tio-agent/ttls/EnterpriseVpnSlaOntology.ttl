@@ -1,0 +1,353 @@
+# Enterprise VPN SLA Ontology extension for TIO v3.6.0
+
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/>
+  rdf:type imo:BaseOntologyModel ;
+  rdfs:label "Enterprise VPN SLA Ontology"@en ;
+  rdfs:comment "This extension ontology defines vocabulary for enterprise VPN hub-and-spoke SLA assurance intents, including tenant, VPN service target, hub/spoke topology, SLA metrics, thresholds, statistics, scope, measurement methods and monitoring windows."@en ;
+  dct:title "Enterprise VPN SLA Ontology"@en ;
+  dct:description "Vocabulary extension for modeling hub-and-spoke enterprise VPN SLA management and monitoring intents."@en ;
+  dct:subject "enterprise VPN"@en ,
+              "hub-and-spoke topology"@en ,
+              "SLA assurance"@en ,
+              "intent expression"@en ;
+  dct:identifier <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> ;
+  dct:created "2026-04-30"^^xsd:date ;
+  dct:modified "2026-04-30"^^xsd:date ;
+  skos:changeNote "2026-04-30 - initial extension vocabulary derived from enterprise VPN SLA management planning slide 5."@en
+.
+
+evsla:EnterpriseVpnSlaIntent
+  rdfs:label "Enterprise VPN SLA Intent Class"@en ;
+  rdfs:comment "An intent for assuring SLA requirements over an enterprise VPN service, especially hub-and-spoke VPN connectivity."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf icm:Intent
+.
+
+evsla:EnterpriseVpnService
+  rdfs:label "Enterprise VPN Service Class"@en ;
+  rdfs:comment "The enterprise VPN service that is the target of an SLA assurance intent."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource
+.
+
+evsla:Tenant
+  rdfs:label "Tenant Class"@en ;
+  rdfs:comment "The enterprise customer or tenant that owns or consumes the VPN service under SLA assurance."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource
+.
+
+evsla:Site
+  rdfs:label "Site Class"@en ;
+  rdfs:comment "A tenant site participating in an enterprise VPN topology."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource
+.
+
+evsla:HubSite
+  rdfs:label "Hub Site Class"@en ;
+  rdfs:comment "The central headquarters or hub site in a hub-and-spoke enterprise VPN topology."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf evsla:Site
+.
+
+evsla:SpokeSite
+  rdfs:label "Spoke Site Class"@en ;
+  rdfs:comment "A branch, remote office or spoke site connected to the hub in a hub-and-spoke enterprise VPN topology."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf evsla:Site
+.
+
+evsla:HubAndSpokeTopology
+  rdfs:label "Hub-and-Spoke Topology Class"@en ;
+  rdfs:comment "A topology context in which one hub site connects to one or more spoke sites."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf icm:Context
+.
+
+evsla:SlaExpectation
+  rdfs:label "SLA Expectation Class"@en ;
+  rdfs:comment "A property expectation expressing one or more SLA guarantees for a VPN service."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf icm:PropertyExpectation
+.
+
+evsla:Statistic
+  rdfs:label "Statistic Class"@en ;
+  rdfs:comment "A statistical interpretation for an SLA metric, such as p95, p99, average, maximum or minimum."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf icm:Context
+.
+
+evsla:Scope
+  rdfs:label "Scope Class"@en ;
+  rdfs:comment "The measurement or guarantee scope of an SLA metric, such as hub-to-all-spokes, per-spoke or a specific spoke."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf icm:Context
+.
+
+evsla:MeasurementMethod
+  rdfs:label "Measurement Method Class"@en ;
+  rdfs:comment "A measurement method used to observe SLA metrics, such as active measurement or TWAMP."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf icm:Context
+.
+
+evsla:TimeWindow
+  rdfs:label "Time Window Class"@en ;
+  rdfs:comment "A monitoring, aggregation or SLA evaluation window, such as five minutes, one hour or monthly SLA."@en ;
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf icm:Context
+.
+
+evsla:forTenant
+  rdfs:label "For Tenant Property"@en ;
+  rdfs:comment "Associates an enterprise VPN SLA intent, service, topology or expectation with the tenant it applies to."@en ;
+  rdf:type rdf:Property ;
+  rdfs:range evsla:Tenant
+.
+
+evsla:serviceTarget
+  rdfs:label "Service Target Property"@en ;
+  rdfs:comment "Associates an SLA expectation with the enterprise VPN service being constrained."@en ;
+  rdf:type rdf:Property ;
+  rdfs:subPropertyOf icm:target ;
+  rdfs:domain icm:Expectation ;
+  rdfs:range evsla:EnterpriseVpnService
+.
+
+evsla:hasTopology
+  rdfs:label "Has Topology Property"@en ;
+  rdfs:comment "Associates an intent or VPN service with its topology context."@en ;
+  rdf:type rdf:Property ;
+  rdfs:range evsla:HubAndSpokeTopology
+.
+
+evsla:hasHub
+  rdfs:label "Has Hub Property"@en ;
+  rdfs:comment "Associates a hub-and-spoke topology with its hub site."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:HubAndSpokeTopology ;
+  rdfs:range evsla:HubSite
+.
+
+evsla:hasSpoke
+  rdfs:label "Has Spoke Property"@en ;
+  rdfs:comment "Associates a hub-and-spoke topology with a spoke site."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:HubAndSpokeTopology ;
+  rdfs:range evsla:SpokeSite
+.
+
+evsla:hasMetric
+  rdfs:label "Has Metric Property"@en ;
+  rdfs:comment "Associates an SLA expectation with the metric property being guaranteed or monitored."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:SlaExpectation ;
+  rdfs:range rdf:Property
+.
+
+evsla:hasThreshold
+  rdfs:label "Has Threshold Property"@en ;
+  rdfs:comment "Associates an SLA expectation with a threshold quantity, such as 50 ms, 0.1 percent or 100 Mbps."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:SlaExpectation ;
+  rdfs:range quan:Quantity
+.
+
+evsla:hasStatistic
+  rdfs:label "Has Statistic Property"@en ;
+  rdfs:comment "Associates an SLA expectation with a statistical interpretation such as p95, p99 or minimum."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:SlaExpectation ;
+  rdfs:range evsla:Statistic
+.
+
+evsla:hasScope
+  rdfs:label "Has Scope Property"@en ;
+  rdfs:comment "Associates an SLA expectation with its measurement or guarantee scope."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:SlaExpectation ;
+  rdfs:range evsla:Scope
+.
+
+evsla:hasMeasurementMethod
+  rdfs:label "Has Measurement Method Property"@en ;
+  rdfs:comment "Associates an SLA expectation with the measurement method used to observe its metric."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:SlaExpectation ;
+  rdfs:range evsla:MeasurementMethod
+.
+
+evsla:hasTimeWindow
+  rdfs:label "Has Time Window Property"@en ;
+  rdfs:comment "Associates an SLA expectation with the monitoring or SLA evaluation time window."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:SlaExpectation ;
+  rdfs:range evsla:TimeWindow
+.
+
+evsla:appliesPerSpoke
+  rdfs:label "Applies Per Spoke Property"@en ;
+  rdfs:comment "States whether an SLA guarantee is evaluated independently for each spoke."@en ;
+  rdf:type rdf:Property ;
+  rdfs:domain evsla:SlaExpectation ;
+  rdfs:range xsd:boolean
+.
+
+evsla:latency
+  rdfs:label "Latency Metric Property"@en ;
+  rdfs:comment "Metric property for network latency between hub and spoke sites."@en ;
+  rdf:type rdf:Property ;
+  rdfs:subPropertyOf met:metric
+.
+
+evsla:packetLoss
+  rdfs:label "Packet Loss Metric Property"@en ;
+  rdfs:comment "Metric property for packet loss rate between hub and spoke sites."@en ;
+  rdf:type rdf:Property ;
+  rdfs:subPropertyOf met:metric
+.
+
+evsla:guaranteedBandwidth
+  rdfs:label "Guaranteed Bandwidth Metric Property"@en ;
+  rdfs:comment "Metric property for the minimum guaranteed bandwidth provided to a spoke or VPN path."@en ;
+  rdf:type rdf:Property ;
+  rdfs:subPropertyOf met:metric
+.
+
+evsla:p95
+  rdfs:label "p95 Statistic"@en ;
+  rdfs:comment "The 95th percentile interpretation for a metric over the applicable time window."@en ;
+  rdf:type evsla:Statistic
+.
+
+evsla:p99
+  rdfs:label "p99 Statistic"@en ;
+  rdfs:comment "The 99th percentile interpretation for a metric over the applicable time window."@en ;
+  rdf:type evsla:Statistic
+.
+
+evsla:average
+  rdfs:label "Average Statistic"@en ;
+  rdfs:comment "The arithmetic average interpretation for a metric over the applicable time window."@en ;
+  rdf:type evsla:Statistic
+.
+
+evsla:maximum
+  rdfs:label "Maximum Statistic"@en ;
+  rdfs:comment "The maximum observed value interpretation for a metric over the applicable time window."@en ;
+  rdf:type evsla:Statistic
+.
+
+evsla:minimum
+  rdfs:label "Minimum Statistic"@en ;
+  rdfs:comment "The minimum observed value interpretation for a metric over the applicable time window."@en ;
+  rdf:type evsla:Statistic
+.
+
+evsla:hubToAllSpokes
+  rdfs:label "Hub To All Spokes Scope"@en ;
+  rdfs:comment "The SLA metric is evaluated from the hub site to all spoke sites in the tenant topology."@en ;
+  rdf:type evsla:Scope
+.
+
+evsla:perSpoke
+  rdfs:label "Per Spoke Scope"@en ;
+  rdfs:comment "The SLA metric is evaluated independently for each spoke site."@en ;
+  rdf:type evsla:Scope
+.
+
+evsla:specificSpoke
+  rdfs:label "Specific Spoke Scope"@en ;
+  rdfs:comment "The SLA metric is evaluated between the hub and a specified spoke site."@en ;
+  rdf:type evsla:Scope
+.
+
+evsla:activeMeasurement
+  rdfs:label "Active Measurement Method"@en ;
+  rdfs:comment "A measurement method that actively sends probes to observe SLA metrics."@en ;
+  rdf:type evsla:MeasurementMethod
+.
+
+evsla:twamp
+  rdfs:label "TWAMP Measurement Method"@en ;
+  rdfs:comment "Two-Way Active Measurement Protocol used to measure network performance metrics."@en ;
+  rdf:type evsla:MeasurementMethod ;
+  skos:altLabel "TWAMP"@en
+.
+
+evsla:fiveMinuteWindow
+  rdfs:label "Five Minute Time Window"@en ;
+  rdfs:comment "A five-minute monitoring or aggregation window for SLA metric evaluation."@en ;
+  rdf:type evsla:TimeWindow
+.
+
+evsla:oneHourWindow
+  rdfs:label "One Hour Time Window"@en ;
+  rdfs:comment "A one-hour monitoring or aggregation window for SLA metric evaluation."@en ;
+  rdf:type evsla:TimeWindow
+.
+
+evsla:monthlySlaWindow
+  rdfs:label "Monthly SLA Time Window"@en ;
+  rdfs:comment "A monthly SLA evaluation window."@en ;
+  rdf:type evsla:TimeWindow
+.
+
+evsla:Vocabulary
+  rdfs:label "Enterprise VPN SLA Vocabulary"@en ;
+  rdfs:comment "The object evsla:Vocabulary is a container of all model elements in this extension ontology."@en ;
+  rdf:type rdfs:Container ;
+  rdfs:member evsla:EnterpriseVpnSlaIntent ,
+              evsla:EnterpriseVpnService ,
+              evsla:Tenant ,
+              evsla:Site ,
+              evsla:HubSite ,
+              evsla:SpokeSite ,
+              evsla:HubAndSpokeTopology ,
+              evsla:SlaExpectation ,
+              evsla:Statistic ,
+              evsla:Scope ,
+              evsla:MeasurementMethod ,
+              evsla:TimeWindow ,
+              evsla:forTenant ,
+              evsla:serviceTarget ,
+              evsla:hasTopology ,
+              evsla:hasHub ,
+              evsla:hasSpoke ,
+              evsla:hasMetric ,
+              evsla:hasThreshold ,
+              evsla:hasStatistic ,
+              evsla:hasScope ,
+              evsla:hasMeasurementMethod ,
+              evsla:hasTimeWindow ,
+              evsla:appliesPerSpoke ,
+              evsla:latency ,
+              evsla:packetLoss ,
+              evsla:guaranteedBandwidth ,
+              evsla:p95 ,
+              evsla:p99 ,
+              evsla:average ,
+              evsla:maximum ,
+              evsla:minimum ,
+              evsla:hubToAllSpokes ,
+              evsla:perSpoke ,
+              evsla:specificSpoke ,
+              evsla:activeMeasurement ,
+              evsla:twamp ,
+              evsla:fiveMinuteWindow ,
+              evsla:oneHourWindow ,
+              evsla:monthlySlaWindow
+.
