@@ -1,0 +1,76 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc011",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure packet loss SLA for 城市交通局 enterprise VPN between the hub and all spokes at below 0.2% for 99% of measurements.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "tenant": {
+    "id": "tenant:城市交通局",
+    "name": "城市交通局",
+    "@type": "evsla:Tenant"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-tc011-packet-loss",
+      "name": "Hub-to-Spoke Packet Loss SLA Expectation",
+      "description": "Guarantee evsla:packetLoss for 城市交通局 enterprise VPN service within the requested hub-and-spoke scope.",
+      "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
+      "expectationObject": {
+        "id": "svc:城市交通局-enterprise-vpn",
+        "name": "城市交通局 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
+      },
+      "expectationTarget": [
+        {
+          "name": "Hub-to-Spoke Packet Loss",
+          "targetProperty": "evsla:packetLoss",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 0.2,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:packetLoss",
+          "evsla:hasThreshold": {
+            "value": 0.2,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p99",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "topology-tc011",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "城市交通局Hub"
+      },
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "All Spokes"
+        }
+      ]
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

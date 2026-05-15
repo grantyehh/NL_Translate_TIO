@@ -1,0 +1,220 @@
+# =====================================================================
+# TIO Enterprise VPN SLA — KAG schema (initial draft)
+#
+# 來源 TTL:
+#   - TM Forum Intent Ontology/IntentCommonModel.ttl  (icm: 抽象基底)
+#   - TM Forum Intent Ontology/QuantityOntology.ttl   (quan: 量值)
+#   - TM Forum Intent Ontology/MetricsAndObservations.ttl (met: 指標)
+#   - tio-agent/ttls/EnterpriseVpnSlaOntology.ttl     (evsla: 領域擴充)
+#
+# 設計取捨:
+#   1. icm:Intent / icm:PropertyExpectation / icm:Target / icm:Context
+#      是抽象父類別 — KAG schema 沒有 subClassOf,改用每個 entity 內的
+#      `tioType` 屬性保留對應的 TIO IRI(下游 JSON-LD 輸出時用)。
+#   2. evsla 的列舉(p95/twamp/hubToAllSpokes 等)在 TTL 是 instance,
+#      在 KAG 改成 ConceptType 的 hyponym instance,以便 IND# 分類索引。
+#   3. quan:Quantity 的 {value, unit} 在 TTL 是 nested struct;KAG 沒
+#      原生 nested,直接 flatten 為 thresholdValue + thresholdUnit。
+#   4. xsd:boolean 在 KAG schema 沒對應 type,以 "true"/"false" Text 存。
+# =====================================================================
+
+namespace TIO_EVSLA
+
+
+# ─────────────────────────────────────────────────────────────────────
+# 1. 列舉型 Taxonomy(ConceptType)
+#    對應 TTL 中 a evsla:Statistic / a evsla:Scope / a evsla:MeasurementMethod
+#    / a evsla:TimeWindow 的 instance,以及 evsla:latency/packetLoss/...
+#    這類 metric property。
+# ─────────────────────────────────────────────────────────────────────
+
+TIO_SlaTier(SLA 等級): ConceptType
+    hypernymPredicate: isA
+    # 預期 instance: basic / standard / gold
+    # 來源:test_cases 與 POC ground_truth 的 tier 欄位(非 EVSLA TTL 詞彙,
+    # 為與彥廷 DSL 對齊新增)
+
+TIO_SlaStatistic(SLA 統計方式): ConceptType
+    hypernymPredicate: isA
+    # 對應 evsla:p95 / evsla:p99 / evsla:average / evsla:maximum / evsla:minimum
+
+TIO_SlaScope(SLA 量測範圍): ConceptType
+    hypernymPredicate: isA
+    # 對應 evsla:hubToAllSpokes / evsla:perSpoke / evsla:specificSpoke
+
+TIO_MeasurementMethod(量測方法): ConceptType
+    hypernymPredicate: isA
+    # 對應 evsla:twamp / evsla:activeMeasurement
+
+TIO_TimeWindow(SLA 評估窗口): ConceptType
+    hypernymPredicate: isA
+    # 對應 evsla:fiveMinuteWindow / evsla:oneHourWindow / evsla:monthlySlaWindow
+
+TIO_MetricType(SLA 指標類型): ConceptType
+    hypernymPredicate: isA
+    # 對應 evsla:latency / evsla:packetLoss / evsla:guaranteedBandwidth
+    # 後續 SLA 擴充(jitter / availability / mtbf)也掛這裡
+
+TIO_MatchCondition(門檻比較符): ConceptType
+    hypernymPredicate: isA
+    # test_cases 中的 operator 欄位:LESS_THAN / LESS_THAN_OR_EQUAL
+    # / GREATER_THAN / GREATER_THAN_OR_EQUAL / EQUALS
+
+
+# ─────────────────────────────────────────────────────────────────────
+# 2. 實體型 EntityType
+# ─────────────────────────────────────────────────────────────────────
+
+Tenant(企業租戶): EntityType
+    # 對應 evsla:Tenant
+    properties:
+        tenantId(租戶 ID): Text
+        name(租戶名稱): Text
+            index: TextAndVector
+        industry(產業別): Text
+            index: TextAndVector
+        tioType(對應 TIO 類別 IRI): Text
+            # 固定值 "evsla:Tenant"
+
+
+EnterpriseVpnService(企業 VPN 服務): EntityType
+    # 對應 evsla:EnterpriseVpnService(對應 icm:Target 的具體化)
+    properties:
+        serviceId(服務 ID): Text
+        name(服務名稱): Text
+            index: TextAndVector
+        tioType(對應 TIO 類別 IRI): Text
+            # 固定值 "evsla:EnterpriseVpnService"
+    relations:
+        forTenant(屬於租戶): Tenant
+
+
+HubSite(Hub 站點): EntityType
+    # 對應 evsla:HubSite(subClassOf evsla:Site)
+    properties:
+        siteId(站點 ID): Text
+        name(Hub 名稱): Text
+            index: TextAndVector
+        location(地理位置): Text
+            index: TextAndVector
+        tioType(對應 TIO 類別 IRI): Text
+            # 固定值 "evsla:HubSite"
+    relations:
+        forTenant(屬於租戶): Tenant
+
+
+SpokeSite(Spoke 站點): EntityType
+    # 對應 evsla:SpokeSite(subClassOf evsla:Site)
+    properties:
+        siteId(站點 ID): Text
+        name(Spoke 名稱): Text
+            index: TextAndVector
+        location(地理位置): Text
+            index: TextAndVector
+        tioType(對應 TIO 類別 IRI): Text
+            # 固定值 "evsla:SpokeSite"
+    relations:
+        forTenant(屬於租戶): Tenant
+        connectsToHub(連線至 Hub): HubSite
+
+
+HubAndSpokeTopology(Hub-Spoke 拓撲): EntityType
+    # 對應 evsla:HubAndSpokeTopology(subClassOf icm:Context)
+    properties:
+        topologyId(拓撲 ID): Text
+        name(拓撲名稱): Text
+            index: TextAndVector
+        tioType(對應 TIO 類別 IRI): Text
+            # 固定值 "evsla:HubAndSpokeTopology"
+    relations:
+        forTenant(屬於租戶): Tenant
+        hasHub(包含 Hub 站點): HubSite
+        hasSpoke(包含 Spoke 站點): SpokeSite
+            constraint: MultiValue
+
+
+SlaExpectation(SLA 預期): EntityType
+    # 對應 evsla:SlaExpectation(subClassOf icm:PropertyExpectation)
+    properties:
+        expectationId(預期 ID): Text
+        description(預期描述): Text
+            index: TextAndVector
+        thresholdValue(門檻值): Float
+            # 對應 quan:Quantity.value(flatten 後)
+        thresholdUnit(門檻單位): Text
+            # 對應 quan:Quantity.unit;字面值如 "ms"/"%"/"Mbps"/"Gbps"
+        compliancePercentage(遵循率%): Float
+            # 對應「95% 的時間內」這類 compliance window
+            # test_cases 的 compliance_window.percentage
+        appliesPerSpoke(逐 Spoke 評估): Text
+            # 對應 evsla:appliesPerSpoke(xsd:boolean);存 "true"/"false"
+        tioType(對應 TIO 類別 IRI): Text
+            # 固定值 "evsla:SlaExpectation"
+        IND#hasMetric(SLA 指標類型): TIO_MetricType
+            # 對應 evsla:hasMetric;指向 latency / packetLoss / ...
+        IND#hasStatistic(SLA 統計): TIO_SlaStatistic
+            # 對應 evsla:hasStatistic
+        IND#hasScope(量測範圍): TIO_SlaScope
+            # 對應 evsla:hasScope
+        IND#hasMeasurementMethod(量測方法): TIO_MeasurementMethod
+            # 對應 evsla:hasMeasurementMethod
+        IND#hasTimeWindow(時間窗口): TIO_TimeWindow
+            # 對應 evsla:hasTimeWindow
+        IND#matchCondition(門檻比較符): TIO_MatchCondition
+            # test_cases.performance_metrics[*].operator
+    relations:
+        serviceTarget(套用至服務): EnterpriseVpnService
+            # 對應 evsla:serviceTarget(subPropertyOf icm:target)
+        targetSpoke(特定目標 Spoke): SpokeSite
+            # 當 IND#hasScope = specificSpoke 時,指向實際被約束的單一 spoke;
+            # 其他 scope 值(hubToAllSpokes / perSpoke)留 null。
+            # 增補來源:fixture 對應 TC003(高雄倉儲中心)發現的 GAP-1。
+
+
+EnterpriseVpnSlaIntent(企業 VPN SLA 意圖): EntityType
+    # 對應 evsla:EnterpriseVpnSlaIntent(subClassOf icm:Intent)
+    properties:
+        intentId(意圖 ID): Text
+        name(意圖名稱): Text
+            index: TextAndVector
+        description(意圖描述): Text
+            index: TextAndVector
+        nlIntent(原始自然語言意圖): Text
+            index: TextAndVector
+            # 例:「確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms」
+        ownerName(意圖擁有者): Text
+            # 對應 JSON-LD 輸出 intentOwner.name
+        tioType(對應 TIO 類別 IRI): Text
+            # 固定值 "evsla:EnterpriseVpnSlaIntent"
+        IND#tier(SLA 等級): TIO_SlaTier
+    relations:
+        forTenant(意圖擁有租戶): Tenant
+            # 對應 evsla:forTenant
+        hasTopology(意圖對應拓撲): HubAndSpokeTopology
+            # 對應 evsla:hasTopology
+        hasExpectation(包含 SLA 預期): SlaExpectation
+            # 對應 icm:hasExpectation;一個 intent 可有多個 expectation
+            constraint: MultiValue
+
+
+# ─────────────────────────────────────────────────────────────────────
+# 3. 目前刻意不模型化的東西(留待後續評估)
+# ─────────────────────────────────────────────────────────────────────
+#
+# - icm:DeliveryExpectation / icm:ReportingExpectation
+#   (test_cases_20.json 全是 PropertyExpectation,Phase A 用不到)
+#
+# - icm:Information / icm:Reason / icm:*Report 系列
+#   (回報路徑;Phase B 監控閉環才會用到)
+#
+# - log:Condition / log:allOf 等 LogicalOperators
+#   (條件式 intent;test_cases_20.json 沒有條件題)
+#
+# - quan: 完整量值系統(unit ontology)
+#   (現階段 thresholdValue + thresholdUnit 兩欄位夠用)
+#
+# - met:lastValue / met:metric 完整路徑
+#   (用 IND#hasMetric 對 TIO_MetricType 替代)
+#
+# - IntentManagementOntology / IntentSpecification / IntentValidity
+#   (lifecycle / specification / validity;Phase B+ 才需要)

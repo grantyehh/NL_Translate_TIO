@@ -1,0 +1,855 @@
+{
+  "_meta": {
+    "purpose": "Verify that TIO_EVSLA.schema can express all fields of test_cases_20.json TC001-TC005 + TC020 (Complex multi-metric ceiling).",
+    "schema_version": "TIO_EVSLA-0.1.1",
+    "covers_test_cases": ["TC001", "TC002", "TC003", "TC004", "TC005", "TC020"],
+    "audit_across_all_20_cases": {
+      "metrics_used": ["latency", "packet_loss", "guaranteed_bandwidth"],
+      "scopes_used": ["hubToAllSpokes", "specificSpoke"],
+      "statistics_used": ["p95", "p99", "minimum"],
+      "operators_used": ["LESS_THAN", "GREATER_THAN_OR_EQUAL"],
+      "time_windows_used": ["fiveMinuteWindow"],
+      "multi_metric_cases": ["TC020 (only)"],
+      "specific_spoke_cases": ["TC003", "TC006", "TC009", "TC012", "TC015", "TC018"],
+      "unused_schema_enum_values": [
+        "TIO_SlaScope: perSpoke",
+        "TIO_SlaStatistic: average, maximum",
+        "TIO_MatchCondition: LESS_THAN_OR_EQUAL, GREATER_THAN, EQUALS",
+        "TIO_TimeWindow: oneHourWindow, monthlySlaWindow"
+      ]
+    },
+    "schema_file": "../schema/TIO_EVSLA.schema",
+    "convention": {
+      "id_prefix": "tenant- / svc- / hub- / spoke- / topo- / exp- / intent- / concept-",
+      "IND#_value_rule": "value is the id of a ConceptType hyponym instance defined in concept_members"
+    },
+    "gaps_found": [
+      "GAP-1 (FIXED in schema v0.1.1): SlaExpectation when IND#hasScope = specificSpoke cannot pin down WHICH SpokeSite. Surfaced by TC003 (高雄倉儲中心). Fix applied: added `targetSpoke: SpokeSite` relation on SlaExpectation."
+    ],
+    "out_of_scope_fields_in_test_cases": [
+      "test_case.description : human comment for test set, not the intent's description — kept on side, not stored in KG",
+      "test_case.expected_tio_elements : evaluator metadata, not KG facts",
+      "test_case.ontology_terms : evaluator metadata, not KG facts",
+      "test_case.complexity / category : test set classification, not KG facts",
+      "compliance_window.unit : always 'percent_of_time', hardcoded in evaluator/output rather than stored"
+    ]
+  },
+
+  "concept_members": {
+    "TIO_SlaTier": [
+      { "id": "concept-tier-basic",    "name": "basic",    "_note": "EVSLA TTL 沒有定義;從 POC 借來對齊彥廷 DSL" },
+      { "id": "concept-tier-standard", "name": "standard" },
+      { "id": "concept-tier-gold",     "name": "gold" }
+    ],
+    "TIO_SlaStatistic": [
+      { "id": "concept-stat-p95",     "name": "p95",     "evsla_iri": "evsla:p95" },
+      { "id": "concept-stat-p99",     "name": "p99",     "evsla_iri": "evsla:p99" },
+      { "id": "concept-stat-average", "name": "average", "evsla_iri": "evsla:average" },
+      { "id": "concept-stat-maximum", "name": "maximum", "evsla_iri": "evsla:maximum" },
+      { "id": "concept-stat-minimum", "name": "minimum", "evsla_iri": "evsla:minimum" }
+    ],
+    "TIO_SlaScope": [
+      { "id": "concept-scope-hubToAllSpokes", "name": "hubToAllSpokes", "evsla_iri": "evsla:hubToAllSpokes" },
+      { "id": "concept-scope-perSpoke",       "name": "perSpoke",       "evsla_iri": "evsla:perSpoke" },
+      { "id": "concept-scope-specificSpoke",  "name": "specificSpoke",  "evsla_iri": "evsla:specificSpoke" }
+    ],
+    "TIO_MeasurementMethod": [
+      { "id": "concept-method-twamp",             "name": "twamp",             "evsla_iri": "evsla:twamp" },
+      { "id": "concept-method-activeMeasurement", "name": "activeMeasurement", "evsla_iri": "evsla:activeMeasurement" }
+    ],
+    "TIO_TimeWindow": [
+      { "id": "concept-window-fiveMinute",  "name": "fiveMinuteWindow",  "evsla_iri": "evsla:fiveMinuteWindow" },
+      { "id": "concept-window-oneHour",     "name": "oneHourWindow",     "evsla_iri": "evsla:oneHourWindow" },
+      { "id": "concept-window-monthlySla",  "name": "monthlySlaWindow",  "evsla_iri": "evsla:monthlySlaWindow" }
+    ],
+    "TIO_MetricType": [
+      { "id": "concept-metric-latency",              "name": "latency",              "evsla_iri": "evsla:latency" },
+      { "id": "concept-metric-packetLoss",           "name": "packetLoss",           "evsla_iri": "evsla:packetLoss" },
+      { "id": "concept-metric-guaranteedBandwidth",  "name": "guaranteedBandwidth",  "evsla_iri": "evsla:guaranteedBandwidth" }
+    ],
+    "TIO_MatchCondition": [
+      { "id": "concept-cond-LESS_THAN",             "name": "LESS_THAN" },
+      { "id": "concept-cond-LESS_THAN_OR_EQUAL",    "name": "LESS_THAN_OR_EQUAL" },
+      { "id": "concept-cond-GREATER_THAN",          "name": "GREATER_THAN" },
+      { "id": "concept-cond-GREATER_THAN_OR_EQUAL", "name": "GREATER_THAN_OR_EQUAL" },
+      { "id": "concept-cond-EQUALS",                "name": "EQUALS" }
+    ]
+  },
+
+  "test_cases": [
+
+    {
+      "test_case_id": "TC001",
+      "source_nl_intent": "確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。",
+      "entities": [
+        {
+          "type": "Tenant",
+          "id": "tenant-星河銀行",
+          "properties": {
+            "tenantId": "tenant-星河銀行",
+            "name": "星河銀行",
+            "industry": "金融",
+            "tioType": "evsla:Tenant"
+          }
+        },
+        {
+          "type": "EnterpriseVpnService",
+          "id": "svc-星河銀行-evpn",
+          "properties": {
+            "serviceId": "svc-星河銀行-evpn",
+            "name": "星河銀行 Enterprise VPN Service",
+            "tioType": "evsla:EnterpriseVpnService"
+          },
+          "relations": {
+            "forTenant": "tenant-星河銀行"
+          }
+        },
+        {
+          "type": "HubSite",
+          "id": "hub-星河銀行-台北",
+          "properties": {
+            "siteId": "hub-星河銀行-台北",
+            "name": "台北總部",
+            "location": "台北",
+            "tioType": "evsla:HubSite"
+          },
+          "relations": {
+            "forTenant": "tenant-星河銀行"
+          }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-星河銀行-新竹",
+          "properties": {
+            "siteId": "spoke-星河銀行-新竹",
+            "name": "新竹分行",
+            "location": "新竹",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": {
+            "forTenant": "tenant-星河銀行",
+            "connectsToHub": "hub-星河銀行-台北"
+          }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-星河銀行-台中",
+          "properties": {
+            "siteId": "spoke-星河銀行-台中",
+            "name": "台中分行",
+            "location": "台中",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": {
+            "forTenant": "tenant-星河銀行",
+            "connectsToHub": "hub-星河銀行-台北"
+          }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-星河銀行-高雄",
+          "properties": {
+            "siteId": "spoke-星河銀行-高雄",
+            "name": "高雄分行",
+            "location": "高雄",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": {
+            "forTenant": "tenant-星河銀行",
+            "connectsToHub": "hub-星河銀行-台北"
+          }
+        },
+        {
+          "type": "HubAndSpokeTopology",
+          "id": "topo-星河銀行-hub-spoke",
+          "properties": {
+            "topologyId": "topo-星河銀行-hub-spoke",
+            "name": "星河銀行 Hub-and-Spoke Topology",
+            "tioType": "evsla:HubAndSpokeTopology"
+          },
+          "relations": {
+            "forTenant": "tenant-星河銀行",
+            "hasHub": "hub-星河銀行-台北",
+            "hasSpoke": [
+              "spoke-星河銀行-新竹",
+              "spoke-星河銀行-台中",
+              "spoke-星河銀行-高雄"
+            ]
+          }
+        },
+        {
+          "type": "SlaExpectation",
+          "id": "exp-TC001-latency",
+          "properties": {
+            "expectationId": "exp-TC001-latency",
+            "description": "Hub-to-spoke latency must stay below 50 ms for 95 percent of the time.",
+            "thresholdValue": 50,
+            "thresholdUnit": "ms",
+            "compliancePercentage": 95,
+            "appliesPerSpoke": "false",
+            "tioType": "evsla:SlaExpectation",
+            "IND#hasMetric": "concept-metric-latency",
+            "IND#hasStatistic": "concept-stat-p95",
+            "IND#hasScope": "concept-scope-hubToAllSpokes",
+            "IND#hasMeasurementMethod": "concept-method-twamp",
+            "IND#hasTimeWindow": "concept-window-fiveMinute",
+            "IND#matchCondition": "concept-cond-LESS_THAN"
+          },
+          "relations": {
+            "serviceTarget": "svc-星河銀行-evpn"
+          }
+        },
+        {
+          "type": "EnterpriseVpnSlaIntent",
+          "id": "intent-TC001",
+          "properties": {
+            "intentId": "intent-TC001",
+            "name": "Enterprise VPN Hub-Spoke SLA Intent — 星河銀行 latency",
+            "description": "Ensure 星河銀行 hub-to-spoke latency stays below 50 ms for 95 percent of the time.",
+            "nlIntent": "確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。",
+            "ownerName": "Network Operations Center",
+            "tioType": "evsla:EnterpriseVpnSlaIntent",
+            "IND#tier": null
+          },
+          "relations": {
+            "forTenant": "tenant-星河銀行",
+            "hasTopology": "topo-星河銀行-hub-spoke",
+            "hasExpectation": ["exp-TC001-latency"]
+          }
+        }
+      ]
+    },
+
+    {
+      "test_case_id": "TC002",
+      "source_nl_intent": "確保遠東製造Hub與各Spoke間封包遺失率低於0.1%（99%時間）。",
+      "entities": [
+        {
+          "type": "Tenant",
+          "id": "tenant-遠東製造",
+          "properties": {
+            "tenantId": "tenant-遠東製造",
+            "name": "遠東製造",
+            "industry": "製造",
+            "tioType": "evsla:Tenant"
+          }
+        },
+        {
+          "type": "EnterpriseVpnService",
+          "id": "svc-遠東製造-evpn",
+          "properties": {
+            "serviceId": "svc-遠東製造-evpn",
+            "name": "遠東製造 Enterprise VPN Service",
+            "tioType": "evsla:EnterpriseVpnService"
+          },
+          "relations": { "forTenant": "tenant-遠東製造" }
+        },
+        {
+          "type": "HubSite",
+          "id": "hub-遠東製造-桃園",
+          "properties": {
+            "siteId": "hub-遠東製造-桃園",
+            "name": "桃園總廠",
+            "location": "桃園",
+            "tioType": "evsla:HubSite"
+          },
+          "relations": { "forTenant": "tenant-遠東製造" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-遠東製造-新竹",
+          "properties": {
+            "siteId": "spoke-遠東製造-新竹",
+            "name": "新竹廠",
+            "location": "新竹",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-遠東製造", "connectsToHub": "hub-遠東製造-桃園" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-遠東製造-台中",
+          "properties": {
+            "siteId": "spoke-遠東製造-台中",
+            "name": "台中廠",
+            "location": "台中",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-遠東製造", "connectsToHub": "hub-遠東製造-桃園" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-遠東製造-台南",
+          "properties": {
+            "siteId": "spoke-遠東製造-台南",
+            "name": "台南廠",
+            "location": "台南",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-遠東製造", "connectsToHub": "hub-遠東製造-桃園" }
+        },
+        {
+          "type": "HubAndSpokeTopology",
+          "id": "topo-遠東製造-hub-spoke",
+          "properties": {
+            "topologyId": "topo-遠東製造-hub-spoke",
+            "name": "遠東製造 Hub-and-Spoke Topology",
+            "tioType": "evsla:HubAndSpokeTopology"
+          },
+          "relations": {
+            "forTenant": "tenant-遠東製造",
+            "hasHub": "hub-遠東製造-桃園",
+            "hasSpoke": [
+              "spoke-遠東製造-新竹",
+              "spoke-遠東製造-台中",
+              "spoke-遠東製造-台南"
+            ]
+          }
+        },
+        {
+          "type": "SlaExpectation",
+          "id": "exp-TC002-packetLoss",
+          "properties": {
+            "expectationId": "exp-TC002-packetLoss",
+            "description": "Hub-to-spoke packet loss must stay below 0.1 percent for 99 percent of the time.",
+            "thresholdValue": 0.1,
+            "thresholdUnit": "%",
+            "compliancePercentage": 99,
+            "appliesPerSpoke": "false",
+            "tioType": "evsla:SlaExpectation",
+            "IND#hasMetric": "concept-metric-packetLoss",
+            "IND#hasStatistic": "concept-stat-p99",
+            "IND#hasScope": "concept-scope-hubToAllSpokes",
+            "IND#hasMeasurementMethod": "concept-method-twamp",
+            "IND#hasTimeWindow": "concept-window-fiveMinute",
+            "IND#matchCondition": "concept-cond-LESS_THAN"
+          },
+          "relations": { "serviceTarget": "svc-遠東製造-evpn" }
+        },
+        {
+          "type": "EnterpriseVpnSlaIntent",
+          "id": "intent-TC002",
+          "properties": {
+            "intentId": "intent-TC002",
+            "name": "Enterprise VPN Hub-Spoke SLA Intent — 遠東製造 packet loss",
+            "description": "Ensure 遠東製造 hub-to-spoke packet loss stays below 0.1 percent for 99 percent of the time.",
+            "nlIntent": "確保遠東製造Hub與各Spoke間封包遺失率低於0.1%（99%時間）。",
+            "ownerName": "Network Operations Center",
+            "tioType": "evsla:EnterpriseVpnSlaIntent",
+            "IND#tier": null
+          },
+          "relations": {
+            "forTenant": "tenant-遠東製造",
+            "hasTopology": "topo-遠東製造-hub-spoke",
+            "hasExpectation": ["exp-TC002-packetLoss"]
+          }
+        }
+      ]
+    },
+
+    {
+      "test_case_id": "TC003",
+      "source_nl_intent": "提供宏海物流總部至高雄倉儲中心100Mbps以上保證頻寬。",
+      "_gap_note": "GAP-1 surfaces here: scope=specificSpoke 但 schema 無 targetSpoke 關係 → 暫用 description 註記;schema 修正前 retrieval 拿不到「哪一個 spoke」結構化欄位。",
+      "entities": [
+        {
+          "type": "Tenant",
+          "id": "tenant-宏海物流",
+          "properties": {
+            "tenantId": "tenant-宏海物流",
+            "name": "宏海物流",
+            "industry": "物流",
+            "tioType": "evsla:Tenant"
+          }
+        },
+        {
+          "type": "EnterpriseVpnService",
+          "id": "svc-宏海物流-evpn",
+          "properties": {
+            "serviceId": "svc-宏海物流-evpn",
+            "name": "宏海物流 Enterprise VPN Service",
+            "tioType": "evsla:EnterpriseVpnService"
+          },
+          "relations": { "forTenant": "tenant-宏海物流" }
+        },
+        {
+          "type": "HubSite",
+          "id": "hub-宏海物流-台北",
+          "properties": {
+            "siteId": "hub-宏海物流-台北",
+            "name": "台北營運中心",
+            "location": "台北",
+            "tioType": "evsla:HubSite"
+          },
+          "relations": { "forTenant": "tenant-宏海物流" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-宏海物流-高雄",
+          "properties": {
+            "siteId": "spoke-宏海物流-高雄",
+            "name": "高雄倉儲中心",
+            "location": "高雄",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-宏海物流", "connectsToHub": "hub-宏海物流-台北" }
+        },
+        {
+          "type": "HubAndSpokeTopology",
+          "id": "topo-宏海物流-hub-spoke",
+          "properties": {
+            "topologyId": "topo-宏海物流-hub-spoke",
+            "name": "宏海物流 Hub-and-Spoke Topology",
+            "tioType": "evsla:HubAndSpokeTopology"
+          },
+          "relations": {
+            "forTenant": "tenant-宏海物流",
+            "hasHub": "hub-宏海物流-台北",
+            "hasSpoke": ["spoke-宏海物流-高雄"]
+          }
+        },
+        {
+          "type": "SlaExpectation",
+          "id": "exp-TC003-guaranteedBandwidth",
+          "properties": {
+            "expectationId": "exp-TC003-guaranteedBandwidth",
+            "description": "Guarantee minimum 100 Mbps bandwidth from hub to 高雄倉儲中心 spoke.",
+            "thresholdValue": 100,
+            "thresholdUnit": "Mbps",
+            "compliancePercentage": null,
+            "appliesPerSpoke": "false",
+            "tioType": "evsla:SlaExpectation",
+            "IND#hasMetric": "concept-metric-guaranteedBandwidth",
+            "IND#hasStatistic": "concept-stat-minimum",
+            "IND#hasScope": "concept-scope-specificSpoke",
+            "IND#hasMeasurementMethod": "concept-method-activeMeasurement",
+            "IND#hasTimeWindow": "concept-window-fiveMinute",
+            "IND#matchCondition": "concept-cond-GREATER_THAN_OR_EQUAL"
+          },
+          "relations": {
+            "serviceTarget": "svc-宏海物流-evpn",
+            "targetSpoke": "spoke-宏海物流-高雄"
+          }
+        },
+        {
+          "type": "EnterpriseVpnSlaIntent",
+          "id": "intent-TC003",
+          "properties": {
+            "intentId": "intent-TC003",
+            "name": "Enterprise VPN Hub-Spoke SLA Intent — 宏海物流 guaranteed bandwidth",
+            "description": "Provide ≥100 Mbps guaranteed bandwidth from 宏海物流 hub to 高雄倉儲中心.",
+            "nlIntent": "提供宏海物流總部至高雄倉儲中心100Mbps以上保證頻寬。",
+            "ownerName": "Network Operations Center",
+            "tioType": "evsla:EnterpriseVpnSlaIntent",
+            "IND#tier": null
+          },
+          "relations": {
+            "forTenant": "tenant-宏海物流",
+            "hasTopology": "topo-宏海物流-hub-spoke",
+            "hasExpectation": ["exp-TC003-guaranteedBandwidth"]
+          }
+        }
+      ]
+    },
+
+    {
+      "test_case_id": "TC004",
+      "source_nl_intent": "確保康健醫療台北醫療雲中心至所有院區分點之延遲在95%的時間內低於30ms。",
+      "entities": [
+        {
+          "type": "Tenant",
+          "id": "tenant-康健醫療",
+          "properties": {
+            "tenantId": "tenant-康健醫療",
+            "name": "康健醫療",
+            "industry": "醫療",
+            "tioType": "evsla:Tenant"
+          }
+        },
+        {
+          "type": "EnterpriseVpnService",
+          "id": "svc-康健醫療-evpn",
+          "properties": {
+            "serviceId": "svc-康健醫療-evpn",
+            "name": "康健醫療 Enterprise VPN Service",
+            "tioType": "evsla:EnterpriseVpnService"
+          },
+          "relations": { "forTenant": "tenant-康健醫療" }
+        },
+        {
+          "type": "HubSite",
+          "id": "hub-康健醫療-台北",
+          "properties": {
+            "siteId": "hub-康健醫療-台北",
+            "name": "台北醫療雲中心",
+            "location": "台北",
+            "tioType": "evsla:HubSite"
+          },
+          "relations": { "forTenant": "tenant-康健醫療" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-康健醫療-林口",
+          "properties": {
+            "siteId": "spoke-康健醫療-林口",
+            "name": "林口院區",
+            "location": "林口",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-康健醫療", "connectsToHub": "hub-康健醫療-台北" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-康健醫療-台中",
+          "properties": {
+            "siteId": "spoke-康健醫療-台中",
+            "name": "台中院區",
+            "location": "台中",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-康健醫療", "connectsToHub": "hub-康健醫療-台北" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-康健醫療-高雄",
+          "properties": {
+            "siteId": "spoke-康健醫療-高雄",
+            "name": "高雄院區",
+            "location": "高雄",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-康健醫療", "connectsToHub": "hub-康健醫療-台北" }
+        },
+        {
+          "type": "HubAndSpokeTopology",
+          "id": "topo-康健醫療-hub-spoke",
+          "properties": {
+            "topologyId": "topo-康健醫療-hub-spoke",
+            "name": "康健醫療 Hub-and-Spoke Topology",
+            "tioType": "evsla:HubAndSpokeTopology"
+          },
+          "relations": {
+            "forTenant": "tenant-康健醫療",
+            "hasHub": "hub-康健醫療-台北",
+            "hasSpoke": [
+              "spoke-康健醫療-林口",
+              "spoke-康健醫療-台中",
+              "spoke-康健醫療-高雄"
+            ]
+          }
+        },
+        {
+          "type": "SlaExpectation",
+          "id": "exp-TC004-latency",
+          "properties": {
+            "expectationId": "exp-TC004-latency",
+            "description": "Hub-to-spoke latency must stay below 30 ms for 95 percent of the time across all hospital district spokes.",
+            "thresholdValue": 30,
+            "thresholdUnit": "ms",
+            "compliancePercentage": 95,
+            "appliesPerSpoke": "false",
+            "tioType": "evsla:SlaExpectation",
+            "IND#hasMetric": "concept-metric-latency",
+            "IND#hasStatistic": "concept-stat-p95",
+            "IND#hasScope": "concept-scope-hubToAllSpokes",
+            "IND#hasMeasurementMethod": "concept-method-twamp",
+            "IND#hasTimeWindow": "concept-window-fiveMinute",
+            "IND#matchCondition": "concept-cond-LESS_THAN"
+          },
+          "relations": { "serviceTarget": "svc-康健醫療-evpn" }
+        },
+        {
+          "type": "EnterpriseVpnSlaIntent",
+          "id": "intent-TC004",
+          "properties": {
+            "intentId": "intent-TC004",
+            "name": "Enterprise VPN Hub-Spoke SLA Intent — 康健醫療 latency",
+            "description": "Ensure 康健醫療 hub-to-spoke latency stays below 30 ms for 95 percent of the time across hospital district spokes.",
+            "nlIntent": "確保康健醫療台北醫療雲中心至所有院區分點之延遲在95%的時間內低於30ms。",
+            "ownerName": "Network Operations Center",
+            "tioType": "evsla:EnterpriseVpnSlaIntent",
+            "IND#tier": null
+          },
+          "relations": {
+            "forTenant": "tenant-康健醫療",
+            "hasTopology": "topo-康健醫療-hub-spoke",
+            "hasExpectation": ["exp-TC004-latency"]
+          }
+        }
+      ]
+    },
+
+    {
+      "test_case_id": "TC005",
+      "source_nl_intent": "確保晨星零售Hub與各Spoke間封包遺失率低於0.05%（99%時間）。",
+      "entities": [
+        {
+          "type": "Tenant",
+          "id": "tenant-晨星零售",
+          "properties": {
+            "tenantId": "tenant-晨星零售",
+            "name": "晨星零售",
+            "industry": "零售",
+            "tioType": "evsla:Tenant"
+          }
+        },
+        {
+          "type": "EnterpriseVpnService",
+          "id": "svc-晨星零售-evpn",
+          "properties": {
+            "serviceId": "svc-晨星零售-evpn",
+            "name": "晨星零售 Enterprise VPN Service",
+            "tioType": "evsla:EnterpriseVpnService"
+          },
+          "relations": { "forTenant": "tenant-晨星零售" }
+        },
+        {
+          "type": "HubSite",
+          "id": "hub-晨星零售-台北",
+          "properties": {
+            "siteId": "hub-晨星零售-台北",
+            "name": "台北資料中心",
+            "location": "台北",
+            "tioType": "evsla:HubSite"
+          },
+          "relations": { "forTenant": "tenant-晨星零售" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-晨星零售-板橋",
+          "properties": {
+            "siteId": "spoke-晨星零售-板橋",
+            "name": "板橋旗艦店",
+            "location": "新北",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-晨星零售", "connectsToHub": "hub-晨星零售-台北" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-晨星零售-台中",
+          "properties": {
+            "siteId": "spoke-晨星零售-台中",
+            "name": "台中公益店",
+            "location": "台中",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-晨星零售", "connectsToHub": "hub-晨星零售-台北" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-晨星零售-台南",
+          "properties": {
+            "siteId": "spoke-晨星零售-台南",
+            "name": "台南西門店",
+            "location": "台南",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-晨星零售", "connectsToHub": "hub-晨星零售-台北" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-晨星零售-高雄",
+          "properties": {
+            "siteId": "spoke-晨星零售-高雄",
+            "name": "高雄夢時代店",
+            "location": "高雄",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-晨星零售", "connectsToHub": "hub-晨星零售-台北" }
+        },
+        {
+          "type": "HubAndSpokeTopology",
+          "id": "topo-晨星零售-hub-spoke",
+          "properties": {
+            "topologyId": "topo-晨星零售-hub-spoke",
+            "name": "晨星零售 Hub-and-Spoke Topology",
+            "tioType": "evsla:HubAndSpokeTopology"
+          },
+          "relations": {
+            "forTenant": "tenant-晨星零售",
+            "hasHub": "hub-晨星零售-台北",
+            "hasSpoke": [
+              "spoke-晨星零售-板橋",
+              "spoke-晨星零售-台中",
+              "spoke-晨星零售-台南",
+              "spoke-晨星零售-高雄"
+            ]
+          }
+        },
+        {
+          "type": "SlaExpectation",
+          "id": "exp-TC005-packetLoss",
+          "properties": {
+            "expectationId": "exp-TC005-packetLoss",
+            "description": "Hub-to-spoke packet loss must stay below 0.05 percent for 99 percent of the time across retail spokes.",
+            "thresholdValue": 0.05,
+            "thresholdUnit": "%",
+            "compliancePercentage": 99,
+            "appliesPerSpoke": "false",
+            "tioType": "evsla:SlaExpectation",
+            "IND#hasMetric": "concept-metric-packetLoss",
+            "IND#hasStatistic": "concept-stat-p99",
+            "IND#hasScope": "concept-scope-hubToAllSpokes",
+            "IND#hasMeasurementMethod": "concept-method-twamp",
+            "IND#hasTimeWindow": "concept-window-fiveMinute",
+            "IND#matchCondition": "concept-cond-LESS_THAN"
+          },
+          "relations": { "serviceTarget": "svc-晨星零售-evpn" }
+        },
+        {
+          "type": "EnterpriseVpnSlaIntent",
+          "id": "intent-TC005",
+          "properties": {
+            "intentId": "intent-TC005",
+            "name": "Enterprise VPN Hub-Spoke SLA Intent — 晨星零售 packet loss",
+            "description": "Ensure 晨星零售 hub-to-spoke packet loss stays below 0.05 percent for 99 percent of the time across retail spokes.",
+            "nlIntent": "確保晨星零售Hub與各Spoke間封包遺失率低於0.05%（99%時間）。",
+            "ownerName": "Network Operations Center",
+            "tioType": "evsla:EnterpriseVpnSlaIntent",
+            "IND#tier": null
+          },
+          "relations": {
+            "forTenant": "tenant-晨星零售",
+            "hasTopology": "topo-晨星零售-hub-spoke",
+            "hasExpectation": ["exp-TC005-packetLoss"]
+          }
+        }
+      ]
+    },
+
+    {
+      "test_case_id": "TC020",
+      "source_nl_intent": "確保精準醫材台北研發總部至竹北實驗室與台南製造廠之延遲在95%的時間內低於35ms，且Hub與各Spoke間封包遺失率低於0.05%（99%時間）。",
+      "_stress_test_target": "Multi-metric:同一 intent 帶 2 個 SlaExpectation;驗證 EnterpriseVpnSlaIntent.hasExpectation 的 MultiValue 路徑。",
+      "entities": [
+        {
+          "type": "Tenant",
+          "id": "tenant-精準醫材",
+          "properties": {
+            "tenantId": "tenant-精準醫材",
+            "name": "精準醫材",
+            "industry": "醫療器材",
+            "tioType": "evsla:Tenant"
+          }
+        },
+        {
+          "type": "EnterpriseVpnService",
+          "id": "svc-精準醫材-evpn",
+          "properties": {
+            "serviceId": "svc-精準醫材-evpn",
+            "name": "精準醫材 Enterprise VPN Service",
+            "tioType": "evsla:EnterpriseVpnService"
+          },
+          "relations": { "forTenant": "tenant-精準醫材" }
+        },
+        {
+          "type": "HubSite",
+          "id": "hub-精準醫材-台北",
+          "properties": {
+            "siteId": "hub-精準醫材-台北",
+            "name": "台北研發總部",
+            "location": "台北",
+            "tioType": "evsla:HubSite"
+          },
+          "relations": { "forTenant": "tenant-精準醫材" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-精準醫材-竹北",
+          "properties": {
+            "siteId": "spoke-精準醫材-竹北",
+            "name": "竹北實驗室",
+            "location": "竹北",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-精準醫材", "connectsToHub": "hub-精準醫材-台北" }
+        },
+        {
+          "type": "SpokeSite",
+          "id": "spoke-精準醫材-台南",
+          "properties": {
+            "siteId": "spoke-精準醫材-台南",
+            "name": "台南製造廠",
+            "location": "台南",
+            "tioType": "evsla:SpokeSite"
+          },
+          "relations": { "forTenant": "tenant-精準醫材", "connectsToHub": "hub-精準醫材-台北" }
+        },
+        {
+          "type": "HubAndSpokeTopology",
+          "id": "topo-精準醫材-hub-spoke",
+          "properties": {
+            "topologyId": "topo-精準醫材-hub-spoke",
+            "name": "精準醫材 Hub-and-Spoke Topology",
+            "tioType": "evsla:HubAndSpokeTopology"
+          },
+          "relations": {
+            "forTenant": "tenant-精準醫材",
+            "hasHub": "hub-精準醫材-台北",
+            "hasSpoke": ["spoke-精準醫材-竹北", "spoke-精準醫材-台南"]
+          }
+        },
+        {
+          "type": "SlaExpectation",
+          "id": "exp-TC020-latency",
+          "properties": {
+            "expectationId": "exp-TC020-latency",
+            "description": "Hub-to-spoke latency must stay below 35 ms for 95 percent of the time across R&D spokes.",
+            "thresholdValue": 35,
+            "thresholdUnit": "ms",
+            "compliancePercentage": 95,
+            "appliesPerSpoke": "false",
+            "tioType": "evsla:SlaExpectation",
+            "IND#hasMetric": "concept-metric-latency",
+            "IND#hasStatistic": "concept-stat-p95",
+            "IND#hasScope": "concept-scope-hubToAllSpokes",
+            "IND#hasMeasurementMethod": "concept-method-twamp",
+            "IND#hasTimeWindow": "concept-window-fiveMinute",
+            "IND#matchCondition": "concept-cond-LESS_THAN"
+          },
+          "relations": { "serviceTarget": "svc-精準醫材-evpn" }
+        },
+        {
+          "type": "SlaExpectation",
+          "id": "exp-TC020-packetLoss",
+          "properties": {
+            "expectationId": "exp-TC020-packetLoss",
+            "description": "Hub-to-spoke packet loss must stay below 0.05 percent for 99 percent of the time across R&D spokes.",
+            "thresholdValue": 0.05,
+            "thresholdUnit": "%",
+            "compliancePercentage": 99,
+            "appliesPerSpoke": "false",
+            "tioType": "evsla:SlaExpectation",
+            "IND#hasMetric": "concept-metric-packetLoss",
+            "IND#hasStatistic": "concept-stat-p99",
+            "IND#hasScope": "concept-scope-hubToAllSpokes",
+            "IND#hasMeasurementMethod": "concept-method-twamp",
+            "IND#hasTimeWindow": "concept-window-fiveMinute",
+            "IND#matchCondition": "concept-cond-LESS_THAN"
+          },
+          "relations": { "serviceTarget": "svc-精準醫材-evpn" }
+        },
+        {
+          "type": "EnterpriseVpnSlaIntent",
+          "id": "intent-TC020",
+          "properties": {
+            "intentId": "intent-TC020",
+            "name": "Enterprise VPN Hub-Spoke SLA Intent — 精準醫材 latency + packet loss",
+            "description": "Ensure 精準醫材 hub-to-spoke latency stays below 35 ms (p95) and packet loss below 0.05 percent (p99) across R&D spokes.",
+            "nlIntent": "確保精準醫材台北研發總部至竹北實驗室與台南製造廠之延遲在95%的時間內低於35ms，且Hub與各Spoke間封包遺失率低於0.05%（99%時間）。",
+            "ownerName": "Network Operations Center",
+            "tioType": "evsla:EnterpriseVpnSlaIntent",
+            "IND#tier": null
+          },
+          "relations": {
+            "forTenant": "tenant-精準醫材",
+            "hasTopology": "topo-精準醫材-hub-spoke",
+            "hasExpectation": ["exp-TC020-latency", "exp-TC020-packetLoss"]
+          }
+        }
+      ]
+    }
+
+  ]
+}

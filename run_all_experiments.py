@@ -26,6 +26,11 @@ EXPERIMENTS = {
         "dir": ROOT / "KGE" / "KGE-based-graphrag",
         "phase1_report": PHASE1_DIR / "phase1_kge_hybrid.json",
     },
+    "kag": {
+        "name": "KAG",
+        "dir": ROOT / "KAG",
+        "phase1_report": PHASE1_DIR / "phase1_kag.json",
+    },
 }
 
 

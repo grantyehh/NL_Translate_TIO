@@ -1,0 +1,263 @@
+#------------project configuration start----------------#
+# 對齊 TIO_Experiment/GraphRag/settings.yaml 的模型選擇,以利三架構公平比較。
+# 模型 + key 由環境變數帶入:
+#   GRAPHRAG_API_KEY        — OpenAI api key
+#   GRAPHRAG_LLM_MODEL      — 例如 gpt-5.4
+#   GRAPHRAG_EMBEDDING_MODEL — 例如 text-embedding-3-small(1536 dim)
+#
+# **注意**:`knext` CLI 用 `ruamel.yaml` 純讀 YAML,不會自動跑 Jinja2 render
+# (僅 kag/common/conf.py runtime 才會)。所以執行 knext 前要先跑:
+#   ./render_config.sh
+# 把這個 template 渲染成 `kag_config.yaml`(被 .gitignore 排除)。
+
+openie_llm: &openie_llm
+  type: openai
+  base_url: https://api.openai.com/v1/
+  api_key: "{{ GRAPHRAG_API_KEY }}"
+  model: "{{ GRAPHRAG_LLM_MODEL }}"
+  enable_check: false
+  max_tokens: 8192
+
+
+ner_llm:
+  type: openai
+  base_url: https://api.openai.com/v1/
+  api_key: "{{ GRAPHRAG_API_KEY }}"
+  model: "{{ GRAPHRAG_LLM_MODEL }}"
+  enable_check: false
+  max_tokens: 1024
+
+chat_llm: &chat_llm
+  type: openai
+  base_url: https://api.openai.com/v1/
+  api_key: "{{ GRAPHRAG_API_KEY }}"
+  model: "{{ GRAPHRAG_LLM_MODEL }}"
+  enable_check: false
+  max_tokens: 1024
+
+vectorize_model: &vectorize_model
+  api_key: "{{ GRAPHRAG_API_KEY }}"
+  base_url: https://api.openai.com/v1/
+  model: "{{ GRAPHRAG_EMBEDDING_MODEL }}"
+  type: openai
+  vector_dimensions: 1536
+  max_rate: 1000
+  time_period: 60
+vectorizer: *vectorize_model
+
+log:
+  level: INFO
+
+project:
+  biz_scene: default
+  host_addr: http://127.0.0.1:8887
+  id: '1'
+  language: zh  # 查詢端是中文 NL intent;corpus 是英文 SKILL.md(bge-m3 / ada-002 都支援 cross-lingual)
+  namespace: TIOEvslaQA
+#------------project configuration end----------------#
+
+#------------kag-builder configuration start----------------#
+
+e1:
+  type: schema_free_extractor # kag.builder.component.extractor.schema_free_extractor.SchemaFreeExtractor
+  llm: *openie_llm
+  ner_prompt:
+    type: default_ner # kag.builder.prompt.default.ner.OpenIENERPrompt
+  std_prompt:
+    type: default_std # kag.builder.prompt.default.std.OpenIEEntitystandardizationdPrompt
+  triple_prompt:
+    type: default_triple # kag.builder.prompt.default.triple.OpenIETriplePrompt
+
+e2: &e2
+  type: chunk_extractor # kag.builder.component.extractor.schema_free_extractor.SchemaFreeExtractor
+
+e3: &e3
+  type: outline_extractor # kag.builder.component.extractor.schema_free_extractor.SchemaFreeExtractor
+
+e4: &e4
+  type: summary_extractor # kag.builder.component.extractor.summary_extractor.SummaryExtractor
+  llm_module: *openie_llm
+  chunk_summary_prompt:
+    type: default_chunk_summary
+
+e5: &e5
+  type: table_extractor
+  llm: *openie_llm
+  table_context_prompt:
+    type: table_context
+  table_row_col_summary_prompt:
+    type: table_row_col_summary
+
+e6: &e6
+  type: atomic_query_extractor # kag.builder.component.extractor.chunk_extractor.ChunkExtractor
+  llm: *openie_llm
+  prompt:
+    type: atomic_query_extract
+
+kag_builder_pipeline:
+  chain:
+    type: unstructured_builder_chain # kag.builder.default_chain.DefaultUnstructuredBuilderChain
+    extractor:
+      - *e2
+      - *e3
+      - *e4
+      - *e5
+      - *e6
+    reader:
+      type: md_reader # kag.builder.component.reader.dict_reader.DictReader
+      cut_depth: 6
+    post_processor:
+      type: kag_post_processor # kag.builder.component.postprocessor.kag_postprocessor.KAGPostProcessor
+    splitter:
+      type: length_splitter # kag.builder.component.splitter.length_splitter.LengthSplitter
+      split_length: 1000
+      window_length: 0
+    vectorizer:
+      type: batch_vectorizer # kag.builder.component.vectorizer.batch_vectorizer.BatchVectorizer
+      vectorize_model: *vectorize_model
+    writer:
+      type: kg_writer # kag.builder.component.writer.kg_writer.KGWriter
+  num_threads_per_chain: 1
+  num_chains: 1
+  max_concurrency: 1
+  scanner:
+    #type: file_scanner
+    type: dir_file_scanner # kag.builder.component.scanner.directory_scanner.DirectoryScanner
+    file_suffix: md
+#------------kag-builder configuration end----------------#
+
+#------------kag-solver configuration start----------------#
+search_api: &search_api
+  type: openspg_search_api
+  #kag.solver.tools.search_api.impl.openspg_search_api.OpenSPGSearchAPI
+
+graph_api: &graph_api
+  type: openspg_graph_api #kag.solver.tools.graph_api.impl.openspg_graph_api.OpenSPGGraphApi
+
+r1: &r1
+  type: atomic_query_chunk_retriever
+  vectorize_model: *vectorize_model
+  search_api: *search_api
+  graph_api: *graph_api
+  llm_client: *chat_llm
+  query_rewrite_prompt:
+    type: atomic_query_rewrite_prompt
+  top_k: 10
+
+r2: &r2
+  type: outline_chunk_retriever
+  vectorize_model: *vectorize_model
+  search_api: *search_api
+  graph_api: *graph_api
+  top_k: 10
+
+r3: &r3
+  type: summary_chunk_retriever
+  vectorize_model: *vectorize_model
+  search_api: *search_api
+  graph_api: *graph_api
+  score_threshold: 0.8
+  top_k: 10
+
+r4: &r4
+  type: vector_chunk_retriever
+  vectorize_model: *vectorize_model
+  search_api: *search_api
+  graph_api: *graph_api
+  score_threshold: 0.8
+  top_k: 10
+
+r5: &r5
+  type: table_retriever
+  vectorize_model: *vectorize_model
+  search_api: *search_api
+  graph_api: *graph_api
+  top_k: 10
+
+retriever_executor: &retriever_executor
+  # NetOperatorQA 用客製 `evidence_based_reasoner`(在 example 的 solver/src/);
+  # 我們改用 KAG 內建 `kag_hybrid_retrieval_executor`(同樣支援 5-way retrievers + merger)。
+  type: kag_hybrid_retrieval_executor
+  llm_module: *chat_llm
+  retrievers:
+   - *r1
+   - *r2
+   - *r3
+   - *r4
+   - *r5
+  merger:
+    type: kag_merger
+
+retriever_executor_rerank: &retriever_executor_rerank
+  type: long_context_reasoner
+  llm: *chat_llm
+  retrievers:
+    - *r1
+    - *r2
+    - *r3
+    - *r4
+    - *r5
+  merger:
+    type: kag_merger
+  context_select_llm: *chat_llm
+  context_select_prompt:
+    type: context_select_prompt
+  vectorize_model: *vectorize_model
+
+
+kag_output_executor: &kag_output_executor_conf
+  type: kag_output_executor
+
+kag_deduce_executor: &kag_deduce_executor_conf
+  type: kag_deduce_executor
+
+
+py_code_based_math_executor: &py_code_based_math_executor_conf
+  type: py_code_based_math_executor
+  llm: *chat_llm
+
+
+kag_solver_pipeline_tc:
+  type: kag_static_pipeline
+  planner:
+    # NetOperatorQA 用客製 `kag_net_operator_static_planner`(我們沒帶);
+    # 改成 KAG 內建 generic 版。
+    type: kag_static_planner
+    llm: *chat_llm
+    plan_prompt:
+      type: default_retriever_static_planning  # NetOperatorQA 用客製 `retriever_static_planning`,我們用內建版
+    rewrite_prompt:
+      type: default_query_rewrite
+  executors:
+    - *retriever_executor
+  generator:
+    # NetOperatorQA 用客製 `llm_generator_with_thought`;改用 KAG 內建 `llm_generator`。
+    # 注意:我們 nl_to_tio.py 只用 retrieved_chunks,generator 的最終答案會被丟掉。
+    type: llm_generator
+    llm_client: *chat_llm
+    generated_prompt:
+      type: default_multi_hop_generator
+#------------kag-solver configuration end----------------#
+
+
+kag_solver_pipeline:
+  type: kag_iterative_pipeline
+  planner:
+    type: kag_iterative_planner
+    llm: *chat_llm
+    plan_prompt:
+      type: default_thought_iterative_planning
+    rewrite_prompt:
+      type: default_query_rewrite
+  executors:
+    - *retriever_executor_rerank
+    - *py_code_based_math_executor_conf
+    - *kag_deduce_executor_conf
+    - *kag_output_executor_conf
+  generator:
+    # NetOperatorQA 用客製 `llm_generator_with_thought`;改用 KAG 內建 `llm_generator`。
+    # 注意:我們 nl_to_tio.py 只用 retrieved_chunks,generator 的最終答案會被丟掉。
+    type: llm_generator
+    llm_client: *chat_llm
+    generated_prompt:
+      type: default_multi_hop_generator

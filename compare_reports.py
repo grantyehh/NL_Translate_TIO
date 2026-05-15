@@ -14,6 +14,7 @@ DEFAULT_REPORTS = [
     ("LLM-only", PHASE1_DIR / "phase1_llm_only.json"),
     ("GraphRag", PHASE1_DIR / "phase1_graphrag.json"),
     ("KGE-hybrid", PHASE1_DIR / "phase1_kge_hybrid.json"),
+    ("KAG", PHASE1_DIR / "phase1_kag.json"),
 ]
 
 
@@ -65,12 +66,16 @@ def aggregate_metrics(items: List[dict]) -> dict:
     parse_ok = [bool(x.get("parse_ok")) for x in items]
     node_count = [int(x.get("json_node_count", x.get("triple_count", 0))) for x in items]
     coverage = [coerce_float(x.get("expected_coverage_ratio", 0.0)) for x in items]
+    ontology_coverage = [coerce_float(x.get("ontology_term_coverage_ratio", 0.0)) for x in items]
+    performance_coverage = [coerce_float(x.get("performance_metric_coverage_ratio", 0.0)) for x in items]
     intent_uri_ok = [bool(x.get("intent_uri_contains_case_id")) for x in items]
     return {
         "count": len(items),
         "parse_ok_rate": ratio_true(parse_ok),
         "avg_triple_count": mean(node_count),
         "avg_coverage_ratio": mean(coverage),
+        "avg_ontology_term_coverage_ratio": mean(ontology_coverage),
+        "avg_performance_metric_coverage_ratio": mean(performance_coverage),
         "intent_uri_ok_rate": ratio_true(intent_uri_ok),
     }
 
@@ -94,9 +99,14 @@ def print_header(title: str) -> None:
 
 
 def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
-    print_header("Three-Way Summary")
-    print(f"{'Experiment':14} | {'Cases':5} | {'Parse OK':10} | {'Avg coverage':12} | {'Avg JSON nodes':14} | {'Intent ID OK':12}")
-    print("-" * 82)
+    n = len(reports)
+    label = {2: "Two-Way", 3: "Three-Way", 4: "Four-Way", 5: "Five-Way"}.get(n, f"{n}-Way")
+    print_header(f"{label} Summary")
+    print(
+        f"{'Experiment':14} | {'Cases':5} | {'Parse OK':10} | {'Avg icm':8} | "
+        f"{'Avg ontology':12} | {'Avg metric':10} | {'Avg JSON nodes':14} | {'Intent ID OK':12}"
+    )
+    print("-" * 113)
     rows: list[tuple[str, dict]] = []
     for name, _, items in reports:
         metrics = aggregate_metrics(items)
@@ -105,47 +115,58 @@ def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
             f"{name:14} | "
             f"{metrics['count']:5d} | "
             f"{metrics['parse_ok_rate'] * 100:9.2f}% | "
-            f"{metrics['avg_coverage_ratio']:12.4f} | "
+            f"{metrics['avg_coverage_ratio']:8.4f} | "
+            f"{metrics['avg_ontology_term_coverage_ratio']:12.4f} | "
+            f"{metrics['avg_performance_metric_coverage_ratio']:10.4f} | "
             f"{metrics['avg_triple_count']:14.2f} | "
             f"{metrics['intent_uri_ok_rate'] * 100:12.2f}%"
         )
 
     best_coverage = max(rows, key=lambda item: item[1]["avg_coverage_ratio"])
+    best_ontology = max(rows, key=lambda item: item[1]["avg_ontology_term_coverage_ratio"])
+    best_performance = max(rows, key=lambda item: item[1]["avg_performance_metric_coverage_ratio"])
     fewest_nodes = min(rows, key=lambda item: item[1]["avg_triple_count"])
     print()
-    print(f"Best average coverage  : {best_coverage[0]} ({best_coverage[1]['avg_coverage_ratio']:.4f})")
+    print(f"Best average ICM coverage       : {best_coverage[0]} ({best_coverage[1]['avg_coverage_ratio']:.4f})")
+    print(
+        f"Best average ontology coverage  : {best_ontology[0]} "
+        f"({best_ontology[1]['avg_ontology_term_coverage_ratio']:.4f})"
+    )
+    print(
+        f"Best average metric coverage    : {best_performance[0]} "
+        f"({best_performance[1]['avg_performance_metric_coverage_ratio']:.4f})"
+    )
     print(f"Fewest average JSON nodes: {fewest_nodes[0]} ({fewest_nodes[1]['avg_triple_count']:.2f})")
 
 
 def print_case_matrix(reports: list[tuple[str, Path, List[dict]]], difficulty_map: Dict[str, str]) -> None:
-    print_header("Per-Case Three-Way Comparison")
+    n = len(reports)
+    label = {2: "Two-Way", 3: "Three-Way", 4: "Four-Way", 5: "Five-Way"}.get(n, f"{n}-Way")
+    print_header(f"Per-Case {label} Comparison")
     indexed = [(name, index_by_case(items)) for name, _, items in reports]
     all_cases = sorted(set().union(*(set(rows.keys()) for _, rows in indexed)))
 
+    # 動態建表頭(每個 pipeline 取縮寫前 4 字元當欄位前綴)
+    def short_label(s: str) -> str:
+        return s.replace("-only", "").replace("-hybrid", "")[:8]
+
+    cov_cols = " | ".join(f"{short_label(name)+' cov':>10}" for name, _, _ in reports)
+    node_cols = " | ".join(f"{short_label(name)+' nodes':>12}" for name, _, _ in reports)
     print(
-        f"{'case_id':8} | {'LLM cov':7} | {'Graph cov':9} | {'KGE cov':7} | "
-        f"{'winner':10} | {'LLM nodes':9} | {'Graph nodes':11} | {'KGE nodes':9} | {'difficulty':10}"
+        f"{'case_id':8} | {cov_cols} | {'winner':10} | {node_cols} | {'difficulty':10}"
     )
-    print("-" * 112)
+    print("-" * (24 + len(cov_cols) + len(node_cols)))
     for case_id in all_cases:
         rows = {name: by_case.get(case_id) for name, by_case in indexed}
-        covs = {
-            "LLM-only": coverage(rows.get("LLM-only")),
-            "GraphRag": coverage(rows.get("GraphRag")),
-            "KGE-hybrid": coverage(rows.get("KGE-hybrid")),
-        }
+        covs = {name: coverage(rows.get(name)) for name, _, _ in reports}
         best = max(covs.values())
         winners = [name for name, value in covs.items() if value == best]
         winner = "tie" if len(winners) > 1 else winners[0]
+        cov_vals = " | ".join(f"{covs[name]:>10.4f}" for name, _, _ in reports)
+        node_vals = " | ".join(f"{node_count(rows.get(name)):>12d}" for name, _, _ in reports)
         print(
-            f"{case_id:8} | "
-            f"{covs['LLM-only']:7.4f} | "
-            f"{covs['GraphRag']:9.4f} | "
-            f"{covs['KGE-hybrid']:7.4f} | "
-            f"{winner:10} | "
-            f"{node_count(rows.get('LLM-only')):9d} | "
-            f"{node_count(rows.get('GraphRag')):11d} | "
-            f"{node_count(rows.get('KGE-hybrid')):9d} | "
+            f"{case_id:8} | {cov_vals} | "
+            f"{winner:10} | {node_vals} | "
             f"{difficulty_map.get(case_id, 'N/A'):10}"
         )
 
@@ -177,7 +198,7 @@ class Tee(io.TextIOBase):
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Compare three phase1 reports for LLM-only, GraphRag, and KGE-hybrid."
+        description="Compare phase1 reports for LLM-only, GraphRag, KGE-hybrid, and KAG."
     )
     parser.add_argument(
         "--test-cases",
@@ -186,8 +207,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--out",
-        default=str(PHASE1_DIR / "compare_three_way.txt"),
-        help="Output text report path (default: phase1/compare_three_way.txt)",
+        default=str(PHASE1_DIR / "compare_four_way.txt"),
+        help="Output text report path (default: phase1/compare_four_way.txt)",
     )
     args = parser.parse_args()
 

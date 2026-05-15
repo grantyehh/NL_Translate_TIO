@@ -1,0 +1,70 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc002",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure packet loss below 0.1% for 遠東製造 enterprise VPN traffic between the hub and all spokes for 99% of measurements.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "tenant": {
+    "id": "tenant:遠東製造",
+    "name": "遠東製造",
+    "@type": "evsla:Tenant"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-tc002-packet-loss",
+      "name": "Hub-to-Spoke Packet Loss SLA Expectation",
+      "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
+      "expectationObject": {
+        "id": "svc:遠東製造-enterprise-vpn",
+        "name": "遠東製造 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
+      },
+      "expectationTarget": [
+        {
+          "name": "Hub-to-All-Spokes Packet Loss",
+          "targetProperty": "evsla:packetLoss",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 0.1,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:packetLoss",
+          "evsla:hasThreshold": {
+            "value": 0.1,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p99",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "topology-tc002",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "遠東製造Hub"
+      },
+      "evsla:hasSpoke": []
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

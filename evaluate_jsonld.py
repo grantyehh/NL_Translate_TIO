@@ -48,6 +48,11 @@ EXPERIMENTS = {
         "output_subdir": "kge_hybrid",
         "report_name": "phase1_kge_hybrid.json",
     },
+    "kag": {
+        "label": "KAG",
+        "output_subdir": "kag",
+        "report_name": "phase1_kag.json",
+    },
 }
 
 
@@ -243,6 +248,81 @@ def evaluate_expected_elements(doc: dict[str, Any], expected_elements: list[str]
     return results
 
 
+def flatten_json_terms(value: Any) -> set[str]:
+    terms: set[str] = set()
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            terms.add(str(key))
+            terms.update(flatten_json_terms(nested))
+    elif isinstance(value, list):
+        for item in value:
+            terms.update(flatten_json_terms(item))
+    elif isinstance(value, str):
+        terms.add(value)
+    return terms
+
+
+def evaluate_ontology_terms(doc: dict[str, Any], ontology_terms: list[str]) -> list[dict[str, Any]]:
+    present_terms = flatten_json_terms(doc)
+    results: list[dict[str, Any]] = []
+    for term in ontology_terms:
+        ok = term in present_terms
+        results.append(
+            {
+                "curie": term,
+                "ok": ok,
+                "reason": "term appears in JSON-LD key/value" if ok else "term not found in JSON-LD key/value",
+            }
+        )
+    return results
+
+
+def quantity_matches(value: Any, expected: dict[str, Any]) -> bool:
+    if not is_object(value):
+        return False
+    expected_value = expected.get("value")
+    expected_unit = expected.get("unit")
+    return value.get("value") == expected_value and value.get("unit") == expected_unit
+
+
+def metric_target_ok(target: dict[str, Any], metric: dict[str, Any]) -> bool:
+    ontology_term = metric.get("ontology_term")
+    expected_threshold = metric.get("threshold")
+    threshold_ok = (
+        quantity_matches(target.get("targetValue"), expected_threshold)
+        or quantity_matches(target.get("evsla:hasThreshold"), expected_threshold)
+        if is_object(expected_threshold)
+        else True
+    )
+    checks = [
+        target.get("targetProperty") == ontology_term or target.get("evsla:hasMetric") == ontology_term,
+        target.get("matchCondition") == metric.get("operator"),
+        threshold_ok,
+        not metric.get("statistic") or target.get("evsla:hasStatistic") == metric.get("statistic"),
+        not metric.get("scope") or target.get("evsla:hasScope") == metric.get("scope"),
+        not metric.get("measurement_method") or target.get("evsla:hasMeasurementMethod") == metric.get("measurement_method"),
+        not metric.get("time_window") or target.get("evsla:hasTimeWindow") == metric.get("time_window"),
+    ]
+    return all(checks)
+
+
+def evaluate_performance_metrics(doc: dict[str, Any], performance_metrics: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    targets = iter_targets(doc)
+    results: list[dict[str, Any]] = []
+    for metric in performance_metrics:
+        metric_name = str(metric.get("metric", metric.get("ontology_term", "unknown")))
+        ok = any(metric_target_ok(target, metric) for target in targets)
+        results.append(
+            {
+                "metric": metric_name,
+                "ontology_term": metric.get("ontology_term"),
+                "ok": ok,
+                "reason": "matching structured SLA target found" if ok else "no structured SLA target matches metric/operator/threshold metadata",
+            }
+        )
+    return results
+
+
 def count_json_nodes(value: Any) -> int:
     if isinstance(value, dict):
         return 1 + sum(count_json_nodes(v) for v in value.values())
@@ -262,13 +342,31 @@ def evaluate_payload(
     file_path: Path,
     markdown_fence_stripped: bool,
     parse_error: str | None,
+    ontology_terms: list[str] | None = None,
+    performance_metrics: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     contract_errors = [] if parse_error else validate_contract(doc)
     parse_ok = parse_error is None and not contract_errors and is_object(doc)
     expected_results = evaluate_expected_elements(doc, expected_elements) if is_object(doc) and parse_error is None else []
-    coverage = (
+    expected_coverage = (
         sum(1 for item in expected_results if item.get("ok")) / len(expected_results)
         if expected_results
+        else None
+    )
+    ontology_results = (
+        evaluate_ontology_terms(doc, ontology_terms or []) if is_object(doc) and parse_error is None else []
+    )
+    ontology_coverage = (
+        sum(1 for item in ontology_results if item.get("ok")) / len(ontology_results)
+        if ontology_results
+        else None
+    )
+    performance_results = (
+        evaluate_performance_metrics(doc, performance_metrics or []) if is_object(doc) and parse_error is None else []
+    )
+    performance_coverage = (
+        sum(1 for item in performance_results if item.get("ok")) / len(performance_results)
+        if performance_results
         else None
     )
     intent_id = str(doc.get("id", "")) if is_object(doc) else ""
@@ -286,12 +384,22 @@ def evaluate_payload(
         "unknown_predicates": [],
         "unknown_types": [],
         "expected_tio_elements": expected_results,
-        "expected_coverage_ratio": coverage,
+        "expected_coverage_ratio": expected_coverage,
+        "ontology_terms": ontology_results,
+        "ontology_term_coverage_ratio": ontology_coverage,
+        "performance_metrics": performance_results,
+        "performance_metric_coverage_ratio": performance_coverage,
         "intent_uri_contains_case_id": case_id_slug(case_id) in intent_id.lower(),
     }
 
 
-def evaluate_file(path: Path, expected_elements: list[str], case_id: str) -> dict[str, Any]:
+def evaluate_file(
+    path: Path,
+    expected_elements: list[str],
+    case_id: str,
+    ontology_terms: list[str] | None = None,
+    performance_metrics: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     raw = path.read_text(encoding="utf-8")
     cleaned, fenced = strip_markdown_json_fence(raw)
     parse_error: str | None = None
@@ -300,7 +408,16 @@ def evaluate_file(path: Path, expected_elements: list[str], case_id: str) -> dic
         doc = json.loads(cleaned)
     except Exception as e:
         parse_error = str(e)
-    return evaluate_payload(doc, expected_elements, case_id, path, fenced, parse_error)
+    return evaluate_payload(
+        doc,
+        expected_elements,
+        case_id,
+        path,
+        fenced,
+        parse_error,
+        ontology_terms=ontology_terms,
+        performance_metrics=performance_metrics,
+    )
 
 
 def missing_file_report(path: Path, case_id: str) -> dict[str, Any]:
@@ -318,6 +435,10 @@ def missing_file_report(path: Path, case_id: str) -> dict[str, Any]:
         "unknown_types": [],
         "expected_tio_elements": [],
         "expected_coverage_ratio": None,
+        "ontology_terms": [],
+        "ontology_term_coverage_ratio": None,
+        "performance_metrics": [],
+        "performance_metric_coverage_ratio": None,
         "intent_uri_contains_case_id": False,
     }
 
@@ -339,7 +460,15 @@ def evaluate_experiment(experiment_key: str, test_cases: list[dict[str, Any]]) -
             reports.append(missing_file_report(path, tc_id))
             continue
         tc = id_to_case[tc_id]
-        reports.append(evaluate_file(path, tc.get("expected_tio_elements", []), tc_id))
+        reports.append(
+            evaluate_file(
+                path,
+                tc.get("expected_tio_elements", []),
+                tc_id,
+                ontology_terms=tc.get("ontology_terms", []),
+                performance_metrics=tc.get("performance_metrics", []),
+            )
+        )
 
     print(f"\n## {config['label']}")
     for row in reports:
@@ -354,6 +483,12 @@ def evaluate_experiment(experiment_key: str, test_cases: list[dict[str, Any]]) -
             cov = row.get("expected_coverage_ratio")
             if cov is not None:
                 print(f"  expected_tio_elements_met: {cov * 100:.0f}%")
+            ontology_cov = row.get("ontology_term_coverage_ratio")
+            if ontology_cov is not None:
+                print(f"  ontology_terms_met: {ontology_cov * 100:.0f}%")
+            metric_cov = row.get("performance_metric_coverage_ratio")
+            if metric_cov is not None:
+                print(f"  performance_metrics_met: {metric_cov * 100:.0f}%")
         print()
 
     report_path.parent.mkdir(parents=True, exist_ok=True)

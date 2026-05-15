@@ -12,3 +12,10 @@ graphrag_term_input/
 
 # KGE generated artifacts
 KGE/KGE-based-graphrag/kge_data/
+
+# KAG runtime artifacts
+KAG/.venv/
+KAG/openspg-kag/
+KAG/example_project/kag_config.yaml
+KAG/example_project/builder/data.full-backup/
+KAG/example_project/ckpt/
