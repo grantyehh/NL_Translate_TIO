@@ -67,6 +67,31 @@ class TestKgePaths(unittest.TestCase):
         self.assertIn("intentExpectation", prompt)
         self.assertNotIn("僅輸出完整、可解析的 Turtle", prompt)
 
+    def test_system_prompt_requires_enterprise_vpn_sla_ontology_terms(self) -> None:
+        prompt = nl_to_tio.build_system_prompt("TC001")
+
+        self.assertIn("evsla:EnterpriseVpnSlaIntent", prompt)
+        self.assertIn("evsla:EnterpriseVpnService", prompt)
+        self.assertIn("evsla:HubAndSpokeTopology", prompt)
+        self.assertIn("latency -> evsla:latency", prompt)
+        self.assertIn("95% -> evsla:p95", prompt)
+        self.assertIn("所有分點 / 各Spoke -> evsla:hubToAllSpokes", prompt)
+        self.assertNotIn("DeliveryExpectation", prompt)
+
+    def test_graphrag_query_focuses_on_evsla_terms(self) -> None:
+        query = nl_to_tio.build_graphrag_query("確保星河銀行總部至所有分點之延遲低於50ms。")
+
+        self.assertIn("TM Forum Intent Ontology v3.6.0", query)
+        self.assertIn("EnterpriseVpnSlaOntology", query)
+        self.assertIn("evsla:EnterpriseVpnSlaIntent", query)
+        self.assertIn("evsla:latency", query)
+        self.assertNotIn("5G", query)
+        self.assertNotIn("QoS", query)
+        self.assertNotIn("icm:DeliveryExpectation", query)
+
+    def test_chat_model_uses_gpt_5_4(self) -> None:
+        self.assertEqual(nl_to_tio.CHAT_MODEL, "gpt-5.4")
+
     def test_kge_retrieve_import_does_not_depend_on_root_evaluator(self) -> None:
         base = Path(__file__).resolve().parent
         result = subprocess.run(

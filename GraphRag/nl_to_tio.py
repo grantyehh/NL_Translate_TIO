@@ -5,8 +5,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from dotenv import load_dotenv
 from openai import OpenAI
+from evsla_prompt import build_evsla_graphrag_query, build_evsla_system_prompt
 
 # 加載環境變數
 load_dotenv()
@@ -22,6 +25,8 @@ if not api_key:
     )
     sys.exit(1)
 client = OpenAI(api_key=api_key)
+
+CHAT_MODEL = "gpt-5.4"
 
 
 def default_test_cases_path(root: Path) -> Path:
@@ -61,48 +66,11 @@ def output_path_for_case(root: Path, tc_id: str) -> Path:
 
 
 def build_system_prompt(tc_id: str) -> str:
-    return f"""你是一位資深的電信意圖 (Intent) 專家，精通 TM Forum Intent Ontology (TIO)、GraphRAG 檢索上下文與 JSON-LD API payload 設計。
-你的任務是將自然語言意圖轉換為 API-friendly TIO JSON-LD，不是 Turtle。
+    return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG")
 
-【輸出目標】
-輸出一個完整 JSON object，可被 json.loads 解析，並作為下游 intent API / compiler 的輸入。
-不要輸出 Markdown、code fence、前言或後記。
 
-【必要 top-level 欄位】
-- "@context": 使用 "https://tmforum.org/schemas/intent-ontology/v1.jsonld"
-- "@type": "Intent"
-- "id": 使用可追蹤 ID，例如 "intent-{tc_id.lower()}"
-- "name": 簡短英文名稱
-- "description": 英文描述
-- "intentOwner": 物件，至少包含 id 與 name；未知時使用 ops-manager-01 / Network Operations Center
-- "intentExpectation": array，至少一個 expectation
-- "intentContext": array；沒有明確 context 時可為 []
-- "intentReport": 物件；沒有明確回報需求時使用 reportingInterval "PT5M" 與 handlerResponse "Continuous"
-
-【Expectation 結構】
-每個 intentExpectation 必須包含：
-- "id", "name", "description"
-- "@type": "DeliveryExpectation" 或 "PropertyExpectation"
-- "expectationObject": 被意圖作用的 service / traffic class / resource，至少包含 id, name, "@type"
-- "expectationTarget": array
-
-【PropertyExpectation target 結構】
-若是 latency、throughput、availability、bandwidth、priority 等屬性要求，expectationTarget 內每個 target 必須結構化表示：
-- "name"
-- "targetProperty": 例如 "latency", "throughput", "availability", "priority"
-- "matchCondition": enum，例如 "LESS_THAN", "LESS_THAN_OR_EQUAL", "GREATER_THAN", "GREATER_THAN_OR_EQUAL", "EQUALS"
-- "targetValue": 物件，數值型門檻使用 {{ "value": number, "unit": string }}
-
-【GraphRAG 使用方式】
-- GraphRAG 上下文用來協助選擇 TIO/intent 類型與欄位語意，但最終輸出仍必須是 JSON-LD。
-- 若上下文提供可用 service/resource id，優先放入 expectationObject.id。
-- 不要把檢索文字整段塞進 description；只抽取必要結構。
-
-【建模原則】
-- 核心語意必須放在 JSON 欄位，不可只寫在 description。
-- 若自然語言中有多個核心 requirement，拆成多個 intentExpectation。
-- 若有地點、時間、事件條件，放入 intentContext。
-"""
+def build_graphrag_query(nl_intent: str) -> str:
+    return build_evsla_graphrag_query(nl_intent)
 
 
 def query_graphrag_local(query_text):
@@ -151,7 +119,7 @@ def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model=CHAT_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
@@ -212,15 +180,7 @@ def main() -> None:
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
-        query_text = (
-            f"請根據 TM Forum Intent Ontology (TIO) v3.6.0，說明如何表達下列自然語言意圖：「{tc['nl_intent']}」。\n"
-            "請務必使用與官方本體一致的術語：\n"
-            "- 以 CURIE 形式寫出相關類別與屬性（例如 icm:Intent、icm:DeliveryExpectation、icm:target），"
-            "命名空間須為 http://tio.models.tmforum.org/tio/v3.6.0/ 底下各模組。\n"
-            "- 屬性與類別請使用本體文件中實際的 local name（例如 icm:target），"
-            "不要自行發明 Java 風格的 hasX 名稱，除非本體中確實定義該名稱。\n"
-            "- 簡要說明各術語在意圖中的角色，以及建議的個體／關聯方向。"
-        )
+        query_text = build_graphrag_query(tc["nl_intent"])
         tio_context = query_graphrag_local(query_text)
 
         if tio_context:

@@ -4,7 +4,7 @@
 completion_models:
   default_completion_model:
     model_provider: openai
-    model: gpt-4o
+    model: gpt-5.4
     auth_method: api_key
     api_key: ${GRAPHRAG_API_KEY}
     parallelization:

@@ -37,6 +37,57 @@ VALID_INTENT = {
     "intentReport": {"reportingInterval": "PT5M", "handlerResponse": "Continuous"},
 }
 
+VALID_EVSLA_INTENT = {
+    "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+    "@type": "Intent",
+    "id": "intent-tc001",
+    "name": "Enterprise VPN Hub-Spoke SLA Intent",
+    "description": "Ensure 星河銀行 hub-to-spoke latency stays below 50 ms for 95 percent of the time.",
+    "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+    "intentOwner": {"id": "ops-manager-01", "name": "Network Operations Center"},
+    "tenant": {"id": "tenant-星河銀行", "name": "星河銀行", "@type": "evsla:Tenant"},
+    "intentExpectation": [
+        {
+            "id": "exp-latency-01",
+            "name": "Hub-to-Spoke Latency SLA Expectation",
+            "description": "Latency must be below 50 ms at p95.",
+            "@type": "PropertyExpectation",
+            "ontologyType": "evsla:SlaExpectation",
+            "expectationObject": {
+                "id": "svc:星河銀行-enterprise-vpn",
+                "name": "星河銀行 Enterprise VPN Service",
+                "@type": "Service",
+                "ontologyType": "evsla:EnterpriseVpnService",
+            },
+            "expectationTarget": [
+                {
+                    "name": "Hub-to-Spoke Latency",
+                    "targetProperty": "evsla:latency",
+                    "matchCondition": "LESS_THAN",
+                    "targetValue": {"value": 50, "unit": "ms", "@type": "quan:Quantity"},
+                    "evsla:hasMetric": "evsla:latency",
+                    "evsla:hasThreshold": {"value": 50, "unit": "ms", "@type": "quan:Quantity"},
+                    "evsla:hasStatistic": "evsla:p95",
+                    "evsla:hasScope": "evsla:hubToAllSpokes",
+                    "evsla:hasMeasurementMethod": "evsla:twamp",
+                    "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+                }
+            ],
+        }
+    ],
+    "intentContext": [
+        {
+            "id": "topology-tc001",
+            "@type": "Context",
+            "name": "Hub-and-Spoke Topology",
+            "ontologyType": "evsla:HubAndSpokeTopology",
+            "evsla:hasHub": {"@type": "evsla:HubSite", "name": "台北總部"},
+            "evsla:hasSpoke": [{"@type": "evsla:SpokeSite", "name": "新竹分行"}],
+        }
+    ],
+    "intentReport": {"reportingInterval": "PT5M", "handlerResponse": "Continuous"},
+}
+
 
 class TestEvaluateJsonLd(unittest.TestCase):
     def test_evaluate_payload_reports_contract_and_expected_coverage(self) -> None:
@@ -71,6 +122,69 @@ class TestEvaluateJsonLd(unittest.TestCase):
         self.assertFalse(report["parse_ok"])
         self.assertIn("JSONLD_TARGET_VALUE", {err["code"] for err in report["contract_errors"]})
 
+    def test_evaluate_payload_scores_ontology_terms_and_performance_metrics(self) -> None:
+        report = evaluate_jsonld.evaluate_payload(
+            VALID_EVSLA_INTENT,
+            expected_elements=["icm:PropertyExpectation", "icm:Target"],
+            case_id="TC001",
+            file_path=Path("TC001.jsonld"),
+            markdown_fence_stripped=False,
+            parse_error=None,
+            ontology_terms=[
+                "evsla:EnterpriseVpnSlaIntent",
+                "evsla:EnterpriseVpnService",
+                "evsla:HubAndSpokeTopology",
+                "evsla:latency",
+                "evsla:p95",
+                "evsla:twamp",
+            ],
+            performance_metrics=[
+                {
+                    "metric": "latency",
+                    "operator": "LESS_THAN",
+                    "threshold": {"value": 50, "unit": "ms"},
+                    "ontology_term": "evsla:latency",
+                    "statistic": "evsla:p95",
+                    "scope": "evsla:hubToAllSpokes",
+                    "measurement_method": "evsla:twamp",
+                    "time_window": "evsla:fiveMinuteWindow",
+                }
+            ],
+        )
+
+        self.assertEqual(report["ontology_term_coverage_ratio"], 1.0)
+        self.assertEqual(report["performance_metric_coverage_ratio"], 1.0)
+
+    def test_evaluate_payload_penalizes_5g_output_missing_evsla_terms_and_threshold(self) -> None:
+        old_5g_output = json.loads(json.dumps(VALID_INTENT))
+        old_5g_output["id"] = "intent-tc001"
+        old_5g_output["name"] = "5G Slice Service Establishment Intent"
+
+        report = evaluate_jsonld.evaluate_payload(
+            old_5g_output,
+            expected_elements=["icm:PropertyExpectation", "icm:Target"],
+            case_id="TC001",
+            file_path=Path("TC001.jsonld"),
+            markdown_fence_stripped=False,
+            parse_error=None,
+            ontology_terms=["evsla:EnterpriseVpnSlaIntent", "evsla:latency", "evsla:p95"],
+            performance_metrics=[
+                {
+                    "metric": "latency",
+                    "operator": "LESS_THAN",
+                    "threshold": {"value": 50, "unit": "ms"},
+                    "ontology_term": "evsla:latency",
+                    "statistic": "evsla:p95",
+                    "scope": "evsla:hubToAllSpokes",
+                    "measurement_method": "evsla:twamp",
+                    "time_window": "evsla:fiveMinuteWindow",
+                }
+            ],
+        )
+
+        self.assertEqual(report["ontology_term_coverage_ratio"], 0.0)
+        self.assertEqual(report["performance_metric_coverage_ratio"], 0.0)
+
     def test_main_uses_convention_paths_for_selected_experiment(self) -> None:
         with TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -89,6 +203,8 @@ class TestEvaluateJsonLd(unittest.TestCase):
                                 "icm:Target",
                                 "icm:valuesOfTargetProperty",
                             ],
+                            "ontology_terms": ["evsla:latency"],
+                            "performance_metrics": [],
                         }
                     ]
                 ),

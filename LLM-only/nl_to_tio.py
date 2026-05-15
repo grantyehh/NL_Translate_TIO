@@ -4,8 +4,11 @@ import os
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from dotenv import load_dotenv
 from openai import OpenAI
+from evsla_prompt import build_evsla_system_prompt
 
 # 加載環境變數
 load_dotenv()
@@ -21,6 +24,8 @@ if not api_key:
     )
     sys.exit(1)
 client = OpenAI(api_key=api_key)
+
+CHAT_MODEL = "gpt-5.4"
 
 
 def default_test_cases_path(root: Path) -> Path:
@@ -60,44 +65,7 @@ def output_path_for_case(root: Path, tc_id: str) -> Path:
 
 
 def build_system_prompt(tc_id: str) -> str:
-    return f"""你是一位資深的電信意圖 (Intent) 專家，精通 TM Forum Intent Ontology (TIO) 與 JSON-LD API payload 設計。
-你的任務是將自然語言意圖轉換為 API-friendly TIO JSON-LD，不是 Turtle。
-
-【輸出目標】
-輸出一個完整 JSON object，可被 json.loads 解析，並作為下游 intent API / compiler 的輸入。
-不要輸出 Markdown、code fence、前言或後記。
-
-【必要 top-level 欄位】
-- "@context": 使用 "https://tmforum.org/schemas/intent-ontology/v1.jsonld"
-- "@type": "Intent"
-- "id": 使用可追蹤 ID，例如 "intent-{tc_id.lower()}"
-- "name": 簡短英文名稱
-- "description": 英文描述
-- "intentOwner": 物件，至少包含 id 與 name；未知時使用 ops-manager-01 / Network Operations Center
-- "intentExpectation": array，至少一個 expectation
-- "intentContext": array；沒有明確 context 時可為 []
-- "intentReport": 物件；沒有明確回報需求時使用 reportingInterval "PT5M" 與 handlerResponse "Continuous"
-
-【Expectation 結構】
-每個 intentExpectation 必須包含：
-- "id", "name", "description"
-- "@type": "DeliveryExpectation" 或 "PropertyExpectation"
-- "expectationObject": 被意圖作用的 service / traffic class / resource，至少包含 id, name, "@type"
-- "expectationTarget": array
-
-【PropertyExpectation target 結構】
-若是 latency、throughput、availability、bandwidth、priority 等屬性要求，expectationTarget 內每個 target 必須結構化表示：
-- "name"
-- "targetProperty": 例如 "latency", "throughput", "availability", "priority"
-- "matchCondition": enum，例如 "LESS_THAN", "LESS_THAN_OR_EQUAL", "GREATER_THAN", "GREATER_THAN_OR_EQUAL", "EQUALS"
-- "targetValue": 物件，數值型門檻使用 {{ "value": number, "unit": string }}
-
-【建模原則】
-- 核心語意必須放在 JSON 欄位，不可只寫在 description。
-- 若自然語言中有多個核心 requirement，拆成多個 intentExpectation。
-- 若有地點、時間、事件條件，放入 intentContext。
-- 若自然語言沒有明確 service id，使用穩定、可讀的 id；若檢索上下文提供 service id，優先使用該 id。
-"""
+    return build_evsla_system_prompt(tc_id)
 
 
 def generate_jsonld_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str | None:
@@ -125,7 +93,7 @@ def generate_jsonld_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model=CHAT_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},

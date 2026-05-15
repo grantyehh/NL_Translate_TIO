@@ -18,17 +18,129 @@
         "reason": "top-level @type is Intent"
       },
       {
-        "curie": "icm:DeliveryExpectation",
-        "ok": true,
-        "reason": "DeliveryExpectation present in intentExpectation"
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
       },
       {
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -44,6 +156,155 @@
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
+      }
+    ],
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p99",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:packetLoss",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "ontology_term": "evsla:packetLoss",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/graphrag/TC003.jsonld",
+    "case_id": "TC003",
+    "format": "jsonld",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "contract_errors": [],
+    "triple_count": 31,
+    "json_node_count": 31,
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
       {
         "curie": "icm:PropertyExpectation",
         "ok": true,
@@ -61,33 +322,108 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/graphrag/TC003.jsonld",
-    "case_id": "TC003",
-    "format": "jsonld",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "contract_errors": [],
-    "triple_count": 31,
-    "json_node_count": 31,
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [
+    "ontology_terms": [
       {
-        "curie": "icm:PropertyExpectation",
-        "ok": true,
-        "reason": "PropertyExpectation present in intentExpectation"
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
-        "curie": "icm:Target",
-        "ok": true,
-        "reason": "expectationTarget has at least one target"
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:activeMeasurement",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:minimum",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:specificSpoke",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -109,17 +445,129 @@
         "reason": "top-level @type is Intent"
       },
       {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
         "curie": "icm:Context",
         "ok": true,
         "reason": "intentContext has at least one context item"
       },
       {
-        "curie": "icm:Expectation",
+        "curie": "icm:valuesOfTargetProperty",
         "ok": true,
-        "reason": "intentExpectation has at least one item"
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
     "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -136,6 +584,10 @@
     "unknown_types": [],
     "expected_tio_elements": [],
     "expected_coverage_ratio": null,
+    "ontology_terms": [],
+    "ontology_term_coverage_ratio": null,
+    "performance_metrics": [],
+    "performance_metric_coverage_ratio": null,
     "intent_uri_contains_case_id": false
   },
   {
@@ -152,6 +604,11 @@
     "unknown_types": [],
     "expected_tio_elements": [
       {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
+      {
         "curie": "icm:PropertyExpectation",
         "ok": true,
         "reason": "PropertyExpectation present in intentExpectation"
@@ -160,9 +617,116 @@
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
     "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:activeMeasurement",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:minimum",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:specificSpoke",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -184,17 +748,129 @@
         "reason": "top-level @type is Intent"
       },
       {
-        "curie": "icm:DeliveryExpectation",
-        "ok": true,
-        "reason": "DeliveryExpectation present in intentExpectation"
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
       },
       {
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -211,6 +887,11 @@
     "unknown_types": [],
     "expected_tio_elements": [
       {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
+      {
         "curie": "icm:PropertyExpectation",
         "ok": true,
         "reason": "PropertyExpectation present in intentExpectation"
@@ -221,12 +902,119 @@
         "reason": "expectationTarget has at least one target"
       },
       {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "intentContext has at least one context item"
+      },
+      {
         "curie": "icm:valuesOfTargetProperty",
         "ok": true,
         "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p99",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:packetLoss",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "ontology_term": "evsla:packetLoss",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -248,17 +1036,124 @@
         "reason": "top-level @type is Intent"
       },
       {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
       },
       {
-        "curie": "icm:Expectation",
+        "curie": "icm:valuesOfTargetProperty",
         "ok": true,
-        "reason": "intentExpectation has at least one item"
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.75,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:activeMeasurement",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:minimum",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:specificSpoke",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -275,6 +1170,11 @@
     "unknown_types": [],
     "expected_tio_elements": [
       {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
+      {
         "curie": "icm:PropertyExpectation",
         "ok": true,
         "reason": "PropertyExpectation present in intentExpectation"
@@ -283,9 +1183,121 @@
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -307,17 +1319,129 @@
         "reason": "top-level @type is Intent"
       },
       {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
         "curie": "icm:Context",
         "ok": true,
         "reason": "intentContext has at least one context item"
       },
       {
-        "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "PropertyExpectation present in intentExpectation"
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 0.6666666666666666,
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p99",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:packetLoss",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "ontology_term": "evsla:packetLoss",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -339,17 +1463,124 @@
         "reason": "top-level @type is Intent"
       },
       {
-        "curie": "log:Condition",
-        "ok": true,
-        "reason": "intentContext includes a condition/trigger context"
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
       },
       {
-        "curie": "icm:DeliveryExpectation",
+        "curie": "icm:Target",
         "ok": true,
-        "reason": "DeliveryExpectation present in intentExpectation"
+        "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.75,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:activeMeasurement",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:minimum",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:specificSpoke",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -371,17 +1602,129 @@
         "reason": "top-level @type is Intent"
       },
       {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
         "curie": "icm:Context",
         "ok": true,
         "reason": "intentContext has at least one context item"
       },
       {
-        "curie": "icm:PropertyExpectation",
+        "curie": "icm:valuesOfTargetProperty",
         "ok": true,
-        "reason": "PropertyExpectation present in intentExpectation"
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
     "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -413,12 +1756,119 @@
         "reason": "expectationTarget has at least one target"
       },
       {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "intentContext has at least one context item"
+      },
+      {
         "curie": "icm:valuesOfTargetProperty",
         "ok": true,
         "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p99",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:packetLoss",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "ontology_term": "evsla:packetLoss",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -440,17 +1890,124 @@
         "reason": "top-level @type is Intent"
       },
       {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
       },
       {
-        "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "PropertyExpectation present in intentExpectation"
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 0.6666666666666666,
+    "expected_coverage_ratio": 0.75,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:activeMeasurement",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:minimum",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:specificSpoke",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -472,17 +2029,129 @@
         "reason": "top-level @type is Intent"
       },
       {
-        "curie": "icm:DeliveryExpectation",
-        "ok": true,
-        "reason": "DeliveryExpectation present in intentExpectation"
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
       },
       {
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.6,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -504,17 +2173,129 @@
         "reason": "top-level @type is Intent"
       },
       {
-        "curie": "icm:DeliveryExpectation",
-        "ok": true,
-        "reason": "DeliveryExpectation present in intentExpectation"
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
       },
       {
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.6,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p99",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:packetLoss",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "packet_loss",
+        "ontology_term": "evsla:packetLoss",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -542,11 +2323,6 @@
         "reason": "top-level @type is Intent"
       },
       {
-        "curie": "log:Condition",
-        "ok": false,
-        "reason": "intentContext includes a condition/trigger context"
-      },
-      {
         "curie": "icm:PropertyExpectation",
         "ok": true,
         "reason": "PropertyExpectation present in intentExpectation"
@@ -555,9 +2331,116 @@
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 0.75,
+    "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:activeMeasurement",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:minimum",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:specificSpoke",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "guaranteed_bandwidth",
+        "ontology_term": "evsla:guaranteedBandwidth",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -579,22 +2462,129 @@
         "reason": "top-level @type is Intent"
       },
       {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
         "curie": "icm:Context",
         "ok": true,
         "reason": "intentContext has at least one context item"
       },
       {
-        "curie": "log:Condition",
+        "curie": "icm:valuesOfTargetProperty",
         "ok": true,
-        "reason": "intentContext includes a condition/trigger context"
-      },
-      {
-        "curie": "icm:Expectation",
-        "ok": true,
-        "reason": "intentExpectation has at least one item"
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   },
   {
@@ -616,27 +2606,145 @@
         "reason": "top-level @type is Intent"
       },
       {
-        "curie": "icm:Context",
-        "ok": true,
-        "reason": "intentContext has at least one context item"
-      },
-      {
         "curie": "icm:PropertyExpectation",
         "ok": true,
         "reason": "PropertyExpectation present in intentExpectation"
       },
       {
-        "curie": "icm:DeliveryExpectation",
-        "ok": false,
-        "reason": "DeliveryExpectation present in intentExpectation"
-      },
-      {
         "curie": "icm:Target",
         "ok": true,
         "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 0.8,
+    "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p99",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:packetLoss",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      },
+      {
+        "metric": "packet_loss",
+        "ontology_term": "evsla:packetLoss",
+        "ok": false,
+        "reason": "no structured SLA target matches metric/operator/threshold metadata"
+      }
+    ],
+    "performance_metric_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": true
   }
 ]

@@ -57,6 +57,20 @@ class TestLlmOnlyPaths(unittest.TestCase):
         self.assertIn("intentExpectation", prompt)
         self.assertNotIn("僅輸出完整、可解析的 Turtle", prompt)
 
+    def test_system_prompt_requires_enterprise_vpn_sla_ontology_terms(self) -> None:
+        prompt = nl_to_tio.build_system_prompt("TC001")
+
+        self.assertIn("evsla:EnterpriseVpnSlaIntent", prompt)
+        self.assertIn("evsla:EnterpriseVpnService", prompt)
+        self.assertIn("evsla:HubAndSpokeTopology", prompt)
+        self.assertIn("latency -> evsla:latency", prompt)
+        self.assertIn("95% -> evsla:p95", prompt)
+        self.assertIn("所有分點 / 各Spoke -> evsla:hubToAllSpokes", prompt)
+        self.assertNotIn("DeliveryExpectation", prompt)
+
+    def test_chat_model_uses_gpt_5_4(self) -> None:
+        self.assertEqual(nl_to_tio.CHAT_MODEL, "gpt-5.4")
+
 
 if __name__ == "__main__":
     unittest.main()
