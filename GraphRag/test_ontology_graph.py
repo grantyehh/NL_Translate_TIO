@@ -98,11 +98,10 @@ class TestCommentIndex(unittest.TestCase):
 class TestTypedBfs(unittest.TestCase):
     def setUp(self):
         self.graph = load_ontology(TTL_DIR)
-        self.typed_bfs_subgraph = typed_bfs_subgraph
 
     def test_bfs_from_sla_expectation_includes_property_expectation(self):
         seed = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/SlaExpectation")
-        triples = self.typed_bfs_subgraph(self.graph, [seed], hops=2)
+        triples = typed_bfs_subgraph(self.graph, [seed], hops=2)
         objects = {str(o) for _, _, o in triples}
         self.assertIn(
             "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation",
@@ -111,7 +110,7 @@ class TestTypedBfs(unittest.TestCase):
 
     def test_bfs_from_latency_finds_metric_super_property(self):
         seed = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/latency")
-        triples = self.typed_bfs_subgraph(self.graph, [seed], hops=2)
+        triples = typed_bfs_subgraph(self.graph, [seed], hops=2)
         objects = {str(o) for _, _, o in triples}
         self.assertIn(
             "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/metric",
@@ -120,8 +119,22 @@ class TestTypedBfs(unittest.TestCase):
 
     def test_bfs_stops_at_hop_limit(self):
         seed = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/twamp")
-        zero_hop = self.typed_bfs_subgraph(self.graph, [seed], hops=0)
+        zero_hop = typed_bfs_subgraph(self.graph, [seed], hops=0)
         self.assertEqual(zero_hop, [])
+
+    def test_bfs_does_not_cross_non_whitelisted_predicates(self):
+        from rdflib import Graph
+        from rdflib.namespace import DCTERMS
+
+        seed = URIRef("http://example.org/seed")
+        unreachable = URIRef("http://example.org/unreachable")
+        g = Graph()
+        g.add((seed, DCTERMS.contributor, unreachable))
+
+        triples = typed_bfs_subgraph(g, [seed], hops=2)
+
+        objects = {str(o) for _, _, o in triples}
+        self.assertNotIn(str(unreachable), objects)
 
 
 if __name__ == "__main__":

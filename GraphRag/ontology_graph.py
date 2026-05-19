@@ -7,8 +7,6 @@ from rdflib import Graph, URIRef
 from rdflib.namespace import RDF, RDFS, SKOS
 from rdflib.term import Node
 
-# Several TIO v3.6.0 TTL files omit prefix declarations that they reference.
-# Inject the missing bindings when they are absent so rdflib can parse them.
 TRAVERSAL_PREDICATES = (
     RDFS.subClassOf,
     RDFS.subPropertyOf,
@@ -17,6 +15,8 @@ TRAVERSAL_PREDICATES = (
     RDFS.range,
 )
 
+# Several TIO v3.6.0 TTL files omit prefix declarations for icm: and imo:.
+# Pre-inject those bindings so rdflib's Turtle parser does not raise BadSyntax.
 _MISSING_PREFIXES = {
     "icm": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
     "imo": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
