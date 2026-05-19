@@ -2,36 +2,79 @@
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
   "id": "intent-tc009",
-  "name": "Emergency Services Traffic Priority Intent",
-  "description": "Ensure that communication traffic for fire and rescue units always has priority over general public traffic.",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure guaranteed bandwidth of at least 200 Mbps from 綠能電力總部 to 彰濱風場 for 綠能電力 enterprise VPN service.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant:綠能電力",
+    "name": "綠能電力",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
-      "id": "exp-priority-01",
-      "name": "Emergency Services Traffic Priority",
-      "description": "Fire and rescue communication traffic must always have higher priority than general public traffic.",
-      "@type": "DeliveryExpectation",
+      "id": "exp-tc009-guaranteed-bandwidth",
+      "name": "Guaranteed Bandwidth SLA Expectation",
+      "description": "Guarantee evsla:guaranteedBandwidth for 綠能電力 enterprise VPN service within the requested hub-and-spoke scope.",
+      "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "service-emergency-communication",
-        "name": "Emergency Communication Traffic",
-        "@type": "Service"
+        "id": "svc:綠能電力-enterprise-vpn",
+        "name": "綠能電力 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
         {
-          "name": "Traffic Priority",
-          "targetProperty": "priority",
-          "matchCondition": "GREATER_THAN",
+          "name": "Guaranteed Bandwidth",
+          "targetProperty": "evsla:guaranteedBandwidth",
+          "matchCondition": "GREATER_THAN_OR_EQUAL",
           "targetValue": {
-            "value": "general-public-traffic"
+            "value": 200,
+            "unit": "Mbps",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:guaranteedBandwidth",
+          "evsla:hasThreshold": {
+            "value": 200,
+            "unit": "Mbps",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:minimum",
+          "evsla:hasScope": "evsla:specificSpoke",
+          "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "綠能電力總部",
+            "spokes": [
+              "彰濱風場"
+            ]
           }
         }
       ]
     }
   ],
-  "intentContext": [],
+  "intentContext": [
+    {
+      "id": "topology-tc009",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "綠能電力總部"
+      },
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "彰濱風場"
+        }
+      ]
+    }
+  ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"

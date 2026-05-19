@@ -2,31 +2,56 @@
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
   "id": "intent-tc013",
-  "name": "Enterprise Backup Traffic Bandwidth Limit Intent",
-  "description": "Limit enterprise backup traffic bandwidth to below 200 Mbps every night from 23:00 to 06:00.",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure latency below 60 ms for 雲端教育 enterprise VPN traffic from the hub to all campus spokes at p95 over five-minute windows.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant:雲端教育",
+    "name": "雲端教育",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
-      "id": "exp-bandwidth-limit-01",
-      "name": "Backup Traffic Bandwidth Limit",
-      "description": "Backup traffic must stay below 200 Mbps during the specified time window.",
+      "id": "exp-tc013-latency",
+      "name": "Hub-to-All-Spokes Latency SLA Expectation",
+      "description": "Guarantee evsla:latency for 雲端教育 enterprise VPN service across all spokes.",
       "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "service-enterprise-backup-traffic",
-        "name": "Enterprise Backup Traffic",
-        "@type": "Service"
+        "id": "svc:雲端教育-enterprise-vpn",
+        "name": "雲端教育 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
         {
-          "name": "Bandwidth Limit",
-          "targetProperty": "bandwidth",
+          "name": "Hub-to-All-Spokes Latency",
+          "targetProperty": "evsla:latency",
           "matchCondition": "LESS_THAN",
           "targetValue": {
-            "value": 200,
-            "unit": "Mbps"
+            "value": 60,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:latency",
+          "evsla:hasThreshold": {
+            "value": 60,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p95",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "總部",
+            "spokes": [
+              "所有校區分點"
+            ]
           }
         }
       ]
@@ -34,10 +59,20 @@
   ],
   "intentContext": [
     {
-      "id": "ctx-night-time-01",
-      "name": "Night Time Window",
-      "@type": "TimeContext",
-      "value": "23:00_to_06:00"
+      "id": "topology-tc013",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "總部"
+      },
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "所有校區分點"
+        }
+      ]
     }
   ],
   "intentReport": {

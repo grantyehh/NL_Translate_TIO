@@ -2,31 +2,56 @@
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
   "id": "intent-tc004",
-  "name": "Office Building Bandwidth Priority Intent",
-  "description": "Set the bandwidth priority to the highest for the office building during weekdays from 08:00 to 18:00.",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure latency below 30 ms at p95 from 康健醫療台北醫療雲中心 to all spoke sites for 康健醫療 enterprise VPN service.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant:康健醫療",
+    "name": "康健醫療",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
-      "id": "exp-priority-01",
-      "name": "Bandwidth Priority Expectation",
-      "description": "The bandwidth priority must be set to the highest level during specified working hours.",
+      "id": "exp-tc004-latency",
+      "name": "Hub-to-Spoke Latency SLA Expectation",
+      "description": "Guarantee evsla:latency for 康健醫療 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "resource-office-building-network",
-        "name": "Office Building Network",
-        "@type": "Resource"
+        "id": "svc:康健醫療-enterprise-vpn",
+        "name": "康健醫療 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
         {
-          "name": "Bandwidth Priority",
-          "targetProperty": "priority",
-          "matchCondition": "EQUALS",
+          "name": "Hub-to-All-Spokes Latency",
+          "targetProperty": "evsla:latency",
+          "matchCondition": "LESS_THAN",
           "targetValue": {
-            "value": "highest",
-            "unit": ""
+            "value": 30,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:latency",
+          "evsla:hasThreshold": {
+            "value": 30,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p95",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "台北醫療雲中心",
+            "spokes": [
+              "所有院區分點"
+            ]
           }
         }
       ]
@@ -34,10 +59,20 @@
   ],
   "intentContext": [
     {
-      "id": "ctx-weekday-working-hours-01",
-      "name": "Weekday Working Hours",
-      "@type": "TimeContext",
-      "value": "weekdays_08:00-18:00"
+      "id": "topology-tc004",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "台北醫療雲中心"
+      },
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "所有院區分點"
+        }
+      ]
     }
   ],
   "intentReport": {

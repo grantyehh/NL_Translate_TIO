@@ -2,54 +2,70 @@
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
   "id": "intent-tc018",
-  "name": "Factory Wireless Sensor Packet Loss Mitigation Intent",
-  "description": "Enhance wireless resource allocation if packet loss rate of factory wireless sensors exceeds 3% for 5 minutes.",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure guaranteed bandwidth of at least 80 Mbps from 東岸觀光總部 to 綠島服務站 for 東岸觀光 enterprise VPN service.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant:東岸觀光",
+    "name": "東岸觀光",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
-      "id": "exp-packet-loss-01",
-      "name": "Packet Loss Monitoring",
-      "description": "Monitor packet loss rate of wireless sensors to ensure it does not exceed 3% for 5 minutes.",
+      "id": "exp-tc018-guaranteed-bandwidth",
+      "name": "Guaranteed Bandwidth SLA Expectation",
+      "description": "Guarantee evsla:guaranteedBandwidth for 東岸觀光 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "resource-factory-wireless-sensors",
-        "name": "Factory Wireless Sensors",
-        "@type": "Resource"
+        "id": "svc:東岸觀光-enterprise-vpn",
+        "name": "東岸觀光 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
         {
-          "name": "Packet Loss Rate",
-          "targetProperty": "packetLossRate",
-          "matchCondition": "GREATER_THAN",
+          "name": "Guaranteed Bandwidth",
+          "targetProperty": "evsla:guaranteedBandwidth",
+          "matchCondition": "GREATER_THAN_OR_EQUAL",
           "targetValue": {
-            "value": 3,
-            "unit": "%"
-          }
+            "value": 80,
+            "unit": "Mbps",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:guaranteedBandwidth",
+          "evsla:hasThreshold": {
+            "value": 80,
+            "unit": "Mbps",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:minimum",
+          "evsla:hasScope": "evsla:specificSpoke",
+          "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
-    },
-    {
-      "id": "exp-resource-enhancement-01",
-      "name": "Wireless Resource Enhancement",
-      "description": "Enhance wireless resource allocation immediately if packet loss condition is met.",
-      "@type": "DeliveryExpectation",
-      "expectationObject": {
-        "id": "resource-factory-wireless-area",
-        "name": "Factory Wireless Area",
-        "@type": "Resource"
-      },
-      "expectationTarget": []
     }
   ],
   "intentContext": [
     {
-      "id": "ctx-duration-01",
-      "name": "Monitoring Duration",
-      "@type": "TimeContext",
-      "value": "PT5M"
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "東岸觀光總部"
+      },
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "綠島服務站"
+        }
+      ]
     }
   ],
   "intentReport": {
