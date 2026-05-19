@@ -21,10 +21,10 @@ EXPERIMENTS = {
         "dir": ROOT / "GraphRag",
         "phase1_report": PHASE1_DIR / "phase1_graphrag.json",
     },
-    "kge_hybrid": {
-        "name": "KGE-hybrid",
+    "kge": {
+        "name": "KGE",
         "dir": ROOT / "KGE" / "KGE-based-graphrag",
-        "phase1_report": PHASE1_DIR / "phase1_kge_hybrid.json",
+        "phase1_report": PHASE1_DIR / "phase1_kge.json",
     },
     "kag": {
         "name": "KAG",
@@ -39,7 +39,7 @@ def run_command(cmd: list[str], cwd: Path) -> None:
     subprocess.run(cmd, cwd=cwd, check=True)
 
 
-def compare_three_way(out_path: Path) -> None:
+def compare_four_way(out_path: Path) -> None:
     cmd = [
         sys.executable,
         str(COMPARE_SCRIPT),
@@ -51,7 +51,7 @@ def compare_three_way(out_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Run or re-evaluate LLM-only, GraphRag, and KGE-hybrid experiments without reindexing or KGE retraining."
+        description="Run or re-evaluate LLM-only, GraphRag, KGE, and KAG experiments without reindexing or KGE retraining."
     )
     parser.add_argument(
         "--compare-dir",
@@ -91,8 +91,8 @@ def main() -> None:
             run_command(nl_to_tio_cmd, experiment_dir)
         run_command(evaluate_cmd, ROOT)
 
-    compare_path = compare_dir / "compare_three_way.txt"
-    compare_three_way(compare_path)
+    compare_path = compare_dir / "compare_four_way.txt"
+    compare_four_way(compare_path)
 
     print("\nCompleted requested experiment workflow.")
     if args.eval_only:

@@ -188,7 +188,7 @@ class TestEvaluateJsonLd(unittest.TestCase):
     def test_main_uses_convention_paths_for_selected_experiment(self) -> None:
         with TemporaryDirectory() as tmp:
             root = Path(tmp)
-            outputs = root / "jsonld_outputs" / "kge_hybrid"
+            outputs = root / "jsonld_outputs" / "kge"
             outputs.mkdir(parents=True)
             (outputs / "TC002.jsonld").write_text(json.dumps(VALID_INTENT), encoding="utf-8")
             cases = root / "test_cases_20.json"
@@ -210,10 +210,10 @@ class TestEvaluateJsonLd(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            report_path = root / "phase1" / "phase1_kge_hybrid.json"
+            report_path = root / "phase1" / "phase1_kge.json"
 
             with patch.object(evaluate_jsonld, "ROOT", root), redirect_stdout(io.StringIO()):
-                code = evaluate_jsonld.main(["kge_hybrid"])
+                code = evaluate_jsonld.main(["kge"])
 
             self.assertEqual(code, 0)
             report = json.loads(report_path.read_text(encoding="utf-8"))
