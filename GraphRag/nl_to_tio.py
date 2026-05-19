@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -9,7 +8,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from dotenv import load_dotenv
 from openai import OpenAI
-from evsla_prompt import build_evsla_graphrag_query, build_evsla_system_prompt
+from evsla_prompt import build_evsla_system_prompt
+from ontology_graph import (
+    build_comment_index,
+    build_label_index,
+    load_ontology,
+    typed_bfs_subgraph,
+)
+from subgraph_retriever import build_subgraph_context
 
 # 加載環境變數
 load_dotenv()
@@ -27,6 +33,9 @@ if not api_key:
 client = OpenAI(api_key=api_key)
 
 CHAT_MODEL = "gpt-5.4"
+
+TTL_DIR = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
+EMBED_MODEL = "text-embedding-3-small"
 
 
 def default_test_cases_path(root: Path) -> Path:
@@ -67,28 +76,6 @@ def output_path_for_case(root: Path, tc_id: str) -> Path:
 
 def build_system_prompt(tc_id: str) -> str:
     return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG")
-
-
-def build_graphrag_query(nl_intent: str) -> str:
-    return build_evsla_graphrag_query(nl_intent)
-
-
-def query_graphrag_local(query_text):
-    """
-    呼叫 GraphRAG 的 local search 獲取 TIO 相關的 Schema 上下文。
-    """
-    print(f"--- Step 1: Querying GraphRAG for TIO context ---")
-    try:
-        result = subprocess.run(
-            ["graphrag", "query", "--root", ".", "--method", "local", query_text],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        print(f"Error querying GraphRAG: {e.stderr}")
-        return None
 
 
 def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
@@ -135,6 +122,22 @@ def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
 generate_turtle_code = generate_jsonld_code
 
 
+def _seed_llm_caller(prompt: str) -> str:
+    response = client.chat.completions.create(
+        model=CHAT_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0,
+    )
+    return (response.choices[0].message.content or "").strip()
+
+
+def _embed_caller(items: list[str]) -> list[list[float]]:
+    if not items:
+        return []
+    resp = client.embeddings.create(model=EMBED_MODEL, input=items)
+    return [d.embedding for d in resp.data]
+
+
 def main() -> None:
     root = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via GraphRAG + OpenAI.")
@@ -177,11 +180,23 @@ def main() -> None:
     output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    print("--- Loading TIO ontology and building indexes ---")
+    graph = load_ontology(TTL_DIR)
+    label_idx = build_label_index(graph)
+    comment_idx = build_comment_index(graph)
+
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
-        query_text = build_graphrag_query(tc["nl_intent"])
-        tio_context = query_graphrag_local(query_text)
+        print("--- Retrieving TIO subgraph via typed traversal ---")
+        tio_context = build_subgraph_context(
+            tc["nl_intent"],
+            label_index=label_idx,
+            comment_index=comment_idx,
+            seed_caller=_seed_llm_caller,
+            embed_caller=_embed_caller,
+            bfs_fn=lambda seeds, hops, g=graph: typed_bfs_subgraph(g, seeds, hops),
+        )
 
         if tio_context:
             jsonld_result = generate_jsonld_code(

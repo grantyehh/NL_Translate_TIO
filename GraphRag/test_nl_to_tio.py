@@ -59,19 +59,47 @@ class TestGraphRagPaths(unittest.TestCase):
         self.assertIn("所有分點 / 各Spoke -> evsla:hubToAllSpokes", prompt)
         self.assertNotIn("DeliveryExpectation", prompt)
 
-    def test_graphrag_query_focuses_on_evsla_terms(self) -> None:
-        query = nl_to_tio.build_graphrag_query("確保星河銀行總部至所有分點之延遲低於50ms。")
-
-        self.assertIn("TM Forum Intent Ontology v3.6.0", query)
-        self.assertIn("EnterpriseVpnSlaOntology", query)
-        self.assertIn("evsla:EnterpriseVpnSlaIntent", query)
-        self.assertIn("evsla:latency", query)
-        self.assertNotIn("5G", query)
-        self.assertNotIn("QoS", query)
-        self.assertNotIn("icm:DeliveryExpectation", query)
-
     def test_chat_model_uses_gpt_5_4(self) -> None:
         self.assertEqual(nl_to_tio.CHAT_MODEL, "gpt-5.4")
+
+
+class TestSubgraphRetrievalIntegration(unittest.TestCase):
+    def test_build_subgraph_context_for_intent_uses_typed_traversal(self):
+        # Smoke: real TTL + mocked LLM/embedding callers produce a non-empty
+        # subgraph string containing at least one evsla URI.
+        from pathlib import Path
+        import json
+
+        from ontology_graph import (
+            build_comment_index,
+            build_label_index,
+            load_ontology,
+            typed_bfs_subgraph,
+        )
+        from subgraph_retriever import build_subgraph_context
+
+        ttl_dir = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
+        g = load_ontology(ttl_dir)
+        label_idx = build_label_index(g)
+        comment_idx = build_comment_index(g)
+
+        def fake_seed_caller(prompt):
+            return json.dumps(["twamp", "p95 statistic", "sla expectation"])
+
+        def fake_embed_caller(items):
+            return [[0.0, 0.0] for _ in items]
+
+        ctx = build_subgraph_context(
+            "確保總部至所有分點延遲在95%時間內低於50ms。",
+            label_index=label_idx,
+            comment_index=comment_idx,
+            seed_caller=fake_seed_caller,
+            embed_caller=fake_embed_caller,
+            bfs_fn=lambda seeds, hops: typed_bfs_subgraph(g, seeds, hops),
+        )
+
+        self.assertIn("evsla:", ctx)
+        self.assertIn("# triples", ctx)
 
 
 if __name__ == "__main__":
