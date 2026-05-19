@@ -3,7 +3,7 @@ from pathlib import Path
 
 from rdflib import URIRef
 
-from ontology_graph import build_label_index, build_type_index, load_ontology
+from ontology_graph import build_comment_index, build_label_index, build_type_index, load_ontology
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -78,6 +78,21 @@ class TestTypeIndex(unittest.TestCase):
             "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/p95",
             instances,
         )
+
+
+class TestCommentIndex(unittest.TestCase):
+    def setUp(self):
+        self.idx = build_comment_index(load_ontology(TTL_DIR))
+
+    def test_comment_index_has_evsla_latency(self):
+        uri = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/latency")
+        self.assertIn(uri, self.idx)
+        self.assertIn("latency", self.idx[uri].lower())
+
+    def test_comment_index_has_evsla_hubtoallspokes(self):
+        uri = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/hubToAllSpokes")
+        self.assertIn(uri, self.idx)
+        self.assertIn("spoke", self.idx[uri].lower())
 
 
 if __name__ == "__main__":

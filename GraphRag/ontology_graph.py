@@ -55,6 +55,15 @@ def build_type_index(graph: Graph) -> dict[URIRef, set[URIRef]]:
     return dict(index)
 
 
+def build_comment_index(graph: Graph) -> dict[URIRef, str]:
+    """Map URI → its first rdfs:comment string. Skips URIs with no comment."""
+    index: dict[URIRef, str] = {}
+    for subject, _, literal in graph.triples((None, RDFS.comment, None)):
+        if isinstance(subject, URIRef) and subject not in index:
+            index[subject] = str(literal)
+    return index
+
+
 def load_ontology(ttl_dir: Path) -> Graph:
     """Load and merge all .ttl files in ttl_dir into a single rdflib Graph."""
     g = Graph()
