@@ -24,5 +24,25 @@ class TestLoadOntology(unittest.TestCase):
         )
 
 
+class TestLabelIndex(unittest.TestCase):
+    def setUp(self):
+        from ontology_graph import load_ontology, build_label_index
+        self.idx = build_label_index(load_ontology(TTL_DIR))
+
+    def test_label_index_maps_twamp_to_evsla_uri(self):
+        self.assertIn("twamp", self.idx)
+        self.assertEqual(
+            str(self.idx["twamp"]),
+            "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/twamp",
+        )
+
+    def test_label_index_includes_alt_label(self):
+        # evsla:twamp has skos:altLabel "TWAMP"
+        self.assertIn("twamp", self.idx)  # case-insensitive normalised
+
+    def test_label_index_handles_multi_word_labels(self):
+        self.assertIn("p95 statistic", self.idx)
+
+
 if __name__ == "__main__":
     unittest.main()

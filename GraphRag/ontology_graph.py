@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rdflib import Graph
+from rdflib import Graph, URIRef
+from rdflib.namespace import RDFS, SKOS
 
 # Several TIO v3.6.0 TTL files omit prefix declarations that they reference.
 # Inject the missing bindings when they are absent so rdflib can parse them.
@@ -22,6 +23,25 @@ def _prepend_missing_tio_prefixes(ttl_path: Path) -> str:
         if f"@prefix {pfx}:" not in content
     )
     return injection + content
+
+
+def build_label_index(graph: Graph) -> dict[str, URIRef]:
+    """Map normalised label string (lowercase, stripped) → URI.
+
+    Sources: rdfs:label and skos:altLabel. If multiple URIs share a label,
+    the lexicographically smallest URI wins (deterministic).
+    """
+    index: dict[str, URIRef] = {}
+    for predicate in (RDFS.label, SKOS.altLabel):
+        for subject, _, literal in graph.triples((None, predicate, None)):
+            if not isinstance(subject, URIRef):
+                continue
+            key = str(literal).strip().lower()
+            if not key:
+                continue
+            if key not in index or str(subject) < str(index[key]):
+                index[key] = subject
+    return index
 
 
 def load_ontology(ttl_dir: Path) -> Graph:
