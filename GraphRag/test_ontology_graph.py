@@ -3,7 +3,7 @@ from pathlib import Path
 
 from rdflib import URIRef
 
-from ontology_graph import load_ontology
+from ontology_graph import load_ontology, build_label_index
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -26,7 +26,6 @@ class TestLoadOntology(unittest.TestCase):
 
 class TestLabelIndex(unittest.TestCase):
     def setUp(self):
-        from ontology_graph import load_ontology, build_label_index
         self.idx = build_label_index(load_ontology(TTL_DIR))
 
     def test_label_index_maps_twamp_to_evsla_uri(self):
@@ -36,9 +35,17 @@ class TestLabelIndex(unittest.TestCase):
             "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/twamp",
         )
 
-    def test_label_index_includes_alt_label(self):
-        # evsla:twamp has skos:altLabel "TWAMP"
-        self.assertIn("twamp", self.idx)  # case-insensitive normalised
+    def test_label_index_picks_up_skos_alt_label_only_term(self):
+        from rdflib import Graph, Literal, URIRef
+        from rdflib.namespace import SKOS
+
+        g = Graph()
+        uri = URIRef("http://example.org/x")
+        g.add((uri, SKOS.altLabel, Literal("Alt Only", lang="en")))
+
+        idx = build_label_index(g)
+
+        self.assertEqual(idx.get("alt only"), uri)
 
     def test_label_index_handles_multi_word_labels(self):
         self.assertIn("p95 statistic", self.idx)

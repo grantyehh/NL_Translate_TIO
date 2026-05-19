@@ -26,10 +26,11 @@ def _prepend_missing_tio_prefixes(ttl_path: Path) -> str:
 
 
 def build_label_index(graph: Graph) -> dict[str, URIRef]:
-    """Map normalised label string (lowercase, stripped) → URI.
+    """Map normalised label string (lowercase, stripped) -> URI.
 
-    Sources: rdfs:label and skos:altLabel. If multiple URIs share a label,
-    the lexicographically smallest URI wins (deterministic).
+    Sources: rdfs:label and skos:altLabel, treated equally (no predicate
+    priority). If multiple URIs share a normalised label, the
+    lexicographically smallest URI wins (deterministic).
     """
     index: dict[str, URIRef] = {}
     for predicate in (RDFS.label, SKOS.altLabel):
