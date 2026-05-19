@@ -12,8 +12,9 @@ _MISSING_PREFIXES = {
 }
 
 
-def _read_with_prefix_fix(ttl_path: Path) -> str:
-    """Return the file content with any missing @prefix declarations prepended."""
+def _prepend_missing_tio_prefixes(ttl_path: Path) -> str:
+    """Pre-inject the two TIO v3.6.0 prefix declarations (icm:, imo:)
+    that five upstream TTL files reference but omit."""
     content = ttl_path.read_text(encoding="utf-8")
     injection = "".join(
         f"@prefix {pfx}: <{uri}> .\n"
@@ -27,5 +28,5 @@ def load_ontology(ttl_dir: Path) -> Graph:
     """Load and merge all .ttl files in ttl_dir into a single rdflib Graph."""
     g = Graph()
     for ttl_path in sorted(Path(ttl_dir).glob("*.ttl")):
-        g.parse(data=_read_with_prefix_fix(ttl_path), format="turtle")
+        g.parse(data=_prepend_missing_tio_prefixes(ttl_path), format="turtle")
     return g

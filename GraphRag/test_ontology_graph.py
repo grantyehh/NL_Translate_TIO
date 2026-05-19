@@ -1,6 +1,8 @@
 import unittest
 from pathlib import Path
 
+from rdflib import URIRef
+
 from ontology_graph import load_ontology
 
 
@@ -15,7 +17,6 @@ class TestLoadOntology(unittest.TestCase):
 
     def test_load_ontology_includes_evsla_terms(self):
         g = load_ontology(TTL_DIR)
-        from rdflib import URIRef
         evsla_twamp = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/twamp")
         self.assertTrue(
             any(s == evsla_twamp for s, _, _ in g),
