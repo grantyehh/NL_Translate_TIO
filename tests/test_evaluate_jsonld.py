@@ -155,6 +155,48 @@ class TestEvaluateJsonLd(unittest.TestCase):
         self.assertEqual(report["ontology_term_coverage_ratio"], 1.0)
         self.assertEqual(report["performance_metric_coverage_ratio"], 1.0)
 
+    def test_evaluate_payload_scores_json_node_budget_range(self) -> None:
+        actual_nodes = evaluate_jsonld.count_json_nodes(VALID_EVSLA_INTENT)
+
+        report = evaluate_jsonld.evaluate_payload(
+            VALID_EVSLA_INTENT,
+            expected_elements=["icm:PropertyExpectation"],
+            case_id="TC001",
+            file_path=Path("TC001.jsonld"),
+            markdown_fence_stripped=False,
+            parse_error=None,
+            expected_json_nodes={
+                "target": actual_nodes,
+                "min": actual_nodes - 2,
+                "max": actual_nodes + 2,
+            },
+        )
+
+        self.assertTrue(report["json_node_budget"]["ok"])
+        self.assertEqual(report["json_node_budget"]["actual"], actual_nodes)
+        self.assertEqual(report["json_node_budget"]["delta"], 0)
+        self.assertEqual(report["json_node_budget"]["ratio"], 1.0)
+
+    def test_evaluate_payload_flags_json_node_budget_over_max(self) -> None:
+        actual_nodes = evaluate_jsonld.count_json_nodes(VALID_EVSLA_INTENT)
+
+        report = evaluate_jsonld.evaluate_payload(
+            VALID_EVSLA_INTENT,
+            expected_elements=["icm:PropertyExpectation"],
+            case_id="TC001",
+            file_path=Path("TC001.jsonld"),
+            markdown_fence_stripped=False,
+            parse_error=None,
+            expected_json_nodes={
+                "target": actual_nodes - 10,
+                "min": actual_nodes - 20,
+                "max": actual_nodes - 5,
+            },
+        )
+
+        self.assertFalse(report["json_node_budget"]["ok"])
+        self.assertEqual(report["json_node_budget"]["status"], "too_verbose")
+
     def test_evaluate_payload_penalizes_5g_output_missing_evsla_terms_and_threshold(self) -> None:
         old_5g_output = json.loads(json.dumps(VALID_INTENT))
         old_5g_output["id"] = "intent-tc001"

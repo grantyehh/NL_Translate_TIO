@@ -331,6 +331,38 @@ def count_json_nodes(value: Any) -> int:
     return 1
 
 
+def evaluate_json_node_budget(actual: int, expected: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not is_object(expected):
+        return None
+
+    target = expected.get("target")
+    min_nodes = expected.get("min")
+    max_nodes = expected.get("max")
+    if not all(isinstance(v, (int, float)) for v in (target, min_nodes, max_nodes)):
+        return None
+
+    target_int = int(target)
+    min_int = int(min_nodes)
+    max_int = int(max_nodes)
+    if actual < min_int:
+        status = "too_sparse"
+    elif actual > max_int:
+        status = "too_verbose"
+    else:
+        status = "ok"
+
+    return {
+        "target": target_int,
+        "min": min_int,
+        "max": max_int,
+        "actual": actual,
+        "ok": status == "ok",
+        "status": status,
+        "delta": actual - target_int,
+        "ratio": actual / target_int if target_int else None,
+    }
+
+
 def case_id_slug(case_id: str) -> str:
     return case_id.strip().lower()
 
@@ -344,9 +376,11 @@ def evaluate_payload(
     parse_error: str | None,
     ontology_terms: list[str] | None = None,
     performance_metrics: list[dict[str, Any]] | None = None,
+    expected_json_nodes: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     contract_errors = [] if parse_error else validate_contract(doc)
     parse_ok = parse_error is None and not contract_errors and is_object(doc)
+    json_node_count = count_json_nodes(doc) if is_object(doc) and parse_error is None else 0
     expected_results = evaluate_expected_elements(doc, expected_elements) if is_object(doc) and parse_error is None else []
     expected_coverage = (
         sum(1 for item in expected_results if item.get("ok")) / len(expected_results)
@@ -379,8 +413,9 @@ def evaluate_payload(
         "parse_error": parse_error,
         "markdown_fence_stripped": markdown_fence_stripped,
         "contract_errors": contract_errors,
-        "triple_count": count_json_nodes(doc) if is_object(doc) and parse_error is None else 0,
-        "json_node_count": count_json_nodes(doc) if is_object(doc) and parse_error is None else 0,
+        "triple_count": json_node_count,
+        "json_node_count": json_node_count,
+        "json_node_budget": evaluate_json_node_budget(json_node_count, expected_json_nodes),
         "unknown_predicates": [],
         "unknown_types": [],
         "expected_tio_elements": expected_results,
@@ -399,6 +434,7 @@ def evaluate_file(
     case_id: str,
     ontology_terms: list[str] | None = None,
     performance_metrics: list[dict[str, Any]] | None = None,
+    expected_json_nodes: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     raw = path.read_text(encoding="utf-8")
     cleaned, fenced = strip_markdown_json_fence(raw)
@@ -417,6 +453,7 @@ def evaluate_file(
         parse_error,
         ontology_terms=ontology_terms,
         performance_metrics=performance_metrics,
+        expected_json_nodes=expected_json_nodes,
     )
 
 
@@ -431,6 +468,7 @@ def missing_file_report(path: Path, case_id: str) -> dict[str, Any]:
         "contract_errors": [],
         "triple_count": 0,
         "json_node_count": 0,
+        "json_node_budget": None,
         "unknown_predicates": [],
         "unknown_types": [],
         "expected_tio_elements": [],
@@ -467,6 +505,7 @@ def evaluate_experiment(experiment_key: str, test_cases: list[dict[str, Any]]) -
                 tc_id,
                 ontology_terms=tc.get("ontology_terms", []),
                 performance_metrics=tc.get("performance_metrics", []),
+                expected_json_nodes=tc.get("expected_json_nodes"),
             )
         )
 
@@ -480,6 +519,12 @@ def evaluate_experiment(experiment_key: str, test_cases: list[dict[str, Any]]) -
             print(f"  contract_errors: {len(row['contract_errors'])}")
         if row.get("parse_ok"):
             print(f"  json_node_count: {row['json_node_count']}")
+            budget = row.get("json_node_budget")
+            if budget:
+                print(
+                    f"  json_node_budget: {budget['status']} "
+                    f"(actual={budget['actual']}, range={budget['min']}-{budget['max']}, target={budget['target']})"
+                )
             cov = row.get("expected_coverage_ratio")
             if cov is not None:
                 print(f"  expected_tio_elements_met: {cov * 100:.0f}%")

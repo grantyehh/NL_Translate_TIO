@@ -9,6 +9,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -159,6 +169,16 @@
     ],
     "triple_count": 56,
     "json_node_count": 56,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 56,
+      "ok": true,
+      "status": "ok",
+      "delta": -4,
+      "ratio": 0.9333333333333333
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -303,6 +323,16 @@
     "contract_errors": [],
     "triple_count": 64,
     "json_node_count": 64,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 64,
+      "ok": true,
+      "status": "ok",
+      "delta": 4,
+      "ratio": 1.0666666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -442,6 +472,16 @@
     "contract_errors": [],
     "triple_count": 64,
     "json_node_count": 64,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 64,
+      "ok": true,
+      "status": "ok",
+      "delta": 4,
+      "ratio": 1.0666666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -586,6 +626,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -730,6 +780,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -869,6 +929,16 @@
     "contract_errors": [],
     "triple_count": 64,
     "json_node_count": 64,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 64,
+      "ok": true,
+      "status": "ok",
+      "delta": 4,
+      "ratio": 1.0666666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1019,6 +1089,16 @@
     ],
     "triple_count": 59,
     "json_node_count": 59,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 59,
+      "ok": true,
+      "status": "ok",
+      "delta": -1,
+      "ratio": 0.9833333333333333
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1163,6 +1243,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1302,6 +1392,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1446,6 +1546,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1590,6 +1700,16 @@
     "contract_errors": [],
     "triple_count": 64,
     "json_node_count": 64,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 64,
+      "ok": true,
+      "status": "ok",
+      "delta": 4,
+      "ratio": 1.0666666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1729,6 +1849,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1873,6 +2003,16 @@
     "contract_errors": [],
     "triple_count": 57,
     "json_node_count": 57,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 57,
+      "ok": true,
+      "status": "ok",
+      "delta": -3,
+      "ratio": 0.95
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2017,6 +2157,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2156,6 +2306,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2300,6 +2460,16 @@
     "contract_errors": [],
     "triple_count": 64,
     "json_node_count": 64,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 64,
+      "ok": true,
+      "status": "ok",
+      "delta": 4,
+      "ratio": 1.0666666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2444,6 +2614,16 @@
     "contract_errors": [],
     "triple_count": 60,
     "json_node_count": 60,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 60,
+      "ok": true,
+      "status": "ok",
+      "delta": 0,
+      "ratio": 1.0
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2583,6 +2763,7 @@
     "contract_errors": [],
     "triple_count": 0,
     "json_node_count": 0,
+    "json_node_budget": null,
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [],
@@ -2603,6 +2784,7 @@
     "contract_errors": [],
     "triple_count": 0,
     "json_node_count": 0,
+    "json_node_budget": null,
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [],

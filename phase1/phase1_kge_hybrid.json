@@ -1,6 +1,6 @@
 [
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC001.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC001.jsonld",
     "case_id": "TC001",
     "format": "jsonld",
     "parse_ok": true,
@@ -9,6 +9,16 @@
     "contract_errors": [],
     "triple_count": 36,
     "json_node_count": 36,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 36,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -24,
+      "ratio": 0.6
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -144,7 +154,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC002.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC002.jsonld",
     "case_id": "TC002",
     "format": "jsonld",
     "parse_ok": true,
@@ -153,6 +163,16 @@
     "contract_errors": [],
     "triple_count": 48,
     "json_node_count": 48,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 48,
+      "ok": true,
+      "status": "ok",
+      "delta": -12,
+      "ratio": 0.8
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -288,7 +308,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC003.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC003.jsonld",
     "case_id": "TC003",
     "format": "jsonld",
     "parse_ok": true,
@@ -297,6 +317,16 @@
     "contract_errors": [],
     "triple_count": 36,
     "json_node_count": 36,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 36,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -24,
+      "ratio": 0.6
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -427,7 +457,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC004.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC004.jsonld",
     "case_id": "TC004",
     "format": "jsonld",
     "parse_ok": true,
@@ -436,6 +466,16 @@
     "contract_errors": [],
     "triple_count": 36,
     "json_node_count": 36,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 36,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -24,
+      "ratio": 0.6
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -571,7 +611,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC005.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC005.jsonld",
     "case_id": "TC005",
     "format": "jsonld",
     "parse_ok": true,
@@ -580,6 +620,16 @@
     "contract_errors": [],
     "triple_count": 48,
     "json_node_count": 48,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 48,
+      "ok": true,
+      "status": "ok",
+      "delta": -12,
+      "ratio": 0.8
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -715,7 +765,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC006.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC006.jsonld",
     "case_id": "TC006",
     "format": "jsonld",
     "parse_ok": true,
@@ -724,6 +774,16 @@
     "contract_errors": [],
     "triple_count": 31,
     "json_node_count": 31,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 31,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -29,
+      "ratio": 0.5166666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -854,7 +914,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC007.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC007.jsonld",
     "case_id": "TC007",
     "format": "jsonld",
     "parse_ok": true,
@@ -863,6 +923,16 @@
     "contract_errors": [],
     "triple_count": 35,
     "json_node_count": 35,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 35,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -25,
+      "ratio": 0.5833333333333334
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -998,7 +1068,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC008.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC008.jsonld",
     "case_id": "TC008",
     "format": "jsonld",
     "parse_ok": true,
@@ -1007,6 +1077,16 @@
     "contract_errors": [],
     "triple_count": 31,
     "json_node_count": 31,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 31,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -29,
+      "ratio": 0.5166666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1142,7 +1222,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC009.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC009.jsonld",
     "case_id": "TC009",
     "format": "jsonld",
     "parse_ok": true,
@@ -1151,6 +1231,16 @@
     "contract_errors": [],
     "triple_count": 31,
     "json_node_count": 31,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 31,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -29,
+      "ratio": 0.5166666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1281,7 +1371,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC010.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC010.jsonld",
     "case_id": "TC010",
     "format": "jsonld",
     "parse_ok": true,
@@ -1290,6 +1380,16 @@
     "contract_errors": [],
     "triple_count": 31,
     "json_node_count": 31,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 31,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -29,
+      "ratio": 0.5166666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1425,7 +1525,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC011.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC011.jsonld",
     "case_id": "TC011",
     "format": "jsonld",
     "parse_ok": true,
@@ -1434,6 +1534,16 @@
     "contract_errors": [],
     "triple_count": 36,
     "json_node_count": 36,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 36,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -24,
+      "ratio": 0.6
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1569,7 +1679,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC012.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC012.jsonld",
     "case_id": "TC012",
     "format": "jsonld",
     "parse_ok": true,
@@ -1578,6 +1688,16 @@
     "contract_errors": [],
     "triple_count": 36,
     "json_node_count": 36,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 36,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -24,
+      "ratio": 0.6
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1708,7 +1828,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC013.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC013.jsonld",
     "case_id": "TC013",
     "format": "jsonld",
     "parse_ok": true,
@@ -1717,6 +1837,16 @@
     "contract_errors": [],
     "triple_count": 36,
     "json_node_count": 36,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 36,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -24,
+      "ratio": 0.6
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1852,7 +1982,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC014.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC014.jsonld",
     "case_id": "TC014",
     "format": "jsonld",
     "parse_ok": true,
@@ -1861,6 +1991,16 @@
     "contract_errors": [],
     "triple_count": 65,
     "json_node_count": 65,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 65,
+      "ok": true,
+      "status": "ok",
+      "delta": 5,
+      "ratio": 1.0833333333333333
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1996,7 +2136,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC015.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC015.jsonld",
     "case_id": "TC015",
     "format": "jsonld",
     "parse_ok": true,
@@ -2005,6 +2145,16 @@
     "contract_errors": [],
     "triple_count": 31,
     "json_node_count": 31,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 31,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -29,
+      "ratio": 0.5166666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2135,7 +2285,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC016.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC016.jsonld",
     "case_id": "TC016",
     "format": "jsonld",
     "parse_ok": true,
@@ -2144,6 +2294,16 @@
     "contract_errors": [],
     "triple_count": 31,
     "json_node_count": 31,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 31,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -29,
+      "ratio": 0.5166666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2279,7 +2439,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC017.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC017.jsonld",
     "case_id": "TC017",
     "format": "jsonld",
     "parse_ok": true,
@@ -2288,6 +2448,16 @@
     "contract_errors": [],
     "triple_count": 31,
     "json_node_count": 31,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 31,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -29,
+      "ratio": 0.5166666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2423,7 +2593,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC018.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC018.jsonld",
     "case_id": "TC018",
     "format": "jsonld",
     "parse_ok": false,
@@ -2438,6 +2608,16 @@
     ],
     "triple_count": 46,
     "json_node_count": 46,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 46,
+      "ok": true,
+      "status": "ok",
+      "delta": -14,
+      "ratio": 0.7666666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2568,7 +2748,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC019.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC019.jsonld",
     "case_id": "TC019",
     "format": "jsonld",
     "parse_ok": true,
@@ -2577,6 +2757,16 @@
     "contract_errors": [],
     "triple_count": 40,
     "json_node_count": 40,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 40,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -20,
+      "ratio": 0.6666666666666666
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2712,7 +2902,7 @@
     "intent_uri_contains_case_id": true
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/jsonld_outputs/kge_hybrid/TC020.jsonld",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kge_hybrid/TC020.jsonld",
     "case_id": "TC020",
     "format": "jsonld",
     "parse_ok": true,
@@ -2721,6 +2911,16 @@
     "contract_errors": [],
     "triple_count": 53,
     "json_node_count": 53,
+    "json_node_budget": {
+      "target": 90,
+      "min": 75,
+      "max": 115,
+      "actual": 53,
+      "ok": false,
+      "status": "too_sparse",
+      "delta": -37,
+      "ratio": 0.5888888888888889
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [

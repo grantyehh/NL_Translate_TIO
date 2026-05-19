@@ -69,6 +69,9 @@ def aggregate_metrics(items: List[dict]) -> dict:
     ontology_coverage = [coerce_float(x.get("ontology_term_coverage_ratio", 0.0)) for x in items]
     performance_coverage = [coerce_float(x.get("performance_metric_coverage_ratio", 0.0)) for x in items]
     intent_uri_ok = [bool(x.get("intent_uri_contains_case_id")) for x in items]
+    budgets = [x.get("json_node_budget") for x in items if isinstance(x.get("json_node_budget"), dict)]
+    budget_ok = [bool(x.get("ok")) for x in budgets]
+    budget_ratios = [coerce_float(x.get("ratio", 0.0)) for x in budgets if x.get("ratio") is not None]
     return {
         "count": len(items),
         "parse_ok_rate": ratio_true(parse_ok),
@@ -77,6 +80,8 @@ def aggregate_metrics(items: List[dict]) -> dict:
         "avg_ontology_term_coverage_ratio": mean(ontology_coverage),
         "avg_performance_metric_coverage_ratio": mean(performance_coverage),
         "intent_uri_ok_rate": ratio_true(intent_uri_ok),
+        "json_node_budget_ok_rate": ratio_true(budget_ok),
+        "avg_json_node_budget_ratio": mean(budget_ratios),
     }
 
 
@@ -104,9 +109,10 @@ def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
     print_header(f"{label} Summary")
     print(
         f"{'Experiment':14} | {'Cases':5} | {'Parse OK':10} | {'Avg icm':8} | "
-        f"{'Avg ontology':12} | {'Avg metric':10} | {'Avg JSON nodes':14} | {'Intent ID OK':12}"
+        f"{'Avg ontology':12} | {'Avg metric':10} | {'Avg JSON nodes':14} | "
+        f"{'Verbosity OK':12} | {'Avg node ratio':14} | {'Intent ID OK':12}"
     )
-    print("-" * 113)
+    print("-" * 144)
     rows: list[tuple[str, dict]] = []
     for name, _, items in reports:
         metrics = aggregate_metrics(items)
@@ -119,6 +125,8 @@ def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
             f"{metrics['avg_ontology_term_coverage_ratio']:12.4f} | "
             f"{metrics['avg_performance_metric_coverage_ratio']:10.4f} | "
             f"{metrics['avg_triple_count']:14.2f} | "
+            f"{metrics['json_node_budget_ok_rate'] * 100:11.2f}% | "
+            f"{metrics['avg_json_node_budget_ratio']:14.4f} | "
             f"{metrics['intent_uri_ok_rate'] * 100:12.2f}%"
         )
 

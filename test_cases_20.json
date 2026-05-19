@@ -68,7 +68,12 @@
       "evsla:latency",
       "evsla:p95",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC002",
@@ -139,7 +144,12 @@
       "evsla:p99",
       "evsla:packetLoss",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC003",
@@ -203,7 +213,12 @@
       "evsla:hasTimeWindow",
       "evsla:minimum",
       "evsla:specificSpoke"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC004",
@@ -274,7 +289,12 @@
       "evsla:latency",
       "evsla:p95",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC005",
@@ -346,7 +366,12 @@
       "evsla:p99",
       "evsla:packetLoss",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC006",
@@ -410,7 +435,12 @@
       "evsla:hasTimeWindow",
       "evsla:minimum",
       "evsla:specificSpoke"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC007",
@@ -481,7 +511,12 @@
       "evsla:latency",
       "evsla:p95",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC008",
@@ -552,7 +587,12 @@
       "evsla:p99",
       "evsla:packetLoss",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC009",
@@ -616,7 +656,12 @@
       "evsla:hasTimeWindow",
       "evsla:minimum",
       "evsla:specificSpoke"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC010",
@@ -687,7 +732,12 @@
       "evsla:latency",
       "evsla:p95",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC011",
@@ -758,7 +808,12 @@
       "evsla:p99",
       "evsla:packetLoss",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC012",
@@ -822,7 +877,12 @@
       "evsla:hasTimeWindow",
       "evsla:minimum",
       "evsla:specificSpoke"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC013",
@@ -894,7 +954,12 @@
       "evsla:latency",
       "evsla:p95",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC014",
@@ -965,7 +1030,12 @@
       "evsla:p99",
       "evsla:packetLoss",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC015",
@@ -1029,7 +1099,12 @@
       "evsla:hasTimeWindow",
       "evsla:minimum",
       "evsla:specificSpoke"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC016",
@@ -1100,7 +1175,12 @@
       "evsla:latency",
       "evsla:p95",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC017",
@@ -1171,7 +1251,12 @@
       "evsla:p99",
       "evsla:packetLoss",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC018",
@@ -1235,7 +1320,12 @@
       "evsla:hasTimeWindow",
       "evsla:minimum",
       "evsla:specificSpoke"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC019",
@@ -1307,7 +1397,12 @@
       "evsla:latency",
       "evsla:p95",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 60,
+      "min": 45,
+      "max": 80
+    }
   },
   {
     "id": "TC020",
@@ -1396,6 +1491,11 @@
       "evsla:p99",
       "evsla:packetLoss",
       "evsla:twamp"
-    ]
+    ],
+    "expected_json_nodes": {
+      "target": 90,
+      "min": 75,
+      "max": 115
+    }
   }
 ]
