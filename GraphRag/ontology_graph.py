@@ -5,9 +5,18 @@ from pathlib import Path
 
 from rdflib import Graph, URIRef
 from rdflib.namespace import RDF, RDFS, SKOS
+from rdflib.term import Node
 
 # Several TIO v3.6.0 TTL files omit prefix declarations that they reference.
 # Inject the missing bindings when they are absent so rdflib can parse them.
+TRAVERSAL_PREDICATES = (
+    RDFS.subClassOf,
+    RDFS.subPropertyOf,
+    RDF.type,
+    RDFS.domain,
+    RDFS.range,
+)
+
 _MISSING_PREFIXES = {
     "icm": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
     "imo": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
@@ -62,6 +71,41 @@ def build_comment_index(graph: Graph) -> dict[URIRef, str]:
         if isinstance(subject, URIRef) and subject not in index:
             index[subject] = str(literal)
     return index
+
+
+def typed_bfs_subgraph(
+    graph: Graph,
+    seeds: list[URIRef],
+    hops: int,
+) -> list[tuple[Node, Node, Node]]:
+    """Return triples reachable from any seed within `hops` BFS steps,
+    following only TRAVERSAL_PREDICATES in either direction."""
+    if hops <= 0:
+        return []
+    visited: set[URIRef] = set()
+    frontier: set[URIRef] = {s for s in seeds if isinstance(s, URIRef)}
+    collected: set[tuple[Node, Node, Node]] = set()
+
+    for _ in range(hops):
+        next_frontier: set[URIRef] = set()
+        for node in frontier:
+            if node in visited:
+                continue
+            visited.add(node)
+            for predicate in TRAVERSAL_PREDICATES:
+                for _, _, obj in graph.triples((node, predicate, None)):
+                    collected.add((node, predicate, obj))
+                    if isinstance(obj, URIRef) and obj not in visited:
+                        next_frontier.add(obj)
+                for subj, _, _ in graph.triples((None, predicate, node)):
+                    collected.add((subj, predicate, node))
+                    if isinstance(subj, URIRef) and subj not in visited:
+                        next_frontier.add(subj)
+        frontier = next_frontier
+        if not frontier:
+            break
+
+    return sorted(collected, key=lambda t: (str(t[0]), str(t[1]), str(t[2])))
 
 
 def load_ontology(ttl_dir: Path) -> Graph:

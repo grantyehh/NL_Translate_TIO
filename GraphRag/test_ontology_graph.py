@@ -3,7 +3,7 @@ from pathlib import Path
 
 from rdflib import URIRef
 
-from ontology_graph import build_comment_index, build_label_index, build_type_index, load_ontology
+from ontology_graph import build_comment_index, build_label_index, build_type_index, load_ontology, typed_bfs_subgraph
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -93,6 +93,35 @@ class TestCommentIndex(unittest.TestCase):
         uri = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/hubToAllSpokes")
         self.assertIn(uri, self.idx)
         self.assertIn("spoke", self.idx[uri].lower())
+
+
+class TestTypedBfs(unittest.TestCase):
+    def setUp(self):
+        self.graph = load_ontology(TTL_DIR)
+        self.typed_bfs_subgraph = typed_bfs_subgraph
+
+    def test_bfs_from_sla_expectation_includes_property_expectation(self):
+        seed = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/SlaExpectation")
+        triples = self.typed_bfs_subgraph(self.graph, [seed], hops=2)
+        objects = {str(o) for _, _, o in triples}
+        self.assertIn(
+            "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation",
+            objects,
+        )
+
+    def test_bfs_from_latency_finds_metric_super_property(self):
+        seed = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/latency")
+        triples = self.typed_bfs_subgraph(self.graph, [seed], hops=2)
+        objects = {str(o) for _, _, o in triples}
+        self.assertIn(
+            "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/metric",
+            objects,
+        )
+
+    def test_bfs_stops_at_hop_limit(self):
+        seed = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/twamp")
+        zero_hop = self.typed_bfs_subgraph(self.graph, [seed], hops=0)
+        self.assertEqual(zero_hop, [])
 
 
 if __name__ == "__main__":
