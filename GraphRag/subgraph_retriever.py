@@ -6,6 +6,7 @@ import re
 from typing import Callable
 
 from rdflib import URIRef
+from rdflib.term import Node
 
 SEED_PROMPT = """You extract ontology-relevant terms from a network intent.
 Output a JSON array of short English terms (1-3 words each), no commentary.
@@ -89,3 +90,49 @@ def ground_seeds(
                     resolved.add(best_uri)
 
     return resolved
+
+
+KNOWN_PREFIXES: list[tuple[str, str]] = [
+    ("evsla", "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/"),
+    ("icm", "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/"),
+    ("imo", "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/"),
+    ("met", "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/"),
+    ("quan", "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/"),
+    ("fun", "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/"),
+    ("rdfs", "http://www.w3.org/2000/01/rdf-schema#"),
+    ("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
+    ("skos", "http://www.w3.org/2004/02/skos/core#"),
+    ("xsd", "http://www.w3.org/2001/XMLSchema#"),
+]
+
+
+def _shorten(node: Node) -> str:
+    s = str(node)
+    for prefix, ns in KNOWN_PREFIXES:
+        if s.startswith(ns):
+            return f"{prefix}:{s[len(ns):]}"
+    return f"<{s}>"
+
+
+def serialize_subgraph(
+    triples: list[tuple[Node, Node, Node]],
+    comment_index: dict[URIRef, str],
+) -> str:
+    """Render triples as `s p o` lines plus a comment block for URIs in `comment_index`."""
+    triple_lines = [f"{_shorten(s)} {_shorten(p)} {_shorten(o)}" for s, p, o in triples]
+    uris_in_subgraph: set[URIRef] = set()
+    for s, _, o in triples:
+        if isinstance(s, URIRef):
+            uris_in_subgraph.add(s)
+        if isinstance(o, URIRef):
+            uris_in_subgraph.add(o)
+    comment_lines: list[str] = []
+    for uri in sorted(uris_in_subgraph, key=str):
+        if uri in comment_index:
+            comment_lines.append(f"# comment: {_shorten(uri)} -> {comment_index[uri]}")
+    parts = ["# triples"] + triple_lines
+    if comment_lines:
+        parts.append("")
+        parts.append("# comments")
+        parts.extend(comment_lines)
+    return "\n".join(parts)

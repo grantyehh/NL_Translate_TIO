@@ -2,8 +2,9 @@ import json
 import unittest
 
 from rdflib import URIRef
+from rdflib.namespace import RDFS
 
-from subgraph_retriever import extract_seeds, ground_seeds
+from subgraph_retriever import extract_seeds, ground_seeds, serialize_subgraph
 
 
 class TestExtractSeeds(unittest.TestCase):
@@ -81,6 +82,32 @@ class TestGroundSeeds(unittest.TestCase):
         )
 
         self.assertEqual(grounded, set())
+
+
+class TestSerializeSubgraph(unittest.TestCase):
+    def test_serialize_emits_one_line_per_triple_with_prefixes(self):
+        evsla = "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/"
+        icm = "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/"
+        triples = [
+            (URIRef(evsla + "SlaExpectation"), RDFS.subClassOf, URIRef(icm + "PropertyExpectation")),
+        ]
+        text = serialize_subgraph(triples, comment_index={})
+
+        self.assertIn("evsla:SlaExpectation", text)
+        self.assertIn("rdfs:subClassOf", text)
+        self.assertIn("icm:PropertyExpectation", text)
+
+    def test_serialize_appends_comment_block_for_known_uris(self):
+        evsla = "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/"
+        sla_uri = URIRef(evsla + "SlaExpectation")
+        triples = [(sla_uri, RDFS.label, sla_uri)]
+        text = serialize_subgraph(
+            triples,
+            comment_index={sla_uri: "A property expectation expressing SLA guarantees."},
+        )
+
+        self.assertIn("# comment: evsla:SlaExpectation", text)
+        self.assertIn("A property expectation expressing SLA guarantees.", text)
 
 
 if __name__ == "__main__":
