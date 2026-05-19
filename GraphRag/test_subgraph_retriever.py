@@ -1,7 +1,9 @@
 import json
 import unittest
 
-from subgraph_retriever import extract_seeds
+from rdflib import URIRef
+
+from subgraph_retriever import extract_seeds, ground_seeds
 
 
 class TestExtractSeeds(unittest.TestCase):
@@ -28,6 +30,57 @@ class TestExtractSeeds(unittest.TestCase):
         seeds = extract_seeds("dummy", caller=fake_caller)
 
         self.assertEqual(seeds, [])
+
+
+class TestGroundSeeds(unittest.TestCase):
+    def test_ground_seeds_uses_label_index_when_available(self):
+        label_idx = {
+            "twamp": URIRef("http://example.org/evsla/twamp"),
+            "p95 statistic": URIRef("http://example.org/evsla/p95"),
+        }
+
+        grounded = ground_seeds(
+            ["TWAMP", "p95 statistic"],
+            label_index=label_idx,
+            comment_index={},
+            embed_caller=lambda items: [],
+        )
+
+        self.assertIn(URIRef("http://example.org/evsla/twamp"), grounded)
+        self.assertIn(URIRef("http://example.org/evsla/p95"), grounded)
+
+    def test_ground_seeds_falls_back_to_comment_similarity(self):
+        uri = URIRef("http://example.org/evsla/hubToAllSpokes")
+        comment_idx = {uri: "The SLA metric is evaluated from the hub site to all spoke sites."}
+
+        # Embed: returns identical vector for seed and comment → cosine = 1
+        def fake_embed(items):
+            return [[1.0, 0.0] for _ in items]
+
+        grounded = ground_seeds(
+            ["hub to all spokes"],
+            label_index={},
+            comment_index=comment_idx,
+            embed_caller=fake_embed,
+            similarity_threshold=0.5,
+        )
+
+        self.assertIn(uri, grounded)
+
+    def test_ground_seeds_skips_when_no_match(self):
+        def fake_embed(items):
+            # First item (seed) is [1, 0]; comment items are orthogonal [0, 1]
+            return [[1.0, 0.0]] + [[0.0, 1.0] for _ in items[1:]]
+
+        grounded = ground_seeds(
+            ["nonexistent term"],
+            label_index={},
+            comment_index={URIRef("http://example.org/x"): "completely unrelated"},
+            embed_caller=fake_embed,
+            similarity_threshold=0.9,
+        )
+
+        self.assertEqual(grounded, set())
 
 
 if __name__ == "__main__":
