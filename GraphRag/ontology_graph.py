@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from pathlib import Path
 
 from rdflib import Graph, URIRef
-from rdflib.namespace import RDFS, SKOS
+from rdflib.namespace import RDF, RDFS, SKOS
 
 # Several TIO v3.6.0 TTL files omit prefix declarations that they reference.
 # Inject the missing bindings when they are absent so rdflib can parse them.
@@ -43,6 +44,15 @@ def build_label_index(graph: Graph) -> dict[str, URIRef]:
             if key not in index or str(subject) < str(index[key]):
                 index[key] = subject
     return index
+
+
+def build_type_index(graph: Graph) -> dict[URIRef, set[URIRef]]:
+    """Map class URI → set of URIs that are rdf:type of that class."""
+    index: dict[URIRef, set[URIRef]] = defaultdict(set)
+    for subject, _, cls in graph.triples((None, RDF.type, None)):
+        if isinstance(subject, URIRef) and isinstance(cls, URIRef):
+            index[cls].add(subject)
+    return dict(index)
 
 
 def load_ontology(ttl_dir: Path) -> Graph:

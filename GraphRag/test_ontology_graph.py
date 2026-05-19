@@ -3,7 +3,7 @@ from pathlib import Path
 
 from rdflib import URIRef
 
-from ontology_graph import load_ontology, build_label_index
+from ontology_graph import build_label_index, build_type_index, load_ontology
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -49,6 +49,35 @@ class TestLabelIndex(unittest.TestCase):
 
     def test_label_index_handles_multi_word_labels(self):
         self.assertIn("p95 statistic", self.idx)
+
+
+class TestTypeIndex(unittest.TestCase):
+    def setUp(self):
+        self.idx = build_type_index(load_ontology(TTL_DIR))
+
+    def test_type_index_lists_scope_instances(self):
+        scope_cls = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/Scope")
+        instances = {str(u) for u in self.idx[scope_cls]}
+        self.assertIn(
+            "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/hubToAllSpokes",
+            instances,
+        )
+        self.assertIn(
+            "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/perSpoke",
+            instances,
+        )
+        self.assertIn(
+            "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/specificSpoke",
+            instances,
+        )
+
+    def test_type_index_lists_statistic_instances(self):
+        stat_cls = URIRef("http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/Statistic")
+        instances = {str(u) for u in self.idx[stat_cls]}
+        self.assertIn(
+            "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/p95",
+            instances,
+        )
 
 
 if __name__ == "__main__":
