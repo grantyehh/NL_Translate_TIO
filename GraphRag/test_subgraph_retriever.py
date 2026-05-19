@@ -4,7 +4,7 @@ import unittest
 from rdflib import URIRef
 from rdflib.namespace import RDFS
 
-from subgraph_retriever import extract_seeds, ground_seeds, serialize_subgraph
+from subgraph_retriever import build_subgraph_context, extract_seeds, ground_seeds, serialize_subgraph
 
 
 class TestExtractSeeds(unittest.TestCase):
@@ -108,6 +108,39 @@ class TestSerializeSubgraph(unittest.TestCase):
 
         self.assertIn("# comment: evsla:SlaExpectation", text)
         self.assertIn("A property expectation expressing SLA guarantees.", text)
+
+
+class TestBuildSubgraphContext(unittest.TestCase):
+    def test_build_subgraph_context_full_pipeline(self):
+        evsla = "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/"
+        icm = "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/"
+        sla_uri = URIRef(evsla + "SlaExpectation")
+        prop_uri = URIRef(icm + "PropertyExpectation")
+
+        label_idx = {"sla expectation": sla_uri}
+        comment_idx = {sla_uri: "A property expectation for SLA guarantees."}
+
+        def fake_seed_caller(prompt):
+            return json.dumps(["sla expectation"])
+
+        def fake_embed_caller(items):
+            return [[0.0, 0.0] for _ in items]
+
+        def fake_bfs(seeds, hops):
+            return [(sla_uri, RDFS.subClassOf, prop_uri)]
+
+        ctx = build_subgraph_context(
+            "確保 SLA 達標",
+            label_index=label_idx,
+            comment_index=comment_idx,
+            seed_caller=fake_seed_caller,
+            embed_caller=fake_embed_caller,
+            bfs_fn=fake_bfs,
+        )
+
+        self.assertIn("evsla:SlaExpectation", ctx)
+        self.assertIn("icm:PropertyExpectation", ctx)
+        self.assertIn("# comment: evsla:SlaExpectation", ctx)
 
 
 if __name__ == "__main__":

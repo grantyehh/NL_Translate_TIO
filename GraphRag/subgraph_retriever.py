@@ -114,6 +114,22 @@ def _shorten(node: Node) -> str:
     return f"<{s}>"
 
 
+def build_subgraph_context(
+    nl_intent: str,
+    label_index: dict[str, URIRef],
+    comment_index: dict[URIRef, str],
+    seed_caller: Callable[[str], str],
+    embed_caller: Callable[[list[str]], list[list[float]]],
+    bfs_fn: Callable[[list[URIRef], int], list[tuple[Node, Node, Node]]],
+    hops: int = 2,
+) -> str:
+    """End-to-end: NL intent → serialized subgraph context string."""
+    seeds = extract_seeds(nl_intent, caller=seed_caller)
+    grounded = ground_seeds(seeds, label_index, comment_index, embed_caller)
+    triples = bfs_fn(list(grounded), hops)
+    return serialize_subgraph(triples, comment_index)
+
+
 def serialize_subgraph(
     triples: list[tuple[Node, Node, Node]],
     comment_index: dict[URIRef, str],
