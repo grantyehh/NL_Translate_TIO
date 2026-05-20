@@ -4,7 +4,10 @@ import subprocess
 import sys
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import Mock, patch
+
+import numpy as np
 
 
 os.environ.setdefault("OPENAI_API_KEY", "test-key")
@@ -35,11 +38,6 @@ class TestKgePaths(unittest.TestCase):
         expected = Path("/tmp/example/CHT/few_shot_samples.json").resolve()
         self.assertEqual(nl_to_tio.default_few_shot_path(root), expected)
 
-    def test_shared_graphrag_root_points_to_graph_rag_index(self) -> None:
-        root = Path("/tmp/example/CHT/KGE/KGE-based-graphrag")
-        expected = Path("/tmp/example/CHT/GraphRag").resolve()
-        self.assertEqual(nl_to_tio.shared_graphrag_root(root), expected)
-
     def test_format_few_shot_block_uses_json_ld_examples(self) -> None:
         examples = [
             {
@@ -57,7 +55,7 @@ class TestKgePaths(unittest.TestCase):
 
     def test_output_path_uses_jsonld_outputs_and_extension(self) -> None:
         root = Path("/tmp/example/CHT/KGE/KGE-based-graphrag")
-        expected = Path("/tmp/example/CHT/jsonld_outputs/kge_hybrid/TC001.jsonld")
+        expected = Path("/tmp/example/CHT/jsonld_outputs/kge/TC001.jsonld")
         self.assertEqual(nl_to_tio.output_path_for_case(root, "TC001"), expected)
 
     def test_system_prompt_requires_json_ld_not_turtle(self) -> None:
@@ -77,17 +75,6 @@ class TestKgePaths(unittest.TestCase):
         self.assertIn("95% -> evsla:p95", prompt)
         self.assertIn("所有分點 / 各Spoke -> evsla:hubToAllSpokes", prompt)
         self.assertNotIn("DeliveryExpectation", prompt)
-
-    def test_graphrag_query_focuses_on_evsla_terms(self) -> None:
-        query = nl_to_tio.build_graphrag_query("確保星河銀行總部至所有分點之延遲低於50ms。")
-
-        self.assertIn("TM Forum Intent Ontology v3.6.0", query)
-        self.assertIn("EnterpriseVpnSlaOntology", query)
-        self.assertIn("evsla:EnterpriseVpnSlaIntent", query)
-        self.assertIn("evsla:latency", query)
-        self.assertNotIn("5G", query)
-        self.assertNotIn("QoS", query)
-        self.assertNotIn("icm:DeliveryExpectation", query)
 
     def test_chat_model_uses_gpt_5_4(self) -> None:
         self.assertEqual(nl_to_tio.CHAT_MODEL, "gpt-5.4")
@@ -111,18 +98,156 @@ class TestKgePaths(unittest.TestCase):
 
         self.assertEqual(result.stdout.strip(), "icm:Intent")
 
-    def test_query_graphrag_local_uses_shared_graph_rag_root(self) -> None:
-        shared_root = Path("/tmp/example/CHT/GraphRag")
-        completed = Mock(stdout="context")
+    def test_generate_prompt_labels_kge_grounded_predictions(self) -> None:
+        completion = Mock()
+        completion.choices = [Mock(message=Mock(content='{"@context": {}}'))]
 
-        with patch.object(nl_to_tio.subprocess, "run", return_value=completed) as run:
-            result = nl_to_tio.query_graphrag_local("query text", shared_root)
+        with patch.object(nl_to_tio.client.chat.completions, "create", return_value=completion) as create:
+            result = nl_to_tio.generate_jsonld_code(
+                "確保延遲低於 50ms",
+                "TC001",
+                "",
+                kge_context=(
+                    "Grounded URIs:\n"
+                    "- evsla:SlaExpectation\n\n"
+                    "Predicted likely triples:\n"
+                    "- evsla:SlaExpectation evsla:hasMetric evsla:latency"
+                ),
+            )
 
-        self.assertEqual(result, "context")
-        args = run.call_args.args[0]
-        self.assertEqual(args[:4], ["graphrag", "query", "--root", str(shared_root)])
-        self.assertIn("--method", args)
-        self.assertIn("local", args)
+        self.assertEqual(result, '{"@context": {}}')
+        user_prompt = create.call_args.kwargs["messages"][1]["content"]
+        self.assertIn("KGE grounded URI / predicted likely triples", user_prompt)
+        self.assertNotIn("GraphRAG", user_prompt)
+        self.assertIn("Grounded URIs:", user_prompt)
+        self.assertIn("Predicted likely triples:", user_prompt)
+
+    def test_main_uses_kge_context_without_querying_graphrag(self) -> None:
+        root = Path(__file__).resolve().parent
+        with TemporaryDirectory() as tmp:
+            out_dir = Path(tmp)
+            with patch.object(
+                nl_to_tio,
+                "default_test_cases_path",
+                return_value=root / "_missing_default_cases.json",
+            ), patch.object(
+                nl_to_tio,
+                "output_path_for_case",
+                side_effect=lambda _root, tc_id: out_dir / f"{tc_id}.jsonld",
+            ), patch.object(
+                nl_to_tio,
+                "load_few_shot_samples",
+                return_value=[],
+            ), patch.object(
+                nl_to_tio,
+                "format_kge_context_for_prompt",
+                return_value="Grounded URIs:\n- evsla:SlaExpectation",
+            ), patch.object(
+                nl_to_tio,
+                "generate_jsonld_code",
+                return_value='{"@context": {}}',
+            ) as generate, patch.object(
+                nl_to_tio,
+                "query_graphrag_local",
+                side_effect=AssertionError("KGE-only must not query GraphRAG"),
+                create=True,
+            ), patch.object(
+                sys,
+                "argv",
+                [
+                    "nl_to_tio.py",
+                    "--test-cases",
+                    str(root.parent.parent / "test_cases_20.json"),
+                    "--no-few-shot",
+                ],
+            ):
+                nl_to_tio.main()
+
+        self.assertGreater(generate.call_count, 0)
+        first_call = generate.call_args_list[0]
+        self.assertIn("Grounded URIs", first_call.kwargs["kge_context"])
+
+    def test_relation_kge_artifact_paths_are_defined(self) -> None:
+        from kge import paths
+
+        self.assertEqual(paths.RELATION_IDS_JSON.name, "relation_ids.json")
+        self.assertEqual(paths.RELATION_KGE_EMB_NPY.name, "relation_kge_embeddings.npy")
+
+    def test_trans_e_link_prediction_scores_candidate_triples(self) -> None:
+        from kge.retrieve import score_link_predictions
+
+        entity_ids = [
+            "http://example.test/SlaExpectation",
+            "http://example.test/latency",
+            "http://example.test/packetLoss",
+        ]
+        relation_ids = [
+            "http://example.test/hasMetric",
+            "http://example.test/blockedRelation",
+        ]
+        entity_emb = np.asarray(
+            [
+                [0.0, 0.0],
+                [1.0, 0.0],
+                [4.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
+        relation_emb = np.asarray(
+            [
+                [1.0, 0.0],
+                [0.0, 1.0],
+            ],
+            dtype=np.float32,
+        )
+
+        predictions = score_link_predictions(
+            "http://example.test/SlaExpectation",
+            entity_ids,
+            relation_ids,
+            entity_emb,
+            relation_emb,
+            relation_whitelist={"http://example.test/hasMetric"},
+            candidate_tail_uris={
+                "http://example.test/latency",
+                "http://example.test/packetLoss",
+            },
+            top_k=2,
+        )
+
+        self.assertEqual(len(predictions), 2)
+        self.assertEqual(predictions[0].relation_uri, "http://example.test/hasMetric")
+        self.assertEqual(predictions[0].tail_uri, "http://example.test/latency")
+        self.assertGreater(predictions[0].score, predictions[1].score)
+        self.assertNotEqual(predictions[0].relation_uri, "http://example.test/blockedRelation")
+
+    def test_grounded_kge_context_formats_predicted_likely_triples(self) -> None:
+        from kge.retrieve import LinkPrediction, format_grounded_kge_context
+
+        context = format_grounded_kge_context(
+            grounded=[
+                (
+                    "evsla:SlaExpectation",
+                    "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/SlaExpectation",
+                    "text",
+                    "SLA expectation class",
+                )
+            ],
+            predictions=[
+                LinkPrediction(
+                    head_uri="http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/SlaExpectation",
+                    relation_uri="http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/hasMetric",
+                    tail_uri="http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/latency",
+                    score=-0.01,
+                )
+            ],
+        )
+
+        self.assertIn("Grounded URIs", context)
+        self.assertIn("Predicted likely triples", context)
+        self.assertIn("evsla:SlaExpectation", context)
+        self.assertIn("evsla:SlaExpectation evsla:hasMetric evsla:latency", context)
+        self.assertIn("Use these as structural hints, not as test-case answers", context)
 
 
 if __name__ == "__main__":

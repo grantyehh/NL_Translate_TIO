@@ -231,12 +231,12 @@ kag_solver_pipeline_tc:
   executors:
     - *retriever_executor
   generator:
-    # NetOperatorQA 用客製 `llm_generator_with_thought`;改用 KAG 內建 `llm_generator`。
-    # 注意:我們 nl_to_tio.py 只用 retrieved_chunks,generator 的最終答案會被丟掉。
-    type: llm_generator
+    # Use a TIO-specific KAG generator so final JSON-LD is produced inside
+    # the native KAG solver pipeline instead of by an external context+LLM step.
+    type: tio_jsonld_generator
     llm_client: *chat_llm
     generated_prompt:
-      type: default_multi_hop_generator
+      type: tio_jsonld_generator_prompt
 #------------kag-solver configuration end----------------#
 
 
@@ -255,9 +255,7 @@ kag_solver_pipeline:
     - *kag_deduce_executor_conf
     - *kag_output_executor_conf
   generator:
-    # NetOperatorQA 用客製 `llm_generator_with_thought`;改用 KAG 內建 `llm_generator`。
-    # 注意:我們 nl_to_tio.py 只用 retrieved_chunks,generator 的最終答案會被丟掉。
-    type: llm_generator
+    type: tio_jsonld_generator
     llm_client: *chat_llm
     generated_prompt:
-      type: default_multi_hop_generator
+      type: tio_jsonld_generator_prompt

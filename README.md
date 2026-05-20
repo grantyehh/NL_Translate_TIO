@@ -4,7 +4,7 @@
 
 - `LLM-only/`: 只用 LLM + few-shot。
 - `GraphRag/`: GraphRAG + LLM + few-shot。
-- `KGE/KGE-based-graphrag/`: GraphRAG + KGE hybrid retrieval + LLM + few-shot。
+- `KGE/KGE-based-graphrag/`: KGE text grounding + TransE link prediction + LLM + few-shot。
 - `KAG/`: OpenSPG/KAG kg-builder + 5-way solver retrieval(atomic_query / outline / summary / vector / table)+ LLM + few-shot。後端走 Docker stack(server + Neo4j + MySQL + MinIO)。詳見 [`KAG/example_project/README.md`](KAG/example_project/README.md)。
 
 四條線共用：
@@ -18,13 +18,13 @@
 
 固定輸出位置:
 
-- 生成結果:根目錄 `jsonld_outputs/<experiment>/*.jsonld`(`<experiment>` ∈ `llm_only / graphrag / kge_hybrid / kag`)
+- 生成結果:根目錄 `jsonld_outputs/<experiment>/*.jsonld`(`<experiment>` ∈ `llm_only / graphrag / kge / kag`)
 - 評分結果:`phase1/phase1_*.json`
 - 比較結果:`phase1/compare_four_way.txt`(舊版 3-way 的 `compare_three_way.txt` 保留作為歷史對照)
 
 ## 0. 前置準備
 
-### 0.1 LLM-only / GraphRag / KGE-hybrid 共用環境
+### 0.1 LLM-only / GraphRag / KGE 共用環境
 
 在專案根目錄啟用環境並安裝依賴:
 
@@ -42,7 +42,7 @@ export GRAPHRAG_API_KEY=your_key_here
 export OPENAI_API_KEY=your_key_here
 ```
 
-`GraphRag/` 與 `KGE/KGE-based-graphrag/` 共用同一份 GraphRAG index。TTL 變更後先用 RDF parser 產生 term-level GraphRAG input,再只在 `GraphRag/` 建一次 index:
+`GraphRag/` 需要自己的 GraphRAG index。TTL 變更後先用 RDF parser 產生 term-level GraphRAG input,再只在 `GraphRag/` 建一次 index:
 
 ```bash
 python3 GraphRag/build_graphrag_input.py
@@ -52,7 +52,7 @@ graphrag index --root .
 
 `GraphRag/build_graphrag_input.py` 會讀取 `TM Forum Intent Ontology/*.ttl`,保留 `rdfs:comment`、`rdfs:subClassOf`、`rdfs:domain`、`rdfs:range` 等 RDF 結構,輸出到 `graphrag_term_input/`。
 
-KGE 線會查詢上面這份共用 GraphRAG index,另外只需要自己的 KGE artifacts。如果 ontology 有變更或 artifacts 不存在,再執行:
+KGE 線不查詢 GraphRAG index；它只使用自己的 KGE artifacts。如果 ontology 有變更或 artifacts 不存在,再執行:
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/KGE/KGE-based-graphrag
@@ -130,7 +130,7 @@ python nl_to_tio.py
 jsonld_outputs/graphrag/*.jsonld
 ```
 
-### 單獨生成 KGE hybrid
+### 單獨生成 KGE
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/KGE/KGE-based-graphrag
@@ -140,7 +140,7 @@ python nl_to_tio.py
 輸出:
 
 ```text
-jsonld_outputs/kge_hybrid/*.jsonld
+jsonld_outputs/kge/*.jsonld
 ```
 
 ### 單獨生成 KAG
@@ -188,7 +188,7 @@ python run_all_experiments.py --eval-only
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment
 python evaluate_jsonld.py llm_only       # 只評 LLM-only
 python evaluate_jsonld.py graphrag       # 只評 GraphRag
-python evaluate_jsonld.py kge_hybrid     # 只評 KGE-hybrid
+python evaluate_jsonld.py kge            # 只評 KGE
 python evaluate_jsonld.py kag            # 只評 KAG
 python evaluate_jsonld.py                # 不帶參數 = 一次評四條線
 ```
@@ -198,7 +198,7 @@ python evaluate_jsonld.py                # 不帶參數 = 一次評四條線
 ```text
 phase1/phase1_llm_only.json
 phase1/phase1_graphrag.json
-phase1/phase1_kge_hybrid.json
+phase1/phase1_kge.json
 phase1/phase1_kag.json
 ```
 

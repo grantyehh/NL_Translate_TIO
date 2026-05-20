@@ -1,6 +1,6 @@
 # TIO_EVSLA_QA — KAG Example Project
 
-KAG 線(NL → TIO JSON-LD)的最小可跑專案。對齊 `LLM-only/` 與 `GraphRag/` 既有兩條 pipeline 的契約,作為 C-8(KAG 實驗執行)+ C-9(三架構交叉比對)的實作載體。
+KAG 線(NL → TIO JSON-LD)的最小可跑專案。對齊 `LLM-only/`、`GraphRag/`、`KGE/` 既有 pipeline 的輸出契約,但保留 KAG 原生的 builder + solver 結構。
 
 ## 為什麼這樣搭
 
@@ -8,6 +8,18 @@ KAG 線(NL → TIO JSON-LD)的最小可跑專案。對齊 `LLM-only/` 與 `Graph
 - KAG schema-driven 路徑(Approach B/C)沒現成 example,改 builder 內部 API 風險高
 - 我們手寫的 `TIO_Experiment/KAG/schema/TIO_EVSLA.schema` 是 Approach B/C 用的,**這個 example_project 暫時用不上**;若 A 跑出來不滿意,再切 B/C
 - 完整討論見 [`../schema/README.md`](../schema/README.md)
+
+查詢端改造後走 KAG 原生 solver:
+
+```text
+NL intent
+  -> kag_static_pipeline planner
+  -> kag_hybrid_retrieval_executor
+  -> tio_jsonld_generator
+  -> TIO JSON-LD
+```
+
+`KAG/nl_to_tio.py` 不再把 retrieved chunks 拿出來交給外部 OpenAI call 生成 JSON-LD;final JSON-LD 由 KAG solver 的 generator 階段產生。
 
 ## 目錄結構
 
@@ -35,7 +47,8 @@ example_project/
 │   └── indexer.py           ← 跑 builder 把 data/ 灌成 KG
 ├── schema/
 │   └── TIO_EVSLA_QA.schema  ← NetOperatorQA 通用 schema(Document/Chunk/Outline/Summary/Table/KnowledgeUnit/AtomicQuery)
-├── solver/                  ← 之後寫 nl_to_tio.py 在這裡
+├── solver/
+│   └── tio_jsonld_generator.py ← KAG generator + prompt,產生 final TIO JSON-LD
 └── reasoner/                ← (KAG 預設目錄,暫空)
 ```
 
@@ -99,9 +112,9 @@ open http://localhost:7474/
 | Corpus | (none — only few-shot) | `graphrag_term_input/` 從 TTL 切 | 同 GraphRag + KGE triples | `builder/data/*.md` 從 SKILL.md |
 | 知識存儲 | (LLM 內) | lancedb 向量索引 | + entity TransE embedding | Neo4j graph(chunks + outline/summary/atomic_query/table) |
 | Retrieval | (無) | community summary + 向量 | 同 + KGE entity 相似 | 5-way ensemble(atomic_query / outline / summary / vector / table) |
-| Generation | LLM + few-shot | LLM + context + few-shot | 同 | LLM + 5-way context + few-shot |
+| Generation | LLM + few-shot | LLM + context + few-shot | 同 | KAG solver generator + 5-way context + few-shot |
 
 ## 後續 task
 
-- [ ] task #10:寫 `solver/nl_to_tio.py`(對齊 `LLM-only/nl_to_tio.py` 與 `GraphRag/nl_to_tio.py` 的 interface)
-- [ ] task #11:把 `kag` 加進 `evaluate_jsonld.py` + `compare_reports.py` 變成 4-way 比較
+- [x] task #10:讓 `KAG/nl_to_tio.py` 走 KAG solver generator 產生 JSON-LD
+- [ ] task #11:跑全量 KAG 輸出並重新做 4-way 比較

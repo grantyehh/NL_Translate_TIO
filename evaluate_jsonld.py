@@ -2,7 +2,7 @@
 """
 Evaluate generated API-friendly TIO JSON-LD outputs.
 
-This is the JSON-LD phase-1 evaluator for the three experiment lines. It checks:
+This is the JSON-LD phase-1 evaluator for the experiment lines. It checks:
 1) JSON syntax
 2) Intent payload contract
 3) Test spec coverage using expected_tio_elements mapped to JSON-LD fields
@@ -43,10 +43,10 @@ EXPERIMENTS = {
         "output_subdir": "graphrag",
         "report_name": "phase1_graphrag.json",
     },
-    "kge_hybrid": {
-        "label": "KGE-hybrid",
-        "output_subdir": "kge_hybrid",
-        "report_name": "phase1_kge_hybrid.json",
+    "kge": {
+        "label": "KGE",
+        "output_subdir": "kge",
+        "report_name": "phase1_kge.json",
     },
     "kag": {
         "label": "KAG",
@@ -549,7 +549,7 @@ def main(argv: list[str] | None = None) -> int:
         nargs="?",
         choices=tuple(EXPERIMENTS.keys()) + ("all",),
         default="all",
-        help="Experiment to evaluate: llm_only, graphrag, kge_hybrid, or all (default: all)",
+        help="Experiment to evaluate: llm_only, graphrag, kge, kag, or all (default: all)",
     )
     args = parser.parse_args(argv)
 

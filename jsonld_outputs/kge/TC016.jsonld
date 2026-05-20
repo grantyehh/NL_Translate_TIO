@@ -1,0 +1,71 @@
+{
+  "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
+  "@type": "Intent",
+  "id": "intent-tc016",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure latency SLA for 智慧農業 enterprise VPN from the hub to all spoke sites with p95 latency below 100 ms.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "intentOwner": {
+    "id": "ops-manager-01",
+    "name": "Network Operations Center"
+  },
+  "tenant": {
+    "id": "tenant:智慧農業",
+    "name": "智慧農業",
+    "@type": "evsla:Tenant"
+  },
+  "intentExpectation": [
+    {
+      "id": "exp-tc016-latency",
+      "name": "Hub-to-Spoke Latency SLA Expectation",
+      "description": "Guarantee evsla:latency for 智慧農業 enterprise VPN service across all spoke sites.",
+      "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
+      "expectationObject": {
+        "id": "svc:智慧農業-enterprise-vpn",
+        "name": "智慧農業 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
+      },
+      "expectationTarget": [
+        {
+          "name": "Hub-to-All-Spokes Latency",
+          "targetProperty": "evsla:latency",
+          "matchCondition": "LESS_THAN",
+          "targetValue": {
+            "value": 100,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:latency",
+          "evsla:hasThreshold": {
+            "value": 100,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p95",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+        }
+      ]
+    }
+  ],
+  "intentContext": [
+    {
+      "id": "topology-tc016",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "智慧農業Hub"
+      },
+      "evsla:hasSpoke": []
+    }
+  ],
+  "intentReport": {
+    "reportingInterval": "PT5M",
+    "handlerResponse": "Continuous"
+  }
+}

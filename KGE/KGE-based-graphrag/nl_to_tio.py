@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -9,8 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from dotenv import load_dotenv
 from openai import OpenAI
-from evsla_prompt import build_evsla_graphrag_query, build_evsla_system_prompt
-from kge.retrieve import format_kge_context_for_prompt, kge_hybrid_ready
+from evsla_prompt import build_evsla_system_prompt
+from kge.retrieve import format_kge_context_for_prompt, kge_ready
 
 # 加載環境變數
 load_dotenv()
@@ -38,11 +37,6 @@ def default_few_shot_path(root: Path) -> Path:
     return (root.parent.parent / "few_shot_samples.json").resolve()
 
 
-def shared_graphrag_root(root: Path) -> Path:
-    """Return the shared GraphRAG index root used by both GraphRAG and KGE-hybrid."""
-    return (root.parent.parent / "GraphRag").resolve()
-
-
 def load_few_shot_samples(path: Path) -> list[dict]:
     if not path.is_file():
         return []
@@ -67,43 +61,20 @@ def format_few_shot_block(examples: list[dict]) -> str:
 
 
 def output_path_for_case(root: Path, tc_id: str) -> Path:
-    return root.parent.parent / "jsonld_outputs" / "kge_hybrid" / f"{tc_id}.jsonld"
+    return root.parent.parent / "jsonld_outputs" / "kge" / f"{tc_id}.jsonld"
 
 
 def build_system_prompt(tc_id: str) -> str:
-    return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG/KGE")
-
-
-def build_graphrag_query(nl_intent: str) -> str:
-    return build_evsla_graphrag_query(nl_intent)
-
-def query_graphrag_local(query_text, graph_root: Path | None = None):
-    """
-    呼叫共用 GraphRAG local search 獲取 TIO 相關的 Schema 上下文。
-    """
-    print(f"--- Step 1: Querying GraphRAG for TIO context ---")
-    root_arg = str(graph_root or shared_graphrag_root(Path(__file__).resolve().parent))
-    try:
-        result = subprocess.run(
-            ["graphrag", "query", "--root", root_arg, "--method", "local", query_text],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        print(f"Error querying GraphRAG: {e.stderr}")
-        return None
+    return build_evsla_system_prompt(tc_id, retrieval_mode="KGE")
 
 def generate_jsonld_code(
     nl_intent,
-    context,
     tc_id,
     few_shot_block: str,
     kge_context: str | None = None,
 ):
     """
-    利用 LLM 將 NL Intent 和 GraphRAG/KGE Context 轉化為 TIO JSON-LD。
+    利用 LLM 將 NL Intent 和 KGE context 轉化為 TIO JSON-LD。
     """
     print(f"--- Step 2: Translating to TIO JSON-LD format for {tc_id} ---")
     
@@ -124,8 +95,7 @@ def generate_jsonld_code(
 
 自然語言意圖："{nl_intent}"
 
-相關 TIO 知識上下文（GraphRAG 檢索）：
-{context}
+相關 TIO 知識上下文（KGE grounded URI / predicted likely triples）：
 {kge_block}
 請生成對應的 TIO JSON-LD：
 """
@@ -149,7 +119,7 @@ generate_turtle_code = generate_jsonld_code
 
 def main() -> None:
     root = Path(__file__).resolve().parent
-    parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via GraphRAG + OpenAI + KGE.")
+    parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via KGE link prediction + OpenAI.")
     parser.add_argument(
         "--test-cases",
         type=Path,
@@ -188,41 +158,33 @@ def main() -> None:
 
     output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
-    graph_root = shared_graphrag_root(root)
 
-    if not kge_hybrid_ready():
+    if not kge_ready():
         print(
-            "--- KGE hybrid disabled: missing kge_data/ (run `pip install -r requirements.txt` "
-            "then `python -m kge.train` with GRAPHRAG_API_KEY for full hybrid retrieval) ---"
+            "--- KGE context disabled: missing kge_data/ (run `pip install -r requirements.txt` "
+            "then `python -m kge.train` with GRAPHRAG_API_KEY or OPENAI_API_KEY) ---"
         )
 
     # 處理 test_cases.json 中的全部案例
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
-        
-        # 1. 檢索知識（要求回覆對齊官方詞彙，便於後續生成 JSON-LD）
-        query_text = build_graphrag_query(tc["nl_intent"])
-        tio_context = query_graphrag_local(query_text, graph_root)
 
         kge_context = format_kge_context_for_prompt(tc["nl_intent"])
 
-        if tio_context:
-            # 2. 生成 JSON-LD（GraphRAG + KGE 混合補強）
-            jsonld_result = generate_jsonld_code(
-                tc["nl_intent"],
-                tio_context,
-                tc["id"],
-                few_shot_block,
-                kge_context=kge_context or None,
-            )
-            
-            if jsonld_result:
-                file_path = output_path_for_case(root, tc["id"])
-                file_path.write_text(jsonld_result, encoding="utf-8")
-                print(f"Successfully saved JSON-LD to: {file_path}")
-                print("-" * 30)
-                print(jsonld_result)
-                print("-" * 30)
+        jsonld_result = generate_jsonld_code(
+            tc["nl_intent"],
+            tc["id"],
+            few_shot_block,
+            kge_context=kge_context or None,
+        )
+
+        if jsonld_result:
+            file_path = output_path_for_case(root, tc["id"])
+            file_path.write_text(jsonld_result, encoding="utf-8")
+            print(f"Successfully saved JSON-LD to: {file_path}")
+            print("-" * 30)
+            print(jsonld_result)
+            print("-" * 30)
 
 if __name__ == "__main__":
     main()

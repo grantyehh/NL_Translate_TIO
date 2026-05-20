@@ -32,6 +32,8 @@ from kge.paths import (  # noqa: E402
     ENTITY_TEXT_EMB_NPY,
     KGE_DATA_DIR,
     MANIFEST_JSON,
+    RELATION_IDS_JSON,
+    RELATION_KGE_EMB_NPY,
     TRIPLES_TSV,
 )
 from kge.tio_triples import build_entity_descriptions, extract_triples_for_kge  # noqa: E402
@@ -82,8 +84,8 @@ def train_trans_e(
     batch_size: int,
     lr: float,
     random_seed: int,
-) -> tuple[np.ndarray, list[str]]:
-    """Run PyKEEN TransE; return (L2-normalized entity matrix, entity_ids by index)."""
+) -> tuple[np.ndarray, list[str], np.ndarray, list[str]]:
+    """Run PyKEEN TransE; return entity/relation matrices and IDs by index."""
     arr = np.asarray(triples, dtype=object)
     tf = TriplesFactory.from_labeled_triples(arr)
     result = pipeline(
@@ -98,14 +100,29 @@ def train_trans_e(
     model = result.model
     n = model.num_entities
     ids = torch.arange(n, dtype=torch.long)
-    emb = model.entity_representations[0](indices=ids).detach().cpu().numpy().astype(np.float32)
-    norms = np.linalg.norm(emb, axis=1, keepdims=True)
+    entity_emb = model.entity_representations[0](indices=ids).detach().cpu().numpy().astype(np.float32)
+    norms = np.linalg.norm(entity_emb, axis=1, keepdims=True)
     norms = np.maximum(norms, 1e-12)
-    emb = emb / norms
+    entity_emb = entity_emb / norms
+
+    n_rel = model.num_relations
+    rel_ids_tensor = torch.arange(n_rel, dtype=torch.long)
+    relation_emb = (
+        model.relation_representations[0](indices=rel_ids_tensor)
+        .detach()
+        .cpu()
+        .numpy()
+        .astype(np.float32)
+    )
+    rel_norms = np.linalg.norm(relation_emb, axis=1, keepdims=True)
+    rel_norms = np.maximum(rel_norms, 1e-12)
+    relation_emb = relation_emb / rel_norms
 
     id_to_uri = {v: k for k, v in tf.entity_to_id.items()}
     entity_ids = [id_to_uri[i] for i in range(n)]
-    return emb, entity_ids
+    id_to_relation = {v: k for k, v in tf.relation_to_id.items()}
+    relation_ids = [id_to_relation[i] for i in range(n_rel)]
+    return entity_emb, entity_ids, relation_emb, relation_ids
 
 
 def main() -> None:
@@ -131,7 +148,7 @@ def main() -> None:
     _write_triples_tsv(triples, TRIPLES_TSV)
     print(f"Wrote {len(triples)} triples to {TRIPLES_TSV}")
 
-    kge_emb, entity_ids = train_trans_e(
+    kge_emb, entity_ids, relation_emb, relation_ids = train_trans_e(
         triples,
         embedding_dim=args.embedding_dim,
         num_epochs=args.epochs,
@@ -144,10 +161,15 @@ def main() -> None:
         json.dump(entity_ids, f, ensure_ascii=False, indent=2)
     np.save(ENTITY_KGE_EMB_NPY, kge_emb)
 
+    with open(RELATION_IDS_JSON, "w", encoding="utf-8") as f:
+        json.dump(relation_ids, f, ensure_ascii=False, indent=2)
+    np.save(RELATION_KGE_EMB_NPY, relation_emb)
+
     manifest = {
         "model": "TransE",
         "embedding_dim": args.embedding_dim,
         "num_entities": len(entity_ids),
+        "num_relations": len(relation_ids),
         "num_triples": len(triples),
         "epochs": args.epochs,
         "text_embedding_model": args.embedding_model,
@@ -156,6 +178,7 @@ def main() -> None:
         json.dump(manifest, f, indent=2)
 
     print(f"Saved KGE embeddings: {ENTITY_KGE_EMB_NPY} ({kge_emb.shape})")
+    print(f"Saved relation KGE embeddings: {RELATION_KGE_EMB_NPY} ({relation_emb.shape})")
 
     if args.skip_text_embeddings:
         print("Skipped text embeddings (--skip-text-embeddings).")

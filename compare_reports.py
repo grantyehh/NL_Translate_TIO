@@ -13,7 +13,7 @@ PHASE1_DIR = ROOT / "phase1"
 DEFAULT_REPORTS = [
     ("LLM-only", PHASE1_DIR / "phase1_llm_only.json"),
     ("GraphRag", PHASE1_DIR / "phase1_graphrag.json"),
-    ("KGE-hybrid", PHASE1_DIR / "phase1_kge_hybrid.json"),
+    ("KGE", PHASE1_DIR / "phase1_kge.json"),
     ("KAG", PHASE1_DIR / "phase1_kag.json"),
 ]
 
@@ -206,7 +206,7 @@ class Tee(io.TextIOBase):
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Compare phase1 reports for LLM-only, GraphRag, KGE-hybrid, and KAG."
+        description="Compare phase1 reports for LLM-only, GraphRag, KGE, and KAG."
     )
     parser.add_argument(
         "--test-cases",

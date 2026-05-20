@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class TestCompareReportsCli(unittest.TestCase):
-    def test_help_documents_four_way_comparison_only(self) -> None:
+    def test_help_documents_default_four_way_comparison_only(self) -> None:
         result = subprocess.run(
             [sys.executable, "compare_reports.py", "--help"],
             cwd=ROOT,
@@ -19,7 +19,7 @@ class TestCompareReportsCli(unittest.TestCase):
             check=True,
         )
 
-        self.assertIn("LLM-only, GraphRag, KGE-hybrid, and KAG", result.stdout)
+        self.assertIn("LLM-only, GraphRag, KGE, and KAG", result.stdout)
         self.assertNotIn("--base", result.stdout)
         self.assertNotIn("--target", result.stdout)
         self.assertNotIn("--base-name", result.stdout)
