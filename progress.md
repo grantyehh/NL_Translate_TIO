@@ -1,86 +1,164 @@
-# Progress Report: GraphRAG Typed Traversal Experiment
+# Progress Report: New Methods Branch
 
-Conclusion recorded at: 2026-05-19 22:55:21 CST
+Conclusion recorded at: 2026-05-24 CST
 
 ## Current Status
 
-目前 `graphrag-typed-traversal` 分支已完成 GraphRAG pipeline 的替代實作，並已重新產生 `jsonld_outputs/graphrag/TC001.jsonld` 到 `TC020.jsonld`。新版 GraphRAG 不再使用 Microsoft GraphRAG CLI 的 document-centric retrieval，而是直接使用 `TM Forum Intent Ontology/*.ttl` 作為 RDF graph，根據 user query 抽出的 seed terms 做 typed traversal，取回 query-specific ontology subgraph，再交給 LLM 生成 TIO JSON-LD。
+目前 `new-methods` 分支已整合三條新版知識增強 pipeline 的 phase1 結果：
 
-目前已完成並驗證：
+- GraphRAG typed RDF traversal
+- KGE link-prediction hybrid
+- KAG native builder + solver/generator
 
-- `GraphRag/ontology_graph.py`: 載入 TTL、建立 label/comment/type index、執行 typed BFS。
-- `GraphRag/subgraph_retriever.py`: seed extraction、seed-to-URI grounding、subgraph serialization。
-- `GraphRag/nl_to_tio.py`: 改用 typed RDF traversal context 取代 Microsoft GraphRAG CLI context。
-- `jsonld_outputs/graphrag/*.jsonld`: 已用新版流程重新產生 20 題輸出。
-- `phase1/phase1_graphrag.json`: 已用 evaluator 重算新版 GraphRAG 結果。
+四條 pipeline 已完成同一組 `test_cases_20.json` 的 JSON-LD 產出與 comparison report：
 
-## Why This Change Matters
+- `jsonld_outputs/graphrag/TC001.jsonld` 到 `TC020.jsonld`
+- `jsonld_outputs/kge/TC001.jsonld` 到 `TC020.jsonld`
+- `jsonld_outputs/kag/TC001.jsonld` 到 `TC020.jsonld`
+- `phase1/phase1_graphrag.json`
+- `phase1/phase1_kge.json`
+- `phase1/phase1_kag.json`
+- `phase1/compare_four_way.txt`
 
-原本的 Microsoft GraphRAG pipeline 比較適合大量非結構化文件的問答場景。它會把文件切成 chunks/text units，抽 entity 和 relationship，建立 community reports，再透過 local/global search 回傳文字型 context 給 LLM。
+## GraphRAG
 
-但本專案的任務不是一般文件問答，而是：
+GraphRAG 已完成從原本 document-centric retrieval 改成 ontology-native typed traversal。
 
-```text
-Natural language intent -> TIO JSON-LD
-```
-
-而且我們已經有正式的 `TM Forum Intent Ontology` TTL 檔。也就是說，知識來源本身已經是結構化 RDF ontology，不需要先經過 Microsoft GraphRAG 的文字 chunk 和 community summary 流程。原本使用 Microsoft GraphRAG 時，LLM 看到的 context 容易變成文字摘要或段落，可能反而弱化 URI、class/property、domain/range 等 ontology 結構訊號，進而讓輸出接近 LLM-only baseline。
-
-新版做法改成直接使用 ontology graph：
+新版流程：
 
 ```text
 user query
 -> extract seed terms
 -> ground seed terms to ontology URIs
--> 2-hop typed traversal over RDF graph
+-> typed BFS over RDF graph
 -> serialize triples + comments
 -> LLM generates TIO JSON-LD
 ```
 
-這讓 LLM 看到的是更接近任務需求的結構化 context，例如 `evsla:latency`、`evsla:p95`、`evsla:twamp`、`evsla:hubToAllSpokes`、`evsla:SlaExpectation` 等實際 ontology terms，而不是較鬆散的文字段落。
+已完成內容：
 
-## Evaluation Result
+- `GraphRag/ontology_graph.py`: 載入 TTL、建立 label/comment/type index、執行 typed BFS。
+- `GraphRag/subgraph_retriever.py`: seed extraction、seed-to-URI grounding、subgraph serialization。
+- `GraphRag/nl_to_tio.py`: 改用 typed RDF traversal context 取代 Microsoft GraphRAG CLI context。
+- 20 題 GraphRAG JSON-LD 已重新產生並評估。
 
-使用 `evaluate_jsonld.py graphrag` 評估新版 GraphRAG 後，結果如下：
+## KGE
 
-```text
-cases: 20
-parse_ok: 20/20 (100.0%)
-expected_tio_elements_avg: 100.0%
-ontology_terms_avg: 98.9%
-performance_metrics_avg: 100.0%
-```
+KGE 已完成新版 KGE-hybrid 流程，將 ontology triples 轉成 graph embedding 訊號，再搭配 link prediction 補出可能需要的 triples。
 
-四條線目前的 phase1 對比：
+新版目標：
 
 ```text
-Experiment     | Parse OK | Avg ICM | Avg ontology | Avg metric | Avg JSON nodes
-LLM-only       |  95.00%  | 0.8975  | 0.0000       | 0.0000     | 39.50
-GraphRag       | 100.00%  | 1.0000  | 0.9889       | 1.0000     | 62.65
-KGE-hybrid     |  95.00%  | 0.8650  | 0.0000       | 0.0000     | 38.40
-KAG            |  80.00%  | 0.9000  | 0.8861       | 0.9000     | 54.60
+TTL triples
+-> entity/relation embedding
+-> NL mention grounding
+-> link prediction
+-> grounded URIs + predicted triples
+-> LLM generates TIO JSON-LD
 ```
 
-目前新版 GraphRAG 在 evaluator 上是四條線中表現最好的：
+目前 KGE phase1 已重新產生 20 題輸出並納入四方比較。
 
-- Parse success rate: `100%`
-- ICM coverage: `1.0000`
-- Ontology term coverage: `0.9889`
-- Performance metric coverage: `1.0000`
+## KAG
 
-## Interpretation
+KAG 目前完成的是 **native KAG builder + solver/generator 版**，不是 `kag-logical-form-grounding` 改良版。
 
-初步結果顯示，對於本專案這種 ontology-to-JSON-LD 生成任務，直接使用 RDF ontology 做 typed subgraph retrieval，比原本透過 Microsoft GraphRAG CLI 產生文字 context 更有效。
+目前實際流程：
 
-可能原因是 Microsoft GraphRAG 的 document-centric pipeline 會把已經結構化的 ontology 轉成較間接的文字 retrieval context，導致 LLM 不一定能穩定使用正確的 TIO URI 和 schema structure。新版 typed traversal 則直接暴露 query-relevant triples 和 comments，讓 LLM 更容易對齊到正確的 ontology terms，因此在 URI 使用率、schema/ICM coverage 和 performance metric coverage 上都有明顯提升。
+```text
+builder/data/*.md
+-> KAG builder builds KG into OpenSPG / Neo4j
+-> KAG solver planning
+-> KAG retrieval / reasoning
+-> KAG generator emits TIO JSON-LD
+-> evaluate_jsonld.py
+```
 
-需要注意的是，目前只有 GraphRAG typed traversal 是最新重新跑出的結果；其他 `LLM-only`、`KGE-hybrid`、`KAG` 報告來自 repo 既有 phase1 檔案。若要作為正式實驗結論，建議後續用同一組模型設定、同一時間重新跑四條 pipeline，再產生最終比較報告。
+已完成內容：
+
+- `KAG/docker-compose-west.yml` stack 已用於 OpenSPG / Neo4j / MySQL / MinIO。
+- `KAG/example_project/builder/indexer.py` 已跑完 16 個 markdown corpus，0 failures。
+- KAG solver 已完成 `TC001` 到 `TC020`。
+- `KAG/nl_to_tio.py` 已支援 resume：
+  - `--resume`: 跳過已存在且非空的輸出。
+  - `--from-case TC014`: 從指定 case 往後跑。
+- `KAG/example_project/solver/tio_jsonld_generator.py` 已接到 KAG solver generator 階段，使用 KAG context 產生 TIO JSON-LD。
+- 增加 KAG output contract 補強：若 generator 漏掉 `intentReport`，會補成 evaluator 需要的 object。
+- `KAG/test_nl_to_tio.py` 已加入 contract 補強測試。
+
+注意：
+
+- KAG builder 的 KG 實際寫入 Docker volume 內的 OpenSPG / Neo4j。
+- `KAG/example_project/builder/ckpt/` 是本機 checkpoint/cache，可用於 builder resume，但不是 KG 本體。
+- 目前 compose 使用 anonymous Docker volumes；若執行 `docker compose down -v`，KAG KG data 會被刪除。建議後續改成 named volumes。
+
+## KAG Logical Form Grounding
+
+`docs/comparison_plan.md` 中提到的 `kag-logical-form-grounding` 尚未實作。
+
+該 variant 原本設計為：
+
+```text
+NL
+-> logical form / slot frame
+-> deterministic ontology grounding
+-> schema validation
+-> template render
+-> TIO JSON-LD
+```
+
+尚未完成項目：
+
+- logical form schema / slot frame parser
+- NL -> logical form prompt
+- slot value -> TTL URI deterministic mapping table
+- SHACL 或 TTL domain/range schema validation
+- grounded slots -> JSON-LD template render
+- 獨立輸出目錄，例如 `jsonld_outputs/kag_logical_form/`
+- evaluator / compare report 第五欄
+
+因此目前比較中的 `KAG` 指的是 native KAG，而不是 logical-form-first KAG。
+
+## Current Four-Way Evaluation
+
+目前 `phase1/compare_four_way.txt` 結果：
+
+```text
+Experiment     | Cases | Parse OK   | Avg icm  | Avg ontology | Avg metric | Avg JSON nodes | Verbosity OK | Avg node ratio | Intent ID OK
+LLM-only       |    20 |     95.00% |   0.8975 |       0.0000 |     0.0000 |          39.50 |       25.00% |         0.6436 |       100.00%
+GraphRag       |    20 |    100.00% |   1.0000 |       0.9889 |     1.0000 |          62.65 |      100.00% |         1.0186 |       100.00%
+KGE            |    20 |     95.00% |   1.0000 |       0.9972 |     1.0000 |          63.40 |        0.00% |         0.0000 |       100.00%
+KAG            |    20 |    100.00% |   0.9900 |       0.9314 |     1.0000 |          61.80 |      100.00% |         1.0031 |       100.00%
+```
+
+目前觀察：
+
+- GraphRAG 在 avg ICM coverage 與 avg metric coverage 上達到滿分。
+- KGE 在 avg ontology coverage 上最高。
+- KAG native 也完成 20/20 parse success，metric coverage 滿分，但 ontology coverage 低於 GraphRAG / KGE。
+- LLM-only 仍保留為主要 baseline，代表沒有額外 ontology retrieval / graph reasoning / grounding 的情況。
+
+## Verification
+
+最近一次已跑過：
+
+```text
+KAG/.venv/bin/python -m unittest KAG/test_nl_to_tio.py -v
+python3 evaluate_jsonld.py kag
+python3 compare_reports.py --out phase1/compare_four_way.txt
+python3 -m unittest tests/test_evaluate_jsonld.py tests/test_compare_reports.py -v
+```
+
+結果：
+
+- KAG unit tests: pass
+- KAG evaluator: 20/20 parse_ok
+- compare report: 已更新
+- evaluator / compare report tests: pass
 
 ## Next Steps
 
-1. 保留 `graphrag-typed-traversal` 作為 GraphRAG 改良版實驗分支。
-2. 在正式報告前，重新跑 `LLM-only`、`KGE-hybrid`、`KAG`，確保四條線比較條件一致。
-3. 後續可分別開新 branch 實作：
-   - `kge-link-prediction`
-   - `kag-logical-form-grounding`
-4. 最後再比較三種改良版 retrieval/grounding 方法是否都優於 baseline。
+1. 決定是否保留目前 `KAG` 作為 native KAG 結果，並另外新增 `kag_logical_form` variant。
+2. 若要做 `kag-logical-form-grounding`，新增獨立輸出目錄與第五條 comparison line，避免和 native KAG 混在一起。
+3. 將 KAG Docker compose 改成 named volumes，避免 builder KG data 因 anonymous volume 管理不清而遺失。
+4. 視正式實驗需要，補上 strict schema / URI hallucination / tenant placement canonicalization 等 evaluator 指標。
