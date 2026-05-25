@@ -18,6 +18,8 @@ NL → TIO JSON-LD via native KAG solver flow(對齊 LLM-only / GraphRag / KGE �
   python nl_to_tio.py                  # 全 20 題
   python nl_to_tio.py --limit 1        # 只跑前 1 題(試水)
   python nl_to_tio.py --case TC001     # 跑指定 case
+  python nl_to_tio.py --from-case TC014 # 從指定 case 往後跑(會覆蓋既有輸出)
+  python nl_to_tio.py --resume         # 跳過已產生的 output,從中斷點續跑
   python nl_to_tio.py --no-few-shot    # 不帶 few-shot
   python nl_to_tio.py --verbose        # 印出 KAG retrieved chunks(debug)
 """
@@ -186,6 +188,24 @@ def generate_jsonld_code(
     )
 
 
+def ensure_jsonld_contract(jsonld: str) -> str:
+    """Fill deterministic output-contract fields the KAG generator may omit."""
+    try:
+        data = json.loads(jsonld)
+    except json.JSONDecodeError:
+        return jsonld
+    if not isinstance(data, dict):
+        return jsonld
+
+    if not isinstance(data.get("intentReport"), dict):
+        data["intentReport"] = {
+            "reportingInterval": "PT5M",
+            "handlerResponse": "Continuous",
+        }
+
+    return json.dumps(data, ensure_ascii=False, indent=2)
+
+
 # ─────────────────────────────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────────────────────────────
@@ -199,6 +219,10 @@ def main() -> None:
                         help="Only process first N test cases (for試水)")
     parser.add_argument("--case", type=str, default=None,
                         help="Only process this single TCxxx id")
+    parser.add_argument("--from-case", type=str, default=None,
+                        help="Process from this TCxxx id onward")
+    parser.add_argument("--resume", action="store_true",
+                        help="Skip cases whose output JSON-LD already exists")
     parser.add_argument("--verbose", action="store_true",
                         help="Print KAG retrieval debug info")
     args = parser.parse_args()
@@ -211,6 +235,16 @@ def main() -> None:
         if not test_cases:
             print(f"Error: no test case with id={args.case}", file=sys.stderr)
             sys.exit(1)
+
+    if args.from_case:
+        start_idx = next(
+            (i for i, tc in enumerate(test_cases) if tc.get("id") == args.from_case),
+            None,
+        )
+        if start_idx is None:
+            print(f"Error: no test case with id={args.from_case}", file=sys.stderr)
+            sys.exit(1)
+        test_cases = test_cases[start_idx:]
 
     if args.limit is not None:
         test_cases = test_cases[: args.limit]
@@ -226,10 +260,18 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     success = 0
+    skipped = 0
     fail = 0
     for tc in test_cases:
         tc_id = tc["id"]
         nl = tc["nl_intent"]
+        out = output_path_for_case(tc_id)
+
+        if args.resume and out.is_file() and out.stat().st_size > 0:
+            print(f"\n>>> Skipping {tc_id}: existing output at {out}")
+            skipped += 1
+            continue
+
         print(f"\n>>> Processing {tc_id}: {nl}")
 
         jsonld = generate_jsonld_code(
@@ -240,7 +282,7 @@ def main() -> None:
         )
 
         if jsonld:
-            out = output_path_for_case(tc_id)
+            jsonld = ensure_jsonld_contract(jsonld)
             out.write_text(jsonld, encoding="utf-8")
             print(f"Saved → {out}")
             if args.verbose:
@@ -251,7 +293,7 @@ def main() -> None:
         else:
             fail += 1
 
-    print(f"\nDone. success={success} fail={fail}")
+    print(f"\nDone. success={success} skipped={skipped} fail={fail}")
 
 
 if __name__ == "__main__":

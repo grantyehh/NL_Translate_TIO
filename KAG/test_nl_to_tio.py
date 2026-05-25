@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import os
 import sys
 import unittest
@@ -42,6 +43,20 @@ class TestKagNlToTio(unittest.TestCase):
             tc_id="TC001",
             few_shot_block="--- Example 1 ---",
             verbose=True,
+        )
+
+    def test_ensure_jsonld_contract_adds_missing_intent_report(self):
+        nl_to_tio = load_module()
+
+        result = nl_to_tio.ensure_jsonld_contract('{"@type": "Intent"}')
+        data = json.loads(result)
+
+        self.assertEqual(
+            data["intentReport"],
+            {
+                "reportingInterval": "PT5M",
+                "handlerResponse": "Continuous",
+            },
         )
 
 

@@ -19,3 +19,4 @@ KAG/openspg-kag/
 KAG/example_project/kag_config.yaml
 KAG/example_project/builder/data.full-backup/
 KAG/example_project/ckpt/
+KAG/example_project/builder/ckpt/

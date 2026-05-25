@@ -34,7 +34,7 @@ def build_solver_content(context: Any) -> str:
     if graph_data:
         task_blocks.append(
             "KAG graph variables:\n"
-            f"{json.dumps(graph_data, ensure_ascii=False, indent=2)}"
+            f"{json.dumps(graph_data, ensure_ascii=False, indent=2, default=str)}"
         )
 
     return "\n\n".join(block for block in task_blocks if block.strip())
