@@ -3,16 +3,10 @@
   "@type": "Intent",
   "id": "intent-tc006",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure guaranteed bandwidth of at least 500 Mbps from 北辰證券總部 to 台中交易室 for 北辰證券 enterprise VPN service.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 北辰證券 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:北辰證券",
-    "name": "北辰證券",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
@@ -20,11 +14,15 @@
       "name": "Guaranteed Bandwidth SLA Expectation",
       "description": "Guarantee evsla:guaranteedBandwidth for 北辰證券 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:北辰證券-enterprise-vpn",
+        "id": "service-北辰證券-enterprise-vpn",
         "name": "北辰證券 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-北辰證券",
+          "name": "北辰證券",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -46,9 +44,16 @@
           "evsla:hasStatistic": "evsla:minimum",
           "evsla:hasScope": "evsla:specificSpoke",
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "北辰證券總部",
+            "spokes": [
+              "台中交易室"
+            ]
+          }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -56,7 +61,6 @@
       "id": "topology-tc006",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
         "name": "北辰證券總部"
@@ -66,11 +70,13 @@
           "@type": "evsla:SpokeSite",
           "name": "台中交易室"
         }
-      ]
+      ],
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

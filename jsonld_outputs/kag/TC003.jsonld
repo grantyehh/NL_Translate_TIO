@@ -3,28 +3,26 @@
   "@type": "Intent",
   "id": "intent-tc003",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure guaranteed bandwidth of at least 100 Mbps from 宏海物流總部 to 高雄倉儲中心 for 宏海物流 enterprise VPN service.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 宏海物流 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:宏海物流",
-    "name": "宏海物流",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
       "id": "exp-tc003-guaranteed-bandwidth",
       "name": "Guaranteed Bandwidth SLA Expectation",
-      "description": "Guarantee evsla:guaranteedBandwidth for 宏海物流 enterprise VPN service toward the specified spoke.",
+      "description": "Guarantee evsla:guaranteedBandwidth for 宏海物流 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:宏海物流-enterprise-vpn",
+        "id": "service-宏海物流-enterprise-vpn",
         "name": "宏海物流 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-宏海物流",
+          "name": "宏海物流",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -54,7 +52,8 @@
             ]
           }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -62,7 +61,6 @@
       "id": "topology-tc003",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
         "name": "宏海物流總部"
@@ -72,11 +70,13 @@
           "@type": "evsla:SpokeSite",
           "name": "高雄倉儲中心"
         }
-      ]
+      ],
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

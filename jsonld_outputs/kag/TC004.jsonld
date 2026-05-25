@@ -3,16 +3,10 @@
   "@type": "Intent",
   "id": "intent-tc004",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure latency below 30 ms for 康健醫療 enterprise VPN traffic from 台北醫療雲中心 to all spoke sites for 95% of measurements.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 康健醫療 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:康健醫療",
-    "name": "康健醫療",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
@@ -20,11 +14,15 @@
       "name": "Hub-to-Spoke Latency SLA Expectation",
       "description": "Guarantee evsla:latency for 康健醫療 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:康健醫療-enterprise-vpn",
+        "id": "service-康健醫療-enterprise-vpn",
         "name": "康健醫療 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-康健醫療",
+          "name": "康健醫療",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -49,12 +47,11 @@
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
           "scope": {
             "hub": "台北醫療雲中心",
-            "spokes": [
-              "所有院區分點"
-            ]
+            "spokes": "all"
           }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -62,21 +59,17 @@
       "id": "topology-tc004",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
         "name": "台北醫療雲中心"
       },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "所有院區分點"
-        }
-      ]
+      "evsla:hasSpoke": [],
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

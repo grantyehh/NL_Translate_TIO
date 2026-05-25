@@ -3,16 +3,10 @@
   "@type": "Intent",
   "id": "intent-tc012",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure guaranteed bandwidth of at least 150 Mbps from 藍海保險總部 to 花蓮服務中心 for the enterprise VPN service.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 藍海保險 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:藍海保險",
-    "name": "藍海保險",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
@@ -20,11 +14,15 @@
       "name": "Guaranteed Bandwidth SLA Expectation",
       "description": "Guarantee evsla:guaranteedBandwidth for 藍海保險 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:藍海保險-enterprise-vpn",
+        "id": "service-藍海保險-enterprise-vpn",
         "name": "藍海保險 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-藍海保險",
+          "name": "藍海保險",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -48,13 +46,14 @@
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
           "scope": {
-            "hub": "藍海保險總部",
+            "hub": "總部",
             "spokes": [
               "花蓮服務中心"
             ]
           }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -62,21 +61,22 @@
       "id": "topology-tc012",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "藍海保險總部"
+        "name": "總部"
       },
       "evsla:hasSpoke": [
         {
           "@type": "evsla:SpokeSite",
           "name": "花蓮服務中心"
         }
-      ]
+      ],
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

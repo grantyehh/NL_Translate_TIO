@@ -3,28 +3,26 @@
   "@type": "Intent",
   "id": "intent-tc015",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure guaranteed bandwidth of at least 300 Mbps from 亞洲航空維修總部 to 小港機棚 for 亞洲航空維修 enterprise VPN service.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 亞洲航空維修 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:亞洲航空維修",
-    "name": "亞洲航空維修",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
       "id": "exp-tc015-guaranteed-bandwidth",
       "name": "Guaranteed Bandwidth SLA Expectation",
-      "description": "Guarantee evsla:guaranteedBandwidth for 亞洲航空維修 enterprise VPN service for the specified spoke.",
+      "description": "Guarantee evsla:guaranteedBandwidth for 亞洲航空維修 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:亞洲航空維修-enterprise-vpn",
+        "id": "service-亞洲航空維修-enterprise-vpn",
         "name": "亞洲航空維修 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-亞洲航空維修",
+          "name": "亞洲航空維修",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -46,9 +44,16 @@
           "evsla:hasStatistic": "evsla:minimum",
           "evsla:hasScope": "evsla:specificSpoke",
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "總部",
+            "spokes": [
+              "小港機棚"
+            ]
+          }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -56,21 +61,22 @@
       "id": "topology-tc015",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "亞洲航空維修總部"
+        "name": "總部"
       },
       "evsla:hasSpoke": [
         {
           "@type": "evsla:SpokeSite",
           "name": "小港機棚"
         }
-      ]
+      ],
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

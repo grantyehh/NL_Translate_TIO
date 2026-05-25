@@ -3,28 +3,26 @@
   "@type": "Intent",
   "id": "intent-tc016",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure that latency from 智慧農業 Hub to all spokes stays below 100 ms for 95% of measurements.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 智慧農業 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:智慧農業",
-    "name": "智慧農業",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
       "id": "exp-tc016-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 智慧農業 enterprise VPN service across the requested hub-and-spoke scope.",
+      "description": "Guarantee evsla:latency for 智慧農業 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:智慧農業-enterprise-vpn",
+        "id": "service-智慧農業-enterprise-vpn",
         "name": "智慧農業 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-智慧農業",
+          "name": "智慧農業",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -48,11 +46,14 @@
           "evsla:hasMeasurementMethod": "evsla:twamp",
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
           "scope": {
-            "hub": "智慧農業 Hub",
-            "spokes": []
+            "hub": "Hub",
+            "spokes": [
+              "All Spokes"
+            ]
           }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -60,16 +61,22 @@
       "id": "topology-tc016",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "智慧農業 Hub"
+        "name": "Hub"
       },
-      "evsla:hasSpoke": []
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "All Spokes"
+        }
+      ],
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

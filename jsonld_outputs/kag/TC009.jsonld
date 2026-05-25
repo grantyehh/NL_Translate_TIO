@@ -3,28 +3,26 @@
   "@type": "Intent",
   "id": "intent-tc009",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure guaranteed bandwidth of at least 200 Mbps from 綠能電力總部 to 彰濱風場 for 綠能電力 enterprise VPN service.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 綠能電力 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:綠能電力",
-    "name": "綠能電力",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
       "id": "exp-tc009-guaranteed-bandwidth",
       "name": "Guaranteed Bandwidth SLA Expectation",
-      "description": "Guarantee evsla:guaranteedBandwidth for 綠能電力 enterprise VPN service for the specified spoke.",
+      "description": "Guarantee evsla:guaranteedBandwidth for 綠能電力 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:綠能電力-enterprise-vpn",
+        "id": "service-綠能電力-enterprise-vpn",
         "name": "綠能電力 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-綠能電力",
+          "name": "綠能電力",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -46,9 +44,16 @@
           "evsla:hasStatistic": "evsla:minimum",
           "evsla:hasScope": "evsla:specificSpoke",
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "總部",
+            "spokes": [
+              "彰濱風場"
+            ]
+          }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -56,21 +61,22 @@
       "id": "topology-tc009",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "綠能電力總部"
+        "name": "總部"
       },
       "evsla:hasSpoke": [
         {
           "@type": "evsla:SpokeSite",
           "name": "彰濱風場"
         }
-      ]
+      ],
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

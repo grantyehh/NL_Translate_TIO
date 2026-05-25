@@ -1,18 +1,12 @@
 {
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
-  "id": "intent-tc005",
+  "id": "intent-tc005-evsla-01",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure packet loss SLA for 晨星零售 enterprise VPN service between the hub and all spokes at below 0.05% for 99% of measurements.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 晨星零售 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:晨星零售",
-    "name": "晨星零售",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
@@ -20,11 +14,15 @@
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
       "description": "Guarantee evsla:packetLoss for 晨星零售 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:晨星零售-enterprise-vpn",
+        "id": "service-晨星零售-enterprise-vpn",
         "name": "晨星零售 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-晨星零售",
+          "name": "晨星零售",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -48,29 +46,25 @@
           "evsla:hasMeasurementMethod": "evsla:twamp",
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
     {
-      "id": "topology-tc005",
+      "id": "tenant-context-tc005",
       "@type": "Context",
-      "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
-      "evsla:hasHub": {
-        "@type": "evsla:HubSite",
-        "name": "Hub"
-      },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "All Spokes"
-        }
-      ]
+      "name": "Enterprise Tenant Context",
+      "evsla:forTenant": {
+        "id": "tenant-晨星零售",
+        "name": "晨星零售",
+        "@type": "evsla:Tenant"
+      }
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

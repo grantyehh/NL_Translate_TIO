@@ -3,16 +3,10 @@
   "@type": "Intent",
   "id": "intent-tc017",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure packet loss below 0.15% for 國際會展 enterprise VPN traffic between the hub and all spokes for 99% of measurements.",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
+  "description": "Assure enterprise VPN SLA requirements for 國際會展 using EnterpriseVpnSlaOntology vocabulary.",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
-  },
-  "tenant": {
-    "id": "tenant:國際會展",
-    "name": "國際會展",
-    "@type": "evsla:Tenant"
   },
   "intentExpectation": [
     {
@@ -20,9 +14,8 @@
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
       "description": "Guarantee evsla:packetLoss for 國際會展 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
-      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "svc:國際會展-enterprise-vpn",
+        "id": "service-國際會展-enterprise-vpn",
         "name": "國際會展 Enterprise VPN Service",
         "@type": "Service",
         "ontologyType": "evsla:EnterpriseVpnService"
@@ -48,13 +41,11 @@
           "evsla:hasMeasurementMethod": "evsla:twamp",
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
           "scope": {
-            "hub": "國際會展Hub",
-            "spokes": [
-              "all spokes"
-            ]
+            "hub": "國際會展Hub"
           }
         }
-      ]
+      ],
+      "ontologyType": "evsla:SlaExpectation"
     }
   ],
   "intentContext": [
@@ -62,21 +53,16 @@
       "id": "topology-tc017",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
         "name": "國際會展Hub"
       },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "All Spokes"
-        }
-      ]
+      "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"
-  }
+  },
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent"
 }

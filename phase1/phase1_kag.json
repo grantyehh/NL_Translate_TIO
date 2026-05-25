@@ -7,17 +7,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 56,
+    "json_node_count": 56,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 56,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": -4,
+      "ratio": 0.9333333333333333
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -157,27 +157,21 @@
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kag/TC002.jsonld",
     "case_id": "TC002",
     "format": "jsonld",
-    "parse_ok": false,
+    "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "contract_errors": [
-      {
-        "code": "JSONLD_REQUIRED_STRING",
-        "message": "description must be a non-empty string.",
-        "path": "$.intentExpectation[0].description"
-      }
-    ],
-    "triple_count": 56,
-    "json_node_count": 56,
+    "contract_errors": [],
+    "triple_count": 57,
+    "json_node_count": 57,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 56,
+      "actual": 57,
       "ok": true,
       "status": "ok",
-      "delta": -4,
-      "ratio": 0.9333333333333333
+      "delta": -3,
+      "ratio": 0.95
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -222,13 +216,13 @@
       },
       {
         "curie": "evsla:HubAndSpokeTopology",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:HubSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:SlaExpectation",
@@ -301,7 +295,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 0.9444444444444444,
+    "ontology_term_coverage_ratio": 0.8333333333333334,
     "performance_metrics": [
       {
         "metric": "packet_loss",
@@ -470,17 +464,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 64,
-    "json_node_count": 64,
+    "triple_count": 60,
+    "json_node_count": 60,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 64,
+      "actual": 60,
       "ok": true,
       "status": "ok",
-      "delta": 4,
-      "ratio": 1.0666666666666667
+      "delta": 0,
+      "ratio": 1.0
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -540,8 +534,8 @@
       },
       {
         "curie": "evsla:SpokeSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:Tenant",
@@ -604,7 +598,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 1.0,
+    "ontology_term_coverage_ratio": 0.9444444444444444,
     "performance_metrics": [
       {
         "metric": "latency",
@@ -624,17 +618,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 56,
+    "json_node_count": 56,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 56,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": -4,
+      "ratio": 0.9333333333333333
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -679,13 +673,13 @@
       },
       {
         "curie": "evsla:HubAndSpokeTopology",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:HubSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:SlaExpectation",
@@ -694,8 +688,8 @@
       },
       {
         "curie": "evsla:SpokeSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:Tenant",
@@ -758,7 +752,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 1.0,
+    "ontology_term_coverage_ratio": 0.8333333333333334,
     "performance_metrics": [
       {
         "metric": "packet_loss",
@@ -778,17 +772,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 64,
+    "json_node_count": 64,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 64,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": 4,
+      "ratio": 1.0666666666666667
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -1077,27 +1071,21 @@
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kag/TC008.jsonld",
     "case_id": "TC008",
     "format": "jsonld",
-    "parse_ok": false,
+    "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "contract_errors": [
-      {
-        "code": "JSONLD_REQUIRED_STRING",
-        "message": "description must be a non-empty string.",
-        "path": "$.intentExpectation[0].description"
-      }
-    ],
-    "triple_count": 59,
-    "json_node_count": 59,
+    "contract_errors": [],
+    "triple_count": 56,
+    "json_node_count": 56,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 59,
+      "actual": 56,
       "ok": true,
       "status": "ok",
-      "delta": -1,
-      "ratio": 0.9833333333333333
+      "delta": -4,
+      "ratio": 0.9333333333333333
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -1142,13 +1130,13 @@
       },
       {
         "curie": "evsla:HubAndSpokeTopology",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:HubSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:SlaExpectation",
@@ -1157,8 +1145,8 @@
       },
       {
         "curie": "evsla:SpokeSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:Tenant",
@@ -1221,7 +1209,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 1.0,
+    "ontology_term_coverage_ratio": 0.8333333333333334,
     "performance_metrics": [
       {
         "metric": "packet_loss",
@@ -1241,17 +1229,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 64,
+    "json_node_count": 64,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 64,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": 4,
+      "ratio": 1.0666666666666667
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -1390,17 +1378,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 56,
+    "json_node_count": 56,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 56,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": -4,
+      "ratio": 0.9333333333333333
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -1445,13 +1433,13 @@
       },
       {
         "curie": "evsla:HubAndSpokeTopology",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:HubSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:SlaExpectation",
@@ -1524,7 +1512,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 0.9444444444444444,
+    "ontology_term_coverage_ratio": 0.8333333333333334,
     "performance_metrics": [
       {
         "metric": "latency",
@@ -1544,17 +1532,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 48,
+    "json_node_count": 48,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 48,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": -12,
+      "ratio": 0.8
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -1576,7 +1564,7 @@
       },
       {
         "curie": "icm:Context",
-        "ok": true,
+        "ok": false,
         "reason": "intentContext has at least one context item"
       },
       {
@@ -1585,7 +1573,7 @@
         "reason": "PropertyExpectation target has targetProperty and targetValue"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
     "ontology_terms": [
       {
         "curie": "evsla:EnterpriseVpnService",
@@ -1599,13 +1587,13 @@
       },
       {
         "curie": "evsla:HubAndSpokeTopology",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:HubSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:SlaExpectation",
@@ -1614,8 +1602,8 @@
       },
       {
         "curie": "evsla:SpokeSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:Tenant",
@@ -1678,7 +1666,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 1.0,
+    "ontology_term_coverage_ratio": 0.8333333333333334,
     "performance_metrics": [
       {
         "metric": "packet_loss",
@@ -1847,17 +1835,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 64,
+    "json_node_count": 64,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 64,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": 4,
+      "ratio": 1.0666666666666667
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -2001,17 +1989,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 57,
-    "json_node_count": 57,
+    "triple_count": 56,
+    "json_node_count": 56,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 57,
+      "actual": 56,
       "ok": true,
       "status": "ok",
-      "delta": -3,
-      "ratio": 0.95
+      "delta": -4,
+      "ratio": 0.9333333333333333
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -2056,13 +2044,13 @@
       },
       {
         "curie": "evsla:HubAndSpokeTopology",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:HubSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
       },
       {
         "curie": "evsla:SlaExpectation",
@@ -2135,7 +2123,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 0.9444444444444444,
+    "ontology_term_coverage_ratio": 0.8333333333333334,
     "performance_metrics": [
       {
         "metric": "packet_loss",
@@ -2155,17 +2143,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 64,
+    "json_node_count": 64,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 64,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": 4,
+      "ratio": 1.0666666666666667
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -2304,160 +2292,6 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
-    "json_node_budget": {
-      "target": 60,
-      "min": 45,
-      "max": 80,
-      "actual": 60,
-      "ok": true,
-      "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
-    },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": true,
-        "reason": "top-level @type is Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": true,
-        "reason": "PropertyExpectation present in intentExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": true,
-        "reason": "expectationTarget has at least one target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": true,
-        "reason": "intentContext has at least one context item"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": true,
-        "reason": "PropertyExpectation target has targetProperty and targetValue"
-      }
-    ],
-    "expected_coverage_ratio": 1.0,
-    "ontology_terms": [
-      {
-        "curie": "evsla:EnterpriseVpnService",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:EnterpriseVpnSlaIntent",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:HubAndSpokeTopology",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:HubSite",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:SlaExpectation",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:SpokeSite",
-        "ok": false,
-        "reason": "term not found in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:Tenant",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:fiveMinuteWindow",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:hasMeasurementMethod",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:hasMetric",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:hasScope",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:hasStatistic",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:hasThreshold",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:hasTimeWindow",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:hubToAllSpokes",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:latency",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:p95",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      },
-      {
-        "curie": "evsla:twamp",
-        "ok": true,
-        "reason": "term appears in JSON-LD key/value"
-      }
-    ],
-    "ontology_term_coverage_ratio": 0.9444444444444444,
-    "performance_metrics": [
-      {
-        "metric": "latency",
-        "ontology_term": "evsla:latency",
-        "ok": true,
-        "reason": "matching structured SLA target found"
-      }
-    ],
-    "performance_metric_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kag/TC017.jsonld",
-    "case_id": "TC017",
-    "format": "jsonld",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "contract_errors": [],
     "triple_count": 64,
     "json_node_count": 64,
     "json_node_budget": {
@@ -2577,6 +2411,160 @@
         "reason": "term appears in JSON-LD key/value"
       },
       {
+        "curie": "evsla:latency",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 1.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": true,
+        "reason": "matching structured SLA target found"
+      }
+    ],
+    "performance_metric_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kag/TC017.jsonld",
+    "case_id": "TC017",
+    "format": "jsonld",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "contract_errors": [],
+    "triple_count": 54,
+    "json_node_count": 54,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 54,
+      "ok": true,
+      "status": "ok",
+      "delta": -6,
+      "ratio": 0.9
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
         "curie": "evsla:p99",
         "ok": true,
         "reason": "term appears in JSON-LD key/value"
@@ -2592,7 +2580,7 @@
         "reason": "term appears in JSON-LD key/value"
       }
     ],
-    "ontology_term_coverage_ratio": 1.0,
+    "ontology_term_coverage_ratio": 0.8888888888888888,
     "performance_metrics": [
       {
         "metric": "packet_loss",
@@ -2612,17 +2600,17 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 60,
-    "json_node_count": 60,
+    "triple_count": 64,
+    "json_node_count": 64,
     "json_node_budget": {
       "target": 60,
       "min": 45,
       "max": 80,
-      "actual": 60,
+      "actual": 64,
       "ok": true,
       "status": "ok",
-      "delta": 0,
-      "ratio": 1.0
+      "delta": 4,
+      "ratio": 1.0666666666666667
     },
     "unknown_predicates": [],
     "unknown_types": [],
@@ -2757,42 +2745,324 @@
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kag/TC019.jsonld",
     "case_id": "TC019",
     "format": "jsonld",
-    "parse_ok": false,
-    "parse_error": "missing output file",
+    "parse_ok": true,
+    "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 0,
-    "json_node_count": 0,
-    "json_node_budget": null,
+    "triple_count": 64,
+    "json_node_count": 64,
+    "json_node_budget": {
+      "target": 60,
+      "min": 45,
+      "max": 80,
+      "actual": 64,
+      "ok": true,
+      "status": "ok",
+      "delta": 4,
+      "ratio": 1.0666666666666667
+    },
     "unknown_predicates": [],
     "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
-    "ontology_terms": [],
-    "ontology_term_coverage_ratio": null,
-    "performance_metrics": [],
-    "performance_metric_coverage_ratio": null,
-    "intent_uri_contains_case_id": false
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 1.0,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": true,
+        "reason": "matching structured SLA target found"
+      }
+    ],
+    "performance_metric_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/jsonld_outputs/kag/TC020.jsonld",
     "case_id": "TC020",
     "format": "jsonld",
-    "parse_ok": false,
-    "parse_error": "missing output file",
+    "parse_ok": true,
+    "parse_error": null,
     "markdown_fence_stripped": false,
     "contract_errors": [],
-    "triple_count": 0,
-    "json_node_count": 0,
-    "json_node_budget": null,
+    "triple_count": 97,
+    "json_node_count": 97,
+    "json_node_budget": {
+      "target": 90,
+      "min": 75,
+      "max": 115,
+      "actual": 97,
+      "ok": true,
+      "status": "ok",
+      "delta": 7,
+      "ratio": 1.0777777777777777
+    },
     "unknown_predicates": [],
     "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
-    "ontology_terms": [],
-    "ontology_term_coverage_ratio": null,
-    "performance_metrics": [],
-    "performance_metric_coverage_ratio": null,
-    "intent_uri_contains_case_id": false
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "top-level @type is Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "PropertyExpectation present in intentExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "expectationTarget has at least one target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "intentContext has at least one context item"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "PropertyExpectation target has targetProperty and targetValue"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "ontology_terms": [
+      {
+        "curie": "evsla:EnterpriseVpnService",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:EnterpriseVpnSlaIntent",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubAndSpokeTopology",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:HubSite",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SlaExpectation",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:SpokeSite",
+        "ok": false,
+        "reason": "term not found in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:Tenant",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:fiveMinuteWindow",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMeasurementMethod",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasMetric",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasScope",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasStatistic",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasThreshold",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hasTimeWindow",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:hubToAllSpokes",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:latency",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p95",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:p99",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:packetLoss",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      },
+      {
+        "curie": "evsla:twamp",
+        "ok": true,
+        "reason": "term appears in JSON-LD key/value"
+      }
+    ],
+    "ontology_term_coverage_ratio": 0.85,
+    "performance_metrics": [
+      {
+        "metric": "latency",
+        "ontology_term": "evsla:latency",
+        "ok": true,
+        "reason": "matching structured SLA target found"
+      },
+      {
+        "metric": "packet_loss",
+        "ontology_term": "evsla:packetLoss",
+        "ok": true,
+        "reason": "matching structured SLA target found"
+      }
+    ],
+    "performance_metric_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true
   }
 ]
