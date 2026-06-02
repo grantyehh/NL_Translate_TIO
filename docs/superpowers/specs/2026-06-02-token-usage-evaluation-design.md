@@ -80,22 +80,34 @@ This avoids binding the interpretation to only the 20-case benchmark while still
 
 ## Output Files
 
-Token telemetry should use fixed Phase 1 paths:
+Phase 1 should separate output quality evaluation from token usage evaluation under two subdirectories:
 
 ```text
-phase1/token_usage_llm_only.json
-phase1/token_usage_graphrag.json
-phase1/token_usage_kge.json
-phase1/token_usage_kag.json
-phase1/compare_token_usage.txt
+phase1/output_quality/
+phase1/token_usage/
 ```
 
-The existing quality files remain unchanged:
+Output quality reports should move to:
 
 ```text
-phase1/phase1_<experiment>.json
-phase1/compare_four_way.txt
+phase1/output_quality/phase1_llm_only.json
+phase1/output_quality/phase1_graphrag.json
+phase1/output_quality/phase1_kge.json
+phase1/output_quality/phase1_kag.json
+phase1/output_quality/compare_four_way.txt
 ```
+
+Token telemetry and token comparison reports should use:
+
+```text
+phase1/token_usage/token_usage_llm_only.json
+phase1/token_usage/token_usage_graphrag.json
+phase1/token_usage/token_usage_kge.json
+phase1/token_usage/token_usage_kag.json
+phase1/token_usage/compare_token_usage.txt
+```
+
+For backward compatibility, existing scripts may temporarily continue writing legacy root-level `phase1/phase1_<experiment>.json` and `phase1/compare_four_way.txt`, but the target layout for new work is the two-folder structure above.
 
 ## Telemetry Record Format
 
