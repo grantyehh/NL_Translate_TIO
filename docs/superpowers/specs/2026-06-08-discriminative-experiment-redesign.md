@@ -30,8 +30,9 @@ The pilot evaluates the following hypotheses:
   retrieval.
 - H3: A complete prompt plus representative few-shot examples causes a ceiling
   effect on familiar slot-filling cases.
-- H4: Ontology-change cases produce the clearest benefit for methods that read
-  the current ontology at inference or preparation time.
+- H4: Private EVSLA grounding cases produce the clearest benefit for methods
+  that can read the project-specific EVSLA ontology at inference or preparation
+  time.
 - H5: Complex linguistic composition does not necessarily benefit from graph
   retrieval unless the method also improves decomposition or reasoning.
 - H6: A method is operationally worthwhile only when its quality or reliability
@@ -46,7 +47,7 @@ Run all four pipelines using only the minimal prompt:
 - 30 test cases;
 - 10 knowledge-gap cases;
 - 10 linguistic-complexity cases;
-- 10 ontology-change cases;
+- 10 private-EVSLA-grounding cases;
 - 3 independent runs per pipeline and case;
 - 4 pipelines: LLM-only, GraphRAG, KGE, and KAG.
 
@@ -74,10 +75,11 @@ selection of only cases favorable to a particular method.
 
 ## 4. Test Suites
 
-### 4.1 Knowledge Gap
+### 4.1 Base TIO Knowledge Gap
 
 These cases require ontology knowledge not explicitly supplied by the minimal
-prompt.
+prompt. They use the base TM Forum Intent Ontology rather than the
+project-specific EVSLA extension.
 
 Coverage should include:
 
@@ -86,9 +88,18 @@ Coverage should include:
 - class-versus-property distinctions;
 - domain and range constraints;
 - scope, statistic, measurement method, and time-window combinations;
-- distractor concepts that are plausible in networking but invalid for EVSLA.
+- contextually plausible networking background terms that are unrelated to the
+  requested SLA and therefore must not produce additional expectations or
+  ontology facts.
 
 The suite should not be solvable by copying one fixed mapping table.
+
+Background terms such as MPLS, BGP, or OSPF are not treated as incorrect user
+instructions. They test whether the pipeline can separate relevant SLA
+requirements from incidental context. Cases where the user explicitly assigns
+an incompatible ontology term are instead classified as invalid or
+contradictory intents; their expected behavior is to report the conflict, not
+silently correct or follow it.
 
 ### 4.2 Linguistic and Semantic Complexity
 
@@ -109,23 +120,38 @@ Coverage should include:
 The expected output must state when the source intent is ambiguous or invalid.
 Silently inventing a value is an error.
 
-### 4.3 Ontology Change
+### 4.3 Private EVSLA Grounding
 
-These cases use a frozen ontology extension created after the base prompt and
-few-shot examples are finalized.
+These cases use the existing project-defined EVSLA ontology as the private
+domain extension to the base TIO ontology.
 
-The extension should add several controlled items, such as:
+The experiment does not claim that the model was certainly never exposed to
+EVSLA during training, because model training data cannot be inspected. It uses
+the following reproducible operational assumption instead:
 
-- a new SLA metric;
-- a new statistic or scope;
-- a new measurement method;
-- a relation with explicit domain and range;
-- one deprecated or replaced term.
+- EVSLA was created for this project and is not treated as public base-TIO
+  knowledge;
+- the P0 prompt contains no EVSLA CURIEs, mapping tables, or example EVSLA
+  JSON-LD;
+- LLM-only receives no EVSLA TTL or retrieval context under P0;
+- GraphRAG, KGE, and KAG receive the same frozen EVSLA TTL through their
+  respective knowledge mechanisms.
 
-Correct answers must depend on the extension. The new terms must not appear in
-the model-facing prompt or few-shot examples. All knowledge-enhanced methods
-must receive the same updated ontology source and complete their required
-indexing or training before the run.
+The ten cases should require grounding natural business language to existing
+EVSLA elements covering:
+
+- EVSLA intent, service, tenant, topology, hub, spoke, and expectation classes;
+- latency, packet-loss, and guaranteed-bandwidth metrics;
+- p95, p99, and minimum statistics;
+- all-spoke and specific-spoke scopes;
+- TWAMP and active-measurement methods;
+- threshold, metric, statistic, scope, measurement-method, and time-window
+  relations.
+
+Natural-language inputs must not expose `evsla:*` CURIEs. Correct answers must
+depend on terms or relations found in the frozen EVSLA TTL. All
+knowledge-enhanced methods must complete their required indexing or training
+from that same ontology version before the run.
 
 ## 5. Prompt Information Levels
 
@@ -146,8 +172,13 @@ statistics, scopes, measurement methods, or few-shot examples.
 
 ### P1: Schema Plus Mapping
 
-Contains P0 plus the stable ontology mapping guidance currently embedded in
-`evsla_prompt.py`.
+Contains P0 plus a frozen mapping pack relevant to the evaluated suite.
+
+For the private EVSLA suite, this is the stable EVSLA mapping guidance currently
+embedded in `evsla_prompt.py`. For the base-TIO suite, it contains only the
+corresponding base-TIO guidance. The linguistic-complexity suite uses the same
+domain mapping as its source cases so that prompt level, rather than ontology
+choice, is the controlled variable.
 
 It does not include few-shot examples.
 
@@ -156,7 +187,10 @@ It does not include few-shot examples.
 Contains P1 plus representative few-shot examples.
 
 Few-shot examples must be disjoint from the evaluated cases and must not contain
-the ontology-change terms.
+EVSLA terms when P2 is used to test base-TIO knowledge gaps. For the dedicated
+prompt-information ablation on the private EVSLA suite, P2 may include frozen
+EVSLA examples so the experiment can measure whether in-context knowledge lets
+LLM-only catch up with retrieval-based methods.
 
 Prompt text must be versioned and hashed in each run manifest.
 
@@ -220,7 +254,7 @@ Parse the active TTL graph and validate:
 - emitted classes and properties have the correct role;
 - domain and range constraints are respected;
 - deprecated terms are rejected or penalized;
-- new extension terms are accepted only when present in the active ontology;
+- private EVSLA terms are accepted only when present in the active ontology;
 - unsupported or hallucinated predicates and types are reported.
 
 SHACL should be used when suitable shapes exist. Additional graph checks may
@@ -333,7 +367,7 @@ Each run manifest records:
 - prompt level, prompt version, and prompt hash;
 - few-shot file hash;
 - test-suite version and hash;
-- ontology and extension hashes;
+- base TIO and EVSLA ontology hashes;
 - retrieval/index/training artifact version;
 - temperature and other decoding parameters;
 - start time, end time, latency, token usage, and errors;
@@ -350,7 +384,8 @@ The redesign will produce:
 - versioned Stage 1 and Stage 2 test suites;
 - three versioned prompt configurations;
 - structured gold specifications;
-- an ontology extension fixture;
+- a frozen, versioned copy of the existing EVSLA ontology used by all
+  knowledge-enhanced pipelines;
 - a strict evaluator and human-review rubric;
 - run manifests and raw per-run reports;
 - quality, stability, token, latency, and amortized-cost comparisons;
@@ -362,8 +397,8 @@ The redesign will produce:
 The redesign succeeds when it can support defensible statements such as:
 
 - retrieval is unnecessary for familiar one-metric cases under P2;
-- GraphRAG improves ontology-change accuracy under P0 but costs a stated token
-  and latency multiplier;
+- GraphRAG improves private EVSLA grounding accuracy under P0 but costs a stated
+  token and latency multiplier;
 - KGE reduces URI or relation errors for a specific knowledge-gap pattern;
 - KAG does or does not improve conditional multi-requirement composition;
 - LLM-only is the preferred default for specified regions of the task space;
