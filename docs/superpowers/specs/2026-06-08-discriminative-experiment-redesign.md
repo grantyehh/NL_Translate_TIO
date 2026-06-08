@@ -4,14 +4,14 @@ Date: 2026-06-08
 
 ## 1. Objective
 
-The experiment will no longer ask only whether GraphRAG, KGE, or KAG has a
-higher average coverage score than LLM-only.
+The experiment will no longer ask only whether GraphRAG or KGE has a higher
+average coverage score than LLM-only.
 
 The primary research question is:
 
-> Under which test-case types and prompt information levels does a
-> knowledge-enhanced pipeline provide enough quality or reliability improvement
-> to justify its additional token, latency, and preparation cost?
+> Can GraphRAG or KGE replace ontology knowledge that is currently duplicated
+> in the system prompt and few-shot examples, while preserving enough quality
+> to justify retrieval tokens, latency, and preparation cost?
 
 The experiment must distinguish:
 
@@ -24,15 +24,15 @@ The experiment must distinguish:
 
 The pilot evaluates the following hypotheses:
 
-- H1: With a minimal schema prompt, knowledge-enhanced methods outperform
-  LLM-only on cases requiring ontology knowledge that is absent from the prompt.
-- H2: Adding ontology mappings to the prompt reduces the marginal benefit of
-  retrieval.
-- H3: A complete prompt plus representative few-shot examples causes a ceiling
-  effect on familiar slot-filling cases.
-- H4: Private EVSLA grounding cases produce the clearest benefit for methods
-  that can read the project-specific EVSLA ontology at inference or preparation
-  time.
+- H1: A full system prompt plus EVSLA few-shot examples is a strong baseline for
+  the current fixed EVSLA task.
+- H2: A structural prompt plus placeholder-style few-shot examples and retrieval
+  can preserve the baseline quality without duplicating EVSLA mappings in the
+  prompt.
+- H3: Retrieval without structural few-shot guidance is less stable than the
+  hybrid-lite configuration.
+- H4: GraphRAG or KGE is worthwhile only if it preserves or improves semantic
+  quality and ontology validity at an acceptable additional cost.
 - H5: Complex linguistic composition does not necessarily benefit from graph
   retrieval unless the method also improves decomposition or reasoning.
 - H6: A method is operationally worthwhile only when its quality or reliability
@@ -40,21 +40,40 @@ The pilot evaluates the following hypotheses:
 
 ## 3. Two-Stage Design
 
-### Stage 1: Exploratory Discrimination Pilot
+### Stage 1: Exploratory Configuration Comparison
 
-Run all four pipelines using only the minimal prompt:
+Run the following three technical lines:
 
 - 30 test cases;
-- 10 knowledge-gap cases;
+- 10 EVSLA-grounding cases;
 - 10 linguistic-complexity cases;
-- 10 private-EVSLA-grounding cases;
-- 3 independent runs per pipeline and case;
-- 4 pipelines: LLM-only, GraphRAG, KGE, and KAG.
+- 10 EVSLA-structure cases;
+- 3 independent runs per configuration and case;
+- technical lines: LLM-only, GraphRAG, and KGE.
 
-This stage requires 360 generation runs.
+The main configurations are:
 
-Stage 1 identifies discriminative case types and recurring error modes. All
-results remain in the report, including cases where every method ties.
+- Full Prompt baseline: LLM-only with the complete structural prompt, EVSLA
+  mappings, and EVSLA few-shot examples.
+- Hybrid-lite GraphRAG and Hybrid-lite KGE: structural prompt, placeholder-style
+  few-shot example, no hard-coded EVSLA mapping, and method-specific retrieval.
+- Retrieval-only GraphRAG and Retrieval-only KGE: minimal output contract, no
+  EVSLA mapping, no structural few-shot example, and method-specific retrieval.
+
+This produces five main experimental cells and 450 generation runs.
+
+Add one diagnostic control:
+
+- Structure-only LLM: the same structural prompt and placeholder-style few-shot
+  example used by Hybrid-lite, but without retrieval.
+
+This control adds 90 runs, for 540 total Stage 1 generation runs. It is not a
+fourth technical line. It measures the quality lost when EVSLA mappings are
+removed and therefore makes the retrieval contribution identifiable.
+
+Stage 1 identifies whether retrieval can replace prompt-embedded ontology
+knowledge and which case patterns expose quality or stability differences. All
+results remain in the report, including ties.
 
 ### Stage 2: Confirmatory Prompt Ablation
 
@@ -67,7 +86,7 @@ Build a preregistered confirmation set before inspecting its outputs:
 - freeze the confirmation cases, scoring rules, thresholds, prompts, model, and
   randomization procedure before running them.
 
-Run the confirmation set at all three prompt information levels and repeat every
+Run the frozen confirmation set with the same configurations and repeat every
 cell three times.
 
 This separates exploratory findings from confirmatory evidence and prevents
@@ -75,11 +94,11 @@ selection of only cases favorable to a particular method.
 
 ## 4. Test Suites
 
-### 4.1 Base TIO Knowledge Gap
+### 4.1 EVSLA Grounding
 
 These cases require ontology knowledge not explicitly supplied by the minimal
-prompt. They use the base TM Forum Intent Ontology rather than the
-project-specific EVSLA extension.
+or structural prompt. All cases remain in the Enterprise VPN hub-and-spoke
+domain and use the project-specific EVSLA ontology.
 
 Coverage should include:
 
@@ -120,10 +139,10 @@ Coverage should include:
 The expected output must state when the source intent is ambiguous or invalid.
 Silently inventing a value is an error.
 
-### 4.3 Private EVSLA Grounding
+### 4.3 EVSLA Ontology Structure
 
-These cases use the existing project-defined EVSLA ontology as the private
-domain extension to the base TIO ontology.
+These cases test relationships in the existing project-defined EVSLA ontology
+that cannot be recovered reliably from a short metric mapping table alone.
 
 The experiment does not claim that the model was certainly never exposed to
 EVSLA during training, because model training data cannot be inspected. It uses
@@ -131,11 +150,11 @@ the following reproducible operational assumption instead:
 
 - EVSLA was created for this project and is not treated as public base-TIO
   knowledge;
-- the P0 prompt contains no EVSLA CURIEs, mapping tables, or example EVSLA
-  JSON-LD;
-- LLM-only receives no EVSLA TTL or retrieval context under P0;
-- GraphRAG, KGE, and KAG receive the same frozen EVSLA TTL through their
-  respective knowledge mechanisms.
+- Hybrid-lite, Retrieval-only, and Structure-only prompts contain no concrete
+  EVSLA CURIE mapping table;
+- LLM-only receives no EVSLA TTL or retrieval context;
+- GraphRAG and KGE receive the same frozen EVSLA TTL through their respective
+  knowledge mechanisms.
 
 The ten cases should require grounding natural business language to existing
 EVSLA elements covering:
@@ -153,56 +172,65 @@ depend on terms or relations found in the frozen EVSLA TTL. All
 knowledge-enhanced methods must complete their required indexing or training
 from that same ontology version before the run.
 
-## 5. Prompt Information Levels
+## 5. Knowledge Configurations
 
-All pipelines use the same generation model, decoding parameters, output
-contract, and prompt level within each experimental cell.
+All configurations use the same generation model, decoding parameters, base
+output contract, and test cases.
 
-### P0: Minimal Schema
+### 5.1 Full Prompt Baseline
 
-Contains only:
+Uses LLM-only with:
 
-- the task definition;
-- required top-level JSON-LD shape;
-- output-format restrictions;
-- a requirement to preserve source meaning and avoid invented values.
+- the complete JSON-LD contract and assembly rules;
+- the current EVSLA mappings;
+- the current EVSLA few-shot examples;
+- no retrieval.
 
-It does not include metric-to-CURIE mappings, operator mappings, fixed
-statistics, scopes, measurement methods, or few-shot examples.
+This represents the current prompt-engineering solution.
 
-### P1: Schema Plus Mapping
+### 5.2 Hybrid-Lite
 
-Contains P0 plus a frozen mapping pack relevant to the evaluated suite.
+Uses GraphRAG or KGE with:
 
-For the private EVSLA suite, this is the stable EVSLA mapping guidance currently
-embedded in `evsla_prompt.py`. For the base-TIO suite, it contains only the
-corresponding base-TIO guidance. The linguistic-complexity suite uses the same
-domain mapping as its source cases so that prompt level, rather than ontology
-choice, is the controlled variable.
+- the JSON-LD contract and structural assembly rules;
+- one placeholder-style few-shot example;
+- no concrete metric, statistic, scope, method, class, or relation mappings;
+- retrieved EVSLA ontology context.
 
-It does not include few-shot examples.
+The placeholder example may use tokens such as `<METRIC_CURIE>` and
+`<STATISTIC_CURIE>`, but must not disclose the concrete EVSLA answer space.
 
-### P2: Full Prompt Plus Few-Shot
+### 5.3 Retrieval-Only
 
-Contains P1 plus representative few-shot examples.
+Uses GraphRAG or KGE with:
 
-Few-shot examples must be disjoint from the evaluated cases and must not contain
-EVSLA terms when P2 is used to test base-TIO knowledge gaps. For the dedicated
-prompt-information ablation on the private EVSLA suite, P2 may include frozen
-EVSLA examples so the experiment can measure whether in-context knowledge lets
-LLM-only catch up with retrieval-based methods.
+- a minimal JSON-LD output contract;
+- no EVSLA mapping;
+- no structural few-shot example;
+- retrieved EVSLA ontology context.
 
-Prompt text must be versioned and hashed in each run manifest.
+This is an ablation that tests whether retrieval can teach both ontology
+grounding and output assembly without prompt examples.
+
+### 5.4 Structure-Only LLM Control
+
+Uses the exact Hybrid-lite structural prompt and placeholder example without
+retrieval. Its purpose is to isolate the information contributed by retrieval.
+
+All prompt texts and retrieval configurations must be versioned and hashed in
+each run manifest.
 
 ## 6. Discriminative Case-Type Rule
 
 A case type is considered discriminative in Stage 1 when at least one
-knowledge-enhanced method shows a practically meaningful difference from
-LLM-only.
+configuration shows a practically meaningful difference from its relevant
+control.
 
 Primary threshold:
 
-- at least 10 percentage points in the preregistered semantic-quality score;
+- at least 10 percentage points in the preregistered semantic-quality score
+  between Hybrid-lite and Structure-only LLM, or between Hybrid-lite and Full
+  Prompt;
 - the direction is reproduced in at least two of the three runs;
 - the difference is not caused solely by JSON parsing or formatting failure.
 
@@ -296,7 +324,7 @@ Disagreements are recorded and adjudicated.
 
 ## 8. Metrics
 
-Report metrics by pipeline, suite, prompt level, and run:
+Report metrics by technical line, knowledge configuration, suite, and run:
 
 - parse and contract success rate;
 - exact semantic-match rate;
@@ -319,13 +347,14 @@ Do not collapse the primary conclusion into a single unweighted average.
 Quality is primary. Cost decides whether a quality gain is operationally worth
 using.
 
-For each method and experimental cell, report:
+For each method and experimental cell, report against both relevant controls:
 
 ```text
-quality_delta = method_quality - llm_only_quality
-token_multiplier = method_online_tokens / llm_only_online_tokens
-latency_multiplier = method_latency / llm_only_latency
-amortized_cost_delta(N) = method_cost(N) - llm_only_cost(N)
+replacement_quality_delta = hybrid_lite_quality - full_prompt_quality
+retrieval_information_gain = hybrid_lite_quality - structure_only_quality
+token_multiplier = method_online_tokens / full_prompt_online_tokens
+latency_multiplier = method_latency / full_prompt_latency
+amortized_cost_delta(N) = method_cost(N) - full_prompt_cost(N)
 ```
 
 A method is classified as:
@@ -350,7 +379,7 @@ population-level significance claims.
 The pilot will therefore report:
 
 - mean and standard deviation across runs;
-- paired per-case differences against LLM-only;
+- paired per-case differences against Full Prompt and Structure-only LLM;
 - bootstrap confidence intervals across test cases;
 - exact counts of wins, ties, and losses;
 - effect sizes and critical-error differences.
@@ -364,7 +393,7 @@ Each run manifest records:
 
 - git commit and dirty-worktree status;
 - model and API;
-- prompt level, prompt version, and prompt hash;
+- knowledge configuration, prompt version, and prompt hash;
 - few-shot file hash;
 - test-suite version and hash;
 - base TIO and EVSLA ontology hashes;
@@ -373,16 +402,18 @@ Each run manifest records:
 - start time, end time, latency, token usage, and errors;
 - random run order.
 
-Pipelines must use the same model and prompt level. Method-specific retrieval
-context is allowed, but post-generation repair that changes semantics must be
-disabled or scored as part of that method rather than silently normalized.
+All configurations must use the same model and base output contract.
+Method-specific retrieval context is allowed only in GraphRAG and KGE cells.
+Post-generation repair that changes semantics must be disabled or scored as
+part of that method rather than silently normalized.
 
 ## 12. Deliverables
 
 The redesign will produce:
 
 - versioned Stage 1 and Stage 2 test suites;
-- three versioned prompt configurations;
+- four versioned knowledge configurations, including the Structure-only
+  diagnostic control;
 - structured gold specifications;
 - a frozen, versioned copy of the existing EVSLA ontology used by all
   knowledge-enhanced pipelines;
@@ -396,11 +427,14 @@ The redesign will produce:
 
 The redesign succeeds when it can support defensible statements such as:
 
-- retrieval is unnecessary for familiar one-metric cases under P2;
-- GraphRAG improves private EVSLA grounding accuracy under P0 but costs a stated
-  token and latency multiplier;
+- Full Prompt is sufficient for familiar one-metric cases;
+- Hybrid-lite GraphRAG preserves Full Prompt quality while replacing
+  prompt-embedded EVSLA mappings at a stated token and latency multiplier;
+- Structure-only LLM loses ontology accuracy that Hybrid-lite recovers, showing
+  that the gain comes from retrieved information rather than prompt structure;
+- Retrieval-only is less stable than Hybrid-lite, showing that structural
+  guidance remains necessary;
 - KGE reduces URI or relation errors for a specific knowledge-gap pattern;
-- KAG does or does not improve conditional multi-requirement composition;
 - LLM-only is the preferred default for specified regions of the task space;
 - a knowledge-enhanced method should be invoked only for identified regions
   where its measured utility is positive.
