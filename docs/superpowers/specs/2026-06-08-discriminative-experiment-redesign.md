@@ -103,6 +103,24 @@ The Structure-only and Retrieval-only cells are diagnostic controls.
 Use 30 new Enterprise VPN hub-and-spoke cases. Every case uses the existing
 project-defined EVSLA ontology.
 
+The case semantics follow the planning deck
+`20260427_企業VPN_SLA管理監測規劃_v1 (1).pptx`:
+
+```text
+tenant
++ hub/spoke range
++ performance metric
++ threshold
++ statistic
++ measurement method
++ monitoring time window
+```
+
+The deck mentions jitter as a possible measured metric, but the current EVSLA
+TTL does not define a jitter metric. Jitter is excluded from the 30 generation
+cases unless the ontology is explicitly extended before the experiment. The
+evaluator must still reject an invented `evsla:jitter` term.
+
 ### 5.1 EVSLA Grounding: 10 Cases
 
 Test whether natural language is grounded to the correct EVSLA terms:
@@ -118,8 +136,8 @@ Test whether multiple requirements are assembled correctly:
 
 - two to four metrics in one intent;
 - different metrics applied to different spokes;
-- conditions, exceptions, and exclusions;
-- missing or conflicting information that must not be invented.
+- per-spoke versus all-spoke wording;
+- omitted measurement or time-window fields that must not be invented.
 
 ### 5.3 EVSLA Structure: 10 Cases
 
@@ -133,6 +151,48 @@ Test ontology relationships that are not represented by a short metric mapping:
 - plausible but irrelevant networking terms that must not create extra facts.
 
 Each case must include a manually reviewed structured gold specification.
+
+### 5.4 Gold Specification
+
+Each case uses this evaluator-oriented shape:
+
+```json
+{
+  "id": "TC101",
+  "tenant": {
+    "name": "企業A",
+    "ontology_type": "evsla:Tenant"
+  },
+  "service": {
+    "ontology_type": "evsla:EnterpriseVpnService"
+  },
+  "topology": {
+    "ontology_type": "evsla:HubAndSpokeTopology",
+    "hub": {"name": "台北總部", "ontology_type": "evsla:HubSite"},
+    "spokes": [
+      {"name": "台中分點", "ontology_type": "evsla:SpokeSite"}
+    ]
+  },
+  "requirements": [
+    {
+      "metric": "evsla:latency",
+      "operator": "LESS_THAN",
+      "threshold": {"value": 50, "unit": "ms"},
+      "statistic": "evsla:p95",
+      "scope": "evsla:hubToAllSpokes",
+      "applies_to_spokes": ["台中分點"],
+      "measurement_method": "evsla:twamp",
+      "time_window": "evsla:fiveMinuteWindow"
+    }
+  ],
+  "must_not_emit": ["evsla:jitter"],
+  "allowed_defaults": []
+}
+```
+
+All 30 cases must be representable by the frozen EVSLA ontology. If the source
+text omits a field, the generator must not add it unless the value is explicitly
+listed in `allowed_defaults`.
 
 ## 6. Runs
 
@@ -162,9 +222,20 @@ Compare the output with the structured gold specification:
 - tenant, hub, spokes, and service;
 - metric, operator, threshold value, and unit;
 - statistic, scope, measurement method, and time window;
-- metric-to-site and condition associations;
+- metric-to-site associations;
 - missing requirements;
 - invented metrics, sites, values, or constraints.
+
+Canonicalize every generated expectation into a requirement tuple:
+
+```text
+(metric, operator, value, unit, statistic, scope,
+ applies_to_spokes, measurement_method, time_window)
+```
+
+Match generated and gold requirements by minimum field-error cost rather than
+array position. This prevents reordered expectations from being penalized and
+detects incorrect metric-to-site pairing.
 
 ### 7.3 Ontology Validity
 
@@ -173,6 +244,10 @@ Validate against the frozen TIO and EVSLA TTL files:
 - every emitted CURIE exists;
 - classes and properties are used in the correct role;
 - domain and range constraints are respected;
+- topology uses `evsla:hasHub` with `evsla:HubSite` and `evsla:hasSpoke` with
+  `evsla:SpokeSite`;
+- SLA fields use valid instances of `evsla:Statistic`, `evsla:Scope`,
+  `evsla:MeasurementMethod`, and `evsla:TimeWindow`;
 - unsupported predicates and types are reported.
 
 ### 7.4 Minimality
@@ -183,6 +258,60 @@ Report:
 - unrelated ontology terms;
 - invented defaults;
 - JSON node and output-token counts.
+
+### 7.5 Scoring
+
+Produce separate dimensions instead of only one aggregate score:
+
+```text
+contract_score
+entity_topology_f1
+requirement_field_f1
+requirement_exact_match
+ontology_validity
+hallucination_rate
+case_exact_match
+```
+
+Definitions:
+
+- `entity_topology_f1`: precision/recall/F1 over tenant, hub, spokes, service,
+  topology, and their ontology types;
+- `requirement_field_f1`: micro F1 over the nine fields in each canonical
+  requirement tuple;
+- `requirement_exact_match`: percentage of gold requirements whose full tuple
+  is matched;
+- `ontology_validity`: valid emitted ontology assertions divided by all emitted
+  ontology assertions;
+- `hallucination_rate`: unsupported or source-absent semantic facts divided by
+  all emitted semantic facts;
+- `case_exact_match`: true only when contract, entities, topology, all
+  requirements, and ontology validity are correct with no hallucinated facts.
+
+The primary quality metric is macro-averaged `requirement_field_f1`, reported
+together with `case_exact_match` and `hallucination_rate`. Contract or ontology
+failures must remain visible and must not be hidden by a weighted average.
+
+### 7.6 Evaluator Verification
+
+Before evaluating generated outputs, create fixtures for:
+
+- fully correct output;
+- wrong tenant, hub, or spoke;
+- missing spoke;
+- wrong threshold value or unit;
+- wrong statistic, scope, method, or time window;
+- metric assigned to the wrong spoke;
+- missing and duplicate requirements;
+- invented metric or default;
+- unknown CURIE;
+- class/property misuse;
+- domain/range violation;
+- fabricated `evsla:jitter` or another unknown EVSLA term.
+
+Each fixture has fixed expected scores and error codes. Deterministic contract,
+semantic, and ontology checks must pass these tests before API experiments are
+run.
 
 ## 8. Metrics
 
@@ -198,6 +327,107 @@ Report results per cell and test-case category:
 - average API call count;
 - end-to-end latency;
 - preparation cost for GraphRAG and KGE.
+
+### 8.1 Token Accounting
+
+Record one row per API call with:
+
+```text
+run_id
+configuration
+technical_line
+case_id
+repeat
+ledger
+stage
+model
+api
+input_tokens
+output_tokens
+total_tokens
+```
+
+Use these ledgers:
+
+- `prep`: reusable ontology indexing, entity embeddings, and KGE training
+  embeddings;
+- `online`: all per-case retrieval and generation calls.
+
+Use these online stages:
+
+- LLM-only: `jsonld_generation`;
+- GraphRAG: `seed_selection`, `grounding_embedding`,
+  `jsonld_generation`;
+- KGE: `retrieval_embedding`, `jsonld_generation`.
+
+Report per case:
+
+```text
+generation_tokens
+retrieval_tokens
+online_total_tokens
+api_call_count
+```
+
+Report preparation tokens separately and amortize them at 30, 100, and 1000
+cases. Never combine prep and online tokens without labeling the workload size.
+
+### 8.2 Latency Accounting
+
+Measure elapsed time with `time.perf_counter_ns()` and store milliseconds.
+Record both stage-level and case-level timing:
+
+```text
+prep_ontology_load_ms
+prep_index_build_ms
+prep_kge_training_ms
+prompt_build_ms
+retrieval_seed_ms
+retrieval_embedding_ms
+retrieval_graph_or_kge_ms
+generation_api_ms
+postprocess_ms
+case_end_to_end_ms
+```
+
+Rules:
+
+- `case_end_to_end_ms` starts immediately before per-case retrieval or prompt
+  construction and ends after the output file is written;
+- Full Prompt and Structure-only still record prompt construction,
+  generation, post-processing, and end-to-end time;
+- GraphRAG records seed-selection API, embedding API, local BFS, and context
+  serialization separately;
+- KGE records query embedding, local ranking/neighborhood/link prediction, and
+  context formatting separately;
+- ontology loading, index building, and KGE training are preparation costs, not
+  per-case online latency;
+- failed calls retain their elapsed time and error status;
+- run order is randomized or rotated so one configuration is not always
+  penalized by transient API conditions.
+
+Report median and p95 latency in addition to mean because API latency is
+typically skewed.
+
+### 8.3 Cost Comparison
+
+For each configuration report:
+
+```text
+avg_online_tokens_per_case
+amortized_tokens_per_case_at_N
+median_end_to_end_ms
+p95_end_to_end_ms
+quality_per_1k_online_tokens
+```
+
+`quality_per_1k_online_tokens` is diagnostic only:
+
+```text
+1000 * requirement_field_f1 / avg_online_tokens_per_case
+```
+
+The final decision must still show quality and cost separately.
 
 ## 9. Decision Rules
 
