@@ -1,0 +1,33 @@
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/tc008/> .
+
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-packet-loss, ex:topology ;
+  rdfs:comment "Assure hub-to-all-spokes packet loss SLA for 晶耀半導體 enterprise VPN."@en .
+
+ex:tenant a evsla:Tenant ;
+  rdfs:label "晶耀半導體"@zh .
+
+ex:service a evsla:EnterpriseVpnService ;
+  evsla:forTenant ex:tenant .
+
+ex:exp-packet-loss a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-packet-loss ;
+  rdfs:comment "Packet loss must stay below 0.01% at p99 across all spokes."@en .
+
+ex:tgt-packet-loss a icm:Target ;
+  evsla:hasMetric evsla:packetLoss ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 0.01 ; quan:unit "%" ] ;
+  evsla:hasThreshold [ a quan:Quantity ; rdf:value 0.01 ; quan:unit "%" ] ;
+  evsla:hasStatistic evsla:p99 ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "Hub"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 1"@zh ] .

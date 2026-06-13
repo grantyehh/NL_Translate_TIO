@@ -1,0 +1,33 @@
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/tc015/> .
+
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-bandwidth, ex:topology ;
+  rdfs:comment "Assure minimum guaranteed bandwidth to a specific spoke for 亞洲航空 enterprise VPN."@en .
+
+ex:tenant a evsla:Tenant ;
+  rdfs:label "亞洲航空"@zh .
+
+ex:service a evsla:EnterpriseVpnService ;
+  evsla:forTenant ex:tenant .
+
+ex:exp-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-bandwidth ;
+  rdfs:comment "Guaranteed bandwidth must be at least 300 Mbps to the named spoke."@en .
+
+ex:tgt-bandwidth a icm:Target ;
+  evsla:hasMetric evsla:guaranteedBandwidth ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 300 ; quan:unit "Mbps" ] ;
+  evsla:hasThreshold [ a quan:Quantity ; rdf:value 300 ; quan:unit "Mbps" ] ;
+  evsla:hasStatistic evsla:minimum ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "航空維修總部"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "小港機棚"@zh ] .
