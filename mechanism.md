@@ -9,18 +9,18 @@
 
 ### 0.1 任務
 
-把**自然語言意圖（NL intent）**轉成 **TIO JSON-LD**（TM Forum Intent Ontology 規格的 JSON-LD 文件），下游 orchestrator 才能消費。
+把**自然語言意圖（NL intent）**轉成 **TIO Turtle**（TM Forum Intent Ontology 規格的 Turtle/RDF 文件），下游 orchestrator 才能消費。
 
 ### 0.2 共用元件
 
 | 元件 | 角色 |
 |---|---|
 | `test_cases_20.json` | 20 題測資（NL intent + 預期 ontology 詞彙）|
-| `few_shot_samples.json` | few-shot 範例（**不是測資**，只給 LLM 看 JSON-LD 結構）|
-| `evsla_prompt.build_evsla_system_prompt` | 三條共用的 system prompt（含 EVSLA 詞彙與 JSON-LD 契約）|
+| `few_shot_samples.json` | few-shot 範例（**不是測資**，只給 LLM 看 TIO Turtle 結構，`turtle` 欄位）|
+| `evsla_prompt.build_evsla_system_prompt` | 三條共用的 system prompt（含 EVSLA 詞彙與 TIO Turtle 契約）|
 | LLM | `gpt-5.4`，三條同款，temperature=0 |
 | `TM Forum Intent Ontology/*.ttl` | TIO v3.6.0 ontology（14+ namespace：evsla / icm / imo / met / quan / fun …）|
-| `evaluate_jsonld.py` | 評分器：parse OK / ontology coverage / metric coverage / verbosity |
+| `evaluate_ttl.py` | 評分器：parse OK / ontology coverage / metric coverage / verbosity |
 
 ### 0.3 貫穿全文的範例：TC001
 
@@ -63,7 +63,7 @@ TTL files
   → 主 LLM 看到「community 摘要散文」
 ```
 
-**問題**：TTL 本來就是結構化的 URI / triple，但 Microsoft GraphRAG 把它當「未結構化文件」處理。經過三層 LLM 重寫後，**`evsla:latency`、`icm:PropertyExpectation` 這些 URI 全部變成「latency」「property expectation」這種普通名詞**，主 LLM 看完當然不會生出帶 URI 的 JSON-LD。
+**問題**：TTL 本來就是結構化的 URI / triple，但 Microsoft GraphRAG 把它當「未結構化文件」處理。經過三層 LLM 重寫後，**`evsla:latency`、`icm:PropertyExpectation` 這些 URI 全部變成「latency」「property expectation」這種普通名詞**，主 LLM 看完當然不會生出帶 URI 的 TIO Turtle。
 
 **證據**：重寫前 TC001 的 evsla URI 數 = **0** 個（`docs/superpowers/plans/2026-05-19-graphrag-typed-traversal.md` Task 11 step 4 留下的驗收 baseline:`Expected: count >= 5 (was 0 before this refactor)`）。
 
@@ -139,9 +139,9 @@ flowchart TD
         Grounded --> S3["Step 3：typed BFS 2-hop<br/>沿 subClassOf / subPropertyOf /<br/>type / domain / range"]
         S3 --> Triples["子圖 triples (s, p, o)"]
         Triples --> S4["Step 4：序列化<br/># triples + # comments block"]
-        S4 --> S5["Step 5：主 LLM 生 JSON-LD<br/>gpt-5.4, temperature=0"]
+        S4 --> S5["Step 5：主 LLM 生 TIO Turtle<br/>gpt-5.4, temperature=0"]
         S5 --> S6["Step 6：normalize output<br/>補空 description"]
-        S6 --> Out[/"TC001.jsonld"/]
+        S6 --> Out[/"TC001.ttl"/]
     end
 
     LabelIdx -. 查詢 .-> S2
@@ -264,42 +264,41 @@ evsla:fiveMinuteWindow rdf:type evsla:TimeWindow
 
 這串就是要餵進主 LLM 的「TIO context」。
 
-#### Step 5：LLM 生成 JSON-LD
+#### Step 5：LLM 生成 TIO Turtle
 
-`generate_jsonld_code()` 用 EVSLA system prompt + few-shot block + NL intent + 上面的 typed subgraph context 一起呼叫 `gpt-5.4`，temperature=0，要求回 pure JSON-LD。
+`generate_turtle_code()` 用 EVSLA system prompt + few-shot block + NL intent + 上面的 typed subgraph context 一起呼叫 `gpt-5.4`，temperature=0，要求回 pure TIO Turtle（EVSLA hub-and-spoke：icm:/evsla:/quan: 詞彙）。
 
 #### Step 6：後處理
 
-`normalize_jsonld_output()` 解 JSON，若 `intentExpectation[*].description` 是空字串，自動用 `name` / `id` / 上層 `description` 補上（避免評分器當缺欄位）。
+`normalize_turtle_output()` 解析 Turtle，若 expectation 的 `rdfs:comment` 是空字串，自動用 label / id / 上層 comment 補上（避免評分器當缺欄位）。
 
-**TC001 最終輸出**（節錄自 `jsonld_outputs/graphrag/TC001.jsonld`）：
+**TC001 最終輸出**（節錄自 `tio_outputs/graphrag/TC001.ttl`，更多範例見 `few_shot_samples.json` 的 `turtle` 欄位）：
 
-```json
-{
-  "@type": "Intent",
-  "id": "intent-tc001",
-  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
-  "tenant": { "id": "tenant:星河銀行", "@type": "evsla:Tenant" },
-  "intentExpectation": [{
-    "@type": "PropertyExpectation",
-    "ontologyType": "evsla:SlaExpectation",
-    "expectationObject": { "ontologyType": "evsla:EnterpriseVpnService" },
-    "expectationTarget": [{
-      "targetProperty": "evsla:latency",
-      "matchCondition": "LESS_THAN",
-      "targetValue": { "value": 50, "unit": "ms", "@type": "quan:Quantity" },
-      "evsla:hasStatistic": "evsla:p95",
-      "evsla:hasScope": "evsla:hubToAllSpokes",
-      "evsla:hasMeasurementMethod": "evsla:twamp",
-      "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
-    }]
-  }],
-  "intentContext": [{ "@type": "Context", "ontologyType": "evsla:HubAndSpokeTopology" }],
-  "intentReport": { "reportingInterval": "PT5M", "handlerResponse": "Continuous" }
-}
+```turtle
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex:    <http://example.org/tio-instance/tc001/> .
+
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-latency, ex:topology .
+
+ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency .
+
+ex:tgt-latency a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 50 ; quan:unit "ms" ] ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:topology a icm:Context, evsla:HubAndSpokeTopology .
 ```
 
-可以看到 Step 3 抓出來的 URI 幾乎全部出現在最終 JSON-LD 裡（`evsla:latency` / `p95` / `hubToAllSpokes` / `twamp` / `fiveMinuteWindow` / `SlaExpectation`）。
+可以看到 Step 3 抓出來的 URI 幾乎全部出現在最終 Turtle 裡（`evsla:latency` / `p95` / `hubToAllSpokes` / `twamp` / `fiveMinuteWindow` / `SlaExpectation`）。
 
 ---
 
@@ -330,8 +329,8 @@ flowchart TD
         Expanded --> S4["Step 4：TransE link prediction<br/>score = -||h+r-t||₂, top-18"]
         S4 --> Preds["predicted triples"]
         Preds --> S5["Step 5：format context<br/>entity list + predicted triples"]
-        S5 --> S6["Step 6：主 LLM 生 JSON-LD<br/>gpt-5.4, temperature=0"]
-        S6 --> Out[/"TC001.jsonld"/]
+        S5 --> S6["Step 6：主 LLM 生 TIO Turtle<br/>gpt-5.4, temperature=0"]
+        S6 --> Out[/"TC001.ttl"/]
     end
 
     TextEmb -. cosine 比 query .-> S2
@@ -464,17 +463,17 @@ Predicted likely triples:
 ...
 ```
 
-#### Step 6：LLM 生 JSON-LD
+#### Step 6：LLM 生 TIO Turtle
 
 跟 GraphRAG 同樣的 system prompt 套路，但傳的 retrieval block 是上面這個。**沒有 GraphRAG 的後處理 step**。
 
-**TC001 最終輸出**（節錄 `jsonld_outputs/kge/TC001.jsonld`）：JSON-LD 結構跟 GraphRAG 類似，**ontology coverage 略勝**（因為 link prediction 多塞了該出現的 URI），但 **node 數較多（~63）容易超出 verbosity budget**。
+**TC001 最終輸出**（節錄 `tio_outputs/kge/TC001.ttl`）：Turtle 結構跟 GraphRAG 類似，**ontology coverage 略勝**（因為 link prediction 多塞了該出現的 URI），但 **node 數較多（~63）容易超出 verbosity budget**。
 
 ---
 
 ## 3. KAG（OpenSPG/KAG kg-builder + 5-way solver）
 
-> 核心：**把 corpus 灌進 Neo4j，每份 chunk 同時建 outline / summary / table / atomic_query 多種索引，query 時 5 路 retriever 並行，再讓 KAG generator 直接生 JSON-LD**。
+> 核心：**把 corpus 灌進 Neo4j，每份 chunk 同時建 outline / summary / table / atomic_query 多種索引，query 時 5 路 retriever 並行，再讓 KAG generator 直接生 TIO Turtle**。
 > 入口：`KAG/nl_to_tio.py`；後端：Docker stack（OpenSPG server + Neo4j + MySQL + MinIO）。
 
 ```mermaid
@@ -495,9 +494,8 @@ flowchart TD
         NL --> Plan["Step 1：kag_static_planner<br/>LLM 拆 sub-queries"]
         Plan --> R5["Step 2：5-way 並行 retrieval"]
         R5 --> Merger["Step 3：kag_merger<br/>去重 + 排序"]
-        Merger --> Gen["Step 4：TIOJsonldGenerator<br/>KAG 內建 LLM call"]
-        Gen --> Contract["Step 5：ensure_jsonld_contract<br/>補 intentReport"]
-        Contract --> Out[/"TC001.jsonld"/]
+        Merger --> Gen["Step 4：TIOTurtleGenerator<br/>KAG 內建 LLM call"]
+        Gen --> Out[/"TC001.ttl"/]
     end
 
     Neo4j -. r1 atomic_query .-> R5
@@ -607,21 +605,23 @@ Plan:
   → chunk: "SLA expectations include latency, packet loss, bandwidth..."
 ```
 
-#### Step 3：KAG generator（`TIOJsonldGenerator`）
+#### Step 3：KAG generator（`TIOTurtleGenerator`）
 
-把 retrieved chunks 序列化成 task blocks（每個 sub-task 的 result / thought + graph 變數），餵 `TIOJsonldGeneratorPrompt`：
+把 retrieved chunks 序列化成 task blocks（每個 sub-task 的 result / thought + graph 變數），餵 `TIOTurtleGeneratorPrompt`：
 
 ```
 You are the final generator inside a KAG solver pipeline for the TIO Experiment.
+You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
+Output ONLY valid, parseable Turtle. Never output JSON, JSON-LD, Markdown, prose, ...
 ...
-- Top-level @type must be "Intent"
-- Use the API-friendly JSON-LD contract with id, name, description,
-  intentOwner, intentExpectation, intentContext, and intentReport
-- Prefer EVSLA/TIO terms supported by the KAG context, such as
-  evsla:EnterpriseVpnSlaIntent, evsla:latency, evsla:p95, evsla:hubToAllSpokes,
-  evsla:twamp, evsla:fiveMinuteWindow ...
+- 固定 @prefix：icm: / evsla: / quan: / rdf: / rdfs: / ex:
+- ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ; icm:intentElements ...
+- 每個 SLA metric 一個 icm:PropertyExpectation, evsla:SlaExpectation
+- 每個 target 用 evsla:hasMetric / hasStatistic / hasScope /
+  hasMeasurementMethod / hasTimeWindow + quan:Quantity threshold
+- Hub-and-spoke context：ex:topology a icm:Context, evsla:HubAndSpokeTopology ...
 
-Few-shot examples:
+Few-shot Turtle examples for structure only:
 $few_shot_block
 
 Current test case ID: TC001
@@ -632,16 +632,13 @@ KAG solver context:
   Sub-task 2 result: ...
 ```
 
-LLM 在 KAG `LLMClient` 包裝下呼叫 `gpt-5.4`，回 final JSON-LD。
+LLM 在 KAG `LLMClient` 包裝下呼叫 `gpt-5.4`，回 final TIO Turtle（pure Turtle，無 JSON-LD）。
 
-#### Step 4：Contract fallback
+#### Step 4：輸出
 
-`ensure_jsonld_contract()` 解 JSON 後若 `intentReport` 不是 dict（KAG generator 偶爾漏寫），補上：
-```json
-{ "reportingInterval": "PT5M", "handlerResponse": "Continuous" }
-```
+`generate_turtle_code()` 取回 generator 的 Turtle 字串並 `strip()` 後直接寫到 `tio_outputs/kag/TC001.ttl`（KAG generator 直接吐 Turtle，無需 JSON-LD 時代的 `intentReport` contract fallback）。完整範例見 `few_shot_samples.json` 的 `turtle` 欄位。
 
-**TC001 最終輸出**（節錄 `jsonld_outputs/kag/TC001.jsonld`）：JSON-LD 結構穩定，但 ontology coverage 比 GraphRAG / KGE 略低（0.9314 vs 0.9889 / 0.9972）— 因為 retrieval 拉回來的是「自然語言段落」，LLM 要自己腦補 URI，命中率不如 GraphRAG / KGE 直接給 URI。
+**TC001 最終輸出**（節錄 `tio_outputs/kag/TC001.ttl`）：Turtle 結構穩定，但 ontology coverage 比 GraphRAG / KGE 略低（0.9314 vs 0.9889 / 0.9972）— 因為 retrieval 拉回來的是「自然語言段落」，LLM 要自己腦補 URI，命中率不如 GraphRAG / KGE 直接給 URI。
 
 ---
 
@@ -655,7 +652,7 @@ LLM 在 KAG `LLMClient` 包裝下呼叫 `gpt-5.4`，回 final JSON-LD。
 | **Retrieval 主邏輯** | Typed BFS（5 種 RDF predicate）2-hop | KGE 鄰居 14×8 + TransE link prediction top-18 | 5-way parallel retriever + kag_merger |
 | **Context 格式** | CURIE triples + comments | tagged entity list + predicted triples | 自然語言 chunks + task results |
 | **Generation** | 外部 OpenAI call | 外部 OpenAI call | KAG solver 內建 generator |
-| **後處理** | 補空 description | 無 | 補 `intentReport` |
+| **後處理** | 補空 description | 無 | 無（generator 直接吐 Turtle）|
 | **Parse OK** | 100% | 95% | 100% |
 | **ICM / metric** | **1.0 / 1.0** | **1.0 / 1.0** | 0.99 / 1.0 |
 | **Ontology coverage** | 0.9889 | **0.9972** | 0.9314 |
@@ -671,13 +668,13 @@ LLM 在 KAG `LLMClient` 包裝下呼叫 `gpt-5.4`，回 final JSON-LD。
 | **第一步產出** | seed terms：`["latency", "p95", "hub to all spokes", "5 minute window"]` | query 向量 `q ∈ ℝ^1536` | retrieval plan（4 個 sub-query）|
 | **中間表示** | grounded URIs `{evsla:latency, evsla:p95, evsla:hubToAllSpokes, evsla:fiveMinuteWindow}` | text top-8 + KGE 鄰居 ≤45 個 entity | 5-way merge 後的 chunks |
 | **送進 LLM 的 context 形式** | `# triples` block + `# comments` block | tagged entity list + predicted triples | task blocks（每個 sub-task result + thought）|
-| **最終輸出** | `evsla:latency` / `p95` / `hubToAllSpokes` / `twamp` / `fiveMinuteWindow` / `SlaExpectation` 都進 JSON-LD | 同上，且 ontology coverage 略高 | 同上，但部分 URI 靠 LLM 從自然語言段落腦補 |
+| **最終輸出** | `evsla:latency` / `p95` / `hubToAllSpokes` / `twamp` / `fiveMinuteWindow` / `SlaExpectation` 都進 Turtle | 同上，且 ontology coverage 略高 | 同上，但部分 URI 靠 LLM 從自然語言段落腦補 |
 
 ---
 
 ## 6. 一句話歸納
 
-> **三條 pipeline 做的事一樣（NL → TIO JSON-LD），差別在 retrieval 的「精度 vs 召回 vs 工程複雜度」三角取捨。**
+> **三條 pipeline 做的事一樣（NL → TIO Turtle），差別在 retrieval 的「精度 vs 召回 vs 工程複雜度」三角取捨。**
 > - **GraphRAG** 直接吃 ontology 結構，精度高、雜訊少，最平衡。
 > - **KGE** 多吃一層向量空間，召回最廣，但容易冗。
 > - **KAG** 最重型基礎設施，retrieval 多元，但 corpus 是自然語言時 ontology 命中率反而被拖累。

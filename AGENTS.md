@@ -6,16 +6,16 @@
 
 **使用者:睿丞**,CHT 意圖驅動網路專案三人組之一。
 
-**負責範疇**:NL → TIO JSON-LD 的方法研究與品質提升。唯一交付是高品質的 TIO JSON-LD 輸出。下游 TMF chain / 設備層 / 驗證 / 部署都是他人責任。
+**負責範疇**:NL → TIO Turtle 的方法研究與品質提升。唯一交付是高品質的 TIO Turtle 輸出。下游 TMF chain / 設備層 / 驗證 / 部署都是他人責任。
 
 **團隊與相關 repo**(`/Users/grantyeh/Grant/Project/CHT/` 底下):
-- `TIO_Experiment/`(本 repo,睿丞主) — NL→JSON-LD 多方法對比實驗
-- `tio-agent-orchestrator/`(翊婕 / 睿丞曾共同碰過) — JSON-LD→TMF chain→netconfig 的 agentic orchestrator
+- `TIO_Experiment/`(本 repo,睿丞主) — NL→TIO Turtle 多方法對比實驗
+- `tio-agent-orchestrator/`(翊婕 / 睿丞曾共同碰過) — TIO Turtle→TMF chain→netconfig 的 agentic orchestrator
 - `intent-vpn-lab/`(彥廷主) — 真實 GNS3 MPLS L3VPN 基礎設施 + NETCONF/Ansible/驗證/監控
 
 ## 2. 這個 repo 在做什麼
 
-比較**四條** NL → TIO JSON-LD 生成 pipeline,用相同評分器評估品質。所有四條共用同一個 LLM 模型(目前為 `gpt-5.4`),以維持比較條件公平。
+比較**四條** NL → TIO Turtle 生成 pipeline,用相同評分器評估品質。所有四條共用同一個 LLM 模型(目前為 `gpt-5.4`),以維持比較條件公平。
 
 | 方法 | 目錄 | 核心思路 |
 |---|---|---|
@@ -27,7 +27,7 @@
 此外:
 - **`tio-agent/`**(獨立 PoC,**不在四條 pipeline 內**):Bun + TypeScript 寫的 OpenAI-compatible agent loop + MCP(fake EVSLA network + tio-validator)+ local skills,只處理 Enterprise VPN hub-and-spoke SLA。有自己的 [`tio-agent/AGENTS.md`](./tio-agent/README.md),不重複內容
 
-**共用基礎設施**:`test_cases_20.json`(20 題測資)、`few_shot_samples.json`、`evsla_prompt.py`、`evaluate_jsonld.py`、`compare_reports.py`、`docs/standard.md`、`TM Forum Intent Ontology/*.ttl`。
+**共用基礎設施**:`test_cases_20.json`(20 題測資)、`few_shot_samples.json`、`evsla_prompt.py`、`evaluate_ttl.py`、`compare_reports.py`、`docs/standard.md`、`TM Forum Intent Ontology/*.ttl`。
 
 **Phase 1 目前結果**(`new-methods` 分支,讀自 `phase1/compare_four_way.txt`):
 
@@ -49,15 +49,15 @@ KAG        | 100.00%  | 0.9900  |   0.9314     |   1.0000   |   61.80   |   100.
 ```
 NL (test_cases_20.json)
   → <method>/nl_to_tio.py
-  → jsonld_outputs/<llm_only|graphrag|kge|kag>/TC*.jsonld
-  → evaluate_jsonld.py <method>
+  → tio_outputs/<llm_only|graphrag|kge|kag>/TC*.ttl
+  → evaluate_ttl.py <method>
   → phase1/phase1_<method>.json
   → compare_reports.py
   → phase1/compare_four_way.txt
 ```
 
 固定輸出位置(不要寫到別處,評分器跟比較器是 hard-code 路徑):
-- 生成:`jsonld_outputs/<experiment>/*.jsonld`
+- 生成:`tio_outputs/<experiment>/*.ttl`
 - 評分:`phase1/phase1_<experiment>.json`
 - 比較:`phase1/compare_four_way.txt`
 
@@ -80,7 +80,7 @@ KAG 0.8.0 對 OpenAI 官方 API 有 2 個必須的 source patch(`chat_template_k
 四條 pipeline 共用同一 LLM(目前 `gpt-5.4`),變更時要四條同步更新,否則跨方法比較不可信。
 
 ### 4.5 評分器涵義
-`evaluate_jsonld.py` 評的是 **JSON-LD 格式 + expected element 覆蓋率**,不等於完整網路語意正確率。Markdown code fence 會嘗試剝掉再 parse,但理想輸出應是 pure JSON-LD。
+`evaluate_ttl.py` 評的是 **TIO Turtle 格式 + expected element 覆蓋率**,不等於完整網路語意正確率。Markdown code fence 會嘗試剝掉再 parse,但理想輸出應是 pure TIO Turtle。
 
 ### 4.6 `run_all_experiments.py` 會覆寫
 預設覆寫固定檔名的 `phase1/phase1_*.json` 與 `phase1/compare_four_way.txt`,**不是歷史紀錄系統** — 要保留歷史結果自己另存。
@@ -99,7 +99,7 @@ KAG 0.8.0 對 OpenAI 官方 API 有 2 個必須的 source patch(`chat_template_k
 # 完整 Phase 1:生成 → 評分 → 比較
 python run_all_experiments.py
 
-# 只重算評分 + 比較(JSON-LD 已生成)
+# 只重算評分 + 比較(Turtle 已生成)
 python run_all_experiments.py --eval-only
 
 # 關閉 few-shot 做 ablation
@@ -118,7 +118,7 @@ python GraphRag/build_graphrag_input.py
 cd KGE/KGE-based-graphrag && python -m kge.train
 
 # 單條評分 / 比較
-python evaluate_jsonld.py graphrag    # 不帶參數 = 一次評四條
+python evaluate_ttl.py graphrag    # 不帶參數 = 一次評四條
 python compare_reports.py
 
 # tio-agent(獨立 PoC)
@@ -135,8 +135,8 @@ cd tio-agent && bun install && OPENAI_API_KEY=sk-... bun run agent
 
 ## 7. 跟其他 repo 的關係
 
-- `tio-agent-orchestrator/tests/fixtures/tio_experiment/graphrag/TC*.jsonld` 是這邊 `jsonld_outputs/graphrag/` 的**舊快照**,只用來測 orchestrator。若兩邊不一致以本 repo 為準
-- 翊婕的 orchestrator 會以本 repo 產出的 JSON-LD 作為輸入。JSON-LD 品質直接影響下游 TMF chain 能否消費 — 但下游邏輯不是本 repo 範疇,**不要在這邊重新實作 TMF chain**
+- `tio-agent-orchestrator/tests/fixtures/tio_experiment/graphrag/` 是這邊 `tio_outputs/graphrag/` 的**舊快照**,只用來測 orchestrator。若兩邊不一致以本 repo 為準
+- 翊婕的 orchestrator 會以本 repo 產出的 TIO Turtle 作為輸入。Turtle 品質直接影響下游 TMF chain 能否消費 — 但下游邏輯不是本 repo 範疇,**不要在這邊重新實作 TMF chain**
 
 ## 8. 不負責的事
 

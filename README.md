@@ -1,6 +1,6 @@
-# CHT TIO JSON-LD Experiments
+# CHT TIO Turtle Experiments
 
-這個專案比較**四條** NL -> TIO JSON-LD 生成流程：
+這個專案比較**四條** NL -> TIO Turtle 生成流程：
 
 - `LLM-only/`: 只用 LLM + few-shot。
 - `GraphRag/`: GraphRAG + LLM + few-shot。
@@ -10,15 +10,15 @@
 四條線共用：
 
 - `test_cases_20.json`: 測試題目。
-- `few_shot_samples.json`: few-shot JSON-LD 範例。
+- `few_shot_samples.json`: few-shot TIO Turtle 範例(`turtle` 欄位)。
 - `evsla_prompt.py`: 共用 EVSLA system prompt 組裝。
-- `evaluate_jsonld.py`: JSON-LD 評分器。
+- `evaluate_ttl.py`: TIO Turtle 評分器。
 - `compare_reports.py`: 評分報告比較器。
-- `docs/standard.md`: JSON-LD 轉譯標準草案。
+- `docs/standard.md`: TIO 轉譯標準草案。
 
 固定輸出位置:
 
-- 生成結果:根目錄 `jsonld_outputs/<experiment>/*.jsonld`(`<experiment>` ∈ `llm_only / graphrag / kge / kag`)
+- 生成結果:根目錄 `tio_outputs/<experiment>/*.ttl`(`<experiment>` ∈ `llm_only / graphrag / kge / kag`)
 - 評分結果:`phase1/phase1_*.json`
 - 比較結果:`phase1/compare_four_way.txt`(舊版 3-way 的 `compare_three_way.txt` 保留作為歷史對照)
 
@@ -84,7 +84,7 @@ python builder/indexer.py        # 灌 16 個 SKILL.md → ~8500 個 Neo4j node(
 
 > ⚠️ **patch 提醒**:KAG 0.8.0 對 OpenAI 官方 API 有 2 個必須的 source patch(`chat_template_kwargs` 與 `max_completion_tokens`),已套用於 `KAG/openspg-kag/`(被 .gitignore 排除)。Re-clone KAG 後須重新 apply,詳見 [`KAG/PATCHES.md`](KAG/PATCHES.md)。
 
-## 1. 生成 JSON-LD
+## 1. 生成 TIO Turtle
 
 ### 一鍵生成四條線
 
@@ -114,7 +114,7 @@ python nl_to_tio.py
 輸出:
 
 ```text
-jsonld_outputs/llm_only/*.jsonld
+tio_outputs/llm_only/*.ttl
 ```
 
 ### 單獨生成 GraphRag
@@ -127,7 +127,7 @@ python nl_to_tio.py
 輸出:
 
 ```text
-jsonld_outputs/graphrag/*.jsonld
+tio_outputs/graphrag/*.ttl
 ```
 
 ### 單獨生成 KGE
@@ -140,7 +140,7 @@ python nl_to_tio.py
 輸出:
 
 ```text
-jsonld_outputs/kge/*.jsonld
+tio_outputs/kge/*.ttl
 ```
 
 ### 單獨生成 KAG
@@ -160,22 +160,22 @@ python nl_to_tio.py --limit 3 --verbose      # 跑前 3 題
 輸出:
 
 ```text
-jsonld_outputs/kag/*.jsonld
+tio_outputs/kag/*.ttl
 ```
 
-> 每題 ~30-60 秒(retrieve 5-way ~20s + planner LLM + generator LLM + 我們的 JSON-LD LLM)。全 20 題約 10-15 分鐘 / ~$2 USD。
+> 每題 ~30-60 秒(retrieve 5-way ~20s + planner LLM + generator LLM + 我們的 Turtle LLM)。全 20 題約 10-15 分鐘 / ~$2 USD。
 
-## 2. 評分 JSON-LD
+## 2. 評分 TIO Turtle
 
-評分器是根目錄的 `evaluate_jsonld.py`。它固定讀取：
+評分器是根目錄的 `evaluate_ttl.py`。它固定讀取：
 
 - 測資：`test_cases_20.json`
-- 生成結果：`jsonld_outputs/<experiment>/*.jsonld`
+- 生成結果：`tio_outputs/<experiment>/*.ttl`
 - 評分輸出：`phase1/phase1_<experiment>.json`
 
 ### 一鍵重算四條線評分
 
-如果 JSON-LD 已經生成好,只想重算評分與比較:
+如果 Turtle 已經生成好,只想重算評分與比較:
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment
@@ -186,11 +186,11 @@ python run_all_experiments.py --eval-only
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment
-python evaluate_jsonld.py llm_only       # 只評 LLM-only
-python evaluate_jsonld.py graphrag       # 只評 GraphRag
-python evaluate_jsonld.py kge            # 只評 KGE
-python evaluate_jsonld.py kag            # 只評 KAG
-python evaluate_jsonld.py                # 不帶參數 = 一次評四條線
+python evaluate_ttl.py llm_only       # 只評 LLM-only
+python evaluate_ttl.py graphrag       # 只評 GraphRag
+python evaluate_ttl.py kge            # 只評 KGE
+python evaluate_ttl.py kag            # 只評 KAG
+python evaluate_ttl.py                # 不帶參數 = 一次評四條線
 ```
 
 評分檔固定寫到:
@@ -254,6 +254,6 @@ python run_all_experiments.py --no-few-shot
 ## 注意事項
 
 - `run_all_experiments.py` 會覆寫固定檔名的 `phase1/phase1_*.json` 與 `phase1/compare_four_way.txt`,不是歷史紀錄系統。
-- `evaluate_jsonld.py` 評的是 JSON-LD 格式與 expected element 覆蓋率,不等於完整網路語意正確率。
-- 如果模型輸出 Markdown code fence,evaluator 會嘗試剝掉再 parse,但理想輸出仍應該是 pure JSON-LD。
+- `evaluate_ttl.py` 評的是 TIO Turtle 格式與 expected element 覆蓋率,不等於完整網路語意正確率。
+- 如果模型輸出 Markdown code fence,evaluator 會嘗試剝掉再 parse,但理想輸出仍應該是 pure TIO Turtle。
 - **KAG 線跟其他三條 venv 隔離**:KAG 用 `KAG/.venv/` 獨立環境(避免 openspg-kag 50+ deps 跟主環境衝突),`run_all_experiments.py` 跑 KAG 那段時要確保 PATH 上有 `KAG/.venv/bin/python`(或讓主 venv 已 import 過 `kag` package)。試水可以用 `python -c "import kag"` 確認。

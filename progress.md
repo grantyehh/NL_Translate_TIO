@@ -10,11 +10,11 @@ Conclusion recorded at: 2026-05-24 CST
 - KGE link-prediction hybrid
 - KAG native builder + solver/generator
 
-四條 pipeline 已完成同一組 `test_cases_20.json` 的 JSON-LD 產出與 comparison report：
+四條 pipeline 已完成同一組 `test_cases_20.json` 的 TIO Turtle 產出與 comparison report：
 
-- `jsonld_outputs/graphrag/TC001.jsonld` 到 `TC020.jsonld`
-- `jsonld_outputs/kge/TC001.jsonld` 到 `TC020.jsonld`
-- `jsonld_outputs/kag/TC001.jsonld` 到 `TC020.jsonld`
+- `tio_outputs/graphrag/TC001.ttl` 到 `TC020.ttl`
+- `tio_outputs/kge/TC001.ttl` 到 `TC020.ttl`
+- `tio_outputs/kag/TC001.ttl` 到 `TC020.ttl`
 - `phase1/phase1_graphrag.json`
 - `phase1/phase1_kge.json`
 - `phase1/phase1_kag.json`
@@ -32,7 +32,7 @@ user query
 -> ground seed terms to ontology URIs
 -> typed BFS over RDF graph
 -> serialize triples + comments
--> LLM generates TIO JSON-LD
+-> LLM generates TIO Turtle
 ```
 
 已完成內容：
@@ -40,7 +40,7 @@ user query
 - `GraphRag/ontology_graph.py`: 載入 TTL、建立 label/comment/type index、執行 typed BFS。
 - `GraphRag/subgraph_retriever.py`: seed extraction、seed-to-URI grounding、subgraph serialization。
 - `GraphRag/nl_to_tio.py`: 改用 typed RDF traversal context 取代 Microsoft GraphRAG CLI context。
-- 20 題 GraphRAG JSON-LD 已重新產生並評估。
+- 20 題 GraphRAG TIO Turtle 已重新產生並評估。
 
 ## KGE
 
@@ -54,7 +54,7 @@ TTL triples
 -> NL mention grounding
 -> link prediction
 -> grounded URIs + predicted triples
--> LLM generates TIO JSON-LD
+-> LLM generates TIO Turtle
 ```
 
 目前 KGE phase1 已重新產生 20 題輸出並納入四方比較。
@@ -70,8 +70,8 @@ builder/data/*.md
 -> KAG builder builds KG into OpenSPG / Neo4j
 -> KAG solver planning
 -> KAG retrieval / reasoning
--> KAG generator emits TIO JSON-LD
--> evaluate_jsonld.py
+-> KAG generator emits TIO Turtle
+-> evaluate_ttl.py
 ```
 
 已完成內容：
@@ -82,9 +82,9 @@ builder/data/*.md
 - `KAG/nl_to_tio.py` 已支援 resume：
   - `--resume`: 跳過已存在且非空的輸出。
   - `--from-case TC014`: 從指定 case 往後跑。
-- `KAG/example_project/solver/tio_jsonld_generator.py` 已接到 KAG solver generator 階段，使用 KAG context 產生 TIO JSON-LD。
-- 增加 KAG output contract 補強：若 generator 漏掉 `intentReport`，會補成 evaluator 需要的 object。
-- `KAG/test_nl_to_tio.py` 已加入 contract 補強測試。
+- `KAG/example_project/solver/tio_turtle_generator.py` 已接到 KAG solver generator 階段，使用 KAG context 產生 TIO Turtle。
+- KAG generator 直接吐 pure TIO Turtle，由 evaluator 解析。
+- `KAG/test_nl_to_tio.py` 已加入 Turtle 產出測試。
 
 注意：
 
@@ -104,7 +104,7 @@ NL
 -> deterministic ontology grounding
 -> schema validation
 -> template render
--> TIO JSON-LD
+-> TIO Turtle
 ```
 
 尚未完成項目：
@@ -113,8 +113,8 @@ NL
 - NL -> logical form prompt
 - slot value -> TTL URI deterministic mapping table
 - SHACL 或 TTL domain/range schema validation
-- grounded slots -> JSON-LD template render
-- 獨立輸出目錄，例如 `jsonld_outputs/kag_logical_form/`
+- grounded slots -> Turtle template render
+- 獨立輸出目錄，例如 `tio_outputs/kag_logical_form/`
 - evaluator / compare report 第五欄
 
 因此目前比較中的 `KAG` 指的是 native KAG，而不是 logical-form-first KAG。
