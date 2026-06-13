@@ -39,24 +39,17 @@ class TestKgePaths(unittest.TestCase):
         expected = Path("/tmp/example/CHT/few_shot_samples.json").resolve()
         self.assertEqual(nl_to_tio.default_few_shot_path(root), expected)
 
-    def test_format_few_shot_block_uses_json_ld_examples(self) -> None:
-        examples = [
-            {
-                "pattern": "property_expectation",
-                "nl_intent": "確保視訊會議流量的延遲低於 20ms。",
-                "jsonld": {"@type": "Intent", "id": "intent-video-conf-001"},
-            }
-        ]
-
+    def test_format_few_shot_block_uses_turtle_examples(self) -> None:
+        examples = [{"pattern": "p", "nl_intent": "x",
+                     "turtle": "ex:i a icm:Intent ."}]
         block = nl_to_tio.format_few_shot_block(examples)
+        self.assertIn("Turtle:", block)
+        self.assertIn("a icm:Intent", block)
+        self.assertNotIn("JSON-LD:", block)
 
-        self.assertIn("JSON-LD:", block)
-        self.assertIn('"@type": "Intent"', block)
-        self.assertNotIn("Turtle:", block)
-
-    def test_output_path_uses_jsonld_outputs_and_extension(self) -> None:
+    def test_output_path_uses_tio_outputs_and_ttl(self) -> None:
         root = Path("/tmp/example/CHT/KGE/KGE-based-graphrag")
-        expected = Path("/tmp/example/CHT/jsonld_outputs/kge/TC001.jsonld")
+        expected = Path("/tmp/example/CHT/tio_outputs/kge/TC001.ttl")
         self.assertEqual(nl_to_tio.output_path_for_case(root, "TC001"), expected)
 
     def test_token_usage_path_uses_phase1_token_usage_directory(self) -> None:
@@ -64,17 +57,15 @@ class TestKgePaths(unittest.TestCase):
         expected = Path("/tmp/example/CHT/phase1/token_usage/token_usage_kge.json")
         self.assertEqual(nl_to_tio.token_usage_path(root), expected)
 
-    def test_system_prompt_requires_json_ld_not_turtle(self) -> None:
+    def test_system_prompt_requires_turtle_not_json_ld(self) -> None:
         prompt = nl_to_tio.build_system_prompt("TC001")
-
-        self.assertIn("JSON-LD", prompt)
-        self.assertIn("intentExpectation", prompt)
-        self.assertNotIn("僅輸出完整、可解析的 Turtle", prompt)
+        self.assertIn("Turtle", prompt)
+        self.assertIn("icm:PropertyExpectation", prompt)
+        self.assertNotIn("intentExpectation", prompt)
 
     def test_system_prompt_requires_enterprise_vpn_sla_ontology_terms(self) -> None:
         prompt = nl_to_tio.build_system_prompt("TC001")
 
-        self.assertIn("evsla:EnterpriseVpnSlaIntent", prompt)
         self.assertIn("evsla:EnterpriseVpnService", prompt)
         self.assertIn("evsla:HubAndSpokeTopology", prompt)
         self.assertIn("latency -> evsla:latency", prompt)
@@ -104,9 +95,9 @@ class TestKgePaths(unittest.TestCase):
 
         self.assertEqual(result.stdout.strip(), "icm:Intent")
 
-    def test_generate_prompt_labels_kge_grounded_predictions(self) -> None:
+    def test_generate_turtle_records_token_usage(self) -> None:
         completion = Mock()
-        completion.choices = [Mock(message=Mock(content='{"@context": {}}'))]
+        completion.choices = [Mock(message=Mock(content="ex:i a icm:Intent ."))]
         completion.usage = Mock(prompt_tokens=30, completion_tokens=10, total_tokens=40)
 
         with TemporaryDirectory() as tmp:
@@ -116,7 +107,7 @@ class TestKgePaths(unittest.TestCase):
                 "token_usage_path",
                 return_value=usage_path,
             ):
-                result = nl_to_tio.generate_jsonld_code(
+                result = nl_to_tio.generate_turtle_code(
                     "確保延遲低於 50ms",
                     "TC001",
                     "",
@@ -128,7 +119,7 @@ class TestKgePaths(unittest.TestCase):
                     ),
                 )
 
-            self.assertEqual(result, '{"@context": {}}')
+            self.assertEqual(result, "ex:i a icm:Intent .")
             user_prompt = create.call_args.kwargs["messages"][1]["content"]
             self.assertIn("KGE grounded URI / predicted likely triples", user_prompt)
             self.assertNotIn("GraphRAG", user_prompt)
@@ -136,7 +127,7 @@ class TestKgePaths(unittest.TestCase):
             self.assertIn("Predicted likely triples:", user_prompt)
             rows = json.loads(usage_path.read_text(encoding="utf-8"))
             self.assertEqual(rows[0]["experiment"], "kge")
-            self.assertEqual(rows[0]["stage"], "jsonld_generation")
+            self.assertEqual(rows[0]["stage"], "turtle_generation")
             self.assertEqual(rows[0]["total_tokens"], 40)
 
     def test_main_uses_kge_context_without_querying_graphrag(self) -> None:
@@ -151,7 +142,7 @@ class TestKgePaths(unittest.TestCase):
             ), patch.object(
                 nl_to_tio,
                 "output_path_for_case",
-                side_effect=lambda _root, tc_id: out_dir / f"{tc_id}.jsonld",
+                side_effect=lambda _root, tc_id: out_dir / f"{tc_id}.ttl",
             ), patch.object(
                 nl_to_tio,
                 "load_few_shot_samples",
@@ -162,8 +153,8 @@ class TestKgePaths(unittest.TestCase):
                 return_value="Grounded URIs:\n- evsla:SlaExpectation",
             ), patch.object(
                 nl_to_tio,
-                "generate_jsonld_code",
-                return_value='{"@context": {}}',
+                "generate_turtle_code",
+                return_value="ex:i a icm:Intent .",
             ) as generate, patch.object(
                 nl_to_tio,
                 "token_usage_path",
