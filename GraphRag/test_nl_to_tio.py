@@ -61,25 +61,6 @@ class TestGraphRagPaths(unittest.TestCase):
     def test_chat_model_uses_gpt_5_4(self) -> None:
         self.assertEqual(nl_to_tio.CHAT_MODEL, "gpt-5.4")
 
-    def test_normalize_jsonld_fills_missing_expectation_description(self) -> None:
-        raw = """{
-  "@type": "Intent",
-  "id": "intent-tc002",
-  "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure packet loss below 0.1%.",
-  "intentExpectation": [
-    {
-      "id": "exp-tc002-packet-loss",
-      "name": "Hub-to-Spoke Packet Loss SLA Expectation",
-      "@type": "PropertyExpectation"
-    }
-  ]
-}"""
-
-        normalized = nl_to_tio.normalize_jsonld_output(raw)
-
-        self.assertIn('"description": "Hub-to-Spoke Packet Loss SLA Expectation"', normalized)
-
     def test_generate_turtle_records_token_usage(self) -> None:
         completion = Mock()
         completion.choices = [Mock(message=Mock(content="ex:i a icm:Intent ."))]

@@ -23,7 +23,7 @@ Required @prefix declarations (always include all of them):
 @prefix ex:    <http://example.org/tio-instance/{tc_id.lower()}/> .
 
 Graph structure:
-- ex:intent a icm:Intent ; icm:intentElements <each expectation>, <the topology context> ; rdfs:comment "<concise English SLA summary>"@en .
+- ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ; icm:intentElements <each expectation>, <the topology context> ; rdfs:comment "<concise English SLA summary>"@en .
 - ex:intent has tenant: ex:tenant a evsla:Tenant ; rdfs:label "<tenant>"@zh .
 - One ex:service a evsla:EnterpriseVpnService ; evsla:forTenant ex:tenant .
 - One PropertyExpectation per SLA metric:
@@ -74,5 +74,5 @@ def build_evsla_graphrag_query(nl_intent: str) -> str:
         "- evsla:p95, evsla:p99, evsla:minimum\n"
         "- evsla:hubToAllSpokes, evsla:specificSpoke\n"
         "- evsla:twamp, evsla:activeMeasurement, evsla:fiveMinuteWindow\n"
-        "請簡短說明 tenant、hub、spokes、metric、operator、threshold、statistic、scope、measurement method、time window 應如何放入 JSON-LD。"
+        "請簡短說明 tenant、hub、spokes、metric、operator、threshold、statistic、scope、measurement method、time window 應如何放入 TIO Turtle。"
     )

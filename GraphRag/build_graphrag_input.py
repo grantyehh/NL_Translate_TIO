@@ -183,7 +183,7 @@ def write_term_document(graph: Graph, module_name: str, subject: URIRef, output_
     lines.append("")
     lines.append("Retrieval guidance:")
     lines.append(
-        f"Use {term} when a natural-language intent asks for this ontology concept, and preserve the exact CURIE in generated JSON-LD or reasoning context when applicable."
+        f"Use {term} when a natural-language intent asks for this ontology concept, and preserve the exact CURIE in generated Turtle or reasoning context when applicable."
     )
 
     path = output_dir / filename_for(module_name, term, str(subject))

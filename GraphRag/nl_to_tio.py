@@ -83,31 +83,6 @@ def build_system_prompt(tc_id: str) -> str:
     return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG")
 
 
-def normalize_jsonld_output(raw: str) -> str:
-    """Normalize generated JSON-LD before writing so evaluator-required
-    non-empty strings are present when the model omits obvious fields."""
-    try:
-        doc = json.loads(raw)
-    except json.JSONDecodeError:
-        return raw
-    if not isinstance(doc, dict):
-        return raw
-
-    expectations = doc.get("intentExpectation")
-    if isinstance(expectations, list):
-        for expectation in expectations:
-            if not isinstance(expectation, dict):
-                continue
-            description = expectation.get("description")
-            if isinstance(description, str) and description.strip():
-                continue
-            fallback = expectation.get("name") or expectation.get("id") or doc.get("description")
-            if isinstance(fallback, str) and fallback.strip():
-                expectation["description"] = fallback.strip()
-
-    return json.dumps(doc, ensure_ascii=False, indent=2)
-
-
 def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
     """
     利用 LLM 將 NL Intent 和 GraphRAG Context 轉化為 TIO Turtle。

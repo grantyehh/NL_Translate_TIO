@@ -37,7 +37,7 @@ class TestCompareTokenUsage(unittest.TestCase):
                             "experiment": "llm_only",
                             "ledger": "online",
                             "case_id": "TC001",
-                            "stage": "jsonld_generation",
+                            "stage": "turtle_generation",
                             "input_tokens": 10,
                             "output_tokens": 5,
                             "total_tokens": 15,
