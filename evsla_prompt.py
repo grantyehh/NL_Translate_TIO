@@ -11,27 +11,39 @@ Retrieval context ({retrieval_mode}) is auxiliary:
 - Do not copy retrieval prose into description.
 """
 
-    return f"""You generate API-friendly TIO JSON-LD for Enterprise VPN hub-and-spoke SLA intents only.
-Never output 5G, datacenter fabric, generic service delivery, generic traffic class, Turtle, Markdown, or prose.
+    return f"""You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
+Output ONLY valid, parseable Turtle. Never output JSON, JSON-LD, Markdown, prose, 5G slices, datacenter fabric, or generic service delivery.
 
-Required JSON object:
-- @context: "https://tmforum.org/schemas/intent-ontology/v1.jsonld"
-- @type: "Intent"
-- id: "intent-{tc_id.lower()}"
-- name: "Enterprise VPN Hub-Spoke SLA Intent"
-- description: concise English SLA summary
-- ontologyType: "evsla:EnterpriseVpnSlaIntent"
-- intentOwner: {{ "id": "ops-manager-01", "name": "Network Operations Center" }}
-- tenant: {{ "id": "tenant:<tenant>", "name": "<tenant>", "@type": "evsla:Tenant" }}
-- intentExpectation: one PropertyExpectation per SLA metric
-- intentContext: one hub-and-spoke Context
-- intentReport: {{ "reportingInterval": "PT5M", "handlerResponse": "Continuous" }}
+Required @prefix declarations (always include all of them):
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/{tc_id.lower()}/> .
 
-Each expectation:
-- @type: "PropertyExpectation"
-- ontologyType: "evsla:SlaExpectation"
-- expectationObject: {{ "id": "svc:<tenant>-enterprise-vpn", "name": "<tenant> Enterprise VPN Service", "@type": "Service", "ontologyType": "evsla:EnterpriseVpnService" }}
-- expectationTarget: include name, targetProperty, matchCondition, targetValue, evsla:hasMetric, evsla:hasThreshold, evsla:hasStatistic, evsla:hasScope, evsla:hasMeasurementMethod, evsla:hasTimeWindow
+Graph structure:
+- ex:intent a icm:Intent ; icm:intentElements <each expectation>, <the topology context> ; rdfs:comment "<concise English SLA summary>"@en .
+- ex:intent has tenant: ex:tenant a evsla:Tenant ; rdfs:label "<tenant>"@zh .
+- One ex:service a evsla:EnterpriseVpnService ; evsla:forTenant ex:tenant .
+- One PropertyExpectation per SLA metric:
+    ex:exp-<metric> a icm:PropertyExpectation, evsla:SlaExpectation ;
+      icm:target ex:tgt-<metric> ;
+      rdfs:comment "<what this guarantees>"@en .
+- Each target:
+    ex:tgt-<metric> a icm:Target ;
+      evsla:hasMetric evsla:<metric> ;
+      icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value <number> ; quan:unit "<unit>" ] ;
+      evsla:hasThreshold [ a quan:Quantity ; rdf:value <number> ; quan:unit "<unit>" ] ;
+      evsla:hasStatistic evsla:<stat> ;
+      evsla:hasScope evsla:<scope> ;
+      evsla:hasMeasurementMethod evsla:<method> ;
+      evsla:hasTimeWindow evsla:fiveMinuteWindow .
+- Hub-and-spoke context:
+    ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+      evsla:hasHub [ a evsla:HubSite ; rdfs:label "<hub>"@zh ] ;
+      evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "<spoke>"@zh ] ;
+      ... one evsla:hasSpoke per spoke ... .
 
 Metric mappings:
 - latency -> evsla:latency, LESS_THAN, evsla:twamp
@@ -44,17 +56,10 @@ Metric mappings:
 - default time window -> evsla:fiveMinuteWindow
 
 Target rules:
-- targetProperty and evsla:hasMetric must both use the same evsla metric.
-- targetValue and evsla:hasThreshold must both include {{ "value": number, "unit": string, "@type": "quan:Quantity" }}.
+- evsla:hasMetric and the metric used in icm:valuesOfTargetProperty/evsla:hasThreshold must be consistent.
+- Both icm:valuesOfTargetProperty and evsla:hasThreshold must carry a quan:Quantity with rdf:value (number) and quan:unit (string).
 
-Hub-spoke context:
-- @type: "Context"
-- name: "Hub-and-Spoke Topology"
-- ontologyType: "evsla:HubAndSpokeTopology"
-- evsla:hasHub: {{ "@type": "evsla:HubSite", "name": "<hub>" }}
-- evsla:hasSpoke: array of {{ "@type": "evsla:SpokeSite", "name": "<spoke>" }}
-
-{retrieval_note}Core semantics must be structured JSON fields, not only description.
+{retrieval_note}Core semantics must be carried by triples, not only by rdfs:comment.
 """
 
 
