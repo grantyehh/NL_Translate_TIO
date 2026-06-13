@@ -41,19 +41,45 @@ def build_solver_content(context: Any) -> str:
 @PromptABC.register("tio_turtle_generator_prompt")
 class TIOTurtleGeneratorPrompt(PromptABC):
     template_en = """You are the final generator inside a KAG solver pipeline for the TIO Experiment.
+You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
+Use the KAG solver context below as grounded evidence. Output ONLY valid, parseable Turtle. Never output JSON, JSON-LD, Markdown, prose, 5G slices, datacenter fabric, or generic service delivery.
 
-Use the KAG solver context below as grounded evidence. Generate only valid RDF 1.1 Turtle for the current network intent.
+Required @prefix declarations (always include all of them):
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/...test-case-id.../> .
 
-Hard requirements:
-- Output Turtle only. Do not wrap it in markdown or add prose.
-- Use official TIO v3.6.0 namespace IRIs and vocabulary supported by the KAG context.
-- Include an icm:Intent instance whose URI contains the current test case ID.
-- Represent requirements with icm:DeliveryExpectation or icm:PropertyExpectation and bind each expectation to an icm:Target with icm:target.
-- Use icm:Context, log:Condition, and icm:valuesOfTargetProperty when required by the natural language.
-- Comments may supplement structure but must not replace the required TIO classes and properties.
-- Do not invent unofficial TIO predicates.
+Graph structure (the ex: namespace must embed the current test case ID):
+- ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ; icm:intentElements <each expectation>, <the topology context> ; rdfs:comment "<concise English SLA summary>"@en .
+- ex:tenant a evsla:Tenant ; rdfs:label "<tenant>"@zh .
+- ex:service a evsla:EnterpriseVpnService ; evsla:forTenant ex:tenant .
+- One PropertyExpectation per SLA metric:
+    ex:exp-<metric> a icm:PropertyExpectation, evsla:SlaExpectation ; icm:target ex:tgt-<metric> ; rdfs:comment "<what this guarantees>"@en .
+- Each target:
+    ex:tgt-<metric> a icm:Target ;
+      evsla:hasMetric evsla:<metric> ;
+      icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value <number> ; quan:unit "<unit>" ] ;
+      evsla:hasThreshold [ a quan:Quantity ; rdf:value <number> ; quan:unit "<unit>" ] ;
+      evsla:hasStatistic evsla:<stat> ; evsla:hasScope evsla:<scope> ;
+      evsla:hasMeasurementMethod evsla:<method> ; evsla:hasTimeWindow evsla:fiveMinuteWindow .
+- Hub-and-spoke context:
+    ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+      evsla:hasHub [ a evsla:HubSite ; rdfs:label "<hub>"@zh ] ;
+      evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "<spoke>"@zh ] .
 
-Few-shot examples for structure only:
+Metric mappings:
+- latency -> evsla:latency, LESS_THAN, evsla:twamp
+- packet_loss / 封包遺失率 -> evsla:packetLoss, LESS_THAN, evsla:twamp
+- guaranteed_bandwidth / 保證頻寬 -> evsla:guaranteedBandwidth, GREATER_THAN_OR_EQUAL, evsla:minimum, evsla:activeMeasurement
+- 95% -> evsla:p95 ; 99% -> evsla:p99
+- all spokes / 所有分點 / 各Spoke -> evsla:hubToAllSpokes ; named single spoke -> evsla:specificSpoke
+
+Comments may supplement structure but must not replace the required classes and properties. Do not invent unofficial predicates.
+
+Few-shot Turtle examples for structure only:
 $few_shot_block
 
 Current test case ID: $tc_id
