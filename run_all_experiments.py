@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 COMPARE_SCRIPT = ROOT / "compare_reports.py"
 TOKEN_COMPARE_SCRIPT = ROOT / "compare_token_usage.py"
-PHASE1_EVALUATOR = ROOT / "evaluate_jsonld.py"
+PHASE1_EVALUATOR = ROOT / "evaluate_ttl.py"
 PHASE1_DIR = ROOT / "phase1"
 OUTPUT_QUALITY_DIR = PHASE1_DIR / "output_quality"
 TOKEN_USAGE_DIR = PHASE1_DIR / "token_usage"

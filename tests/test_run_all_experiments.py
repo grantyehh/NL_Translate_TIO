@@ -33,6 +33,18 @@ class TestRunAllExperimentsCli(unittest.TestCase):
             ROOT / "phase1" / "token_usage",
         )
 
+    def test_phase1_evaluator_points_to_evaluate_ttl(self) -> None:
+        self.assertEqual(
+            run_all_experiments.PHASE1_EVALUATOR,
+            ROOT / "evaluate_ttl.py",
+        )
+
+    def test_experiments_has_four_methods(self) -> None:
+        self.assertEqual(
+            set(run_all_experiments.EXPERIMENTS.keys()),
+            {"llm_only", "graphrag", "kge", "kag"},
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
