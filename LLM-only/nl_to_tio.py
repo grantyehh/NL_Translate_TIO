@@ -50,19 +50,17 @@ def format_few_shot_block(examples: list[dict]) -> str:
     parts: list[str] = []
     for i, ex in enumerate(examples, 1):
         pat = ex.get("pattern", "")
-        jsonld = ex.get("jsonld", {})
-        if not isinstance(jsonld, str):
-            jsonld = json.dumps(jsonld, ensure_ascii=False, indent=2)
+        turtle = ex.get("turtle", "")
         parts.append(
             f"--- Example {i} ({pat}) ---\n"
             f"Natural language:\n{ex.get('nl_intent', '')}\n\n"
-            f"JSON-LD:\n{jsonld}"
+            f"Turtle:\n{turtle}"
         )
     return "\n\n".join(parts)
 
 
 def output_path_for_case(root: Path, tc_id: str) -> Path:
-    return root.parent / "jsonld_outputs" / "llm_only" / f"{tc_id}.jsonld"
+    return root.parent / "tio_outputs" / "llm_only" / f"{tc_id}.ttl"
 
 
 def token_usage_path(root: Path | None = None) -> Path:
@@ -74,19 +72,19 @@ def build_system_prompt(tc_id: str) -> str:
     return build_evsla_system_prompt(tc_id)
 
 
-def generate_jsonld_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str | None:
+def generate_turtle_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str | None:
     """
-    利用 LLM 將 NL Intent 直接轉化為 TIO JSON-LD。
+    利用 LLM 將 NL Intent 直接轉化為 TIO Turtle。
     不使用 GraphRAG 或 KGE，只保留 few-shot + prompt constraints。
     """
-    print(f"--- Translating to TIO JSON-LD format for {tc_id} ---")
+    print(f"--- Translating to TIO Turtle format for {tc_id} ---")
 
     system_prompt = build_system_prompt(tc_id)
 
     few_shot_section = ""
     if few_shot_block.strip():
         few_shot_section = (
-            "【Few-shot JSON-LD 範例（與本題不同情境；請學結構，勿抄內容）】\n"
+            "【Few-shot Turtle 範例（與本題不同情境；請學結構，勿抄內容）】\n"
             f"{few_shot_block}\n\n"
         )
 
@@ -94,7 +92,7 @@ def generate_jsonld_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str
 
 自然語言意圖："{nl_intent}"
 
-請直接生成對應的 TIO JSON-LD。
+請直接生成對應的 TIO Turtle。
 """
 
     try:
@@ -111,7 +109,7 @@ def generate_jsonld_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str
             experiment="llm_only",
             ledger="online",
             case_id=tc_id,
-            stage="jsonld_generation",
+            stage="turtle_generation",
             model=CHAT_MODEL,
             api="chat.completions",
             response=response,
@@ -122,12 +120,13 @@ def generate_jsonld_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str
         return None
 
 
-generate_turtle_code = generate_jsonld_code
+# backward-compat alias
+generate_jsonld_code = generate_turtle_code
 
 
 def main() -> None:
     root = Path(__file__).resolve().parent
-    parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via LLM only.")
+    parser = argparse.ArgumentParser(description="NL to TIO Turtle via LLM only.")
     parser.add_argument(
         "--test-cases",
         type=Path,
@@ -138,7 +137,7 @@ def main() -> None:
         "--few-shot",
         type=Path,
         default=default_few_shot_path(root),
-        help="Few-shot NL+JSON-LD examples JSON (default: ../few_shot_samples.json); omit file to disable",
+        help="Few-shot NL+Turtle examples JSON (default: ../few_shot_samples.json); omit file to disable",
     )
     parser.add_argument(
         "--no-few-shot",
@@ -171,18 +170,18 @@ def main() -> None:
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
-        jsonld_result = generate_jsonld_code(
+        turtle_result = generate_turtle_code(
             tc["nl_intent"],
             tc["id"],
             few_shot_block,
         )
 
-        if jsonld_result:
+        if turtle_result:
             file_path = output_path_for_case(root, tc["id"])
-            file_path.write_text(jsonld_result, encoding="utf-8")
-            print(f"Successfully saved JSON-LD to: {file_path}")
+            file_path.write_text(turtle_result, encoding="utf-8")
+            print(f"Successfully saved Turtle to: {file_path}")
             print("-" * 30)
-            print(jsonld_result)
+            print(turtle_result)
             print("-" * 30)
 
 

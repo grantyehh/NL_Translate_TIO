@@ -33,24 +33,17 @@ class TestLlmOnlyPaths(unittest.TestCase):
         expected = Path("/tmp/example/CHT/few_shot_samples.json").resolve()
         self.assertEqual(nl_to_tio.default_few_shot_path(root), expected)
 
-    def test_format_few_shot_block_uses_json_ld_examples(self) -> None:
-        examples = [
-            {
-                "pattern": "property_expectation",
-                "nl_intent": "確保視訊會議流量的延遲低於 20ms。",
-                "jsonld": {"@type": "Intent", "id": "intent-video-conf-001"},
-            }
-        ]
-
+    def test_format_few_shot_block_uses_turtle_examples(self) -> None:
+        examples = [{"pattern": "p", "nl_intent": "x",
+                     "turtle": "ex:i a icm:Intent ."}]
         block = nl_to_tio.format_few_shot_block(examples)
+        self.assertIn("Turtle:", block)
+        self.assertIn("a icm:Intent", block)
+        self.assertNotIn("JSON-LD:", block)
 
-        self.assertIn("JSON-LD:", block)
-        self.assertIn('"@type": "Intent"', block)
-        self.assertNotIn("Turtle:", block)
-
-    def test_output_path_uses_jsonld_outputs_and_extension(self) -> None:
+    def test_output_path_uses_tio_outputs_and_ttl(self) -> None:
         root = Path("/tmp/example/CHT/LLM-only")
-        expected = Path("/tmp/example/CHT/jsonld_outputs/llm_only/TC001.jsonld")
+        expected = Path("/tmp/example/CHT/tio_outputs/llm_only/TC001.ttl")
         self.assertEqual(nl_to_tio.output_path_for_case(root, "TC001"), expected)
 
     def test_token_usage_path_uses_phase1_token_usage_directory(self) -> None:
@@ -58,17 +51,15 @@ class TestLlmOnlyPaths(unittest.TestCase):
         expected = Path("/tmp/example/CHT/phase1/token_usage/token_usage_llm_only.json")
         self.assertEqual(nl_to_tio.token_usage_path(root), expected)
 
-    def test_system_prompt_requires_json_ld_not_turtle(self) -> None:
+    def test_system_prompt_requires_turtle_not_json_ld(self) -> None:
         prompt = nl_to_tio.build_system_prompt("TC001")
-
-        self.assertIn("JSON-LD", prompt)
-        self.assertIn("intentExpectation", prompt)
-        self.assertNotIn("僅輸出完整、可解析的 Turtle", prompt)
+        self.assertIn("Turtle", prompt)
+        self.assertIn("icm:PropertyExpectation", prompt)
+        self.assertNotIn("intentExpectation", prompt)
 
     def test_system_prompt_requires_enterprise_vpn_sla_ontology_terms(self) -> None:
         prompt = nl_to_tio.build_system_prompt("TC001")
 
-        self.assertIn("evsla:EnterpriseVpnSlaIntent", prompt)
         self.assertIn("evsla:EnterpriseVpnService", prompt)
         self.assertIn("evsla:HubAndSpokeTopology", prompt)
         self.assertIn("latency -> evsla:latency", prompt)
@@ -79,9 +70,9 @@ class TestLlmOnlyPaths(unittest.TestCase):
     def test_chat_model_uses_gpt_5_4(self) -> None:
         self.assertEqual(nl_to_tio.CHAT_MODEL, "gpt-5.4")
 
-    def test_generate_jsonld_code_records_token_usage(self) -> None:
+    def test_generate_turtle_records_token_usage(self) -> None:
         completion = Mock()
-        completion.choices = [Mock(message=Mock(content='{"@context": {}}'))]
+        completion.choices = [Mock(message=Mock(content="ex:i a icm:Intent ."))]
         completion.usage = Mock(prompt_tokens=10, completion_tokens=5, total_tokens=15)
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -91,16 +82,16 @@ class TestLlmOnlyPaths(unittest.TestCase):
                 "create",
                 return_value=completion,
             ), patch.object(nl_to_tio, "token_usage_path", return_value=usage_path):
-                result = nl_to_tio.generate_jsonld_code(
+                result = nl_to_tio.generate_turtle_code(
                     "確保延遲低於 50ms",
                     "TC001",
                     "",
                 )
 
-            self.assertEqual(result, '{"@context": {}}')
+            self.assertEqual(result, "ex:i a icm:Intent .")
             rows = json.loads(usage_path.read_text(encoding="utf-8"))
             self.assertEqual(rows[0]["experiment"], "llm_only")
-            self.assertEqual(rows[0]["stage"], "jsonld_generation")
+            self.assertEqual(rows[0]["stage"], "turtle_generation")
             self.assertEqual(rows[0]["total_tokens"], 15)
 
 
