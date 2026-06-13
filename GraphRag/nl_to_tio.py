@@ -61,19 +61,17 @@ def format_few_shot_block(examples: list[dict]) -> str:
     parts: list[str] = []
     for i, ex in enumerate(examples, 1):
         pat = ex.get("pattern", "")
-        jsonld = ex.get("jsonld", {})
-        if not isinstance(jsonld, str):
-            jsonld = json.dumps(jsonld, ensure_ascii=False, indent=2)
+        turtle = ex.get("turtle", "")
         parts.append(
             f"--- Example {i} ({pat}) ---\n"
             f"Natural language:\n{ex.get('nl_intent', '')}\n\n"
-            f"JSON-LD:\n{jsonld}"
+            f"Turtle:\n{turtle}"
         )
     return "\n\n".join(parts)
 
 
 def output_path_for_case(root: Path, tc_id: str) -> Path:
-    return root.parent / "jsonld_outputs" / "graphrag" / f"{tc_id}.jsonld"
+    return root.parent / "tio_outputs" / "graphrag" / f"{tc_id}.ttl"
 
 
 def token_usage_path(root: Path | None = None) -> Path:
@@ -110,19 +108,19 @@ def normalize_jsonld_output(raw: str) -> str:
     return json.dumps(doc, ensure_ascii=False, indent=2)
 
 
-def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
+def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
     """
-    利用 LLM 將 NL Intent 和 GraphRAG Context 轉化為 TIO JSON-LD。
-    few_shot_block: optional text of NL+JSON-LD examples (not from test_cases).
+    利用 LLM 將 NL Intent 和 GraphRAG Context 轉化為 TIO Turtle。
+    few_shot_block: optional text of NL+Turtle examples (not from test_cases).
     """
-    print(f"--- Step 2: Translating to TIO JSON-LD format for {tc_id} ---")
+    print(f"--- Translating to TIO Turtle format for {tc_id} ---")
 
     system_prompt = build_system_prompt(tc_id)
 
     few_shot_section = ""
     if few_shot_block.strip():
         few_shot_section = (
-            "【Few-shot JSON-LD 範例（與本題不同情境；請學結構，勿抄內容）】\n"
+            "【Few-shot Turtle 範例（與本題不同情境；請學結構，勿抄內容）】\n"
             f"{few_shot_block}\n\n"
         )
 
@@ -133,7 +131,7 @@ def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
 相關 TIO 知識上下文：
 {context}
 
-請生成對應的 TIO JSON-LD：
+請直接生成對應的 TIO Turtle。
 """
 
     try:
@@ -150,7 +148,7 @@ def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
             experiment="graphrag",
             ledger="online",
             case_id=tc_id,
-            stage="jsonld_generation",
+            stage="turtle_generation",
             model=CHAT_MODEL,
             api="chat.completions",
             response=response,
@@ -161,7 +159,7 @@ def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
         return None
 
 
-generate_turtle_code = generate_jsonld_code
+generate_jsonld_code = generate_turtle_code
 
 
 def _seed_llm_caller(prompt: str) -> str:
@@ -203,7 +201,7 @@ def _embed_caller(items: list[str]) -> list[list[float]]:
 def main() -> None:
     global ACTIVE_CASE_ID
     root = Path(__file__).resolve().parent
-    parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via GraphRAG + OpenAI.")
+    parser = argparse.ArgumentParser(description="NL to TIO Turtle via GraphRAG + OpenAI.")
     parser.add_argument(
         "--test-cases",
         type=Path,
@@ -214,7 +212,7 @@ def main() -> None:
         "--few-shot",
         type=Path,
         default=default_few_shot_path(root),
-        help="Few-shot NL+JSON-LD examples JSON (default: ../few_shot_samples.json); omit file to disable",
+        help="Few-shot NL+Turtle examples JSON (default: ../few_shot_samples.json); omit file to disable",
     )
     parser.add_argument(
         "--no-few-shot",
@@ -264,20 +262,20 @@ def main() -> None:
         )
 
         if tio_context:
-            jsonld_result = generate_jsonld_code(
+            turtle_result = generate_turtle_code(
                 tc["nl_intent"],
                 tio_context,
                 tc["id"],
                 few_shot_block,
             )
 
-            if jsonld_result:
+            if turtle_result:
                 file_path = output_path_for_case(root, tc["id"])
-                jsonld_result = normalize_jsonld_output(jsonld_result)
-                file_path.write_text(jsonld_result, encoding="utf-8")
-                print(f"Successfully saved JSON-LD to: {file_path}")
+                file_path.parent.mkdir(parents=True, exist_ok=True)
+                file_path.write_text(turtle_result, encoding="utf-8")
+                print(f"Successfully saved Turtle to: {file_path}")
                 print("-" * 30)
-                print(jsonld_result)
+                print(turtle_result)
                 print("-" * 30)
         ACTIVE_CASE_ID = None
 
