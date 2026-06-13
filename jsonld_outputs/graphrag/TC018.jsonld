@@ -46,13 +46,20 @@
           "evsla:hasStatistic": "evsla:minimum",
           "evsla:hasScope": "evsla:specificSpoke",
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "東岸觀光總部",
+            "spokes": [
+              "綠島服務站"
+            ]
+          }
         }
       ]
     }
   ],
   "intentContext": [
     {
+      "id": "topology-tc018",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
       "ontologyType": "evsla:HubAndSpokeTopology",

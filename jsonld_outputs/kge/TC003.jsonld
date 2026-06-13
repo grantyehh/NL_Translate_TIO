@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc003",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Guarantee at least 100 Mbps bandwidth from 宏海物流總部 to 高雄倉儲中心 for 宏海物流 enterprise VPN service.",
+  "description": "Guarantee at least 100 Mbps bandwidth from 宏海物流總部 to 高雄倉儲中心 for the enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",

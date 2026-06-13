@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc013",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure latency below 60 ms for 雲端教育 enterprise VPN traffic from the hub to all campus spokes at p95 over five-minute windows.",
+  "description": "Assure enterprise VPN latency SLA for 雲端教育 from the hub to all campus spokes with p95 latency below 60 ms.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -17,8 +17,7 @@
   "intentExpectation": [
     {
       "id": "exp-tc013-latency",
-      "name": "Hub-to-All-Spokes Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 雲端教育 enterprise VPN service across all spokes.",
+      "name": "Hub-to-Spoke Latency SLA Expectation",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -46,15 +45,10 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "總部",
-            "spokes": [
-              "所有校區分點"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
-      ]
+      ],
+      "description": "Hub-to-Spoke Latency SLA Expectation"
     }
   ],
   "intentContext": [

@@ -121,40 +121,61 @@ NL
 
 ## Current Four-Way Evaluation
 
-目前 `phase1/compare_four_way.txt` 結果：
+目前 `phase1/output_quality/compare_four_way.txt` 結果：
+
+本輪完整 run notes 與 token 解讀紀錄在：
+
+- `phase1/experiment_run_notes_2026-06-02.md`
 
 ```text
 Experiment     | Cases | Parse OK   | Avg icm  | Avg ontology | Avg metric | Avg JSON nodes | Verbosity OK | Avg node ratio | Intent ID OK
-LLM-only       |    20 |     95.00% |   0.8975 |       0.0000 |     0.0000 |          39.50 |       25.00% |         0.6436 |       100.00%
-GraphRag       |    20 |    100.00% |   1.0000 |       0.9889 |     1.0000 |          62.65 |      100.00% |         1.0186 |       100.00%
-KGE            |    20 |     95.00% |   1.0000 |       0.9972 |     1.0000 |          63.40 |        0.00% |         0.0000 |       100.00%
-KAG            |    20 |    100.00% |   0.9900 |       0.9314 |     1.0000 |          61.80 |      100.00% |         1.0031 |       100.00%
+LLM-only       |    20 |     95.00% |   1.0000 |       0.9806 |     1.0000 |          62.75 |      100.00% |         1.0211 |       100.00%
+GraphRag       |    20 |    100.00% |   1.0000 |       0.9861 |     1.0000 |          62.75 |      100.00% |         1.0203 |       100.00%
+KGE            |    20 |    100.00% |   1.0000 |       0.9944 |     1.0000 |          62.90 |      100.00% |         1.0228 |       100.00%
+KAG            |    20 |    100.00% |   0.9900 |       0.9233 |     1.0000 |          61.50 |      100.00% |         0.9978 |       100.00%
 ```
 
 目前觀察：
 
-- GraphRAG 在 avg ICM coverage 與 avg metric coverage 上達到滿分。
+- LLM-only / GraphRAG / KGE 在 avg ICM coverage 與 avg metric coverage 上達到滿分。
 - KGE 在 avg ontology coverage 上最高。
 - KAG native 也完成 20/20 parse success，metric coverage 滿分，但 ontology coverage 低於 GraphRAG / KGE。
 - LLM-only 仍保留為主要 baseline，代表沒有額外 ontology retrieval / graph reasoning / grounding 的情況。
+
+## Current Token Usage Evaluation
+
+目前 `phase1/token_usage/compare_token_usage.txt` 結果：
+
+```text
+Experiment     | Cases | Prep total   | Avg online   | Online total | Avg calls |   Amortized @20 |  Amortized @100 | Amortized @1000
+LLM-only       |    20 |            0 |      5201.15 |       104023 |      1.00 |         5201.15 |         5201.15 |         5201.15
+GraphRag       |    20 |            0 |     24993.35 |       499867 |      3.00 |        24993.35 |        24993.35 |        24993.35
+KGE            |    20 |        15501 |     11526.70 |       230534 |      2.00 |        12301.75 |        11681.71 |        11542.20
+KAG            |    20 |       276204 |      5906.35 |       118127 |      1.00 |        19716.55 |         8668.39 |         6182.55
+```
+
+目前觀察：
+
+- Online inference cost 最低的是 LLM-only，其次是 KAG。
+- KAG prep cost 很高，N=20 時 amortized cost 最高；當規模放大到 N=1000 時，KAG amortized cost 接近 online-only 成本。
+- KGE prep cost 較小，amortized cost 在 N=100 / N=1000 時接近其 online average。
+- GraphRAG 目前 preprocessing 為 local TTL traversal input rebuild，token prep cost 為 0，但 online retrieval/generation 平均 token 最高。
 
 ## Verification
 
 最近一次已跑過：
 
 ```text
-KAG/.venv/bin/python -m unittest KAG/test_nl_to_tio.py -v
-python3 evaluate_jsonld.py kag
-python3 compare_reports.py --out phase1/compare_four_way.txt
-python3 -m unittest tests/test_evaluate_jsonld.py tests/test_compare_reports.py -v
+python3 run_all_experiments.py --eval-only
+python3 -m unittest discover -v
+python3 -m unittest LLM-only/test_nl_to_tio.py GraphRag/test_nl_to_tio.py KGE/KGE-based-graphrag/test_nl_to_tio.py KAG/test_nl_to_tio.py -v
 ```
 
 結果：
 
-- KAG unit tests: pass
-- KAG evaluator: 20/20 parse_ok
-- compare report: 已更新
-- evaluator / compare report tests: pass
+- quality reports: 已更新到 `phase1/output_quality/`
+- token reports: 已更新到 `phase1/token_usage/`
+- unit tests: pass
 
 ## Next Steps
 

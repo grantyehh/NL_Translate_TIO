@@ -2,59 +2,73 @@
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
   "id": "intent-tc002",
-  "name": "Gaming User Performance Intent",
-  "description": "Ensure all gaming users have a download speed greater than 100 Mbps and latency less than 10 ms.",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Assure packet loss below 0.1% for 遠東製造 enterprise VPN traffic from the hub to all spokes for 99% of the time.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant:遠東製造",
+    "name": "遠東製造",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
-      "id": "exp-throughput-01",
-      "name": "Download Speed Expectation",
-      "description": "Download speed must be greater than 100 Mbps for all gaming users.",
+      "id": "exp-tc002-packet-loss",
+      "name": "Hub-to-Spoke Packet Loss SLA Expectation",
+      "description": "Guarantee evsla:packetLoss for 遠東製造 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "service-gaming-users",
-        "name": "Gaming Users",
-        "@type": "Service"
+        "id": "svc:遠東製造-enterprise-vpn",
+        "name": "遠東製造 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
         {
-          "name": "Download Speed",
-          "targetProperty": "throughput",
-          "matchCondition": "GREATER_THAN",
-          "targetValue": {
-            "value": 100,
-            "unit": "Mbps"
-          }
-        }
-      ]
-    },
-    {
-      "id": "exp-latency-01",
-      "name": "Latency Expectation",
-      "description": "Latency must be less than 10 ms for all gaming users.",
-      "@type": "PropertyExpectation",
-      "expectationObject": {
-        "id": "service-gaming-users",
-        "name": "Gaming Users",
-        "@type": "Service"
-      },
-      "expectationTarget": [
-        {
-          "name": "Latency",
-          "targetProperty": "latency",
+          "name": "Hub-to-Spoke Packet Loss",
+          "targetProperty": "evsla:packetLoss",
           "matchCondition": "LESS_THAN",
           "targetValue": {
-            "value": 10,
-            "unit": "ms"
-          }
+            "value": 0.1,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:packetLoss",
+          "evsla:hasThreshold": {
+            "value": 0.1,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p99",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }
   ],
-  "intentContext": [],
+  "intentContext": [
+    {
+      "id": "topology-tc002",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "遠東製造Hub"
+      },
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "Spoke-1"
+        }
+      ]
+    }
+  ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"

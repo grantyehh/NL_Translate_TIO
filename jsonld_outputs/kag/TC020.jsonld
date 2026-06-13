@@ -8,6 +8,11 @@
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant-精準醫材",
+    "name": "精準醫材",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
       "id": "exp-tc020-latency",
@@ -108,11 +113,7 @@
     {
       "id": "topology-tc020",
       "@type": "Context",
-      "name": "Hub-and-Spoke Topology",
-      "evsla:hasHub": {
-        "@type": "evsla:HubSite",
-        "name": "台北研發總部"
-      }
+      "name": "Hub-and-Spoke Topology"
     }
   ],
   "intentReport": {

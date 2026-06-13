@@ -44,13 +44,7 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "安全監控總部",
-            "spokes": [
-              "所有分點"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ],
       "ontologyType": "evsla:SlaExpectation"
@@ -63,14 +57,8 @@
       "name": "Hub-and-Spoke Topology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "安全監控總部"
+        "name": "總部"
       },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "所有分點"
-        }
-      ],
       "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],

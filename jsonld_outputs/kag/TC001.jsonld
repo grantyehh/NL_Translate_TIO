@@ -52,14 +52,14 @@
   ],
   "intentContext": [
     {
-      "id": "topology-tc001",
+      "id": "tenant-tc001",
       "@type": "Context",
-      "name": "Hub-and-Spoke Topology",
-      "evsla:hasHub": {
-        "@type": "evsla:HubSite",
-        "name": "總部"
-      },
-      "ontologyType": "evsla:HubAndSpokeTopology"
+      "name": "Enterprise Tenant Context",
+      "tenant": {
+        "id": "tenant-星河銀行",
+        "name": "星河銀行",
+        "@type": "evsla:Tenant"
+      }
     }
   ],
   "intentReport": {

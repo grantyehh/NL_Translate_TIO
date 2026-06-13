@@ -1,0 +1,32 @@
+flowchart TD
+    subgraph Offline["離線準備（python -m kge.train, 要重訓才跑）"]
+        TTL[/"TIO TTL files"/] --> Extract["extract_triples_for_kge<br/>只留 URI-URI 三元組"]
+        Extract --> TSV[("triples.tsv")]
+        TSV --> TransE["train_trans_e<br/>PyKEEN TransE, dim=128, epochs=80"]
+        TransE --> KGEemb[("entity_kge.npy<br/>relation_kge.npy")]
+        Extract --> Desc["build_entity_descriptions<br/>label + comment"]
+        Desc --> Ada["text-embedding-ada-002"]
+        Ada --> TextEmb[("entity_text_emb.npy")]
+    end
+
+    subgraph Online["線上推論（每題跑一次）"]
+        NL[/"NL intent"/]
+        NL --> Q["Step 1：query embedding<br/>ada-002, L2-normalize"]
+        Q --> S2["Step 2：文字相似度 top-8<br/>text_emb @ q (cosine)"]
+        S2 --> Seeds["seed entities<br/>(tag = text)"]
+        Seeds --> S3["Step 3：KGE 鄰居擴張<br/>每 seed 取 top-14"]
+        S3 --> Expanded["entity list ≤ 45<br/>(text + kge_neighbor)"]
+        Expanded --> S4["Step 4：TransE link prediction<br/>score = -||h+r-t||₂, top-18"]
+        S4 --> Preds["predicted triples"]
+        Preds --> S5["Step 5：format context<br/>entity list + predicted triples"]
+        S5 --> S6["Step 6：主 LLM 生 JSON-LD<br/>gpt-5.4, temperature=0"]
+        S6 --> Out[/"TC001.jsonld"/]
+    end
+
+    TextEmb -. cosine 比 query .-> S2
+    KGEemb -. KGE space cosine .-> S3
+    KGEemb -. TransE 評分 .-> S4
+    NL -. 原始 NL 一併餵進 .-> S6
+
+    style NL fill:#90EE90,stroke:#333
+    style Out fill:#FFD700,stroke:#333

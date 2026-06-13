@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc015",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Guarantee at least 300 Mbps bandwidth from 亞洲航空維修總部 to 小港機棚 for the enterprise VPN service.",
+  "description": "Guarantee at least 300 Mbps bandwidth from 亞洲航空維修總部 to 小港機棚 for 亞洲航空維修 enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -46,13 +46,7 @@
           "evsla:hasStatistic": "evsla:minimum",
           "evsla:hasScope": "evsla:specificSpoke",
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "亞洲航空維修總部",
-            "spokes": [
-              "小港機棚"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }

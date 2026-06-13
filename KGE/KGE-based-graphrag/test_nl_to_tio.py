@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import os
 import subprocess
 import sys
@@ -58,6 +59,11 @@ class TestKgePaths(unittest.TestCase):
         expected = Path("/tmp/example/CHT/jsonld_outputs/kge/TC001.jsonld")
         self.assertEqual(nl_to_tio.output_path_for_case(root, "TC001"), expected)
 
+    def test_token_usage_path_uses_phase1_token_usage_directory(self) -> None:
+        root = Path("/tmp/example/CHT/KGE/KGE-based-graphrag")
+        expected = Path("/tmp/example/CHT/phase1/token_usage/token_usage_kge.json")
+        self.assertEqual(nl_to_tio.token_usage_path(root), expected)
+
     def test_system_prompt_requires_json_ld_not_turtle(self) -> None:
         prompt = nl_to_tio.build_system_prompt("TC001")
 
@@ -101,31 +107,43 @@ class TestKgePaths(unittest.TestCase):
     def test_generate_prompt_labels_kge_grounded_predictions(self) -> None:
         completion = Mock()
         completion.choices = [Mock(message=Mock(content='{"@context": {}}'))]
+        completion.usage = Mock(prompt_tokens=30, completion_tokens=10, total_tokens=40)
 
-        with patch.object(nl_to_tio.client.chat.completions, "create", return_value=completion) as create:
-            result = nl_to_tio.generate_jsonld_code(
-                "確保延遲低於 50ms",
-                "TC001",
-                "",
-                kge_context=(
-                    "Grounded URIs:\n"
-                    "- evsla:SlaExpectation\n\n"
-                    "Predicted likely triples:\n"
-                    "- evsla:SlaExpectation evsla:hasMetric evsla:latency"
-                ),
-            )
+        with TemporaryDirectory() as tmp:
+            usage_path = Path(tmp) / "token_usage_kge.json"
+            with patch.object(nl_to_tio.client.chat.completions, "create", return_value=completion) as create, patch.object(
+                nl_to_tio,
+                "token_usage_path",
+                return_value=usage_path,
+            ):
+                result = nl_to_tio.generate_jsonld_code(
+                    "確保延遲低於 50ms",
+                    "TC001",
+                    "",
+                    kge_context=(
+                        "Grounded URIs:\n"
+                        "- evsla:SlaExpectation\n\n"
+                        "Predicted likely triples:\n"
+                        "- evsla:SlaExpectation evsla:hasMetric evsla:latency"
+                    ),
+                )
 
-        self.assertEqual(result, '{"@context": {}}')
-        user_prompt = create.call_args.kwargs["messages"][1]["content"]
-        self.assertIn("KGE grounded URI / predicted likely triples", user_prompt)
-        self.assertNotIn("GraphRAG", user_prompt)
-        self.assertIn("Grounded URIs:", user_prompt)
-        self.assertIn("Predicted likely triples:", user_prompt)
+            self.assertEqual(result, '{"@context": {}}')
+            user_prompt = create.call_args.kwargs["messages"][1]["content"]
+            self.assertIn("KGE grounded URI / predicted likely triples", user_prompt)
+            self.assertNotIn("GraphRAG", user_prompt)
+            self.assertIn("Grounded URIs:", user_prompt)
+            self.assertIn("Predicted likely triples:", user_prompt)
+            rows = json.loads(usage_path.read_text(encoding="utf-8"))
+            self.assertEqual(rows[0]["experiment"], "kge")
+            self.assertEqual(rows[0]["stage"], "jsonld_generation")
+            self.assertEqual(rows[0]["total_tokens"], 40)
 
     def test_main_uses_kge_context_without_querying_graphrag(self) -> None:
         root = Path(__file__).resolve().parent
         with TemporaryDirectory() as tmp:
             out_dir = Path(tmp)
+            usage_path = out_dir / "token_usage_kge.json"
             with patch.object(
                 nl_to_tio,
                 "default_test_cases_path",
@@ -147,6 +165,10 @@ class TestKgePaths(unittest.TestCase):
                 "generate_jsonld_code",
                 return_value='{"@context": {}}',
             ) as generate, patch.object(
+                nl_to_tio,
+                "token_usage_path",
+                return_value=usage_path,
+            ), patch.object(
                 nl_to_tio,
                 "query_graphrag_local",
                 side_effect=AssertionError("KGE-only must not query GraphRAG"),

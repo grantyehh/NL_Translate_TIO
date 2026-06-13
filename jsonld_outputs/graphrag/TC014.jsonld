@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc014",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure packet loss below 0.05% for 聯合媒體 enterprise VPN traffic between the hub and all spokes at p99 over five-minute windows.",
+  "description": "Assure packet loss below 0.05% for 聯合媒體 enterprise VPN traffic from the hub to all spokes at p99 over five-minute windows.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -61,12 +61,7 @@
         "@type": "evsla:HubSite",
         "name": "聯合媒體Hub"
       },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "Spoke-1"
-        }
-      ]
+      "evsla:hasSpoke": []
     }
   ],
   "intentReport": {

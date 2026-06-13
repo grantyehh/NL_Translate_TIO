@@ -52,6 +52,11 @@ class TestCompareReportsCli(unittest.TestCase):
         self.assertEqual(metrics["json_node_budget_ok_rate"], 0.5)
         self.assertEqual(metrics["avg_json_node_budget_ratio"], 1.25)
 
+    def test_default_reports_prefer_output_quality_directory(self) -> None:
+        report_paths = [path for _, path in compare_reports.DEFAULT_REPORTS]
+
+        self.assertTrue(all("output_quality" in path.parts for path in report_paths))
+
 
 if __name__ == "__main__":
     unittest.main()

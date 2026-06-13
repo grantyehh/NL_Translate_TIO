@@ -8,6 +8,11 @@
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant-綠能電力",
+    "name": "綠能電力",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
       "id": "exp-tc009-guaranteed-bandwidth",

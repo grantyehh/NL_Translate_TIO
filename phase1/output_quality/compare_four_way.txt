@@ -1,0 +1,46 @@
+Reports
+-------
+LLM-only  : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/output_quality/phase1_llm_only.json
+GraphRag  : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/output_quality/phase1_graphrag.json
+KGE       : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/output_quality/phase1_kge.json
+KAG       : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/output_quality/phase1_kag.json
+Test cases: /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/test_cases_20.json
+
+Four-Way Summary
+----------------
+Experiment     | Cases | Parse OK   | Avg icm  | Avg ontology | Avg metric | Avg JSON nodes | Verbosity OK | Avg node ratio | Intent ID OK
+------------------------------------------------------------------------------------------------------------------------------------------------
+LLM-only       |    20 |     95.00% |   1.0000 |       0.9806 |     1.0000 |          62.75 |      100.00% |         1.0211 |       100.00%
+GraphRag       |    20 |    100.00% |   1.0000 |       0.9861 |     1.0000 |          62.75 |      100.00% |         1.0203 |       100.00%
+KGE            |    20 |    100.00% |   1.0000 |       0.9944 |     1.0000 |          62.90 |      100.00% |         1.0228 |       100.00%
+KAG            |    20 |    100.00% |   0.9900 |       0.9233 |     1.0000 |          61.50 |      100.00% |         0.9978 |       100.00%
+
+Best average ICM coverage       : LLM-only (1.0000)
+Best average ontology coverage  : KGE (0.9944)
+Best average metric coverage    : LLM-only (1.0000)
+Fewest average JSON nodes: KAG (61.50)
+
+Per-Case Four-Way Comparison
+----------------------------
+case_id  |    LLM cov | GraphRag cov |    KGE cov |    KAG cov | winner     |    LLM nodes | GraphRag nodes |    KGE nodes |    KAG nodes | difficulty
+--------------------------------------------------------------------------------------------------------------------------------------
+TC001    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           64 |           57 |           56 | Simple    
+TC002    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           63 |           64 |           61 | Simple    
+TC003    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           64 |           64 |           64 | Simple    
+TC004    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           57 |           64 |           64 | Medium    
+TC005    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           57 |           60 |           60 |           53 | Medium    
+TC006    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           64 |           64 |           68 | Simple    
+TC007    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           64 |           64 |           64 | Medium    
+TC008    |     1.0000 |     1.0000 |     1.0000 |     0.8000 | tie        |           60 |           60 |           60 |           52 | Medium    
+TC009    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           64 |           64 |           68 | Simple    
+TC010    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           60 |           64 |           56 | Medium    
+TC011    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           60 |           60 |           53 | Medium    
+TC012    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           64 |           60 |           64 | Simple    
+TC013    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           60 |           60 |           64 | Medium    
+TC014    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           57 |           60 |           56 | Medium    
+TC015    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           64 |           60 |           60 |           64 | Simple    
+TC016    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           57 |           60 |           49 | Medium    
+TC017    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           57 |           57 |           57 |           56 | Medium    
+TC018    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           64 |           60 |           64 | Simple    
+TC019    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           60 |           64 |           64 |           56 | Medium    
+TC020    |     1.0000 |     1.0000 |     1.0000 |     1.0000 | tie        |           89 |           92 |           92 |           98 | Complex   

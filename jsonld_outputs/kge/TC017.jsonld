@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc017",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure packet loss below 0.15% for 國際會展 enterprise VPN traffic between the hub and all spokes at the 99th percentile.",
+  "description": "Assure packet loss below 0.15% for 國際會展 enterprise VPN traffic from the hub to all spokes at the 99th percentile over five-minute windows.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc017-packet-loss",
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
-      "description": "Guarantee evsla:packetLoss for 國際會展 enterprise VPN service across all spokes.",
+      "description": "Guarantee evsla:packetLoss for 國際會展 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -46,13 +46,7 @@
           "evsla:hasStatistic": "evsla:p99",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "國際會展Hub",
-            "spokes": [
-              "All Spokes"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }
@@ -67,12 +61,7 @@
         "@type": "evsla:HubSite",
         "name": "國際會展Hub"
       },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "All Spokes"
-        }
-      ]
+      "evsla:hasSpoke": []
     }
   ],
   "intentReport": {

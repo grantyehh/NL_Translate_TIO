@@ -1,7 +1,10 @@
+import json
 import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 
 os.environ.setdefault("OPENAI_API_KEY", "test-key")
@@ -40,6 +43,11 @@ class TestGraphRagPaths(unittest.TestCase):
         root = Path("/tmp/example/CHT/GraphRag")
         expected = Path("/tmp/example/CHT/jsonld_outputs/graphrag/TC001.jsonld")
         self.assertEqual(nl_to_tio.output_path_for_case(root, "TC001"), expected)
+
+    def test_token_usage_path_uses_phase1_token_usage_directory(self) -> None:
+        root = Path("/tmp/example/CHT/GraphRag")
+        expected = Path("/tmp/example/CHT/phase1/token_usage/token_usage_graphrag.json")
+        self.assertEqual(nl_to_tio.token_usage_path(root), expected)
 
     def test_system_prompt_requires_json_ld_not_turtle(self) -> None:
         prompt = nl_to_tio.build_system_prompt("TC001")
@@ -80,6 +88,31 @@ class TestGraphRagPaths(unittest.TestCase):
         normalized = nl_to_tio.normalize_jsonld_output(raw)
 
         self.assertIn('"description": "Hub-to-Spoke Packet Loss SLA Expectation"', normalized)
+
+    def test_generate_jsonld_code_records_token_usage(self) -> None:
+        completion = Mock()
+        completion.choices = [Mock(message=Mock(content='{"@context": {}}'))]
+        completion.usage = Mock(prompt_tokens=20, completion_tokens=10, total_tokens=30)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            usage_path = Path(tmp) / "token_usage_graphrag.json"
+            with patch.object(
+                nl_to_tio.client.chat.completions,
+                "create",
+                return_value=completion,
+            ), patch.object(nl_to_tio, "token_usage_path", return_value=usage_path):
+                result = nl_to_tio.generate_jsonld_code(
+                    "確保延遲低於 50ms",
+                    "context",
+                    "TC001",
+                    "",
+                )
+
+            self.assertEqual(result, '{"@context": {}}')
+            rows = json.loads(usage_path.read_text(encoding="utf-8"))
+            self.assertEqual(rows[0]["experiment"], "graphrag")
+            self.assertEqual(rows[0]["stage"], "jsonld_generation")
+            self.assertEqual(rows[0]["total_tokens"], 30)
 
 
 class TestSubgraphRetrievalIntegration(unittest.TestCase):

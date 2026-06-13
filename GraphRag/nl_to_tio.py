@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dotenv import load_dotenv
 from openai import OpenAI
 from evsla_prompt import build_evsla_system_prompt
+from token_usage import record_usage, reset_usage_ledger
 from ontology_graph import (
     build_comment_index,
     build_label_index,
@@ -36,6 +37,7 @@ CHAT_MODEL = "gpt-5.4"
 
 TTL_DIR = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
 EMBED_MODEL = "text-embedding-3-small"
+ACTIVE_CASE_ID: str | None = None
 
 
 def default_test_cases_path(root: Path) -> Path:
@@ -72,6 +74,11 @@ def format_few_shot_block(examples: list[dict]) -> str:
 
 def output_path_for_case(root: Path, tc_id: str) -> Path:
     return root.parent / "jsonld_outputs" / "graphrag" / f"{tc_id}.jsonld"
+
+
+def token_usage_path(root: Path | None = None) -> Path:
+    root = root or Path(__file__).resolve().parent
+    return root.parent / "phase1" / "token_usage" / "token_usage_graphrag.json"
 
 
 def build_system_prompt(tc_id: str) -> str:
@@ -138,6 +145,16 @@ def generate_jsonld_code(nl_intent, context, tc_id, few_shot_block: str):
             ],
             temperature=0,
         )
+        record_usage(
+            token_usage_path(),
+            experiment="graphrag",
+            ledger="online",
+            case_id=tc_id,
+            stage="jsonld_generation",
+            model=CHAT_MODEL,
+            api="chat.completions",
+            response=response,
+        )
         return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
@@ -153,6 +170,16 @@ def _seed_llm_caller(prompt: str) -> str:
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
     )
+    record_usage(
+        token_usage_path(),
+        experiment="graphrag",
+        ledger="online",
+        case_id=ACTIVE_CASE_ID,
+        stage="seed_selection",
+        model=CHAT_MODEL,
+        api="chat.completions",
+        response=response,
+    )
     return (response.choices[0].message.content or "").strip()
 
 
@@ -160,10 +187,21 @@ def _embed_caller(items: list[str]) -> list[list[float]]:
     if not items:
         return []
     resp = client.embeddings.create(model=EMBED_MODEL, input=items)
+    record_usage(
+        token_usage_path(),
+        experiment="graphrag",
+        ledger="online",
+        case_id=ACTIVE_CASE_ID,
+        stage="embedding",
+        model=EMBED_MODEL,
+        api="embeddings",
+        response=resp,
+    )
     return [d.embedding for d in resp.data]
 
 
 def main() -> None:
+    global ACTIVE_CASE_ID
     root = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via GraphRAG + OpenAI.")
     parser.add_argument(
@@ -204,6 +242,7 @@ def main() -> None:
 
     output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
+    reset_usage_ledger(token_usage_path(root), "online")
 
     print("--- Loading TIO ontology and building indexes ---")
     graph = load_ontology(TTL_DIR)
@@ -211,6 +250,7 @@ def main() -> None:
     comment_idx = build_comment_index(graph)
 
     for tc in test_cases:
+        ACTIVE_CASE_ID = tc["id"]
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
         print("--- Retrieving TIO subgraph via typed traversal ---")
@@ -239,6 +279,7 @@ def main() -> None:
                 print("-" * 30)
                 print(jsonld_result)
                 print("-" * 30)
+        ACTIVE_CASE_ID = None
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc004",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure latency below 30 ms at p95 from 康健醫療台北醫療雲中心 to all spoke sites for 康健醫療 enterprise VPN service.",
+  "description": "Assure latency below 30 ms for 95% of measurements from 康健醫療台北醫療雲中心 to all spoke sites of 康健醫療 enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc004-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 康健醫療 enterprise VPN service within the requested hub-and-spoke scope.",
+      "description": "Guarantee evsla:latency for 康健醫療 enterprise VPN service across all spokes.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -46,13 +46,7 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "台北醫療雲中心",
-            "spokes": [
-              "所有院區分點"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }
@@ -65,14 +59,9 @@
       "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "台北醫療雲中心"
+        "name": "康健醫療台北醫療雲中心"
       },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "所有院區分點"
-        }
-      ]
+      "evsla:hasSpoke": []
     }
   ],
   "intentReport": {

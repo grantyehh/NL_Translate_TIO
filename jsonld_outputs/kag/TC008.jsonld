@@ -8,6 +8,11 @@
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant-晶耀半導體",
+    "name": "晶耀半導體",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
       "id": "exp-tc008-packet-loss",
@@ -50,18 +55,7 @@
       "ontologyType": "evsla:SlaExpectation"
     }
   ],
-  "intentContext": [
-    {
-      "id": "tenant-context-tc008",
-      "@type": "Context",
-      "name": "Enterprise VPN Tenant Context",
-      "evsla:forTenant": {
-        "id": "tenant-晶耀半導體",
-        "name": "晶耀半導體",
-        "@type": "evsla:Tenant"
-      }
-    }
-  ],
+  "intentContext": [],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"

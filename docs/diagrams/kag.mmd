@@ -1,0 +1,30 @@
+flowchart TD
+    subgraph Offline["離線準備（一次性建 KG, 30-60 分鐘）"]
+        Docker["docker compose up<br/>OpenSPG + Neo4j + MySQL + MinIO"]
+        Docker --> Schema["knext schema commit<br/>Document / Chunk / Outline /<br/>Summary / Table / AtomicQuery"]
+        Corpus[/"16 份 tio-*.md<br/>(從 tio-agent SKILL.md 來)"/]
+        Corpus --> Split["length_splitter<br/>1000 字 / chunk"]
+        Split --> Ext["5 extractor 各對每 chunk 跑一次<br/>chunk / outline / summary /<br/>table / atomic_query<br/>(4 個會打 LLM)"]
+        Ext --> Vec["batch_vectorizer<br/>所有產物做 embedding"]
+        Vec --> Neo4j[("Neo4j KG<br/>chunks + 4 種輔助節點")]
+        Schema -.-> Neo4j
+    end
+
+    subgraph Online["線上推論（kag_solver_pipeline_tc, static）"]
+        NL[/"NL intent"/]
+        NL --> Plan["Step 1：kag_static_planner<br/>LLM 拆 sub-queries"]
+        Plan --> R5["Step 2：5-way 並行 retrieval"]
+        R5 --> Merger["Step 3：kag_merger<br/>去重 + 排序"]
+        Merger --> Gen["Step 4：TIOJsonldGenerator<br/>KAG 內建 LLM call"]
+        Gen --> Contract["Step 5：ensure_jsonld_contract<br/>補 intentReport"]
+        Contract --> Out[/"TC001.jsonld"/]
+    end
+
+    Neo4j -. r1 atomic_query .-> R5
+    Neo4j -. r2 outline .-> R5
+    Neo4j -. r3 summary .-> R5
+    Neo4j -. r4 vector .-> R5
+    Neo4j -. r5 table .-> R5
+
+    style NL fill:#90EE90,stroke:#333
+    style Out fill:#FFD700,stroke:#333

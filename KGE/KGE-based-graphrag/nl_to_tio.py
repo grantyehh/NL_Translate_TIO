@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from evsla_prompt import build_evsla_system_prompt
 from kge.retrieve import format_kge_context_for_prompt, kge_ready
+from token_usage import record_usage, reset_usage_ledger
 
 # 加載環境變數
 load_dotenv()
@@ -64,6 +65,11 @@ def output_path_for_case(root: Path, tc_id: str) -> Path:
     return root.parent.parent / "jsonld_outputs" / "kge" / f"{tc_id}.jsonld"
 
 
+def token_usage_path(root: Path | None = None) -> Path:
+    root = root or Path(__file__).resolve().parent
+    return root.parent.parent / "phase1" / "token_usage" / "token_usage_kge.json"
+
+
 def build_system_prompt(tc_id: str) -> str:
     return build_evsla_system_prompt(tc_id, retrieval_mode="KGE")
 
@@ -108,6 +114,16 @@ def generate_jsonld_code(
                 {"role": "user", "content": user_content},
             ],
             temperature=0,
+        )
+        record_usage(
+            token_usage_path(),
+            experiment="kge",
+            ledger="online",
+            case_id=tc_id,
+            stage="jsonld_generation",
+            model=CHAT_MODEL,
+            api="chat.completions",
+            response=response,
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -158,6 +174,7 @@ def main() -> None:
 
     output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
+    reset_usage_ledger(token_usage_path(root), "online")
 
     if not kge_ready():
         print(
@@ -169,7 +186,7 @@ def main() -> None:
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
-        kge_context = format_kge_context_for_prompt(tc["nl_intent"])
+        kge_context = format_kge_context_for_prompt(tc["nl_intent"], case_id=tc["id"])
 
         jsonld_result = generate_jsonld_code(
             tc["nl_intent"],

@@ -8,6 +8,11 @@
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant-北辰證券",
+    "name": "北辰證券",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
       "id": "exp-tc006-guaranteed-bandwidth",

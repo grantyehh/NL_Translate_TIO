@@ -50,7 +50,14 @@
       "ontologyType": "evsla:SlaExpectation"
     }
   ],
-  "intentContext": [],
+  "intentContext": [
+    {
+      "id": "topology-tc011",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology"
+    }
+  ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"

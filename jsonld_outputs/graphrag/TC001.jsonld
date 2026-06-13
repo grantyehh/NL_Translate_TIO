@@ -46,14 +46,20 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "星河銀行總部",
+            "spokes": [
+              "所有分點"
+            ]
+          }
         }
       ]
     }
   ],
   "intentContext": [
     {
-      "id": "ctx-tc001-topology",
+      "id": "topology-tc001",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
       "ontologyType": "evsla:HubAndSpokeTopology",
@@ -61,7 +67,12 @@
         "@type": "evsla:HubSite",
         "name": "星河銀行總部"
       },
-      "evsla:hasSpoke": []
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "所有分點"
+        }
+      ]
     }
   ],
   "intentReport": {

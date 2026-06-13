@@ -46,7 +46,7 @@
           "evsla:hasMeasurementMethod": "evsla:twamp",
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
           "scope": {
-            "hub": "雲端教育總部",
+            "hub": "總部",
             "spokes": [
               "所有校區分點"
             ]
@@ -63,7 +63,7 @@
       "name": "Hub-and-Spoke Topology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "雲端教育總部"
+        "name": "總部"
       },
       "evsla:hasSpoke": [
         {

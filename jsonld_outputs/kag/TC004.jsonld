@@ -47,7 +47,9 @@
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
           "scope": {
             "hub": "台北醫療雲中心",
-            "spokes": "all"
+            "spokes": [
+              "所有院區分點"
+            ]
           }
         }
       ],
@@ -63,7 +65,12 @@
         "@type": "evsla:HubSite",
         "name": "台北醫療雲中心"
       },
-      "evsla:hasSpoke": [],
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "所有院區分點"
+        }
+      ],
       "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],

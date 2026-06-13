@@ -46,13 +46,20 @@
           "evsla:hasStatistic": "evsla:minimum",
           "evsla:hasScope": "evsla:specificSpoke",
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "北辰證券總部",
+            "spokes": [
+              "台中交易室"
+            ]
+          }
         }
       ]
     }
   ],
   "intentContext": [
     {
+      "id": "topology-tc006",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
       "ontologyType": "evsla:HubAndSpokeTopology",

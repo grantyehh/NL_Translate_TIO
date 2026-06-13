@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dotenv import load_dotenv
 from openai import OpenAI
 from evsla_prompt import build_evsla_system_prompt
+from token_usage import record_usage, reset_usage_ledger
 
 # 加載環境變數
 load_dotenv()
@@ -64,6 +65,11 @@ def output_path_for_case(root: Path, tc_id: str) -> Path:
     return root.parent / "jsonld_outputs" / "llm_only" / f"{tc_id}.jsonld"
 
 
+def token_usage_path(root: Path | None = None) -> Path:
+    root = root or Path(__file__).resolve().parent
+    return root.parent / "phase1" / "token_usage" / "token_usage_llm_only.json"
+
+
 def build_system_prompt(tc_id: str) -> str:
     return build_evsla_system_prompt(tc_id)
 
@@ -99,6 +105,16 @@ def generate_jsonld_code(nl_intent: str, tc_id: str, few_shot_block: str) -> str
                 {"role": "user", "content": user_content},
             ],
             temperature=0,
+        )
+        record_usage(
+            token_usage_path(),
+            experiment="llm_only",
+            ledger="online",
+            case_id=tc_id,
+            stage="jsonld_generation",
+            model=CHAT_MODEL,
+            api="chat.completions",
+            response=response,
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -150,6 +166,7 @@ def main() -> None:
 
     output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
+    reset_usage_ledger(token_usage_path(root), "online")
 
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")

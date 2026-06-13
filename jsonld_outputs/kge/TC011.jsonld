@@ -18,7 +18,7 @@
     {
       "id": "exp-tc011-packet-loss",
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
-      "description": "Guarantee evsla:packetLoss for 城市交通局 enterprise VPN service across all spokes.",
+      "description": "Guarantee evsla:packetLoss for 城市交通局 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -29,7 +29,7 @@
       },
       "expectationTarget": [
         {
-          "name": "Hub-to-All-Spokes Packet Loss",
+          "name": "Hub-to-Spoke Packet Loss",
           "targetProperty": "evsla:packetLoss",
           "matchCondition": "LESS_THAN",
           "targetValue": {

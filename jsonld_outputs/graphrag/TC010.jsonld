@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc010",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Ensure latency from 迅捷遊戲總部 to all spokes stays below 20 ms for 95% of measurements.",
+  "description": "Ensure latency from 迅捷遊戲總部 to all spokes stays below 20 ms for 95% of the time.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc010-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee latency SLA for 迅捷遊戲 enterprise VPN service across all spokes.",
+      "description": "Guarantee evsla:latency for 迅捷遊戲 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -29,7 +29,7 @@
       },
       "expectationTarget": [
         {
-          "name": "Hub-to-All-Spokes Latency",
+          "name": "Hub-to-Spoke Latency",
           "targetProperty": "evsla:latency",
           "matchCondition": "LESS_THAN",
           "targetValue": {
@@ -46,7 +46,11 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "迅捷遊戲總部",
+            "spokes": []
+          }
         }
       ]
     }

@@ -18,7 +18,7 @@
     {
       "id": "exp-tc010-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 迅捷遊戲 enterprise VPN service across all spokes.",
+      "description": "Guarantee evsla:latency for 迅捷遊戲 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -29,7 +29,7 @@
       },
       "expectationTarget": [
         {
-          "name": "Hub-to-All-Spokes Latency",
+          "name": "Hub-to-Spoke Latency",
           "targetProperty": "evsla:latency",
           "matchCondition": "LESS_THAN",
           "targetValue": {

@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc018",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Guarantee at least 80 Mbps bandwidth from 東岸觀光總部 to 綠島服務站 for 東岸觀光 enterprise VPN service.",
+  "description": "Assure at least 80 Mbps guaranteed bandwidth from 東岸觀光總部 to 綠島服務站 for 東岸觀光 enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc018-guaranteed-bandwidth",
       "name": "Guaranteed Bandwidth SLA Expectation",
-      "description": "Guarantee evsla:guaranteedBandwidth for 東岸觀光 enterprise VPN service to the specified spoke.",
+      "description": "Guarantee evsla:guaranteedBandwidth for 東岸觀光 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -46,13 +46,7 @@
           "evsla:hasStatistic": "evsla:minimum",
           "evsla:hasScope": "evsla:specificSpoke",
           "evsla:hasMeasurementMethod": "evsla:activeMeasurement",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "東岸觀光總部",
-            "spokes": [
-              "綠島服務站"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }

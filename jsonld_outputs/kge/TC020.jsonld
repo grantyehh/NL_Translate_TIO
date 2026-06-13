@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc020",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure latency and packet loss SLA for 精準醫材 enterprise VPN service from 台北研發總部 to 竹北實驗室 and 台南製造廠.",
+  "description": "Assure latency below 35 ms at p95 and packet loss below 0.05% at p99 from 台北研發總部 to all spokes for 精準醫材 enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc020-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 精準醫材 enterprise VPN service within the requested hub-and-spoke scope.",
+      "description": "Guarantee latency SLA for 精準醫材 enterprise VPN service across the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -53,7 +53,7 @@
     {
       "id": "exp-tc020-packet-loss",
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
-      "description": "Guarantee evsla:packetLoss for 精準醫材 enterprise VPN service within the requested hub-and-spoke scope.",
+      "description": "Guarantee packet loss SLA for 精準醫材 enterprise VPN service across the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {

@@ -18,11 +18,6 @@
         "id": "service-智慧農業-enterprise-vpn",
         "name": "智慧農業 Enterprise VPN Service",
         "@type": "Service",
-        "evsla:forTenant": {
-          "id": "tenant-智慧農業",
-          "name": "智慧農業",
-          "@type": "evsla:Tenant"
-        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -44,13 +39,7 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "Hub",
-            "spokes": [
-              "All Spokes"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ],
       "ontologyType": "evsla:SlaExpectation"
@@ -61,16 +50,6 @@
       "id": "topology-tc016",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
-      "evsla:hasHub": {
-        "@type": "evsla:HubSite",
-        "name": "Hub"
-      },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "All Spokes"
-        }
-      ],
       "ontologyType": "evsla:HubAndSpokeTopology"
     }
   ],

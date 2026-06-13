@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc016",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure latency SLA for 智慧農業 enterprise VPN from the hub to all spoke sites with p95 latency below 100 ms.",
+  "description": "Assure latency below 100 ms for 智慧農業 enterprise VPN traffic from the hub to all spokes for 95% of measurements.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc016-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 智慧農業 enterprise VPN service across all spoke sites.",
+      "description": "Guarantee evsla:latency for 智慧農業 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -29,7 +29,7 @@
       },
       "expectationTarget": [
         {
-          "name": "Hub-to-All-Spokes Latency",
+          "name": "Hub-to-Spoke Latency",
           "targetProperty": "evsla:latency",
           "matchCondition": "LESS_THAN",
           "targetValue": {
@@ -53,7 +53,7 @@
   ],
   "intentContext": [
     {
-      "id": "topology-tc016",
+      "id": "ctx-tc016-topology",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
       "ontologyType": "evsla:HubAndSpokeTopology",
@@ -61,7 +61,12 @@
         "@type": "evsla:HubSite",
         "name": "智慧農業Hub"
       },
-      "evsla:hasSpoke": []
+      "evsla:hasSpoke": [
+        {
+          "@type": "evsla:SpokeSite",
+          "name": "Spoke-1"
+        }
+      ]
     }
   ],
   "intentReport": {

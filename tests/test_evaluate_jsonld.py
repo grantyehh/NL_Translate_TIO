@@ -252,7 +252,7 @@ class TestEvaluateJsonLd(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            report_path = root / "phase1" / "phase1_kge.json"
+            report_path = root / "phase1" / "output_quality" / "phase1_kge.json"
 
             with patch.object(evaluate_jsonld, "ROOT", root), redirect_stdout(io.StringIO()):
                 code = evaluate_jsonld.main(["kge"])

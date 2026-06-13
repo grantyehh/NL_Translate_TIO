@@ -2,37 +2,68 @@
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
   "id": "intent-tc017",
-  "name": "Smart Meter Data Daily Success Intent",
-  "description": "Ensure smart meter data is successfully reported at least once daily.",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Ensure packet loss between 國際會展 Hub and all spokes stays below 0.15% for 99% of measurements.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant:國際會展",
+    "name": "國際會展",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
-      "id": "exp-daily-report-01",
-      "name": "Daily Data Reporting Expectation",
-      "description": "Smart meter data must be successfully reported at least once every day.",
+      "id": "exp-tc017-packet-loss",
+      "name": "Hub-to-Spoke Packet Loss SLA Expectation",
+      "description": "Guarantee evsla:packetLoss for 國際會展 enterprise VPN service across the hub-to-all-spokes scope.",
       "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "service-smart-meter-data",
-        "name": "Smart Meter Data Service",
-        "@type": "Service"
+        "id": "svc:國際會展-enterprise-vpn",
+        "name": "國際會展 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
         {
-          "name": "Daily Reporting Success",
-          "targetProperty": "reportingFrequency",
-          "matchCondition": "GREATER_THAN_OR_EQUAL",
+          "name": "Hub-to-Spoke Packet Loss",
+          "targetProperty": "evsla:packetLoss",
+          "matchCondition": "LESS_THAN",
           "targetValue": {
-            "value": 1,
-            "unit": "times_per_day"
-          }
+            "value": 0.15,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:packetLoss",
+          "evsla:hasThreshold": {
+            "value": 0.15,
+            "unit": "%",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p99",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }
   ],
-  "intentContext": [],
+  "intentContext": [
+    {
+      "id": "topology-tc017",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "國際會展Hub"
+      },
+      "evsla:hasSpoke": []
+    }
+  ],
   "intentReport": {
     "reportingInterval": "PT5M",
     "handlerResponse": "Continuous"

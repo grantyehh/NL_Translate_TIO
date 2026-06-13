@@ -18,6 +18,7 @@
     {
       "id": "exp-tc014-packet-loss",
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
+      "description": "Guarantee evsla:packetLoss for 聯合媒體 enterprise VPN service across all spokes.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -58,7 +59,7 @@
       "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "Hub"
+        "name": "聯合媒體Hub"
       },
       "evsla:hasSpoke": [
         {

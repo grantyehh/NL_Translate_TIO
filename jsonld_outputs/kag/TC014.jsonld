@@ -54,7 +54,7 @@
     {
       "id": "tenant-context-tc014",
       "@type": "Context",
-      "name": "Enterprise Tenant Context",
+      "name": "Tenant Context",
       "tenant": {
         "id": "tenant-聯合媒體",
         "name": "聯合媒體",

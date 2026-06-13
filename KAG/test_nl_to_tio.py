@@ -59,6 +59,12 @@ class TestKagNlToTio(unittest.TestCase):
             },
         )
 
+    def test_token_usage_path_uses_phase1_token_usage_directory(self):
+        nl_to_tio = load_module()
+
+        expected = ROOT / "phase1" / "token_usage" / "token_usage_kag.json"
+        self.assertEqual(nl_to_tio.token_usage_path(), expected)
+
 
 if __name__ == "__main__":
     unittest.main()

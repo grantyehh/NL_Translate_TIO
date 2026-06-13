@@ -1,0 +1,28 @@
+flowchart TD
+    subgraph Offline["離線準備（程式啟動時做一次）"]
+        TTL[/"TIO TTL files"/] --> LoadG["load_ontology<br/>合併為 rdflib.Graph"]
+        LoadG --> LabelIdx[("label_index<br/>label → URI")]
+        LoadG --> CommentIdx[("comment_index<br/>URI → rdfs:comment")]
+    end
+
+    subgraph Online["線上推論（每題跑一次）"]
+        NL[/"NL intent"/]
+        NL --> S1["Step 1：LLM 抽 seed terms<br/>過濾掉租戶名 / 數字 / 單位"]
+        S1 --> Seeds["seed terms<br/>['latency', 'p95', 'hub to all spokes', ...]"]
+        Seeds --> S2["Step 2：seed → URI grounding<br/>label 命中為主, embedding fallback"]
+        S2 --> Grounded["grounded URIs<br/>{evsla:latency, evsla:p95, ...}"]
+        Grounded --> S3["Step 3：typed BFS 2-hop<br/>沿 subClassOf / subPropertyOf /<br/>type / domain / range"]
+        S3 --> Triples["子圖 triples (s, p, o)"]
+        Triples --> S4["Step 4：序列化<br/># triples + # comments block"]
+        S4 --> S5["Step 5：主 LLM 生 JSON-LD<br/>gpt-5.4, temperature=0"]
+        S5 --> S6["Step 6：normalize output<br/>補空 description"]
+        S6 --> Out[/"TC001.jsonld"/]
+    end
+
+    LabelIdx -. 查詢 .-> S2
+    CommentIdx -. fallback .-> S2
+    LoadG -. 圖物件 .-> S3
+    NL -. 原始 NL 一併餵進 .-> S5
+
+    style NL fill:#90EE90,stroke:#333
+    style Out fill:#FFD700,stroke:#333

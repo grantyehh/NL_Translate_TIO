@@ -17,6 +17,9 @@ from openai import OpenAI
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
+_REPO_ROOT = _PROJECT_ROOT.parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 from kge.paths import (  # noqa: E402
     ENTITY_IDS_JSON,
@@ -28,6 +31,7 @@ from kge.paths import (  # noqa: E402
     TRIPLES_TSV,
 )
 from kge.tio_triples import entity_text_description, load_merged_ontology_graph  # noqa: E402
+from token_usage import record_usage  # noqa: E402
 
 load_dotenv(_PROJECT_ROOT / ".env")
 
@@ -138,6 +142,17 @@ def _load_triple_rows() -> list[tuple[str, str, str]]:
 
 def _embed_query(client: OpenAI, text: str, model: str) -> np.ndarray:
     resp = client.embeddings.create(model=model, input=text[:8000])
+    case_id = os.getenv("KGE_ACTIVE_CASE_ID")
+    record_usage(
+        _REPO_ROOT / "phase1" / "token_usage" / "token_usage_kge.json",
+        experiment="kge",
+        ledger="online",
+        case_id=case_id,
+        stage="retrieval_embedding",
+        model=model,
+        api="embeddings",
+        response=resp,
+    )
     v = np.asarray(resp.data[0].embedding, dtype=np.float32)
     n = np.linalg.norm(v)
     if n < 1e-12:
@@ -326,6 +341,7 @@ def get_kge_ranked_entities(
     kge_neighbors_per_seed: int = KGE_NEIGHBORS_PER_SEED,
     max_terms: int = MAX_TERMS_IN_PROMPT,
     embedding_model: str | None = None,
+    case_id: str | None = None,
 ) -> list[tuple[str, str, str]]:
     """
     Return list of (curie, full_iri, reason_tag) for prompt injection.
@@ -347,7 +363,17 @@ def get_kge_ranked_entities(
 
     entity_ids, kge_emb, text_emb = _load_arrays()
     client = OpenAI(api_key=api_key)
-    q = _embed_query(client, nl_query, model)
+    previous_case_id = os.getenv("KGE_ACTIVE_CASE_ID")
+    if case_id:
+        os.environ["KGE_ACTIVE_CASE_ID"] = case_id
+    try:
+        q = _embed_query(client, nl_query, model)
+    finally:
+        if case_id:
+            if previous_case_id is None:
+                os.environ.pop("KGE_ACTIVE_CASE_ID", None)
+            else:
+                os.environ["KGE_ACTIVE_CASE_ID"] = previous_case_id
 
     text_scores = text_emb @ q
     seed_indices = _top_k_indices(text_scores, text_top_seed)
@@ -399,13 +425,13 @@ def get_kge_ranked_entities(
     return rows
 
 
-def format_kge_context_for_prompt(nl_query: str) -> str:
+def format_kge_context_for_prompt(nl_query: str, case_id: str | None = None) -> str:
     """
     Human-readable block for LLM: suggested TIO terms from hybrid KGE retrieval.
     Returns empty string if artifacts or API are unavailable.
     """
     try:
-        ranked = get_kge_ranked_entities(nl_query)
+        ranked = get_kge_ranked_entities(nl_query, case_id=case_id)
     except Exception:
         return ""
 

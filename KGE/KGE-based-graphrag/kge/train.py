@@ -25,6 +25,9 @@ from pykeen.triples import TriplesFactory
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
+_REPO_ROOT = _PROJECT_ROOT.parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 from kge.paths import (  # noqa: E402
     ENTITY_IDS_JSON,
@@ -37,8 +40,13 @@ from kge.paths import (  # noqa: E402
     TRIPLES_TSV,
 )
 from kge.tio_triples import build_entity_descriptions, extract_triples_for_kge  # noqa: E402
+from token_usage import record_usage, reset_usage_ledger  # noqa: E402
 
 load_dotenv(_PROJECT_ROOT / ".env")
+
+
+def token_usage_path() -> Path:
+    return _REPO_ROOT / "phase1" / "token_usage" / "token_usage_kge.json"
 
 
 def _write_triples_tsv(rows: list[tuple[str, str, str]], path: Path) -> None:
@@ -63,6 +71,16 @@ def _embed_texts_openai(
         batch = cleaned_texts[i : i + batch_size]
         try:
             resp = client.embeddings.create(model=model, input=batch)
+            record_usage(
+                token_usage_path(),
+                experiment="kge",
+                ledger="prep",
+                case_id=None,
+                stage="text_embedding_artifacts",
+                model=model,
+                api="embeddings",
+                response=resp,
+            )
             by_idx = sorted(enumerate(resp.data), key=lambda x: x[1].index)
             for _, item in by_idx:
                 all_vecs.append(item.embedding)
@@ -70,6 +88,16 @@ def _embed_texts_openai(
             # Recover by embedding each text separately to isolate bad input.
             for one in batch:
                 resp = client.embeddings.create(model=model, input=one)
+                record_usage(
+                    token_usage_path(),
+                    experiment="kge",
+                    ledger="prep",
+                    case_id=None,
+                    stage="text_embedding_artifacts",
+                    model=model,
+                    api="embeddings",
+                    response=resp,
+                )
                 all_vecs.append(resp.data[0].embedding)
     arr = np.asarray(all_vecs, dtype=np.float32)
     norms = np.linalg.norm(arr, axis=1, keepdims=True)
@@ -139,6 +167,7 @@ def main() -> None:
     )
     parser.add_argument("--skip-text-embeddings", action="store_true")
     args = parser.parse_args()
+    reset_usage_ledger(token_usage_path(), "prep")
 
     triples = extract_triples_for_kge()
     if len(triples) < 3:

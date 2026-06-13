@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc004",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure that latency from 康健醫療台北醫療雲中心 to all campus spokes stays below 30 ms for 95% of measurements.",
+  "description": "Assure latency below 30 ms for 康健醫療 enterprise VPN traffic from 台北醫療雲中心 to all spoke sites for 95% of measurements.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -46,7 +46,13 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "台北醫療雲中心",
+            "spokes": [
+              "所有院區分點"
+            ]
+          }
         }
       ]
     }

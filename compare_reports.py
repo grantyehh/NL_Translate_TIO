@@ -10,15 +10,20 @@ from typing import Dict, List
 
 ROOT = Path(__file__).resolve().parent
 PHASE1_DIR = ROOT / "phase1"
+OUTPUT_QUALITY_DIR = PHASE1_DIR / "output_quality"
 DEFAULT_REPORTS = [
-    ("LLM-only", PHASE1_DIR / "phase1_llm_only.json"),
-    ("GraphRag", PHASE1_DIR / "phase1_graphrag.json"),
-    ("KGE", PHASE1_DIR / "phase1_kge.json"),
-    ("KAG", PHASE1_DIR / "phase1_kag.json"),
+    ("LLM-only", OUTPUT_QUALITY_DIR / "phase1_llm_only.json"),
+    ("GraphRag", OUTPUT_QUALITY_DIR / "phase1_graphrag.json"),
+    ("KGE", OUTPUT_QUALITY_DIR / "phase1_kge.json"),
+    ("KAG", OUTPUT_QUALITY_DIR / "phase1_kag.json"),
 ]
 
 
 def load_report(path: Path) -> List[dict]:
+    if not path.is_file() and path.parent.name == "output_quality":
+        legacy_path = PHASE1_DIR / path.name
+        if legacy_path.is_file():
+            path = legacy_path
     with path.open("r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, list):

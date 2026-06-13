@@ -59,7 +59,7 @@
       "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "Hub"
+        "name": "晨星零售Hub"
       },
       "evsla:hasSpoke": [
         {

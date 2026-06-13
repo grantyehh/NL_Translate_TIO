@@ -18,7 +18,7 @@
     {
       "id": "exp-tc008-packet-loss",
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
-      "description": "Guarantee evsla:packetLoss for 晶耀半導體 enterprise VPN service across the hub-and-spoke topology.",
+      "description": "Guarantee evsla:packetLoss for 晶耀半導體 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -53,7 +53,7 @@
   ],
   "intentContext": [
     {
-      "id": "context-tc008-topology",
+      "id": "topology-tc008",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
       "ontologyType": "evsla:HubAndSpokeTopology",

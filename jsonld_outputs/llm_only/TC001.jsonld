@@ -2,31 +2,54 @@
   "@context": "https://tmforum.org/schemas/intent-ontology/v1.jsonld",
   "@type": "Intent",
   "id": "intent-tc001",
-  "name": "5G Slice Service Establishment Intent",
-  "description": "Establish a 5G slice service between Taipei and Taichung.",
+  "name": "Enterprise VPN Hub-Spoke SLA Intent",
+  "description": "Ensure latency from 星河銀行總部 to all spokes stays below 50 ms for 95% of measurements.",
+  "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
     "name": "Network Operations Center"
   },
+  "tenant": {
+    "id": "tenant:星河銀行",
+    "name": "星河銀行",
+    "@type": "evsla:Tenant"
+  },
   "intentExpectation": [
     {
-      "id": "exp-delivery-01",
-      "name": "5G Slice Service Delivery",
-      "description": "Deliver a 5G slice service between Taipei and Taichung.",
-      "@type": "DeliveryExpectation",
+      "id": "exp-tc001-latency",
+      "name": "Hub-to-Spoke Latency SLA Expectation",
+      "description": "Guarantee latency SLA for 星河銀行 enterprise VPN service across all spokes.",
+      "@type": "PropertyExpectation",
+      "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
-        "id": "service-5g-slice",
-        "name": "5G Slice Service",
-        "@type": "Service"
+        "id": "svc:星河銀行-enterprise-vpn",
+        "name": "星河銀行 Enterprise VPN Service",
+        "@type": "Service",
+        "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
         {
-          "name": "Connectivity Scope",
-          "targetProperty": "connectivity",
-          "matchCondition": "EQUALS",
+          "name": "Hub-to-All-Spokes Latency",
+          "targetProperty": "evsla:latency",
+          "matchCondition": "LESS_THAN",
           "targetValue": {
-            "from": "Taipei",
-            "to": "Taichung"
+            "value": 50,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasMetric": "evsla:latency",
+          "evsla:hasThreshold": {
+            "value": 50,
+            "unit": "ms",
+            "@type": "quan:Quantity"
+          },
+          "evsla:hasStatistic": "evsla:p95",
+          "evsla:hasScope": "evsla:hubToAllSpokes",
+          "evsla:hasMeasurementMethod": "evsla:twamp",
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
+          "scope": {
+            "hub": "星河銀行總部",
+            "spokes": []
           }
         }
       ]
@@ -34,10 +57,15 @@
   ],
   "intentContext": [
     {
-      "id": "ctx-location-01",
-      "name": "Geographic Scope",
-      "@type": "LocationContext",
-      "value": "Taipei_to_Taichung"
+      "id": "topology-tc001",
+      "@type": "Context",
+      "name": "Hub-and-Spoke Topology",
+      "ontologyType": "evsla:HubAndSpokeTopology",
+      "evsla:hasHub": {
+        "@type": "evsla:HubSite",
+        "name": "星河銀行總部"
+      },
+      "evsla:hasSpoke": []
     }
   ],
   "intentReport": {

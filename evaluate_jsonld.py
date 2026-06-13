@@ -68,6 +68,10 @@ def phase1_dir() -> Path:
     return ROOT / "phase1"
 
 
+def output_quality_dir() -> Path:
+    return phase1_dir() / "output_quality"
+
+
 def strip_markdown_json_fence(raw: str) -> tuple[str, bool]:
     text = raw.strip()
     if not text.startswith("```"):
@@ -484,7 +488,7 @@ def missing_file_report(path: Path, case_id: str) -> dict[str, Any]:
 def evaluate_experiment(experiment_key: str, test_cases: list[dict[str, Any]]) -> Path | None:
     config = EXPERIMENTS[experiment_key]
     outputs_dir = jsonld_outputs_dir() / config["output_subdir"]
-    report_path = phase1_dir() / config["report_name"]
+    report_path = output_quality_dir() / config["report_name"]
     if not outputs_dir.is_dir():
         print(f"Outputs directory not found: {outputs_dir}", file=sys.stderr)
         return None

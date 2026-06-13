@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc016",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure that latency from the 智慧農業 hub to all spokes stays below 100 ms for 95% of measurements.",
+  "description": "Assure latency below 100 ms at p95 from the 智慧農業 hub to all spokes for the enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,6 @@
     {
       "id": "exp-tc016-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 智慧農業 enterprise VPN service across the hub-and-spoke topology.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -48,7 +47,8 @@
           "evsla:hasMeasurementMethod": "evsla:twamp",
           "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
-      ]
+      ],
+      "description": "Hub-to-Spoke Latency SLA Expectation"
     }
   ],
   "intentContext": [

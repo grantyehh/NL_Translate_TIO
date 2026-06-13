@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc013",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure latency below 60 ms for 95% of measurements from 雲端教育總部 to all campus spokes of 雲端教育 enterprise VPN service.",
+  "description": "Assure 95th percentile hub-to-all-spokes latency below 60 ms for 雲端教育 enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -29,7 +29,7 @@
       },
       "expectationTarget": [
         {
-          "name": "Hub-to-Spoke Latency",
+          "name": "Hub-to-All-Spokes Latency",
           "targetProperty": "evsla:latency",
           "matchCondition": "LESS_THAN",
           "targetValue": {
@@ -46,13 +46,7 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "雲端教育總部",
-            "spokes": [
-              "所有校區分點"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }
@@ -65,7 +59,7 @@
       "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "雲端教育總部"
+        "name": "總部"
       },
       "evsla:hasSpoke": [
         {

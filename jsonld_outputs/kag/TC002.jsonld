@@ -55,6 +55,11 @@
       "id": "ctx-tc002-service",
       "@type": "Context",
       "name": "Enterprise VPN Service Context",
+      "tenant": {
+        "id": "tenant-遠東製造",
+        "name": "遠東製造",
+        "@type": "evsla:Tenant"
+      },
       "service": {
         "id": "service-遠東製造-enterprise-vpn",
         "name": "遠東製造 Enterprise VPN Service",

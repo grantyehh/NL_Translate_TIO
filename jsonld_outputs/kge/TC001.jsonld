@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc001",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure that latency from 星河銀行總部 to all spoke sites stays below 50 ms for 95% of measurements.",
+  "description": "Ensure latency from 星河銀行總部 to all spoke sites stays below 50 ms for 95% of measurements.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc001-latency",
       "name": "Hub-to-Spoke Latency SLA Expectation",
-      "description": "Guarantee evsla:latency for 星河銀行 enterprise VPN service within the requested hub-and-spoke scope.",
+      "description": "Guarantee evsla:latency for 星河銀行 enterprise VPN service across all spokes.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -29,7 +29,7 @@
       },
       "expectationTarget": [
         {
-          "name": "Hub-to-Spoke Latency",
+          "name": "Hub-to-All-Spokes Latency",
           "targetProperty": "evsla:latency",
           "matchCondition": "LESS_THAN",
           "targetValue": {
@@ -46,20 +46,14 @@
           "evsla:hasStatistic": "evsla:p95",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "星河銀行總部",
-            "spokes": [
-              "所有分點"
-            ]
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ]
     }
   ],
   "intentContext": [
     {
-      "id": "topology-tc001",
+      "id": "context-tc001-topology",
       "@type": "Context",
       "name": "Hub-and-Spoke Topology",
       "ontologyType": "evsla:HubAndSpokeTopology",
@@ -67,12 +61,7 @@
         "@type": "evsla:HubSite",
         "name": "星河銀行總部"
       },
-      "evsla:hasSpoke": [
-        {
-          "@type": "evsla:SpokeSite",
-          "name": "所有分點"
-        }
-      ]
+      "evsla:hasSpoke": []
     }
   ],
   "intentReport": {

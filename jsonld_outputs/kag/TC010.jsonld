@@ -52,9 +52,9 @@
   ],
   "intentContext": [
     {
-      "id": "tenant-context-tc010",
+      "id": "ctx-tc010-tenant",
       "@type": "Context",
-      "name": "Enterprise VPN Tenant Context",
+      "name": "Enterprise Tenant Context",
       "tenant": {
         "id": "tenant-迅捷遊戲",
         "name": "迅捷遊戲",

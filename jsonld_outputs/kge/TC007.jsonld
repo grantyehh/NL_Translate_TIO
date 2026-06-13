@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc007",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure latency below 80 ms at the 95th percentile from 海港航運高雄港營運中心 to all port spoke sites.",
+  "description": "Assure latency below 80 ms at p95 from 高雄港營運中心 to all 港站分點 for 海港航運 enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",

@@ -3,7 +3,7 @@
   "@type": "Intent",
   "id": "intent-tc008",
   "name": "Enterprise VPN Hub-Spoke SLA Intent",
-  "description": "Assure packet loss below 0.01% for 晶耀半導體 enterprise VPN traffic between the hub and all spokes at p99 over five-minute windows.",
+  "description": "Assure packet loss below 0.01% at p99 between the hub and all spokes for 晶耀半導體 enterprise VPN service.",
   "ontologyType": "evsla:EnterpriseVpnSlaIntent",
   "intentOwner": {
     "id": "ops-manager-01",
@@ -18,7 +18,7 @@
     {
       "id": "exp-tc008-packet-loss",
       "name": "Hub-to-Spoke Packet Loss SLA Expectation",
-      "description": "Guarantee evsla:packetLoss for 晶耀半導體 enterprise VPN service across all spokes.",
+      "description": "Guarantee evsla:packetLoss for 晶耀半導體 enterprise VPN service within the requested hub-and-spoke scope.",
       "@type": "PropertyExpectation",
       "ontologyType": "evsla:SlaExpectation",
       "expectationObject": {
@@ -29,7 +29,7 @@
       },
       "expectationTarget": [
         {
-          "name": "Hub-to-All-Spokes Packet Loss",
+          "name": "Hub-to-Spoke Packet Loss",
           "targetProperty": "evsla:packetLoss",
           "matchCondition": "LESS_THAN",
           "targetValue": {
@@ -59,7 +59,7 @@
       "ontologyType": "evsla:HubAndSpokeTopology",
       "evsla:hasHub": {
         "@type": "evsla:HubSite",
-        "name": "晶耀半導體Hub"
+        "name": "Hub"
       },
       "evsla:hasSpoke": [
         {

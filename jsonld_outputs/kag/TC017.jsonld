@@ -18,6 +18,11 @@
         "id": "service-國際會展-enterprise-vpn",
         "name": "國際會展 Enterprise VPN Service",
         "@type": "Service",
+        "evsla:forTenant": {
+          "id": "tenant-國際會展",
+          "name": "國際會展",
+          "@type": "evsla:Tenant"
+        },
         "ontologyType": "evsla:EnterpriseVpnService"
       },
       "expectationTarget": [
@@ -39,10 +44,7 @@
           "evsla:hasStatistic": "evsla:p99",
           "evsla:hasScope": "evsla:hubToAllSpokes",
           "evsla:hasMeasurementMethod": "evsla:twamp",
-          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow",
-          "scope": {
-            "hub": "國際會展Hub"
-          }
+          "evsla:hasTimeWindow": "evsla:fiveMinuteWindow"
         }
       ],
       "ontologyType": "evsla:SlaExpectation"
