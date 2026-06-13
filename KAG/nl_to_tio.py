@@ -1,11 +1,11 @@
 """
-NL → TIO JSON-LD via native KAG solver flow(對齊 LLM-only / GraphRag / KGE 的 sibling contract)。
+NL → TIO Turtle via native KAG solver flow(對齊 LLM-only / GraphRag / KGE 的 sibling contract)。
 
 工作流:
   1. 對每筆 test case 的 nl_intent,呼叫 KAG kag_solver_pipeline_tc(static pipeline)
   2. KAG solver 做 planning → retrieval / reasoning executor
-  3. KAG solver 的 generator 階段使用 TIO JSON-LD prompt 產生 final JSON-LD
-  4. 寫到 ../jsonld_outputs/kag/<TCID>.jsonld
+  3. KAG solver 的 generator 階段使用 TIO Turtle prompt 產生 final Turtle
+  4. 寫到 ../tio_outputs/kag/<TCID>.ttl
 
 前置條件:
   - docker stack up(`docker compose -f docker-compose-west.yml up -d`)
@@ -60,7 +60,7 @@ def default_few_shot_path() -> Path:
 
 
 def output_path_for_case(tc_id: str) -> Path:
-    return TIO_EXPERIMENT_ROOT / "jsonld_outputs" / "kag" / f"{tc_id}.jsonld"
+    return TIO_EXPERIMENT_ROOT / "tio_outputs" / "kag" / f"{tc_id}.ttl"
 
 
 def token_usage_path() -> Path:
@@ -88,13 +88,11 @@ def format_few_shot_block(examples: list[dict]) -> str:
     parts: list[str] = []
     for i, ex in enumerate(examples, 1):
         pat = ex.get("pattern", "")
-        jsonld = ex.get("jsonld", {})
-        if not isinstance(jsonld, str):
-            jsonld = json.dumps(jsonld, ensure_ascii=False, indent=2)
+        turtle = ex.get("turtle", "")
         parts.append(
             f"--- Example {i} ({pat}) ---\n"
             f"Natural language:\n{ex.get('nl_intent', '')}\n\n"
-            f"JSON-LD:\n{jsonld}"
+            f"Turtle:\n{turtle}"
         )
     return "\n\n".join(parts)
 
@@ -132,7 +130,7 @@ async def _kag_solve_async(
     few_shot_block: str,
     verbose: bool = False,
 ) -> str:
-    """呼叫 KAG static solver pipeline,回吐 KAG generator 產生的 final JSON-LD。"""
+    """呼叫 KAG static solver pipeline,回吐 KAG generator 產生的 final Turtle。"""
     _ensure_kag_inited()
 
     from kag.common.conf import KAG_CONFIG
@@ -194,16 +192,16 @@ def query_kag(
 
 
 # ─────────────────────────────────────────────────────────────────────
-# JSON-LD generation(對齊 GraphRag 的 context+few-shot 套路)
+# Turtle generation(對齊 GraphRag 的 context+few-shot 套路)
 # ─────────────────────────────────────────────────────────────────────
 
-def generate_jsonld_code(
+def generate_turtle_code(
     nl_intent: str,
     tc_id: str,
     few_shot_block: str,
     verbose: bool = False,
 ) -> str | None:
-    print(f"--- Step 2: Generating TIO JSON-LD inside KAG solver for {tc_id} ---")
+    print(f"--- Step 2: Generating TIO Turtle inside KAG solver for {tc_id} ---")
     return query_kag(
         nl_intent,
         tc_id=tc_id,
@@ -212,30 +210,12 @@ def generate_jsonld_code(
     )
 
 
-def ensure_jsonld_contract(jsonld: str) -> str:
-    """Fill deterministic output-contract fields the KAG generator may omit."""
-    try:
-        data = json.loads(jsonld)
-    except json.JSONDecodeError:
-        return jsonld
-    if not isinstance(data, dict):
-        return jsonld
-
-    if not isinstance(data.get("intentReport"), dict):
-        data["intentReport"] = {
-            "reportingInterval": "PT5M",
-            "handlerResponse": "Continuous",
-        }
-
-    return json.dumps(data, ensure_ascii=False, indent=2)
-
-
 # ─────────────────────────────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="NL to TIO JSON-LD via KAG retrieval.")
+    parser = argparse.ArgumentParser(description="NL to TIO Turtle via KAG retrieval.")
     parser.add_argument("--test-cases", type=Path, default=default_test_cases_path())
     parser.add_argument("--few-shot", type=Path, default=default_few_shot_path())
     parser.add_argument("--no-few-shot", action="store_true")
@@ -246,7 +226,7 @@ def main() -> None:
     parser.add_argument("--from-case", type=str, default=None,
                         help="Process from this TCxxx id onward")
     parser.add_argument("--resume", action="store_true",
-                        help="Skip cases whose output JSON-LD already exists")
+                        help="Skip cases whose output Turtle already exists")
     parser.add_argument("--verbose", action="store_true",
                         help="Print KAG retrieval debug info")
     args = parser.parse_args()
@@ -300,20 +280,19 @@ def main() -> None:
 
         print(f"\n>>> Processing {tc_id}: {nl}")
 
-        jsonld = generate_jsonld_code(
+        turtle = generate_turtle_code(
             nl,
             tc_id,
             few_shot_block,
             verbose=args.verbose,
         )
 
-        if jsonld:
-            jsonld = ensure_jsonld_contract(jsonld)
-            out.write_text(jsonld, encoding="utf-8")
+        if turtle:
+            out.write_text(turtle, encoding="utf-8")
             print(f"Saved → {out}")
             if args.verbose:
                 print("-" * 30)
-                print(jsonld)
+                print(turtle)
                 print("-" * 30)
             success += 1
         else:

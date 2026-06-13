@@ -1,5 +1,4 @@
 import importlib.util
-import json
 import os
 import sys
 import unittest
@@ -26,18 +25,18 @@ def load_module():
 
 
 class TestKagNlToTio(unittest.TestCase):
-    def test_generate_jsonld_code_delegates_to_kag_solver(self):
+    def test_generate_turtle_code_delegates_to_kag_solver(self):
         nl_to_tio = load_module()
 
-        with patch.object(nl_to_tio, "query_kag", return_value='{"@type": "Intent"}') as query_kag:
-            result = nl_to_tio.generate_jsonld_code(
+        with patch.object(nl_to_tio, "query_kag", return_value="ex:i a icm:Intent .") as query_kag:
+            result = nl_to_tio.generate_turtle_code(
                 "確保星河銀行總部至所有分點之延遲低於50ms。",
                 "TC001",
                 "--- Example 1 ---",
                 verbose=True,
             )
 
-        self.assertEqual(result, '{"@type": "Intent"}')
+        self.assertEqual(result, "ex:i a icm:Intent .")
         query_kag.assert_called_once_with(
             "確保星河銀行總部至所有分點之延遲低於50ms。",
             tc_id="TC001",
@@ -45,19 +44,19 @@ class TestKagNlToTio(unittest.TestCase):
             verbose=True,
         )
 
-    def test_ensure_jsonld_contract_adds_missing_intent_report(self):
+    def test_solver_config_uses_turtle_generator(self):
+        config_text = (
+            KAG_ROOT / "example_project" / "kag_config.yaml"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("tio_turtle_generator", config_text)
+        self.assertNotIn("tio_jsonld_generator", config_text)
+
+    def test_output_path_uses_tio_outputs_and_ttl(self):
         nl_to_tio = load_module()
 
-        result = nl_to_tio.ensure_jsonld_contract('{"@type": "Intent"}')
-        data = json.loads(result)
-
-        self.assertEqual(
-            data["intentReport"],
-            {
-                "reportingInterval": "PT5M",
-                "handlerResponse": "Continuous",
-            },
-        )
+        expected = ROOT / "tio_outputs" / "kag" / "TC001.ttl"
+        self.assertEqual(nl_to_tio.output_path_for_case("TC001"), expected)
 
     def test_token_usage_path_uses_phase1_token_usage_directory(self):
         nl_to_tio = load_module()

@@ -15,8 +15,8 @@ KAG 線(NL → TIO JSON-LD)的最小可跑專案。對齊 `LLM-only/`、`GraphRa
 NL intent
   -> kag_static_pipeline planner
   -> kag_hybrid_retrieval_executor
-  -> tio_jsonld_generator
-  -> TIO JSON-LD
+  -> tio_turtle_generator
+  -> TIO Turtle
 ```
 
 `KAG/nl_to_tio.py` 不再把 retrieved chunks 拿出來交給外部 OpenAI call 生成 JSON-LD;final JSON-LD 由 KAG solver 的 generator 階段產生。
@@ -48,7 +48,7 @@ example_project/
 ├── schema/
 │   └── TIO_EVSLA_QA.schema  ← NetOperatorQA 通用 schema(Document/Chunk/Outline/Summary/Table/KnowledgeUnit/AtomicQuery)
 ├── solver/
-│   └── tio_jsonld_generator.py ← KAG generator + prompt,產生 final TIO JSON-LD
+│   └── tio_turtle_generator.py ← KAG generator + prompt,產生 final TIO Turtle
 └── reasoner/                ← (KAG 預設目錄,暫空)
 ```
 

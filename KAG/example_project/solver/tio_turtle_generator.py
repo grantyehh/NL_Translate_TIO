@@ -1,4 +1,3 @@
-import json
 from typing import Any, List
 
 from kag.interface import GeneratorABC, LLMClient, PromptABC
@@ -33,25 +32,26 @@ def build_solver_content(context: Any) -> str:
     graph_data = getattr(context, "variables_graph", None)
     if graph_data:
         task_blocks.append(
-            "KAG graph variables:\n"
-            f"{json.dumps(graph_data, ensure_ascii=False, indent=2, default=str)}"
+            f"KAG graph variables:\n{graph_data}"
         )
 
     return "\n\n".join(block for block in task_blocks if block.strip())
 
 
-@PromptABC.register("tio_jsonld_generator_prompt")
-class TIOJsonldGeneratorPrompt(PromptABC):
+@PromptABC.register("tio_turtle_generator_prompt")
+class TIOTurtleGeneratorPrompt(PromptABC):
     template_en = """You are the final generator inside a KAG solver pipeline for the TIO Experiment.
 
-Use the KAG solver context below as grounded evidence. Generate only one valid TIO JSON-LD object for the current network intent.
+Use the KAG solver context below as grounded evidence. Generate only valid RDF 1.1 Turtle for the current network intent.
 
 Hard requirements:
-- Output JSON only. Do not wrap it in markdown.
-- Top-level @type must be "Intent".
-- Use the API-friendly JSON-LD contract with id, name, description, intentOwner, intentExpectation, intentContext, and intentReport.
-- Prefer EVSLA/TIO terms supported by the KAG context, such as evsla:EnterpriseVpnSlaIntent, evsla:EnterpriseVpnService, evsla:SlaExpectation, evsla:latency, evsla:packetLoss, evsla:guaranteedBandwidth, evsla:p95, evsla:p99, evsla:minimum, evsla:hubToAllSpokes, evsla:specificSpoke, evsla:twamp, evsla:activeMeasurement, and evsla:fiveMinuteWindow.
-- Do not invent ontology URIs that are not supported by the KAG context or the TIO prompt requirements.
+- Output Turtle only. Do not wrap it in markdown or add prose.
+- Use official TIO v3.6.0 namespace IRIs and vocabulary supported by the KAG context.
+- Include an icm:Intent instance whose URI contains the current test case ID.
+- Represent requirements with icm:DeliveryExpectation or icm:PropertyExpectation and bind each expectation to an icm:Target with icm:target.
+- Use icm:Context, log:Condition, and icm:valuesOfTargetProperty when required by the natural language.
+- Comments may supplement structure but must not replace the required TIO classes and properties.
+- Do not invent unofficial TIO predicates.
 
 Few-shot examples for structure only:
 $few_shot_block
@@ -71,20 +71,16 @@ $content
         return ["query", "content", "tc_id", "few_shot_block"]
 
     def is_json_format(self):
-        return True
+        return False
 
     def parse_response(self, response: Any, **kwargs):
-        if isinstance(response, dict):
-            if isinstance(response.get("jsonld"), dict):
-                response = response["jsonld"]
-            return json.dumps(response, ensure_ascii=False, indent=2)
         if isinstance(response, str):
             return response.strip()
-        raise ValueError(f"Unsupported TIO JSON-LD response: {response!r}")
+        raise ValueError(f"Unsupported TIO Turtle response: {response!r}")
 
 
-@GeneratorABC.register("tio_jsonld_generator")
-class TIOJsonldGenerator(GeneratorABC):
+@GeneratorABC.register("tio_turtle_generator")
+class TIOTurtleGenerator(GeneratorABC):
     def __init__(
         self,
         llm_client: LLMClient,
