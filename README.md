@@ -42,17 +42,9 @@ export GRAPHRAG_API_KEY=your_key_here
 export OPENAI_API_KEY=your_key_here
 ```
 
-`GraphRag/` 需要自己的 GraphRAG index。TTL 變更後先用 RDF parser 產生 term-level GraphRAG input,再只在 `GraphRag/` 建一次 index:
+`GraphRag/` 不需要預先建立任何 index:`nl_to_tio.py` 在執行期用 rdflib 直接讀 `TM Forum Intent Ontology/*.ttl`(`ontology_graph.py` + `subgraph_retriever.py`),以 typed traversal 取出子圖 context。無需 `graphrag index`。
 
-```bash
-python3 GraphRag/build_graphrag_input.py
-cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/GraphRag
-graphrag index --root .
-```
-
-`GraphRag/build_graphrag_input.py` 會讀取 `TM Forum Intent Ontology/*.ttl`,保留 `rdfs:comment`、`rdfs:subClassOf`、`rdfs:domain`、`rdfs:range` 等 RDF 結構,輸出到 `graphrag_term_input/`。
-
-KGE 線不查詢 GraphRAG index；它只使用自己的 KGE artifacts。如果 ontology 有變更或 artifacts 不存在,再執行:
+KGE 線同樣只使用自己的 KGE artifacts(由 ontology TTL 訓練而來)。如果 ontology 有變更或 artifacts 不存在,再執行:
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/KGE/KGE-based-graphrag

@@ -21,7 +21,7 @@
 |---|---|---|
 | LLM-only | `LLM-only/` | 純 LLM + few-shot,做 baseline |
 | GraphRAG | `GraphRag/` | **typed RDF traversal**(不是 Microsoft GraphRAG CLI),從 TM Forum Intent Ontology TTL 抓 query-specific subgraph |
-| KGE | `KGE/KGE-based-graphrag/` | text grounding + TransE neighborhood expansion + **link prediction** + LLM。pipeline 在 `kge/`(`paths.py` / `retrieve.py` / `tio_triples.py` / `train.py`);`tio_to_text.py` 把 triple 轉成 text 供 prompt |
+| KGE | `KGE/KGE-based-graphrag/` | text grounding + TransE neighborhood expansion + **link prediction** + LLM。pipeline 在 `kge/`(`paths.py` / `retrieve.py` / `tio_triples.py` / `train.py`) |
 | KAG | `KAG/` | OpenSPG/KAG kg-builder + 5-way solver retrieval(atomic_query / outline / summary / vector / table)+ LLM。後端是 Docker stack(server + Neo4j + MySQL + MinIO) |
 
 此外:
@@ -111,9 +111,6 @@ cd GraphRag && python nl_to_tio.py
 cd KGE/KGE-based-graphrag && python nl_to_tio.py
 # KAG(獨立 venv + Docker stack):見 KAG/example_project/README.md
 
-# 重建 GraphRAG ontology input(TTL 變更時)
-python GraphRag/build_graphrag_input.py
-
 # 重訓 KGE artifacts(TTL 變更或 artifacts 不存在時)
 cd KGE/KGE-based-graphrag && python -m kge.train
 
@@ -129,7 +126,7 @@ cd tio-agent && bun install && OPENAI_API_KEY=sk-... bun run agent
 
 - **新方法 / 改 retrieval 策略前**:先看 `progress.md` 與 `phase1/compare_four_way.txt` 看當前狀態
 - **跨方法比較前**:確認四條線都是相同 model / few-shot 設定下產生,否則結論不可信
-- **改 ontology(TTL)**:要先重建 `graphrag_term_input/`,GraphRAG index 也要重建一次;KGE artifacts 要 retrain
+- **改 ontology(TTL)**:GraphRag 執行期直接讀 TTL,免重建;KGE artifacts 需 retrain(`python -m kge.train`)
 - **重跑實驗後**:同步更新 `progress.md` 的結果表(`compare_four_way.txt` 不會自動 propagate 到文字報告)
 - **commit message**:依現有 git log style,Conventional Commits 但不強制 scope
 

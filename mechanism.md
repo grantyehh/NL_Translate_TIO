@@ -67,7 +67,7 @@ TTL files
 
 **證據**：重寫前 TC001 的 evsla URI 數 = **0** 個（`docs/superpowers/plans/2026-05-19-graphrag-typed-traversal.md` Task 11 step 4 留下的驗收 baseline:`Expected: count >= 5 (was 0 before this refactor)`）。
 
-殘留物：`GraphRag/output/community_reports.parquet`、`entities.parquet`、`relationships.parquet`、`lancedb/`、`settings.yaml`、`cache/` 全部是舊版產出的 artifact，現在 `nl_to_tio.py` 已不 import，留作對照與審計用。
+舊版 Microsoft GraphRAG 的 artifact(`output/*.parquet`、`lancedb/`、`settings.yaml`、`cache/`)已移除;現行 `nl_to_tio.py` 以 rdflib typed traversal 直接讀 ontology TTL,不需要這些。
 
 ### 新版：typed RDF traversal（2026-05-19 重寫）
 
