@@ -1,0 +1,23 @@
+import unittest
+
+from evsla_prompt import build_evsla_system_prompt
+
+
+class TestWeak(unittest.TestCase):
+    def test_weak_drops_domain_knowledge(self):
+        w = build_evsla_system_prompt("TC001", retrieval_mode="GraphRAG", weak_prompt=True)
+        for banned in ["evsla:latency", "evsla:hasMetric", "quan:smaller", "Metric mappings",
+                       "Graph structure", "hubToAllSpokes", "p95"]:
+            self.assertNotIn(banned, w)
+        self.assertIn("Turtle", w)        # output-format kept
+        self.assertIn("tc001", w)         # ex: namespace kept
+        self.assertIn("GraphRAG", w)      # retrieval note kept
+
+    def test_strong_unchanged(self):
+        s = build_evsla_system_prompt("TC001")
+        self.assertIn("evsla:hasMetric", s)
+        self.assertIn("quan:smaller", s)
+
+
+if __name__ == "__main__":
+    unittest.main()

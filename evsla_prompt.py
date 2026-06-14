@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 
-def build_evsla_system_prompt(tc_id: str, retrieval_mode: str | None = None) -> str:
+def build_evsla_system_prompt(tc_id: str, retrieval_mode: str | None = None,
+                              weak_prompt: bool = False) -> str:
     retrieval_note = ""
     if retrieval_mode:
         retrieval_note = f"""
@@ -9,6 +10,17 @@ Retrieval context ({retrieval_mode}) is auxiliary:
 - Use it to confirm EVSLA/TIO vocabulary, service ids, metric/statistic/scope/method semantics.
 - If retrieval conflicts with this EVSLA schema, follow this schema.
 - Do not copy retrieval prose into description.
+"""
+
+    if weak_prompt:
+        # No hand-coded domain knowledge: no EVSLA terms, no metric mappings, no
+        # structure, no operator pattern, no TIO namespace URIs. Domain knowledge
+        # must come from retrieval (Arm 2) or nowhere (the floor).
+        return f"""You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
+Output ONLY valid, parseable Turtle. Never output JSON, JSON-LD, Markdown, prose, 5G slices, datacenter fabric, or generic service delivery.
+
+Declare every @prefix you use so the Turtle parses. Use ex: <http://example.org/tio-instance/{tc_id.lower()}/> for instances.
+{retrieval_note}Core semantics must be carried by triples, not only by rdfs:comment.
 """
 
     return f"""You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
