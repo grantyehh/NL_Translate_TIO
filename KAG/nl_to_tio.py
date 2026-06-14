@@ -46,6 +46,8 @@ if not API_KEY:
     sys.exit(1)
 CHAT_MODEL = os.getenv("GRAPHRAG_LLM_MODEL", "gpt-5.4")
 
+WEAK = False  # set True by --weak-prompt: no few-shot + _weak outputs (weak generator prompt via TIO_GENERATOR_PROMPT)
+
 
 # ─────────────────────────────────────────────────────────────────────
 # Path helpers (相容於 run_all_experiments.py 與其他 pipeline)
@@ -60,7 +62,7 @@ def default_few_shot_path() -> Path:
 
 
 def output_path_for_case(tc_id: str) -> Path:
-    return TIO_EXPERIMENT_ROOT / "tio_outputs" / "kag" / f"{tc_id}.ttl"
+    return TIO_EXPERIMENT_ROOT / "tio_outputs" / ("kag" + ("_weak" if WEAK else "")) / f"{tc_id}.ttl"
 
 
 def token_usage_path() -> Path:
@@ -154,7 +156,7 @@ async def _kag_solve_async(
             stat = LLMClient.get_token_meter().to_dict()
         record_usage_counts(
             token_usage_path(),
-            experiment="kag",
+            experiment="kag" + ("_weak" if WEAK else ""),
             ledger="online",
             case_id=tc_id,
             stage="kag_solver",
@@ -229,7 +231,14 @@ def main() -> None:
                         help="Skip cases whose output Turtle already exists")
     parser.add_argument("--verbose", action="store_true",
                         help="Print KAG retrieval debug info")
+    parser.add_argument("--weak-prompt", action="store_true",
+                        help="No few-shot + _weak outputs (weak generator prompt via TIO_GENERATOR_PROMPT)")
     args = parser.parse_args()
+
+    global WEAK
+    WEAK = args.weak_prompt
+    if args.weak_prompt:
+        args.no_few_shot = True
 
     with open(args.test_cases, encoding="utf-8") as f:
         test_cases = json.load(f)

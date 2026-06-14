@@ -115,6 +115,28 @@ $content
         raise ValueError(f"Unsupported TIO Turtle response: {response!r}")
 
 
+@PromptABC.register("tio_turtle_generator_prompt_weak")
+class TIOTurtleGeneratorPromptWeak(TIOTurtleGeneratorPrompt):
+    """Weak variant: no EVSLA structure / metric mappings / comparison-direction /
+    TIO namespace URIs. Domain knowledge must come from the KAG solver context."""
+    template_en = """You are the final generator inside a KAG solver pipeline for the TIO Experiment.
+You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
+Use the KAG solver context below as grounded evidence. Output ONLY valid, parseable Turtle.
+Never output JSON, JSON-LD, Markdown, prose, 5G slices, datacenter fabric, or generic service delivery.
+Declare every @prefix you use so the Turtle parses. Use ex: with the current test case ID for instances.
+Core semantics must be carried by triples, not only by rdfs:comment.
+
+Current test case ID: $tc_id
+
+Natural language intent:
+$query
+
+KAG solver context:
+$content
+"""
+    template_zh = template_en
+
+
 @GeneratorABC.register("tio_turtle_generator")
 class TIOTurtleGenerator(GeneratorABC):
     def __init__(

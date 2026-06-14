@@ -236,7 +236,7 @@ kag_solver_pipeline_tc:
     type: tio_turtle_generator
     llm_client: *chat_llm
     generated_prompt:
-      type: tio_turtle_generator_prompt
+      type: {{ TIO_GENERATOR_PROMPT | default("tio_turtle_generator_prompt") }}
 #------------kag-solver configuration end----------------#
 
 
@@ -258,4 +258,4 @@ kag_solver_pipeline:
     type: tio_turtle_generator
     llm_client: *chat_llm
     generated_prompt:
-      type: tio_turtle_generator_prompt
+      type: {{ TIO_GENERATOR_PROMPT | default("tio_turtle_generator_prompt") }}
