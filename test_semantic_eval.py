@@ -100,12 +100,51 @@ ex:tgt-bw a icm:Target ; evsla:hasMetric evsla:guaranteedBandwidth .
         self.assertEqual(r["precision"]["hallucination_count"], 1)
         self.assertLess(r["dimensions"]["precision"], 1.0)
 
-    def test_operator_detected_when_present(self):
-        with_op = GOOD_TTL.replace(
-            "evsla:hasTimeWindow evsla:fiveMinuteWindow .",
-            "evsla:hasTimeWindow evsla:fiveMinuteWindow ; evsla:hasCondition [ a quan:smaller ] .")
-        g = Graph(); g.parse(data=with_op, format="turtle")
-        self.assertEqual(score_semantics(g, GOLD_TC001)["dimensions"]["operator"], 1.0)
+
+OP_TTL = """
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log:   <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/tc001/> .
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency .
+ex:tenant a evsla:Tenant ; rdfs:label "星河銀行"@zh .
+ex:cond-latency a log:Condition ;
+  quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+ex:obs-latency a met:Observation ; met:observedMetric evsla:latency .
+ex:obs-latency-value a quan:Quantity ; met:observedValue ( ex:obs-latency ) .
+ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ; icm:target ex:tgt-latency .
+ex:tgt-latency a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  evsla:hasThreshold ex:thr-latency ;
+  icm:valuesOfTargetProperty ex:thr-latency ;
+  evsla:hasStatistic evsla:p95 ; evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ; evsla:hasTimeWindow evsla:fiveMinuteWindow .
+ex:thr-latency a quan:Quantity ; rdf:value 50 ; quan:unit "ms" .
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "總部"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "所有分點"@zh ] .
+"""
+
+
+class TestOperator(unittest.TestCase):
+    def test_operator_correct_function_bound_to_threshold(self):
+        g = Graph(); g.parse(data=OP_TTL, format="turtle")
+        r = score_semantics(g, GOLD_TC001)["dimensions"]
+        self.assertEqual(r["operator"], 1.0)
+        self.assertEqual(r["threshold"], 1.0)   # still read from the named threshold node
+
+    def test_operator_wrong_function_scores_zero(self):
+        g = Graph(); g.parse(data=OP_TTL.replace("quan:smaller", "quan:atLeast"), format="turtle")
+        self.assertEqual(score_semantics(g, GOLD_TC001)["dimensions"]["operator"], 0.0)
+
+    def test_operator_absent_scores_zero(self):
+        g = Graph(); g.parse(data=GOOD_TTL, format="turtle")
+        self.assertEqual(score_semantics(g, GOLD_TC001)["dimensions"]["operator"], 0.0)
 
 
 if __name__ == "__main__":

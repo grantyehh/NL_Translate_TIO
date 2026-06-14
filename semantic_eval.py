@@ -48,29 +48,42 @@ def _obj(g, s, p):
     return None
 
 
-def _threshold(g, target):
+def _threshold_node(g, target):
     for p in (EVSLA.hasThreshold, ICM.valuesOfTargetProperty):
         q = _obj(g, target, p)
-        if q is not None:
-            val = _obj(g, q, RDF.value)
-            if val is not None:
-                return val, _obj(g, q, QUAN.unit)
+        if q is not None and _obj(g, q, RDF.value) is not None:
+            return q
+    return None
+
+
+def _threshold(g, target):
+    q = _threshold_node(g, target)
+    if q is not None:
+        return _obj(g, q, RDF.value), _obj(g, q, QUAN.unit)
     return None, None
 
 
-def _subgraph_terms(g, root, depth=5):
-    """All predicates + URIRef objects reachable from root up to `depth` hops."""
-    seen, frontier = set(), [root]
-    while frontier and depth >= 0:
-        nxt = []
-        for n in frontier:
-            for p, o in g.predicate_objects(n):
-                seen.add(p)
-                if isinstance(o, URIRef):
-                    seen.add(o)
-                nxt.append(o)
-        frontier, depth = nxt, depth - 1
-    return seen
+def _list_members(g, head):
+    """Walk an rdf:List (rdf:first/rdf:rest) and return its member nodes."""
+    out, seen = [], set()
+    while head is not None and head != RDF.nil and head not in seen:
+        seen.add(head)
+        first = _obj(g, head, RDF.first)
+        if first is not None:
+            out.append(first)
+        head = _obj(g, head, RDF.rest)
+    return out
+
+
+def _operator_ok(g, expected_fn, thr_node):
+    """True if the expected comparison function is applied (as a predicate over an
+    rdf:List) to an argument list that includes this metric's threshold node."""
+    if expected_fn is None or thr_node is None:
+        return 0.0
+    for _s, lst in g.subject_objects(expected_fn):
+        if thr_node in _list_members(g, lst):
+            return 1.0
+    return 0.0
 
 
 def extract_bindings(g):
@@ -139,7 +152,7 @@ def _score_one_metric(g, pm, bindings, errors):
         if not ok:
             errors.append(f"{key} {pm['ontology_term']}: expected {pm[key]}, got {b.get(attr)}")
     expected_fn = OPERATOR_FN.get(pm.get("operator"))
-    d["operator"] = 1.0 if expected_fn in _subgraph_terms(g, b["expectation"]) else 0.0
+    d["operator"] = _operator_ok(g, expected_fn, _threshold_node(g, b["target"]))
     return d
 
 
