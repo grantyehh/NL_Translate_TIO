@@ -19,6 +19,8 @@ from pathlib import Path
 from rdflib import Graph, Namespace, URIRef
 from rdflib.namespace import RDF, RDFS
 
+from semantic_eval import score_semantics
+
 ROOT = Path(__file__).resolve().parent
 ONTOLOGY_DIR = ROOT / "TM Forum Intent Ontology"
 
@@ -147,6 +149,7 @@ def evaluate_file(
     case_id: str,
     ref_classes: set[URIRef] | None = None,
     ref_properties: set[URIRef] | None = None,
+    gold_case: dict | None = None,
 ) -> dict:
     if ref_classes is None or ref_properties is None:
         ref_classes, ref_properties = reference_vocabulary()
@@ -222,6 +225,9 @@ def evaluate_file(
                 intent_uri_hint_ok = True
                 break
 
+    semantic = (score_semantics(g, gold_case)
+                if (parse_error is None and gold_case) else None)
+
     return {
         "file": str(path),
         "case_id": case_id,
@@ -239,6 +245,7 @@ def evaluate_file(
             else None
         ),
         "intent_uri_contains_case_id": intent_uri_hint_ok,
+        "semantic": semantic,
     }
 
 
@@ -271,7 +278,7 @@ def evaluate_experiment(experiment_key: str, test_cases: list[dict]) -> Path:
                             "triple_count": 0, "expected_results": [],
                             "expected_coverage_ratio": None})
             continue
-        reports.append(evaluate_file(path, tc.get("expected_tio_elements", []), tc_id))
+        reports.append(evaluate_file(path, tc.get("expected_tio_elements", []), tc_id, gold_case=tc))
 
     print(f"\n## {config['label']}")
     for row in reports:
