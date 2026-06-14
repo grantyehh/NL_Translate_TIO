@@ -258,6 +258,14 @@ EXPERIMENTS = {
             "report": ROOT / "phase1" / "phase1_kge.json"},
     "kag": {"label": "KAG", "outputs_dir": ROOT / "tio_outputs" / "kag",
             "report": ROOT / "phase1" / "phase1_kag.json"},
+    "llm_only_weak": {"label": "LLM-only-weak", "outputs_dir": ROOT / "tio_outputs" / "llm_only_weak",
+                      "report": ROOT / "phase1" / "phase1_llm_only_weak.json"},
+    "graphrag_weak": {"label": "GraphRAG-weak", "outputs_dir": ROOT / "tio_outputs" / "graphrag_weak",
+                      "report": ROOT / "phase1" / "phase1_graphrag_weak.json"},
+    "kge_weak": {"label": "KGE-weak", "outputs_dir": ROOT / "tio_outputs" / "kge_weak",
+                 "report": ROOT / "phase1" / "phase1_kge_weak.json"},
+    "kag_weak": {"label": "KAG-weak", "outputs_dir": ROOT / "tio_outputs" / "kag_weak",
+                 "report": ROOT / "phase1" / "phase1_kag_weak.json"},
 }
 
 
