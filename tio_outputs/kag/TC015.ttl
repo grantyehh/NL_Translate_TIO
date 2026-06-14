@@ -1,12 +1,14 @@
 @prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
 @prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log:   <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ex:    <http://example.org/tio-instance/TC015/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
-  icm:intentElements ex:exp-bandwidth, ex:topology ;
+  icm:intentElements ex:exp-bandwidth, ex:cond-bandwidth, ex:topology ;
   rdfs:comment "Assure minimum guaranteed bandwidth to a specific spoke for 亞洲航空維修 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
@@ -21,12 +23,25 @@ ex:exp-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
 
 ex:tgt-bandwidth a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
-  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 300 ; quan:unit "Mbps" ] ;
-  evsla:hasThreshold [ a quan:Quantity ; rdf:value 300 ; quan:unit "Mbps" ] ;
+  icm:valuesOfTargetProperty ex:thr-bandwidth ;
+  evsla:hasThreshold ex:thr-bandwidth ;
   evsla:hasStatistic evsla:minimum ;
   evsla:hasScope evsla:specificSpoke ;
   evsla:hasMeasurementMethod evsla:activeMeasurement ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-bandwidth a quan:Quantity ;
+  rdf:value 300 ;
+  quan:unit "Mbps" .
+
+ex:cond-bandwidth a log:Condition ;
+  quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth a met:Observation ;
+  met:observedMetric evsla:guaranteedBandwidth .
+
+ex:obs-bandwidth-value a quan:Quantity ;
+  met:observedValue ( ex:obs-bandwidth ) .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "總部"@zh ] ;

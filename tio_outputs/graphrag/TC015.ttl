@@ -1,13 +1,15 @@
 @prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
 @prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log:   <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ex:    <http://example.org/tio-instance/tc015/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
-  icm:intentElements ex:exp-guaranteed-bandwidth, ex:topology ;
-  rdfs:comment "Assure minimum guaranteed bandwidth to a specific spoke for 亞洲航空維修 enterprise VPN."@en .
+  icm:intentElements ex:exp-guaranteed-bandwidth, ex:cond-guaranteed-bandwidth, ex:topology ;
+  rdfs:comment "Assure minimum guaranteed bandwidth from hub to a specific spoke for 亞洲航空維修 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "亞洲航空維修"@zh .
@@ -21,13 +23,26 @@ ex:exp-guaranteed-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
 
 ex:tgt-guaranteed-bandwidth a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
-  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 300 ; quan:unit "Mbps" ] ;
-  evsla:hasThreshold [ a quan:Quantity ; rdf:value 300 ; quan:unit "Mbps" ] ;
+  icm:valuesOfTargetProperty ex:thr-guaranteed-bandwidth ;
+  evsla:hasThreshold ex:thr-guaranteed-bandwidth ;
   evsla:hasStatistic evsla:minimum ;
   evsla:hasScope evsla:specificSpoke ;
   evsla:hasMeasurementMethod evsla:activeMeasurement ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
+ex:thr-guaranteed-bandwidth a quan:Quantity ;
+  rdf:value 300 ;
+  quan:unit "Mbps" .
+
+ex:cond-guaranteed-bandwidth a log:Condition ;
+  quan:atLeast ( ex:obs-guaranteed-bandwidth-value ex:thr-guaranteed-bandwidth ) .
+
+ex:obs-guaranteed-bandwidth a met:Observation ;
+  met:observedMetric evsla:guaranteedBandwidth .
+
+ex:obs-guaranteed-bandwidth-value a quan:Quantity ;
+  met:observedValue ( ex:obs-guaranteed-bandwidth ) .
+
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub [ a evsla:HubSite ; rdfs:label "維修總部"@zh ] ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "亞洲航空維修總部"@zh ] ;
   evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "小港機棚"@zh ] .

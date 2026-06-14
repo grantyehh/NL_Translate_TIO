@@ -5,11 +5,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 32,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -23,7 +28,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -60,7 +67,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.871,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -68,9 +75,9 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
-        "topology": 0.0,
+        "topology": 1.0,
         "contract": 1.0,
         "precision": 1.0
       },
@@ -87,11 +94,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 32,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -105,7 +117,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -142,7 +156,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.871,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -150,9 +164,9 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
-        "topology": 0.0,
+        "topology": 1.0,
         "contract": 1.0,
         "precision": 1.0
       },
@@ -169,11 +183,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -187,7 +206,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -218,7 +239,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -226,7 +247,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -245,11 +266,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -263,7 +289,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -300,7 +328,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -308,7 +336,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -327,11 +355,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -345,7 +378,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -382,7 +417,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -390,7 +425,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -409,11 +444,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -427,7 +467,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -458,7 +500,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -466,7 +508,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -485,11 +527,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -503,7 +550,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -540,7 +589,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -548,7 +597,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -567,11 +616,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -585,7 +639,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -622,7 +678,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -630,7 +686,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -649,11 +705,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -667,7 +728,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -698,7 +761,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -706,7 +769,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -725,11 +788,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 48,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -743,7 +811,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -780,7 +850,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -788,7 +858,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -807,11 +877,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 48,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -825,7 +900,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -862,7 +939,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -870,7 +947,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -889,11 +966,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -907,7 +989,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -938,7 +1022,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -946,7 +1030,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -965,11 +1049,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -983,7 +1072,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1020,7 +1111,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1028,7 +1119,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -1047,11 +1138,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -1065,7 +1161,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1102,7 +1200,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1110,7 +1208,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -1129,11 +1227,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -1147,7 +1250,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1178,7 +1283,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1186,7 +1291,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -1205,11 +1310,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -1223,7 +1333,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1260,7 +1372,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1268,7 +1380,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -1287,11 +1399,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 32,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -1305,7 +1422,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1342,7 +1461,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.871,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1350,9 +1469,9 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
-        "topology": 0.0,
+        "topology": 1.0,
         "contract": 1.0,
         "precision": 1.0
       },
@@ -1369,11 +1488,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -1387,7 +1511,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1418,7 +1544,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1426,7 +1552,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,
@@ -1445,11 +1571,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 32,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -1463,7 +1594,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1500,7 +1633,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.871,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1508,9 +1641,9 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
-        "topology": 0.0,
+        "topology": 1.0,
         "contract": 1.0,
         "precision": 1.0
       },
@@ -1527,11 +1660,16 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 57,
+    "triple_count": 77,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
       "evsla": {
@@ -1545,7 +1683,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1582,7 +1722,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -1590,7 +1730,7 @@
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
-        "operator": 0.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
         "contract": 1.0,

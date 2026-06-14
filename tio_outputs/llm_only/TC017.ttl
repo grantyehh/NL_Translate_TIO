@@ -1,12 +1,14 @@
 @prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
 @prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log:   <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ex:    <http://example.org/tio-instance/tc017/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
-  icm:intentElements ex:exp-packet-loss, ex:topology ;
+  icm:intentElements ex:exp-packet-loss, ex:cond-packet-loss, ex:topology ;
   rdfs:comment "Assure hub-to-all-spokes packet loss SLA for 國際會展 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
@@ -21,13 +23,26 @@ ex:exp-packet-loss a icm:PropertyExpectation, evsla:SlaExpectation ;
 
 ex:tgt-packet-loss a icm:Target ;
   evsla:hasMetric evsla:packetLoss ;
-  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 0.15 ; quan:unit "%" ] ;
-  evsla:hasThreshold [ a quan:Quantity ; rdf:value 0.15 ; quan:unit "%" ] ;
+  icm:valuesOfTargetProperty ex:thr-packet-loss ;
+  evsla:hasThreshold ex:thr-packet-loss ;
   evsla:hasStatistic evsla:p99 ;
   evsla:hasScope evsla:hubToAllSpokes ;
   evsla:hasMeasurementMethod evsla:twamp ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
+ex:thr-packet-loss a quan:Quantity ;
+  rdf:value 0.15 ;
+  quan:unit "%" .
+
+ex:cond-packet-loss a log:Condition ;
+  quan:smaller ( ex:obs-packet-loss-value ex:thr-packet-loss ) .
+
+ex:obs-packet-loss a met:Observation ;
+  met:observedMetric evsla:packetLoss .
+
+ex:obs-packet-loss-value a quan:Quantity ;
+  met:observedValue ( ex:obs-packet-loss ) .
+
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "國際會展Hub"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "各Spoke"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 1"@zh ] .

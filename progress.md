@@ -180,6 +180,37 @@ KGE        |  0.9226   | operator 0.00 ; topology 0.80 (TC001/002/017/019)
   precision)四條都滿分 —— strong prompt 已手寫保證,差異只在 prompt 未管的 topology
   完整性與 operator。
 
+> 上表是 **operator 尚未進 gold(commit `2e20eb8`)** 的基線:operator 全 0、composite ~0.92–0.94。
+
+## Experiment Architecture 1 — strong prompt + operator-in-gold (2026-06-15)
+
+把**顯式比較方向(operator)**寫進 gold few-shot + 兩個生成 prompt(TIO-忠實 pattern:
+`log:Condition` 以 `quan:smaller`/`quan:atLeast` 當謂詞,套用到 `met:observedValue` 取出的
+觀測量與共用 threshold 節點;spec `2026-06-15-operator-pattern-design.md`)。四條全用
+strong prompt + operator-enriched few-shot 重生成,嚴格語意評分器(11 維度)結果:
+
+```text
+Line     | Parse | Composite | operator | topology | (其餘 9 維度)
+LLM-only |  100% |  1.0000   |   1.00   |   1.00   | 全 1.00
+GraphRag |  100% |  1.0000   |   1.00   |   1.00   | 全 1.00
+KGE      |  100% |  1.0000   |   1.00   |   1.00   | 全 1.00
+KAG      |  100% |  0.9968   |   1.00   |   0.95   | 全 1.00  (TC010 拓樸缺 spoke)
+
+tokens   | total     | per_case
+LLM-only |  104,438  |  5,221
+GraphRag |  509,809  | 25,490   (~4.9× LLM-only;retrieval context 灌爆 input)
+KGE      |  121,412  |  6,070
+KAG      |  124,479  |  6,223
+```
+
+關鍵發現:
+- **operator 從 0/20 → 20/20(四條全學會)** —— 模型能從 few-shot 學會那個 TTL 從未示範、
+  我們自訂的複雜 `log:Condition` 套用 pattern。證明「few-shot 教得會組裝」。
+- 加 operator 後四條 composite 反而**逼近滿分**(因為 operator 這個原本全 0 的維度被補上)。
+  KGE 先前的 topology 殘缺(0.80)在這輪重生成也補齊了;只剩 KAG TC010 一題缺 spoke。
+- token 因 few-shot 變豐富(多了 condition 區塊)整體上升 ~20–25%。
+- **這是「強配方」基線**,將與架構二(weak 配方)做 CP 對決。
+
 ## Current Token Usage Evaluation
 
 目前 `phase1/token_usage/compare_token_usage.txt` 結果(2026-06-13 本輪)：

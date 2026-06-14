@@ -18,9 +18,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4022,
-    "output_tokens": 1142,
-    "total_tokens": 5164,
+    "input_tokens": 4921,
+    "output_tokens": 1422,
+    "total_tokens": 6343,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -30,9 +30,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4035,
-    "output_tokens": 1293,
-    "total_tokens": 5328,
+    "input_tokens": 4938,
+    "output_tokens": 1660,
+    "total_tokens": 6598,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -42,9 +42,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4015,
-    "output_tokens": 1003,
-    "total_tokens": 5018,
+    "input_tokens": 4912,
+    "output_tokens": 1079,
+    "total_tokens": 5991,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -54,9 +54,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4044,
-    "output_tokens": 1424,
-    "total_tokens": 5468,
+    "input_tokens": 4939,
+    "output_tokens": 1390,
+    "total_tokens": 6329,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -66,9 +66,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4032,
-    "output_tokens": 1199,
-    "total_tokens": 5231,
+    "input_tokens": 4929,
+    "output_tokens": 1428,
+    "total_tokens": 6357,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -78,9 +78,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4010,
-    "output_tokens": 854,
-    "total_tokens": 4864,
+    "input_tokens": 4908,
+    "output_tokens": 1038,
+    "total_tokens": 5946,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -90,9 +90,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4042,
-    "output_tokens": 1337,
-    "total_tokens": 5379,
+    "input_tokens": 4938,
+    "output_tokens": 1504,
+    "total_tokens": 6442,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -102,9 +102,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4034,
-    "output_tokens": 1228,
-    "total_tokens": 5262,
+    "input_tokens": 4934,
+    "output_tokens": 1516,
+    "total_tokens": 6450,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -114,9 +114,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4015,
-    "output_tokens": 976,
-    "total_tokens": 4991,
+    "input_tokens": 4912,
+    "output_tokens": 1113,
+    "total_tokens": 6025,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -126,9 +126,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4027,
-    "output_tokens": 1231,
-    "total_tokens": 5258,
+    "input_tokens": 4923,
+    "output_tokens": 1319,
+    "total_tokens": 6242,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -138,9 +138,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4030,
-    "output_tokens": 1207,
-    "total_tokens": 5237,
+    "input_tokens": 4922,
+    "output_tokens": 1254,
+    "total_tokens": 6176,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -150,9 +150,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4016,
-    "output_tokens": 908,
-    "total_tokens": 4924,
+    "input_tokens": 4909,
+    "output_tokens": 950,
+    "total_tokens": 5859,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -162,9 +162,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4034,
-    "output_tokens": 1328,
-    "total_tokens": 5362,
+    "input_tokens": 4927,
+    "output_tokens": 1288,
+    "total_tokens": 6215,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -174,9 +174,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4029,
-    "output_tokens": 1168,
-    "total_tokens": 5197,
+    "input_tokens": 4929,
+    "output_tokens": 1361,
+    "total_tokens": 6290,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -186,9 +186,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4014,
-    "output_tokens": 1029,
-    "total_tokens": 5043,
+    "input_tokens": 4908,
+    "output_tokens": 1107,
+    "total_tokens": 6015,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -198,9 +198,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4020,
-    "output_tokens": 1083,
-    "total_tokens": 5103,
+    "input_tokens": 4914,
+    "output_tokens": 1162,
+    "total_tokens": 6076,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -210,9 +210,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4031,
-    "output_tokens": 1193,
-    "total_tokens": 5224,
+    "input_tokens": 4929,
+    "output_tokens": 1398,
+    "total_tokens": 6327,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -222,9 +222,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4013,
-    "output_tokens": 964,
-    "total_tokens": 4977,
+    "input_tokens": 4908,
+    "output_tokens": 1026,
+    "total_tokens": 5934,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -234,9 +234,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4019,
-    "output_tokens": 975,
-    "total_tokens": 4994,
+    "input_tokens": 4917,
+    "output_tokens": 1107,
+    "total_tokens": 6024,
     "usage_source": "kag.LLMClient.TokenMeter"
   },
   {
@@ -246,9 +246,9 @@
     "stage": "kag_solver",
     "model": "gpt-5.4",
     "api": "kag.llm_meter",
-    "input_tokens": 4102,
-    "output_tokens": 1580,
-    "total_tokens": 5682,
+    "input_tokens": 4997,
+    "output_tokens": 1843,
+    "total_tokens": 6840,
     "usage_source": "kag.LLMClient.TokenMeter"
   }
 ]
