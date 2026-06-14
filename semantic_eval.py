@@ -177,7 +177,9 @@ def score_semantics(g, gold):
     out_bindings = [b for b in bindings if b.get("metric") is not None]
     matched = sum(1 for b in out_bindings if b["metric"] in gold_iris)
     total = len(out_bindings)
-    dims["precision"] = matched / total if total else 1.0
+    # No output bindings = the model produced no valid EVSLA expectation; that is
+    # not "perfect precision", it is nothing correct. Score 0 rather than reward it.
+    dims["precision"] = matched / total if total else 0.0
     hallucination = total - matched
 
     composite = sum(WEIGHTS[k] * dims[k] for k in WEIGHTS) / sum(WEIGHTS.values())

@@ -147,5 +147,17 @@ class TestOperator(unittest.TestCase):
         self.assertEqual(score_semantics(g, GOLD_TC001)["dimensions"]["operator"], 0.0)
 
 
+class TestEmptyOutput(unittest.TestCase):
+    def test_no_bindings_scores_zero_not_perfect_precision(self):
+        # invented vocabulary (wrong namespace) -> no bindings found
+        bad = """@prefix tio: <http://example.org/tio/> .
+@prefix ex: <http://example.org/tio-instance/tc001/> .
+ex:i a tio:Intent ; tio:hasMetric tio:latency ."""
+        g = Graph(); g.parse(data=bad, format="turtle")
+        r = score_semantics(g, GOLD_TC001)
+        self.assertEqual(r["dimensions"]["precision"], 0.0)
+        self.assertEqual(r["composite"], 0.0)
+
+
 if __name__ == "__main__":
     unittest.main()
