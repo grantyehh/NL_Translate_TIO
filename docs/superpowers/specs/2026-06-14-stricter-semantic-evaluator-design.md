@@ -38,6 +38,7 @@ Field → dimension mapping:
 | scope | `performance_metrics[].scope` |
 | measurement_method | `performance_metrics[].measurement_method` |
 | time_window | `performance_metrics[].time_window` |
+| operator (comparison fn) | `performance_metrics[].operator` → `quan:smaller`/`atMost`/`greater`/`atLeast`/`exactly` |
 | tenant | `tenant` |
 | hub / spokes | `scope.hub` / `scope.spokes[]` |
 | topology types | `topology{@type,hub_type,spoke_type}` |
@@ -74,6 +75,7 @@ locates the node and validates wiring.
 | scope | `evsla:hasScope` == gold |
 | measurement_method | `evsla:hasMeasurementMethod` == gold |
 | time_window | `evsla:hasTimeWindow` == gold |
+| operator | the bound metric's expectation subgraph encodes the comparison direction with the **correct TIO comparison function** per gold `operator` (see §3.1) |
 
 **Case-level dimensions:**
 
@@ -88,23 +90,47 @@ locates the node and validates wiring.
 **Label matching:** normalized exact match (strip language tag, exact string;
 Chinese names literal). Fuzzy matching is out of scope (future).
 
-### 3.1 Why `operator` is excluded (deliberate, not an oversight)
+### 3.1 `operator` dimension — explicit comparison-function encoding
 
-Gold carries `performance_metrics[].operator` (LESS_THAN / GREATER_THAN_OR_EQUAL),
-but it is **not a scored dimension**, because:
+Gold carries `performance_metrics[].operator`. We score whether the output makes
+the comparison direction **explicit** using TIO's comparison vocabulary, rather
+than leaving it implied by the metric.
 
-1. The experiment's own canonical gold shape does not encode it — the few-shot
-   reference (`FS-EVSLA-01`), the prompt template, and every output express the
-   threshold as a `quan:Quantity` (value + unit) and leave direction **implied by
-   the metric** (latency ⇒ below; guaranteedBandwidth ⇒ at least). Scoring an
-   operator triple would penalize output that correctly conforms to the gold shape.
-2. Its semantic content (direction) is one-to-one with the metric
-   (`evsla:latency` ⟺ LESS_THAN, `evsla:guaranteedBandwidth` ⟺ GREATER_THAN_OR_EQUAL),
-   so it is **transitively covered by the `metric` dimension** — choosing the
-   wrong metric flips the direction and is already penalized.
+**Evidence this is well-founded** (not a comment-text heuristic):
+- `QuantityOntology.ttl` defines a full set of comparison `fun:Function`s (arity 2,
+  over `quan:Quantity`, boolean result): `quan:smaller` (<), `quan:greater` (>),
+  `quan:atMost` (≤), `quan:atLeast` (≥), `quan:exactly` (=).
+- `LogicalOperators.ttl` defines `log:Condition` — the canonical wrapper for a
+  boolean condition statement (where such a function is applied).
+- `EnterpriseVpnSlaOntology.ttl` **imports `quan:`** (it already uses
+  `quan:Quantity` / `quan:unit`), so this comparison vocabulary is legitimately in
+  scope for an EVSLA model.
 
-Making TIO output carry an explicit operator would be a change to the *gold shape*
-(touching few-shot / prompt), a separate decision outside this evaluator.
+**Gold operator → expected function:**
+
+| gold `operator` | expected function |
+|---|---|
+| LESS_THAN | `quan:smaller` |
+| LESS_THAN_OR_EQUAL | `quan:atMost` |
+| GREATER_THAN | `quan:greater` |
+| GREATER_THAN_OR_EQUAL | `quan:atLeast` |
+| EQUAL | `quan:exactly` |
+
+**Check:** within the bound metric's expectation/target subgraph, the **correct**
+comparison-function IRI appears (ideally inside a `log:Condition` / function
+application referencing the metric's threshold quantity). Wrong function (e.g.
+`quan:atLeast` where `quan:smaller` is expected) → 0; correct → 1; absent → 0. The
+check matches the **specific term**, never `rdfs:comment` text.
+
+**Important caveat (a finding, not a bug):** EVSLA's *prescribed* `SlaExpectation`
+shape is flat (`evsla:hasThreshold → quan:Quantity`, direction implied by metric)
+and does **not** require a comparison function. Verified: all four current
+strong-prompt lines use it **0/20**. So under the current strong prompt this
+dimension is uniformly 0 across methods — that is itself a reportable result ("no
+method models comparison direction explicitly"), and the dimension becomes a
+genuine discriminator under weak-prompt + retrieval (does retrieval surface the
+`quan:` comparison pattern the prompt never hand-coded?). It is reported as its own
+cross-case rate so this 0 is always visible and never silently averaged away.
 
 ## 4. Scoring model — per-dimension sub-scores + weighted composite
 
@@ -120,9 +146,13 @@ Making TIO output carry an explicit operator would be a change to the *gold shap
 
 ```
 metric 2.0 | threshold 2.0 | contract 2.0 | scope 1.5 | statistic 1.5 |
-precision 1.5 | measurement_method 1.0 | time_window 1.0 |
+precision 1.5 | measurement_method 1.0 | time_window 1.0 | operator 1.0 |
 tenant 1.0 | hub 1.0 | spokes 1.0
 ```
+
+`operator` is counted in the composite (weight 1.0) but **always reported as its
+own cross-case rate** (per §3.1 it is uniformly 0 under the current strong prompt,
+so its contribution must stay visible rather than be silently averaged in).
 
 Weights are a starting point, not load-bearing for the architecture; they live in
 one constant so they can be re-tuned without touching logic.
@@ -151,7 +181,7 @@ one constant so they can be re-tuned without touching logic.
   "composite": 0.86,
   "dimensions": {
     "metric": 1.0, "threshold": 1.0, "statistic": 1.0, "scope": 0.0,
-    "measurement_method": 1.0, "time_window": 1.0,
+    "measurement_method": 1.0, "time_window": 1.0, "operator": 0.0,
     "tenant": 1.0, "hub": 1.0, "spokes": 0.67, "contract": 1.0
   },
   "precision": { "score": 1.0, "hallucination_count": 0 },
@@ -163,7 +193,10 @@ one constant so they can be re-tuned without touching logic.
 ## 7. Out of scope
 
 - SHACL (graph-binding chosen instead) — no `pyshacl` dependency.
-- Changing generation pipelines or the gold shape (operator stays implicit).
+- Changing generation pipelines or the few-shot/prompt — we *score* explicit
+  operator encoding if present, but do not change what the prompt teaches the model
+  to emit. (Whether to enrich the prompt to teach the `quan:` comparison pattern is
+  a separate, downstream decision informed by this evaluator's results.)
 - Re-deriving/curating gold (reuse existing `test_cases_20.json` fields).
 - Fuzzy label matching (normalized exact only this round).
 
@@ -192,3 +225,9 @@ The two specs are complementary:
 - Confirm the `evsla:EnterpriseVpnService` / `evsla:forTenant` linkage is present
   in outputs for the tenant-wiring check; if absent across all lines, treat tenant
   wiring as label-only (do not penalize uniformly).
+- `operator`: outputs currently never emit `quan:` comparison functions (0/20), so
+  there is no real example of the wiring to anchor on. Implement the check to accept
+  the correct comparison-function IRI appearing anywhere in the bound metric's
+  expectation/target subgraph (optionally inside a `log:Condition` / function
+  application); do not over-specify the exact argument wiring until a real example
+  exists. Match the IRI, never `rdfs:comment` text.
