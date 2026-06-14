@@ -146,6 +146,30 @@ def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
     )
 
 
+SEM_DIMS = ["metric", "threshold", "statistic", "scope", "measurement_method",
+            "time_window", "operator", "tenant", "topology", "contract", "precision"]
+
+
+def print_semantic(reports: list[tuple[str, Path, List[dict]]]) -> None:
+    print_header("Semantic Summary (graph-binding correctness)")
+    header = (f"{'Experiment':14} | {'Composite':9} | "
+              + " | ".join(f"{d[:5]:>5}" for d in SEM_DIMS))
+    print(header)
+    print("-" * len(header))
+    best = None
+    for name, _, items in reports:
+        sem = [x.get("semantic") for x in items if x.get("semantic")]
+        n = len(sem) or 1
+        comp = sum(s["composite"] for s in sem) / n
+        rates = [sum(s["dimensions"].get(d, 0.0) for s in sem) / n for d in SEM_DIMS]
+        print(f"{name:14} | {comp:9.4f} | " + " | ".join(f"{r:5.2f}" for r in rates))
+        if best is None or comp > best[1]:
+            best = (name, comp)
+    if best is not None:
+        print()
+        print(f"Best semantic composite : {best[0]} ({best[1]:.4f})")
+
+
 def print_case_matrix(reports: list[tuple[str, Path, List[dict]]], difficulty_map: Dict[str, str]) -> None:
     n = len(reports)
     label = {2: "Two-Way", 3: "Three-Way", 4: "Four-Way", 5: "Five-Way"}.get(n, f"{n}-Way")
@@ -186,6 +210,7 @@ def emit_report(reports: list[tuple[str, Path, List[dict]]], test_cases_path: Pa
     print(f"Test cases: {test_cases_path}")
 
     print_overall(reports)
+    print_semantic(reports)
     print_case_matrix(reports, load_difficulty_map(test_cases_path))
 
 
