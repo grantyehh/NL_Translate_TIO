@@ -121,45 +121,56 @@ NL
 
 ## Current Four-Way Evaluation
 
+最新一輪：**2026-06-13 全四條重新生成**(strong prompt、gpt-5.4、text-embedding-3-small、few-shot 4)。
+
+> ⚠️ 評分器/比較器已從 JSON-LD 時代轉成 Turtle 版。`evaluate_ttl.py` 產出簡化 schema
+> (parse_ok / expected_coverage_ratio / triple_count / unknown_predicates·types /
+> intent_uri / markdown_fence);`compare_reports.py` 已於本輪對齊(commit `920c6cc`),
+> 讀 `phase1/phase1_<line>.json` 並輸出下列欄位。舊的 ICM/ontology/metric/node-ratio
+> 欄位是 JSON-LD evaluator 的指標,現行 Turtle evaluator **不再產出**。
+
 目前 `phase1/output_quality/compare_four_way.txt` 結果：
 
-本輪完整 run notes 與 token 解讀紀錄在：
-
-- `phase1/experiment_run_notes_2026-06-02.md`
-
 ```text
-Experiment     | Cases | Parse OK   | Avg icm  | Avg ontology | Avg metric | Avg JSON nodes | Verbosity OK | Avg node ratio | Intent ID OK
-LLM-only       |    20 |     95.00% |   1.0000 |       0.9806 |     1.0000 |          62.75 |      100.00% |         1.0211 |       100.00%
-GraphRag       |    20 |    100.00% |   1.0000 |       0.9861 |     1.0000 |          62.75 |      100.00% |         1.0203 |       100.00%
-KGE            |    20 |    100.00% |   1.0000 |       0.9944 |     1.0000 |          62.90 |      100.00% |         1.0228 |       100.00%
-KAG            |    20 |    100.00% |   0.9900 |       0.9233 |     1.0000 |          61.50 |      100.00% |         0.9978 |       100.00%
+Experiment     | Cases | Parse OK   | Avg coverage | Cov=100%   | Avg triples  | Pure TTL   | Unk pred  | Unk type  | Intent ID OK
+LLM-only       |    20 |    100.00% |       1.0000 |    100.00% |        36.70 |    100.00% |         0 |         0 |       100.00%
+GraphRag       |    20 |    100.00% |       1.0000 |    100.00% |        36.40 |    100.00% |         0 |         0 |       100.00%
+KGE            |    20 |    100.00% |       1.0000 |    100.00% |        35.80 |    100.00% |         0 |         0 |       100.00%
+KAG            |    20 |    100.00% |       1.0000 |    100.00% |        35.95 |    100.00% |         0 |         0 |       100.00%
 ```
 
 目前觀察：
 
-- LLM-only / GraphRAG / KGE 在 avg ICM coverage 與 avg metric coverage 上達到滿分。
-- KGE 在 avg ontology coverage 上最高。
-- KAG native 也完成 20/20 parse success，metric coverage 滿分，但 ontology coverage 低於 GraphRAG / KGE。
-- LLM-only 仍保留為主要 baseline，代表沒有額外 ontology retrieval / graph reasoning / grounding 的情況。
+- **品質四方並列、全部頂格**:四條都 100% parse、expected coverage 1.0000、零非 TIO 詞彙
+  (unknown predicate/type 皆 0)、輸出皆 pure Turtle(無 markdown fence)、intent URI 全帶對 case id。
+- 在**強 prompt** 下,現行 evaluator **無法區分四條品質** —— 強 prompt 已把 schema/metric mappings
+  手寫進去,retrieval 的語意貢獻被天花板遮蔽。這是啟動 weak-prompt 替代性實驗的直接動機
+  (spec: `docs/superpowers/specs/2026-06-13-weak-prompt-retrieval-substitution-design.md`)。
+- 唯一能分出高下的是**成本**(見下節 token):本輪三條品質相同,但 GraphRag 用了約 5.7× token。
+- LLM-only 仍為主要 baseline(無 ontology retrieval / graph reasoning / grounding)。
 
 ## Current Token Usage Evaluation
 
-目前 `phase1/token_usage/compare_token_usage.txt` 結果：
+目前 `phase1/token_usage/compare_token_usage.txt` 結果(2026-06-13 本輪)：
 
 ```text
 Experiment     | Cases | Prep total   | Avg online   | Online total | Avg calls |   Amortized @20 |  Amortized @100 | Amortized @1000
-LLM-only       |    20 |            0 |      5201.15 |       104023 |      1.00 |         5201.15 |         5201.15 |         5201.15
-GraphRag       |    20 |            0 |     24993.35 |       499867 |      3.00 |        24993.35 |        24993.35 |        24993.35
-KGE            |    20 |        15501 |     11526.70 |       230534 |      2.00 |        12301.75 |        11681.71 |        11542.20
-KAG            |    20 |       276204 |      5906.35 |       118127 |      1.00 |        19716.55 |         8668.39 |         6182.55
+LLM-only       |    20 |            0 |      4164.65 |        83293 |      1.00 |         4164.65 |         4164.65 |         4164.65
+GraphRag       |    20 |            0 |     23942.70 |       478854 |      3.00 |        23942.70 |        23942.70 |        23942.70
+KGE            |    20 |        15501 |      4232.10 |        84642 |      1.00 |         5007.15 |         4387.11 |         4247.60
+KAG            |    20 |            0 |      5185.30 |       103706 |      1.00 |         5185.30 |         5185.30 |         5185.30
 ```
 
 目前觀察：
 
-- Online inference cost 最低的是 LLM-only，其次是 KAG。
-- KAG prep cost 很高，N=20 時 amortized cost 最高；當規模放大到 N=1000 時，KAG amortized cost 接近 online-only 成本。
-- KGE prep cost 較小，amortized cost 在 N=100 / N=1000 時接近其 online average。
-- GraphRAG 目前 preprocessing 為 local TTL traversal input rebuild，token prep cost 為 0，但 online retrieval/generation 平均 token 最高。
+- **Online inference cost 最低是 LLM-only**(4,165/題);KGE(4,232/題)、KAG(5,185/題)略高;
+  **GraphRag 最貴(23,943/題,每題 3 次 LLM call)≈ LLM-only 的 5.7×**,幾乎全來自把 typed-traversal
+  subgraph 灌進 input。
+- ⚠️ **本輪 KAG `Prep total = 0` 是因為 indexer 全部命中既有 checkpoint(0 token 重灌進新 Neo4j)**。
+  從零重建 KAG KG 的 prep 成本約 **276,204 token**(前一輪 2026-06-02 實測值);amortization 要看 KAG
+  時應以該 prep 計:@20≈19.7k/題、@100≈8.7k/題、@1000≈6.2k/題。本輪因 cache 命中而未付這筆。
+- KGE prep(text grounding 等)約 15,501 token,攤提到 @100/@1000 後逼近其 online average(~4.2k–4.4k/題)。
+- GraphRag preprocessing 為執行期 local TTL traversal,prep token = 0,但 online 平均 token 最高。
 
 ## Verification
 
@@ -179,6 +190,10 @@ python3 -m unittest LLM-only/test_nl_to_tio.py GraphRag/test_nl_to_tio.py KGE/KG
 
 ## Next Steps
 
+0. **(active) Weak-prompt 替代性實驗**:強 prompt 下四方品質並列頂格、evaluator 飽和,改測「retrieval 能否
+   在不含領域知識的弱 prompt 下追平強-prompt 上界」。設計已定稿並 commit:
+   `docs/superpowers/specs/2026-06-13-weak-prompt-retrieval-substitution-design.md`(`b620a43`)。
+   下一步:進 writing-plans 拆實作計畫。
 1. 決定是否保留目前 `KAG` 作為 native KAG 結果，並另外新增 `kag_logical_form` variant。
 2. 若要做 `kag-logical-form-grounding`，新增獨立輸出目錄與第五條 comparison line，避免和 native KAG 混在一起。
 3. 將 KAG Docker compose 改成 named volumes，避免 builder KG data 因 anonymous volume 管理不清而遺失。
