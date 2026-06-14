@@ -10,20 +10,16 @@ from typing import Dict, List
 
 ROOT = Path(__file__).resolve().parent
 PHASE1_DIR = ROOT / "phase1"
-OUTPUT_QUALITY_DIR = PHASE1_DIR / "output_quality"
+# evaluate_ttl.py writes the Turtle phase-1 reports here (phase1/phase1_<line>.json).
 DEFAULT_REPORTS = [
-    ("LLM-only", OUTPUT_QUALITY_DIR / "phase1_llm_only.json"),
-    ("GraphRag", OUTPUT_QUALITY_DIR / "phase1_graphrag.json"),
-    ("KGE", OUTPUT_QUALITY_DIR / "phase1_kge.json"),
-    ("KAG", OUTPUT_QUALITY_DIR / "phase1_kag.json"),
+    ("LLM-only", PHASE1_DIR / "phase1_llm_only.json"),
+    ("GraphRag", PHASE1_DIR / "phase1_graphrag.json"),
+    ("KGE", PHASE1_DIR / "phase1_kge.json"),
+    ("KAG", PHASE1_DIR / "phase1_kag.json"),
 ]
 
 
 def load_report(path: Path) -> List[dict]:
-    if not path.is_file() and path.parent.name == "output_quality":
-        legacy_path = PHASE1_DIR / path.name
-        if legacy_path.is_file():
-            path = legacy_path
     with path.open("r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, list):
@@ -68,25 +64,25 @@ def coerce_float(value, default: float = 0.0) -> float:
 
 
 def aggregate_metrics(items: List[dict]) -> dict:
+    n = len(items)
     parse_ok = [bool(x.get("parse_ok")) for x in items]
-    node_count = [int(x.get("json_node_count", x.get("triple_count", 0))) for x in items]
+    triple_count = [int(x.get("triple_count", 0) or 0) for x in items]
     coverage = [coerce_float(x.get("expected_coverage_ratio", 0.0)) for x in items]
-    ontology_coverage = [coerce_float(x.get("ontology_term_coverage_ratio", 0.0)) for x in items]
-    performance_coverage = [coerce_float(x.get("performance_metric_coverage_ratio", 0.0)) for x in items]
+    coverage_full = [c for c in coverage if c >= 0.999]
     intent_uri_ok = [bool(x.get("intent_uri_contains_case_id")) for x in items]
-    budgets = [x.get("json_node_budget") for x in items if isinstance(x.get("json_node_budget"), dict)]
-    budget_ok = [bool(x.get("ok")) for x in budgets]
-    budget_ratios = [coerce_float(x.get("ratio", 0.0)) for x in budgets if x.get("ratio") is not None]
+    fence_stripped = [bool(x.get("markdown_fence_stripped")) for x in items]
+    unknown_predicate_total = sum(len(x.get("unknown_predicates") or []) for x in items)
+    unknown_type_total = sum(len(x.get("unknown_types") or []) for x in items)
     return {
-        "count": len(items),
+        "count": n,
         "parse_ok_rate": ratio_true(parse_ok),
-        "avg_triple_count": mean(node_count),
+        "avg_triple_count": mean(triple_count),
         "avg_coverage_ratio": mean(coverage),
-        "avg_ontology_term_coverage_ratio": mean(ontology_coverage),
-        "avg_performance_metric_coverage_ratio": mean(performance_coverage),
+        "coverage_full_rate": (len(coverage_full) / n if n else 0.0),
         "intent_uri_ok_rate": ratio_true(intent_uri_ok),
-        "json_node_budget_ok_rate": ratio_true(budget_ok),
-        "avg_json_node_budget_ratio": mean(budget_ratios),
+        "pure_turtle_rate": 1.0 - ratio_true(fence_stripped),
+        "unknown_predicate_total": unknown_predicate_total,
+        "unknown_type_total": unknown_type_total,
     }
 
 
@@ -98,8 +94,8 @@ def coverage(row: dict | None) -> float:
     return coerce_float((row or {}).get("expected_coverage_ratio", 0.0))
 
 
-def node_count(row: dict | None) -> int:
-    return int((row or {}).get("json_node_count", (row or {}).get("triple_count", 0)))
+def triple_count(row: dict | None) -> int:
+    return int((row or {}).get("triple_count", 0) or 0)
 
 
 def print_header(title: str) -> None:
@@ -113,11 +109,11 @@ def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
     label = {2: "Two-Way", 3: "Three-Way", 4: "Four-Way", 5: "Five-Way"}.get(n, f"{n}-Way")
     print_header(f"{label} Summary")
     print(
-        f"{'Experiment':14} | {'Cases':5} | {'Parse OK':10} | {'Avg icm':8} | "
-        f"{'Avg ontology':12} | {'Avg metric':10} | {'Avg JSON nodes':14} | "
-        f"{'Verbosity OK':12} | {'Avg node ratio':14} | {'Intent ID OK':12}"
+        f"{'Experiment':14} | {'Cases':5} | {'Parse OK':10} | {'Avg coverage':12} | "
+        f"{'Cov=100%':10} | {'Avg triples':12} | {'Pure TTL':10} | "
+        f"{'Unk pred':9} | {'Unk type':9} | {'Intent ID OK':12}"
     )
-    print("-" * 144)
+    print("-" * 134)
     rows: list[tuple[str, dict]] = []
     for name, _, items in reports:
         metrics = aggregate_metrics(items)
@@ -126,30 +122,28 @@ def print_overall(reports: list[tuple[str, Path, List[dict]]]) -> None:
             f"{name:14} | "
             f"{metrics['count']:5d} | "
             f"{metrics['parse_ok_rate'] * 100:9.2f}% | "
-            f"{metrics['avg_coverage_ratio']:8.4f} | "
-            f"{metrics['avg_ontology_term_coverage_ratio']:12.4f} | "
-            f"{metrics['avg_performance_metric_coverage_ratio']:10.4f} | "
-            f"{metrics['avg_triple_count']:14.2f} | "
-            f"{metrics['json_node_budget_ok_rate'] * 100:11.2f}% | "
-            f"{metrics['avg_json_node_budget_ratio']:14.4f} | "
+            f"{metrics['avg_coverage_ratio']:12.4f} | "
+            f"{metrics['coverage_full_rate'] * 100:9.2f}% | "
+            f"{metrics['avg_triple_count']:12.2f} | "
+            f"{metrics['pure_turtle_rate'] * 100:9.2f}% | "
+            f"{metrics['unknown_predicate_total']:9d} | "
+            f"{metrics['unknown_type_total']:9d} | "
             f"{metrics['intent_uri_ok_rate'] * 100:12.2f}%"
         )
 
     best_coverage = max(rows, key=lambda item: item[1]["avg_coverage_ratio"])
-    best_ontology = max(rows, key=lambda item: item[1]["avg_ontology_term_coverage_ratio"])
-    best_performance = max(rows, key=lambda item: item[1]["avg_performance_metric_coverage_ratio"])
-    fewest_nodes = min(rows, key=lambda item: item[1]["avg_triple_count"])
+    fewest_triples = min(rows, key=lambda item: item[1]["avg_triple_count"])
+    cleanest = min(rows, key=lambda item: item[1]["unknown_predicate_total"] + item[1]["unknown_type_total"])
     print()
-    print(f"Best average ICM coverage       : {best_coverage[0]} ({best_coverage[1]['avg_coverage_ratio']:.4f})")
     print(
-        f"Best average ontology coverage  : {best_ontology[0]} "
-        f"({best_ontology[1]['avg_ontology_term_coverage_ratio']:.4f})"
+        f"Best average expected coverage  : {best_coverage[0]} "
+        f"({best_coverage[1]['avg_coverage_ratio']:.4f})"
     )
+    print(f"Fewest average triples          : {fewest_triples[0]} ({fewest_triples[1]['avg_triple_count']:.2f})")
     print(
-        f"Best average metric coverage    : {best_performance[0]} "
-        f"({best_performance[1]['avg_performance_metric_coverage_ratio']:.4f})"
+        f"Cleanest vocabulary (unk pred+type): {cleanest[0]} "
+        f"({cleanest[1]['unknown_predicate_total'] + cleanest[1]['unknown_type_total']})"
     )
-    print(f"Fewest average JSON nodes: {fewest_nodes[0]} ({fewest_nodes[1]['avg_triple_count']:.2f})")
 
 
 def print_case_matrix(reports: list[tuple[str, Path, List[dict]]], difficulty_map: Dict[str, str]) -> None:
@@ -164,7 +158,7 @@ def print_case_matrix(reports: list[tuple[str, Path, List[dict]]], difficulty_ma
         return s.replace("-only", "").replace("-hybrid", "")[:8]
 
     cov_cols = " | ".join(f"{short_label(name)+' cov':>10}" for name, _, _ in reports)
-    node_cols = " | ".join(f"{short_label(name)+' nodes':>12}" for name, _, _ in reports)
+    node_cols = " | ".join(f"{short_label(name)+' triples':>14}" for name, _, _ in reports)
     print(
         f"{'case_id':8} | {cov_cols} | {'winner':10} | {node_cols} | {'difficulty':10}"
     )
@@ -176,7 +170,7 @@ def print_case_matrix(reports: list[tuple[str, Path, List[dict]]], difficulty_ma
         winners = [name for name, value in covs.items() if value == best]
         winner = "tie" if len(winners) > 1 else winners[0]
         cov_vals = " | ".join(f"{covs[name]:>10.4f}" for name, _, _ in reports)
-        node_vals = " | ".join(f"{node_count(rows.get(name)):>12d}" for name, _, _ in reports)
+        node_vals = " | ".join(f"{triple_count(rows.get(name)):>14d}" for name, _, _ in reports)
         print(
             f"{case_id:8} | {cov_vals} | "
             f"{winner:10} | {node_vals} | "
