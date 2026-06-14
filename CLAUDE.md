@@ -42,7 +42,6 @@ KAG        | 100.00%  | 0.9900  |   0.9314     |   1.0000   |   61.80   |   100.
 - **Ontology coverage 最佳:KGE(0.9972)** — link prediction 版本領先
 - **ICM / metric coverage 最佳:GraphRag(1.0000),KGE 並列**
 - **Verbosity:KGE 0%** — node 數超出 budget,是改進方向
-- 舊版 `KGE-hybrid` 結果留在 `phase1_kge_hybrid.json` / `compare_three_way.txt` 作對照,不再參與 four-way
 
 ## 3. 目錄與資料流
 

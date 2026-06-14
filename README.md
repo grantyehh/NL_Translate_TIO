@@ -20,7 +20,7 @@
 
 - 生成結果:根目錄 `tio_outputs/<experiment>/*.ttl`(`<experiment>` ∈ `llm_only / graphrag / kge / kag`)
 - 評分結果:`phase1/phase1_*.json`
-- 比較結果:`phase1/compare_four_way.txt`(舊版 3-way 的 `compare_three_way.txt` 保留作為歷史對照)
+- 比較結果:`phase1/output_quality/compare_four_way.txt`(品質)、`phase1/token_usage/compare_token_usage.txt`(token)
 
 ## 0. 前置準備
 
