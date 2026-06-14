@@ -1,157 +1,152 @@
-# Weak-prompt Retrieval Substitution Experiment — Design Spec
+# Recipe CP Comparison: Prompt-Engineering vs Retrieval — Design Spec
 
-**Date:** 2026-06-13
+**Date:** 2026-06-13 (revised 2026-06-15 to a two-arm CP framing)
 **Author:** 睿丞 (with Claude Code)
 **Status:** Approved design — pending implementation plan
 
-## 1. Research question
+## 1. Purpose
 
-Under a **weak system prompt that contains no hand-coded domain knowledge**, can
-the retrieval lines (GraphRag / KGE / KAG) reach the output quality of the
-**LLM-only strong-prompt ceiling**?
+Compare two end-to-end **recipes** for NL → TIO Turtle and decide which has the
+better **cost-performance (CP)** — quality per token:
 
-- **If yes** → retrieval can substitute for prompt engineering (the hand-coded
-  EVSLA schema in the prompt).
-- **If no** → retrieval alone is insufficient; explicit prompt knowledge still matters.
+- **Arm 1 — "prompt-engineering" recipe (LLM-only):** strong system prompt +
+  strong few-shot + **no retrieval**. All domain knowledge is hand-coded into the
+  prompt and examples.
+- **Arm 2 — "retrieval" recipe:** **weak** system prompt + **no few-shot** +
+  retrieval (GraphRag / KGE / KAG). Hand-coded domain knowledge is removed; the
+  model must get EVSLA vocabulary/structure from retrieval.
 
-By also running an **LLM-only weak (no-retrieval) floor**, we upgrade the claim
-from "substitution vs ceiling" to a quantified **retrieval net lift**:
-`lift = (weak + retrieval) − (weak only)`.
+This is deliberately an **approach-vs-approach** comparison (multiple variables
+differ at once), because the question is "which whole strategy is worth it," not
+an isolated single-variable ablation.
 
-### Claim scope (honesty note)
+A **floor** condition (weak prompt + no few-shot + **no retrieval**) isolates how
+much retrieval adds on top of the bare weak base.
 
-The strong-prompt LLM-only baseline and the weak-prompt retrieval lines use
-*different* prompts by design. This experiment therefore measures **"can
-retrieval replace hand-coded prompt knowledge"**, NOT "retrieval's marginal
-contribution under an identical prompt." Reports must state this framing.
+### Conclusion shape
+For each line, plot/quote **quality (semantic composite + key dimensions)** against
+**token cost**. Does LLM-only-strong dominate (better quality at comparable/less
+cost), or does a weak+retrieval line give comparable quality far cheaper? CP is the
+verdict.
 
-## 2. Weak prompt definition
+## 2. Conditions
 
-The strong `build_evsla_system_prompt()` contains: output-format constraint,
-`@prefix` list, graph-structure skeleton, metric mappings, target rules,
-retrieval note, and a "core semantics in triples" line.
+| Condition | System prompt | Few-shot | Retrieval | Role |
+|---|---|---|---|---|
+| **LLM-only-strong** | strong | strong | none | **Arm 1** (prompt-engineering recipe) |
+| **LLM-only-weak** | weak | none | none | **Floor** (no engineering, no retrieval) |
+| **GraphRag-weak** | weak | none | typed RDF traversal | **Arm 2** |
+| **KGE-weak** | weak | none | TransE + link prediction | **Arm 2** |
+| **KAG-weak** | weak | none | 5-way solver | **Arm 2** |
 
-`build_evsla_system_prompt(tc_id, retrieval_mode=None, weak_prompt=False)` gains
-a `weak_prompt` flag. Weak vs strong:
+Arm 1 reuses the existing strong run (strong prompt + the operator-enriched
+few-shot). The strong-prompt retrieval lines are *not* part of this experiment.
+
+## 3. Weak prompt definition
+
+`build_evsla_system_prompt(tc_id, retrieval_mode=None, weak_prompt=False)` gains a
+`weak_prompt` flag. Weak **drops all hand-coded domain knowledge**:
 
 | Block | Strong | Weak |
 |---|---|---|
 | Output-format constraint (only Turtle, never JSON/MD/prose…) | ✅ | ✅ keep |
-| Graph-structure skeleton (intent/tenant/service/expectation/target/topology) | ✅ | ❌ **drop** (hand-coded answer) |
-| Metric mappings (latency→evsla:latency, 95%→p95, …) | ✅ | ❌ **drop** (domain knowledge) |
-| Target rules | ✅ | ❌ **drop** (domain knowledge) |
+| Generic "declare every prefix you use" | (implicit) | ✅ keep |
+| `ex:` instance namespace with `tc_id` | ✅ | ✅ keep (evaluator scores `intent_uri`) |
 | retrieval note | ✅ | ✅ keep |
-| "Core semantics must be carried by triples" | ✅ | ✅ keep |
-| **`@prefix` handling** | full TIO URI list | **split — see below** |
+| "core semantics in triples" line | ✅ | ✅ keep |
+| Graph-structure skeleton | ✅ | ❌ drop |
+| Metric mappings (latency→evsla:latency, 95%→p95…) | ✅ | ❌ drop |
+| Target rules | ✅ | ❌ drop |
+| **Comparison-direction (operator) section** | ✅ | ❌ drop |
+| Specific TIO `@prefix` URI list (icm/evsla/quan/log/met…) | ✅ | ❌ drop |
 
-### 2.1 `@prefix` handling (the refined decision)
+The weak prompt thus contains **no EVSLA class/property names, no metric mappings,
+no structure, no operator pattern, no TIO namespace URIs** — only "produce
+parseable TIO Turtle for this intent, declare the prefixes you use, ground it in
+the retrieval context." Everything domain-specific must come from retrieval.
 
-The `@prefix` block bundles two different things; the weak prompt splits them:
+## 4. Few-shot removal (the key change)
 
-- **(a) Turtle format mechanism** — "every prefix you use must be declared so the
-  output is parseable Turtle." This is pure format, unrelated to domain knowledge.
-  → **KEEP** as a generic instruction in the weak prompt.
-- **(b) Specific TIO namespace URIs** — `icm: / evsla: / quan: / met: / …` with their
-  full `http://tio.models.tmforum.org/...` URIs. This *is* the most concentrated
-  piece of domain vocabulary, and it is exactly what retrieval is meant to supply
-  from the ontology TTL. → **DROP** from the weak prompt.
-- **`ex:` instance namespace** (`http://example.org/tio-instance/{tc_id}/`) — this is
-  the experiment's own instance convention, NOT domain knowledge, and the evaluator
-  scores `intent_uri_contains_case_id` against it. → **KEEP** (with `tc_id`).
+In weak mode, **few-shot is fully removed** — not weakened, removed. The
+`--weak-prompt` flag disables few-shot loading so the user message carries only the
+NL intent (and, for retrieval lines, the retrieval context). No EVSLA example is
+shown. Rationale: with the strong few-shot kept, the 4 examples leak the entire
+EVSLA structure (incl. the operator condition), so weakening only the system prompt
+would test nothing. Removing few-shot makes **retrieval the sole domain source** in
+Arm 2, and leaves the floor with no domain source at all.
 
-Rationale: this isolates **format-correctness** ("model knows it must declare
-prefixes") from **knowledge** ("which namespaces / what URIs — must come from
-retrieval"). A wrong or missing TIO URI then surfaces as a *true* retrieval-failure
-signal (rising `unknown_predicates`/`unknown_types`, or parse failure from an
-undeclared CURIE), not as an unfair pure-syntax artifact.
+## 5. Output isolation (preserve strong baselines)
 
-### 2.2 KAG weak prompt
-
-KAG does **not** use `build_evsla_system_prompt`; it has its own registered
-`tio_turtle_generator_prompt` (PromptABC) in
-`KAG/example_project/solver/tio_turtle_generator.py`, embedding the same domain
-sections plus `$query / $content / $tc_id / $few_shot_block`.
-
-Add a parallel `tio_turtle_generator_prompt_weak` class that mirrors the shared
-weak prompt content (same dropped sections + same `@prefix` split + same kept
-KAG framing/template variables). Building the weak variant is also an opportunity
-to align KAG's wording to the shared weak prompt, narrowing the known KAG
-prompt-divergence for the weak condition.
-
-## 3. Flag + isolated output (preserve strong baselines)
-
-All four `nl_to_tio.py` gain a `--weak-prompt` flag. When set, outputs route to a
-`_weak` namespace; **strong-prompt baselines are never overwritten**:
+`--weak-prompt` routes to a `_weak` namespace; strong baselines are untouched:
 
 | Artifact | Strong | Weak |
 |---|---|---|
-| TTL | `tio_outputs/{llm_only,graphrag,kge,kag}/` | `tio_outputs/{…}_weak/` |
+| TTL | `tio_outputs/<line>/` | `tio_outputs/<line>_weak/` |
 | token log | `phase1/token_usage/token_usage_<line>.json` | `…_<line>_weak.json` |
 | phase report | `phase1/phase1_<line>.json` | `phase1/phase1_<line>_weak.json` |
 
-- **LLM-only / GraphRag / KGE**: flag passes `weak_prompt=True` into
-  `build_evsla_system_prompt(...)`; output-path / token-path helpers append the
-  `_weak` suffix when the flag is set.
-- **KAG**: `--weak-prompt` routes output to `tio_outputs/kag_weak/` and tags token
-  usage `experiment="kag_weak"`. The generator prompt is switched via a templated
-  config variable: `kag_config.template.yaml`'s `generator.generated_prompt.type`
-  becomes `{{ TIO_GENERATOR_PROMPT }}` (default `tio_turtle_generator_prompt`); the
-  weak run exports `TIO_GENERATOR_PROMPT=tio_turtle_generator_prompt_weak`, re-runs
-  `render_config.sh`, then runs `nl_to_tio.py --weak-prompt`. (Fallback if config
-  templating proves awkward: override the generator's `generated_prompt` instance
-  at runtime in `nl_to_tio.py` — to be settled in the implementation plan.)
+- LLM-only / GraphRag / KGE: `--weak-prompt` → `weak_prompt=True` into
+  `build_evsla_system_prompt(...)`, few-shot disabled, `_weak` output paths.
+- KAG: a parallel weak generator prompt (`tio_turtle_generator_prompt_weak`,
+  mirroring the shared weak prompt — dropped sections, no operator, no TIO URIs),
+  selected via a templated `generator.generated_prompt.type` in
+  `kag_config.template.yaml` (`{{ TIO_GENERATOR_PROMPT }}`), few-shot disabled,
+  `_weak` output + `experiment="kag_weak"` token tag.
 
-## 4. Evaluation + comparison
+## 6. Measurement — stricter semantic evaluator + token
 
-- `evaluate_ttl.py`: add experiment keys `llm_only_weak`, `graphrag_weak`,
-  `kge_weak`, `kag_weak`, each pointing at the corresponding `_weak` output dir and
-  writing `phase1_<line>_weak.json`. The evaluator logic is unchanged.
-- Comparison: generalize the ad-hoc aggregator already used this session into a
-  small script that accepts an arbitrary set of phase1 keys and emits both a
-  **quality table** (parse OK %, avg expected coverage, cov=100% count, avg triples,
-  intent-URI %, fence count, unknown predicates/types) and a **token table**
-  (input / output / total / avg-per-case). Output: `phase1/compare_weak_prompt.txt`.
+Use the **graph-binding semantic evaluator** (`semantic_eval.py`, already built),
+not the old format+coverage view. `evaluate_ttl.py` already attaches the `semantic`
+block; add experiment keys `llm_only_weak`, `graphrag_weak`, `kge_weak`,
+`kag_weak`. The comparison reports, per condition:
 
-## 5. Experimental conditions
+- **Quality:** semantic composite + per-dimension rates (metric / threshold /
+  statistic / scope / method / time_window / operator / tenant / topology /
+  contract / precision), plus parse-OK as a gate.
+- **Cost:** input / output / total tokens, avg per case (and KGE/KAG prep where
+  relevant).
+- **CP:** quality-vs-token for Arm 1 vs each Arm 2 line, with the floor as the
+  no-retrieval reference.
 
-| Condition | Prompt | Retrieval | Source |
-|---|---|---|---|
-| LLM-only-strong | strong | none | **ceiling** — existing (this session) |
-| GraphRag-strong | strong | typed RDF traversal | existing reference |
-| KGE-strong | strong | TransE + link prediction | existing reference |
-| KAG-strong | strong (own) | 5-way solver | existing reference |
-| **LLM-only-weak** | weak | none | **floor** — new |
-| **GraphRag-weak** | weak | typed RDF traversal | new |
-| **KGE-weak** | weak | TransE + link prediction | new |
-| **KAG-weak** | weak | 5-way solver | new |
+Output: `phase1/output_quality/compare_recipe_cp.txt` (extend the existing
+multi-key comparator).
 
-Primary comparison: ceiling (LLM-only-strong) vs the three weak-retrieval lines,
-with LLM-only-weak as the floor for net-lift computation. Strong retrieval lines
-are kept as reference but are not the focus.
+## 7. Honest prediction (this is the finding the experiment buys)
 
-## 6. Out of scope
+TIO's TTLs define **vocabulary** but contain **no worked assembly example**
+(intent→expectation→target wiring, the operator condition). Retrieval reads those
+TTLs, so it can supply **vocabulary** (`evsla:latency`, `quan:smaller` exist) but
+**not assembly** (how to wire them). Expected: Arm 2 holds up on vocabulary-ish
+dimensions (metric/scope/statistic if retrieval surfaces the terms) but **drops on
+the assembly dimensions** (structure/contract/topology) and especially
+**operator ≈ 0** (our convention is absent from the TTLs, so retrieval cannot teach
+it). The CP comparison quantifies exactly this: retrieval saves prompt-engineering
+effort but may not buy structural correctness — and never buys the un-exampled
+operator pattern.
 
-- **Evaluator semantic depth**: the current evaluator already registers weakening
-  effects (unknown predicate/type rise, coverage drop, parse failures), so it is
-  sufficient for this round; no evaluator redesign here.
-- **Cross-method prompt identity in the *strong* condition**: KAG-strong already
-  diverges from the shared strong prompt (known gap); not addressed here beyond the
-  weak-prompt alignment noted in §2.2.
+## 8. Fairness invariants
 
-## 7. Model / fairness invariants
+- All conditions share `gpt-5.4` + `text-embedding-3-small`.
+- The intended differences are exactly: prompt strength (strong/weak), few-shot
+  (present/absent), retrieval (none/GraphRag/KGE/KAG) — bundled per recipe by design.
 
-- All conditions share `gpt-5.4` (LLM) and `text-embedding-3-small` (embedding).
-- All conditions use the same `few_shot_samples.json` `examples` (4, no slicing).
-- The only intended difference across the weak conditions is **prompt (weak) ×
-  retrieval (none / GraphRag / KGE / KAG)**.
+## 9. Out of scope
 
-## 8. Affected files
+- Strong-prompt retrieval lines (not part of the 2-arm CP question; kept only as
+  prior reference results).
+- Evaluator changes beyond adding the `_weak` keys (the semantic evaluator is reused
+  as-is).
+- KAG re-indexing (KG already populated; only KAG weak generation + prompt).
 
-- `evsla_prompt.py` — add `weak_prompt` param + `@prefix` split.
+## 10. Affected files
+
+- `evsla_prompt.py` — `weak_prompt` flag (drop domain blocks incl. operator + TIO URIs).
 - `LLM-only/nl_to_tio.py`, `GraphRag/nl_to_tio.py`,
-  `KGE/KGE-based-graphrag/nl_to_tio.py` — `--weak-prompt` flag + `_weak` output routing.
-- `KAG/nl_to_tio.py` — `--weak-prompt` flag + `_weak` output routing + token tag.
+  `KGE/KGE-based-graphrag/nl_to_tio.py` — `--weak-prompt` (weak prompt + disable
+  few-shot + `_weak` output routing).
+- `KAG/nl_to_tio.py` — `--weak-prompt` (disable few-shot + `_weak` output + token tag).
 - `KAG/example_project/solver/tio_turtle_generator.py` — `tio_turtle_generator_prompt_weak`.
 - `KAG/example_project/kag_config.template.yaml` — templated `generated_prompt.type`.
 - `evaluate_ttl.py` — four `_weak` experiment keys.
-- new `compare_weak_prompt.py` (or generalized comparator) — multi-key quality + token table.
+- `compare_reports.py` (or a new `compare_recipe_cp.py`) — multi-key quality (semantic)
+  + token CP table over the 5 conditions.
