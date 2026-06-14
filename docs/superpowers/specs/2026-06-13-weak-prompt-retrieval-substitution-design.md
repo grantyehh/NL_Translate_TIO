@@ -42,6 +42,13 @@ verdict.
 Arm 1 reuses the existing strong run (strong prompt + the operator-enriched
 few-shot). The strong-prompt retrieval lines are *not* part of this experiment.
 
+**The three Arm-2 retrieval methods are evaluated as three independent conditions
+(`graphrag_weak`, `kge_weak`, `kag_weak`) — each its own line, its own outputs, its
+own score. They are NEVER combined, ensembled, or mixed.** The CP comparison is
+LLM-only-strong vs each retrieval method individually (with the floor as reference);
+GraphRag, KGE, and KAG are ranked against each other and against LLM-only, never
+merged into one "retrieval" number.
+
 ## 3. Weak prompt definition
 
 `build_evsla_system_prompt(tc_id, retrieval_mode=None, weak_prompt=False)` gains a
