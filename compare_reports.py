@@ -214,8 +214,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--out",
-        default=str(PHASE1_DIR / "compare_four_way.txt"),
-        help="Output text report path (default: phase1/compare_four_way.txt)",
+        default=str(PHASE1_DIR / "output_quality" / "compare_four_way.txt"),
+        help="Output text report path (default: phase1/output_quality/compare_four_way.txt)",
     )
     args = parser.parse_args()
 
