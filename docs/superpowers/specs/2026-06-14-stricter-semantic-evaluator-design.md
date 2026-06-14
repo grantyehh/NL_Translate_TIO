@@ -44,6 +44,28 @@ Field → dimension mapping:
 | topology types | `topology{@type,hub_type,spoke_type}` |
 | (reference) full vocabulary | `ontology_terms[]` (richer than `expected_tio_elements`) |
 
+### 2.1 Final grounding audit (pre-planning verification)
+
+- **EVSLA is built on the base modules**, so the evaluator's term checks are
+  validly grounded: `evsla:EnterpriseVpnSlaIntent ⊑ icm:Intent`,
+  `evsla:SlaExpectation ⊑ icm:PropertyExpectation`,
+  `evsla:HubAndSpokeTopology/HubSite/SpokeSite ⊑ icm:Context`, the metric
+  properties `⊑ met:metric`, the target property `⊑ icm:target`, and
+  `evsla:hasThreshold range quan:Quantity`.
+- **Comment-implied audit (all 4 few-shot examples):** every semantic element —
+  metric, threshold value+unit, statistic, scope, measurement_method, time_window,
+  tenant, hub, spokes — is carried by explicit triples using proper icm/met/quan/
+  evsla terms. The **only** element living solely in `rdfs:comment` ("must stay
+  **below** … / **at least** …") with no triple is the **comparison direction**,
+  i.e. the `operator` dimension (§3.1). No other important element is comment-only.
+- **"95% of the time"** is fully captured by `evsla:p95` (a `evsla:Statistic`); the
+  `met:` Observation/observedValue family is runtime monitoring, outside the intent
+  spec's generation target.
+- **Nuance:** the test cases' own `ontology_terms[]` lists no `quan:` comparison
+  function, so the `operator` dimension is a **deliberate enrichment** derived from
+  the gold `operator` field + ontology capability, not from the listed vocabulary —
+  consistent with treating it as a currently-0/20 "finding" dimension.
+
 ## 3. Verification — graph-binding semantic check
 
 Match each gold metric to an output subgraph by **traversing the contract path
