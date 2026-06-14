@@ -79,6 +79,16 @@ Metric mappings:
 
 Comments may supplement structure but must not replace the required classes and properties. Do not invent unofficial predicates.
 
+Comparison direction (required — encode it explicitly with TIO terms, never only in rdfs:comment):
+- Also declare: @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+  and @prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+- Make each threshold a shared named node ex:thr-<metric> used by BOTH icm:valuesOfTargetProperty and evsla:hasThreshold (not an inline blank node).
+- For every metric add a condition, and list it in ex:intent icm:intentElements:
+    ex:cond-<metric> a log:Condition ; <fn> ( ex:obs-<metric>-value ex:thr-<metric> ) .
+    ex:obs-<metric> a met:Observation ; met:observedMetric evsla:<metric> .
+    ex:obs-<metric>-value a quan:Quantity ; met:observedValue ( ex:obs-<metric> ) .
+  <fn>: latency / packet_loss -> quan:smaller ; guaranteed_bandwidth -> quan:atLeast.
+
 Few-shot Turtle examples for structure only:
 $few_shot_block
 

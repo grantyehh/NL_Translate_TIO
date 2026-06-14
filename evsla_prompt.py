@@ -59,6 +59,16 @@ Target rules:
 - evsla:hasMetric and the metric used in icm:valuesOfTargetProperty/evsla:hasThreshold must be consistent.
 - Both icm:valuesOfTargetProperty and evsla:hasThreshold must carry a quan:Quantity with rdf:value (number) and quan:unit (string).
 
+Comparison direction (required — encode it explicitly with TIO terms, never only in rdfs:comment):
+- Also declare: @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+  and @prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+- Make each threshold a shared named node ex:thr-<metric> used by BOTH icm:valuesOfTargetProperty and evsla:hasThreshold (not an inline blank node).
+- For every metric add a condition, and list it in ex:intent icm:intentElements:
+    ex:cond-<metric> a log:Condition ; <fn> ( ex:obs-<metric>-value ex:thr-<metric> ) .
+    ex:obs-<metric> a met:Observation ; met:observedMetric evsla:<metric> .
+    ex:obs-<metric>-value a quan:Quantity ; met:observedValue ( ex:obs-<metric> ) .
+  <fn>: latency / packet_loss -> quan:smaller ; guaranteed_bandwidth -> quan:atLeast.
+
 {retrieval_note}Core semantics must be carried by triples, not only by rdfs:comment.
 """
 
