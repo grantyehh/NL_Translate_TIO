@@ -29,6 +29,8 @@ client = OpenAI(api_key=api_key)
 
 CHAT_MODEL = "gpt-5.4"
 
+WEAK = False  # set True by --weak-prompt: weak system prompt + no few-shot + _weak outputs
+
 
 def default_test_cases_path(root: Path) -> Path:
     return (root.parent.parent / "test_cases_20.json").resolve()
@@ -60,16 +62,16 @@ def format_few_shot_block(examples: list[dict]) -> str:
 
 
 def output_path_for_case(root: Path, tc_id: str) -> Path:
-    return root.parent.parent / "tio_outputs" / "kge" / f"{tc_id}.ttl"
+    return root.parent.parent / "tio_outputs" / ("kge" + ("_weak" if WEAK else "")) / f"{tc_id}.ttl"
 
 
 def token_usage_path(root: Path | None = None) -> Path:
     root = root or Path(__file__).resolve().parent
-    return root.parent.parent / "phase1" / "token_usage" / "token_usage_kge.json"
+    return root.parent.parent / "phase1" / "token_usage" / f"token_usage_kge{'_weak' if WEAK else ''}.json"
 
 
 def build_system_prompt(tc_id: str) -> str:
-    return build_evsla_system_prompt(tc_id, retrieval_mode="KGE")
+    return build_evsla_system_prompt(tc_id, retrieval_mode="KGE", weak_prompt=WEAK)
 
 def generate_turtle_code(
     nl_intent,
@@ -115,7 +117,7 @@ def generate_turtle_code(
         )
         record_usage(
             token_usage_path(),
-            experiment="kge",
+            experiment="kge" + ("_weak" if WEAK else ""),
             ledger="online",
             case_id=tc_id,
             stage="turtle_generation",
@@ -151,7 +153,17 @@ def main() -> None:
         action="store_true",
         help="Do not load few-shot file even if it exists",
     )
+    parser.add_argument(
+        "--weak-prompt",
+        action="store_true",
+        help="Weak system prompt + no few-shot + _weak outputs",
+    )
     args = parser.parse_args()
+
+    global WEAK
+    WEAK = args.weak_prompt
+    if args.weak_prompt:
+        args.no_few_shot = True
 
     test_cases_path = (
         args.test_cases.resolve() if args.test_cases.is_absolute() else (root / args.test_cases).resolve()

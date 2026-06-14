@@ -35,6 +35,8 @@ client = OpenAI(api_key=api_key)
 
 CHAT_MODEL = "gpt-5.4"
 
+WEAK = False  # set True by --weak-prompt: weak system prompt + no few-shot + _weak outputs
+
 TTL_DIR = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
 EMBED_MODEL = "text-embedding-3-small"
 ACTIVE_CASE_ID: str | None = None
@@ -71,16 +73,16 @@ def format_few_shot_block(examples: list[dict]) -> str:
 
 
 def output_path_for_case(root: Path, tc_id: str) -> Path:
-    return root.parent / "tio_outputs" / "graphrag" / f"{tc_id}.ttl"
+    return root.parent / "tio_outputs" / ("graphrag" + ("_weak" if WEAK else "")) / f"{tc_id}.ttl"
 
 
 def token_usage_path(root: Path | None = None) -> Path:
     root = root or Path(__file__).resolve().parent
-    return root.parent / "phase1" / "token_usage" / "token_usage_graphrag.json"
+    return root.parent / "phase1" / "token_usage" / f"token_usage_graphrag{'_weak' if WEAK else ''}.json"
 
 
 def build_system_prompt(tc_id: str) -> str:
-    return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG")
+    return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG", weak_prompt=WEAK)
 
 
 def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
@@ -120,7 +122,7 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
         )
         record_usage(
             token_usage_path(),
-            experiment="graphrag",
+            experiment="graphrag" + ("_weak" if WEAK else ""),
             ledger="online",
             case_id=tc_id,
             stage="turtle_generation",
@@ -145,7 +147,7 @@ def _seed_llm_caller(prompt: str) -> str:
     )
     record_usage(
         token_usage_path(),
-        experiment="graphrag",
+        experiment="graphrag" + ("_weak" if WEAK else ""),
         ledger="online",
         case_id=ACTIVE_CASE_ID,
         stage="seed_selection",
@@ -162,7 +164,7 @@ def _embed_caller(items: list[str]) -> list[list[float]]:
     resp = client.embeddings.create(model=EMBED_MODEL, input=items)
     record_usage(
         token_usage_path(),
-        experiment="graphrag",
+        experiment="graphrag" + ("_weak" if WEAK else ""),
         ledger="online",
         case_id=ACTIVE_CASE_ID,
         stage="embedding",
@@ -194,7 +196,17 @@ def main() -> None:
         action="store_true",
         help="Do not load few-shot file even if it exists",
     )
+    parser.add_argument(
+        "--weak-prompt",
+        action="store_true",
+        help="Weak system prompt + no few-shot + _weak outputs",
+    )
     args = parser.parse_args()
+
+    global WEAK
+    WEAK = args.weak_prompt
+    if args.weak_prompt:
+        args.no_few_shot = True
 
     test_cases_path = (
         args.test_cases.resolve() if args.test_cases.is_absolute() else (root / args.test_cases).resolve()
