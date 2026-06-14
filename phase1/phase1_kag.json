@@ -1,6 +1,6 @@
 [
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC001.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC001.ttl",
     "case_id": "TC001",
     "parse_ok": true,
     "parse_error": null,
@@ -82,7 +82,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC002.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC002.ttl",
     "case_id": "TC002",
     "parse_ok": true,
     "parse_error": null,
@@ -164,7 +164,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC003.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC003.ttl",
     "case_id": "TC003",
     "parse_ok": true,
     "parse_error": null,
@@ -240,7 +240,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC004.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC004.ttl",
     "case_id": "TC004",
     "parse_ok": true,
     "parse_error": null,
@@ -322,12 +322,12 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC005.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC005.ttl",
     "case_id": "TC005",
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 35,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -404,7 +404,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC006.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC006.ttl",
     "case_id": "TC006",
     "parse_ok": true,
     "parse_error": null,
@@ -480,7 +480,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC007.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC007.ttl",
     "case_id": "TC007",
     "parse_ok": true,
     "parse_error": null,
@@ -562,7 +562,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC008.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC008.ttl",
     "case_id": "TC008",
     "parse_ok": true,
     "parse_error": null,
@@ -644,7 +644,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC009.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC009.ttl",
     "case_id": "TC009",
     "parse_ok": true,
     "parse_error": null,
@@ -720,12 +720,12 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC010.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC010.ttl",
     "case_id": "TC010",
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 35,
+    "triple_count": 32,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -780,7 +780,7 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 0.871,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
@@ -790,7 +790,7 @@
         "time_window": 1.0,
         "operator": 0.0,
         "tenant": 1.0,
-        "topology": 1.0,
+        "topology": 0.0,
         "contract": 1.0,
         "precision": 1.0
       },
@@ -802,7 +802,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC011.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC011.ttl",
     "case_id": "TC011",
     "parse_ok": true,
     "parse_error": null,
@@ -884,7 +884,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC012.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC012.ttl",
     "case_id": "TC012",
     "parse_ok": true,
     "parse_error": null,
@@ -960,12 +960,12 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC013.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC013.ttl",
     "case_id": "TC013",
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 35,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -1042,7 +1042,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC014.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC014.ttl",
     "case_id": "TC014",
     "parse_ok": true,
     "parse_error": null,
@@ -1124,7 +1124,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC015.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC015.ttl",
     "case_id": "TC015",
     "parse_ok": true,
     "parse_error": null,
@@ -1200,7 +1200,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC016.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC016.ttl",
     "case_id": "TC016",
     "parse_ok": true,
     "parse_error": null,
@@ -1282,7 +1282,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC017.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC017.ttl",
     "case_id": "TC017",
     "parse_ok": true,
     "parse_error": null,
@@ -1364,7 +1364,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC018.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC018.ttl",
     "case_id": "TC018",
     "parse_ok": true,
     "parse_error": null,
@@ -1440,7 +1440,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC019.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC019.ttl",
     "case_id": "TC019",
     "parse_ok": true,
     "parse_error": null,
@@ -1522,7 +1522,7 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag/TC020.ttl",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kag/TC020.ttl",
     "case_id": "TC020",
     "parse_ok": true,
     "parse_error": null,

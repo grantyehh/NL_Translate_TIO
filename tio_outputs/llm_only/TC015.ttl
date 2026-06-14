@@ -7,17 +7,17 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-bandwidth, ex:topology ;
-  rdfs:comment "Assure minimum guaranteed bandwidth to a specific spoke for 亞洲航空 enterprise VPN."@en .
+  rdfs:comment "Assure minimum guaranteed bandwidth to a specific spoke for 亞洲航空維修 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
-  rdfs:label "亞洲航空"@zh .
+  rdfs:label "亞洲航空維修"@zh .
 
 ex:service a evsla:EnterpriseVpnService ;
   evsla:forTenant ex:tenant .
 
 ex:exp-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-bandwidth ;
-  rdfs:comment "Guaranteed bandwidth must be at least 300 Mbps to the named spoke."@en .
+  rdfs:comment "Guaranteed bandwidth must be at least 300 Mbps from the hub to the named spoke."@en .
 
 ex:tgt-bandwidth a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
@@ -29,5 +29,5 @@ ex:tgt-bandwidth a icm:Target ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub [ a evsla:HubSite ; rdfs:label "航空維修總部"@zh ] ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "亞洲航空維修總部"@zh ] ;
   evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "小港機棚"@zh ] .

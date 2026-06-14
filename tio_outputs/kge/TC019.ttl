@@ -29,6 +29,4 @@ ex:tgt-latency a icm:Target ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub [ a evsla:HubSite ; rdfs:label "安全監控總部"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "分點一"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "分點二"@zh ] .
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "安全監控總部"@zh ] .

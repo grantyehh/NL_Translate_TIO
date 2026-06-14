@@ -3,26 +3,26 @@
 @prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ex:    <http://example.org/tio-instance/tc009/> .
+@prefix ex:    <http://example.org/tio-instance/TC012/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-bandwidth, ex:topology ;
-  rdfs:comment "Assure minimum guaranteed bandwidth to a specific spoke for 綠能電力 enterprise VPN."@en .
+  rdfs:comment "Assure minimum guaranteed bandwidth to a specific spoke for 藍海保險 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
-  rdfs:label "綠能電力"@zh .
+  rdfs:label "藍海保險"@zh .
 
 ex:service a evsla:EnterpriseVpnService ;
   evsla:forTenant ex:tenant .
 
 ex:exp-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-bandwidth ;
-  rdfs:comment "Guaranteed bandwidth must be at least 200 Mbps to the named spoke."@en .
+  rdfs:comment "Guaranteed bandwidth must be at least 150 Mbps to the named spoke."@en .
 
 ex:tgt-bandwidth a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
-  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 200 ; quan:unit "Mbps" ] ;
-  evsla:hasThreshold [ a quan:Quantity ; rdf:value 200 ; quan:unit "Mbps" ] ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 150 ; quan:unit "Mbps" ] ;
+  evsla:hasThreshold [ a quan:Quantity ; rdf:value 150 ; quan:unit "Mbps" ] ;
   evsla:hasStatistic evsla:minimum ;
   evsla:hasScope evsla:specificSpoke ;
   evsla:hasMeasurementMethod evsla:activeMeasurement ;
@@ -30,4 +30,4 @@ ex:tgt-bandwidth a icm:Target ;
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "總部"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "彰濱風場"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "花蓮服務中心"@zh ] .

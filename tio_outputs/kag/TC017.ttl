@@ -3,32 +3,31 @@
 @prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ex:    <http://example.org/tio-instance/tc005/> .
+@prefix ex:    <http://example.org/tio-instance/TC017/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-packet-loss, ex:topology ;
-  rdfs:comment "Assure hub-to-all-spokes packet loss SLA for 晨星零售 enterprise VPN."@en .
+  rdfs:comment "Assure hub-to-all-spokes packet loss SLA for 國際會展 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
-  rdfs:label "晨星零售"@zh .
+  rdfs:label "國際會展"@zh .
 
 ex:service a evsla:EnterpriseVpnService ;
   evsla:forTenant ex:tenant .
 
 ex:exp-packet-loss a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-packet-loss ;
-  rdfs:comment "Packet loss must stay below 0.05% at p99 across all spokes."@en .
+  rdfs:comment "Packet loss must stay below 0.15% at p99 across all spokes."@en .
 
 ex:tgt-packet-loss a icm:Target ;
   evsla:hasMetric evsla:packetLoss ;
-  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 0.05 ; quan:unit "%" ] ;
-  evsla:hasThreshold [ a quan:Quantity ; rdf:value 0.05 ; quan:unit "%" ] ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 0.15 ; quan:unit "%" ] ;
+  evsla:hasThreshold [ a quan:Quantity ; rdf:value 0.15 ; quan:unit "%" ] ;
   evsla:hasStatistic evsla:p99 ;
   evsla:hasScope evsla:hubToAllSpokes ;
   evsla:hasMeasurementMethod evsla:twamp ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub [ a evsla:HubSite ; rdfs:label "Hub"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke A"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke B"@zh ] .
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "國際會展Hub"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke"@zh ] .

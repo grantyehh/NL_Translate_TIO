@@ -3,31 +3,30 @@
 @prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ex:    <http://example.org/tio-instance/tc016/> .
+@prefix ex:    <http://example.org/tio-instance/TC010/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:topology ;
-  rdfs:comment "Assure hub-to-all-spokes latency SLA for 智慧農業 enterprise VPN."@en .
+  rdfs:comment "Assure hub-to-all-spokes latency SLA for 迅捷遊戲 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
-  rdfs:label "智慧農業"@zh .
+  rdfs:label "迅捷遊戲"@zh .
 
 ex:service a evsla:EnterpriseVpnService ;
   evsla:forTenant ex:tenant .
 
 ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-latency ;
-  rdfs:comment "Latency must stay below 100 ms at p95 across all spokes."@en .
+  rdfs:comment "Latency must stay below 20 ms at p95 across all spokes."@en .
 
 ex:tgt-latency a icm:Target ;
   evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 100 ; quan:unit "ms" ] ;
-  evsla:hasThreshold [ a quan:Quantity ; rdf:value 100 ; quan:unit "ms" ] ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 20 ; quan:unit "ms" ] ;
+  evsla:hasThreshold [ a quan:Quantity ; rdf:value 20 ; quan:unit "ms" ] ;
   evsla:hasStatistic evsla:p95 ;
   evsla:hasScope evsla:hubToAllSpokes ;
   evsla:hasMeasurementMethod evsla:twamp ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub [ a evsla:HubSite ; rdfs:label "智慧農業Hub"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 1"@zh ] .
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "總部"@zh ] .

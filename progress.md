@@ -149,6 +149,37 @@ KAG            |    20 |    100.00% |       1.0000 |    100.00% |        35.95 |
 - 唯一能分出高下的是**成本**(見下節 token):本輪三條品質相同,但 GraphRag 用了約 5.7× token。
 - LLM-only 仍為主要 baseline(無 ontology retrieval / graph reasoning / grounding)。
 
+## Semantic Evaluator (stricter, 2026-06-14)
+
+為了打破上面「四方品質全 100% 平手」的天花板,新增 graph-binding 語意評分器
+(`semantic_eval.py`,擴充進 `evaluate_ttl.py`,結果見 `compare_four_way.txt` 的
+Semantic Summary)。它沿 intent 契約路徑綁定每個 gold metric 到輸出子圖,逐維度比對
+**正確性**(非僅存在性):metric / threshold值+單位 / statistic / scope / method /
+time_window / operator / tenant / topology / contract / precision,加權成 composite。
+設計與計畫:`docs/superpowers/specs/2026-06-14-stricter-semantic-evaluator-design.md`、
+`docs/superpowers/plans/2026-06-14-stricter-semantic-evaluator.md`。
+
+本輪(strong prompt)結果:
+
+```text
+Experiment | Composite | (除下列外各維度皆 1.00)
+LLM-only   |  0.9355   | operator 0.00
+GraphRag   |  0.9355   | operator 0.00
+KAG        |  0.9323   | operator 0.00 ; topology 0.95 (TC010)
+KGE        |  0.9226   | operator 0.00 ; topology 0.80 (TC001/002/017/019)
+```
+
+關鍵發現(舊評分器全看不到):
+
+- **嚴格評分器打破了 100% 平手**:KGE 排最後、KAG 次低。
+- **topology 拉開差距**:**KGE 4 題產出殘缺拓樸**(`evsla:HubAndSpokeTopology` 有 hub、
+  但缺 `evsla:hasSpoke`/SpokeSite),KAG 1 題(TC010);LLM-only / GraphRag 完整。
+- **operator 整排 0/20**:無任何方法用 `quan:smaller/atLeast` 顯式建模比較方向(全靠
+  metric 隱含)。是 weak-prompt + retrieval 的潛在分水嶺。
+- 核心語意(metric/threshold/statistic/scope/method/time_window/tenant/contract/
+  precision)四條都滿分 —— strong prompt 已手寫保證,差異只在 prompt 未管的 topology
+  完整性與 operator。
+
 ## Current Token Usage Evaluation
 
 目前 `phase1/token_usage/compare_token_usage.txt` 結果(2026-06-13 本輪)：
@@ -197,4 +228,6 @@ python3 -m unittest LLM-only/test_nl_to_tio.py GraphRag/test_nl_to_tio.py KGE/KG
 1. 決定是否保留目前 `KAG` 作為 native KAG 結果，並另外新增 `kag_logical_form` variant。
 2. 若要做 `kag-logical-form-grounding`，新增獨立輸出目錄與第五條 comparison line，避免和 native KAG 混在一起。
 3. 將 KAG Docker compose 改成 named volumes，避免 builder KG data 因 anonymous volume 管理不清而遺失。
-4. 視正式實驗需要，補上 strict schema / URI hallucination / tenant placement canonicalization 等 evaluator 指標。
+4. ✅ **已做(2026-06-14)**:嚴格語意評分器(`semantic_eval.py`,11 維度 graph-binding),
+   見上方「Semantic Evaluator」段。後續可加:hub/spoke 名稱與基數比對(目前 topology 只驗結構)、
+   weak-prompt 條件下重跑以放大 retrieval 差異、operator 權重調校。

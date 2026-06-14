@@ -30,5 +30,4 @@ ex:tgt-packet-loss a icm:Target ;
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "城市交通局Hub"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 1"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 2"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "各Spoke"@zh ] .

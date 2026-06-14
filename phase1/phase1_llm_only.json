@@ -58,7 +58,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC002.ttl",
@@ -119,7 +140,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC003.ttl",
@@ -174,7 +216,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC004.ttl",
@@ -235,7 +298,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC005.ttl",
@@ -243,7 +327,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 32,
+    "triple_count": 35,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -296,7 +380,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC006.ttl",
@@ -351,7 +456,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC007.ttl",
@@ -412,7 +538,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC008.ttl",
@@ -473,7 +620,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC009.ttl",
@@ -528,7 +696,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC010.ttl",
@@ -589,11 +778,272 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC011.ttl",
     "case_id": "TC011",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 35,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "property used on at least one triple",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC012.ttl",
+    "case_id": "TC012",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 35,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "property used on at least one triple",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC013.ttl",
+    "case_id": "TC013",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 41,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "property used on at least one triple",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC014.ttl",
+    "case_id": "TC014",
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
@@ -650,184 +1100,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC012.ttl",
-    "case_id": "TC012",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 35,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
       },
-      "evsla": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "matches_official": true
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
       },
-      "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": true
-      }
-    },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": true,
-        "reason": "property used on at least one triple",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC013.ttl",
-    "case_id": "TC013",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 35,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": true
-      },
-      "evsla": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "matches_official": true
-      },
-      "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": true
-      }
-    },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": true,
-        "reason": "property used on at least one triple",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC014.ttl",
-    "case_id": "TC014",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 35,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": true
-      },
-      "evsla": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "matches_official": true
-      },
-      "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": true
-      }
-    },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": true,
-        "reason": "property used on at least one triple",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC015.ttl",
@@ -882,7 +1176,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC016.ttl",
@@ -943,7 +1258,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC017.ttl",
@@ -1004,7 +1340,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC018.ttl",
@@ -1059,7 +1416,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC019.ttl",
@@ -1120,7 +1498,28 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only/TC020.ttl",
@@ -1181,6 +1580,27 @@
       }
     ],
     "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9355,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 0.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": []
+    }
   }
 ]

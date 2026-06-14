@@ -19,6 +19,17 @@ Best average expected coverage  : LLM-only (1.0000)
 Fewest average triples          : KGE (35.80)
 Cleanest vocabulary (unk pred+type): LLM-only (0)
 
+Semantic Summary (graph-binding correctness)
+--------------------------------------------
+Experiment     | Composite | metri | thres | stati | scope | measu | time_ | opera | tenan | topol | contr | preci
+------------------------------------------------------------------------------------------------------------------
+LLM-only       |    0.9355 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  0.00 |  1.00 |  1.00 |  1.00 |  1.00
+GraphRag       |    0.9355 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  0.00 |  1.00 |  1.00 |  1.00 |  1.00
+KGE            |    0.9226 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  0.00 |  1.00 |  0.80 |  1.00 |  1.00
+KAG            |    0.9323 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  1.00 |  0.00 |  1.00 |  0.95 |  1.00 |  1.00
+
+Best semantic composite : LLM-only (0.9355)
+
 Per-Case Four-Way Comparison
 ----------------------------
 case_id  |    LLM cov | GraphRag cov |    KGE cov |    KAG cov | winner     |    LLM triples | GraphRag triples |    KGE triples |    KAG triples | difficulty
