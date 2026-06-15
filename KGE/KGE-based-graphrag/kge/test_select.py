@@ -41,3 +41,13 @@ def test_assemble_context_clean_and_scoped():
     assert "Predicted likely triples" not in ctx
     for bad in (" rdfs:subClassOf ", " rdfs:domain ", " rdfs:range "):
         assert bad not in ctx
+
+def test_build_kge_context_wires_grounding(monkeypatch):
+    monkeypatch.setattr(select, "text_ground", lambda q, **k: [LATENCY])
+    ctx = select.build_kge_context("延遲低於50ms")
+    assert "### Canonical prefixes" in ctx
+    assert "evsla:latency" in ctx
+    assert "TransE score=" not in ctx and "Predicted likely triples" not in ctx
+
+def test_text_ground_callable_exists():
+    assert callable(select.text_ground)

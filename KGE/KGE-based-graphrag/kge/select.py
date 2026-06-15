@@ -97,3 +97,59 @@ def assemble_context(grounded_uris: list[str]) -> str:
     ]
     vocab = closed_vocab_for_reached_roles(reached, resources)
     return serialize_context(grounded, relations, vocab)
+
+
+import json  # noqa: E402
+import os  # noqa: E402
+
+import numpy as np  # noqa: E402
+
+from kge.retrieve import _load_arrays, _embed_query, kge_ready  # noqa: E402
+from kge.paths import MANIFEST_JSON  # noqa: E402
+
+TEXT_TOP_K = 8
+EXPAND_TOP_K = 8
+
+
+def _resolve_embedding_model() -> str:
+    if MANIFEST_JSON.is_file():
+        m = json.loads(MANIFEST_JSON.read_text(encoding="utf-8")).get("text_embedding_model")
+        if m:
+            return m
+    return "text-embedding-3-small"
+
+
+def text_ground(query: str, *, top_k: int = TEXT_TOP_K, case_id: str | None = None) -> list[str]:
+    """Dense entity retrieval: cosine(query text embedding, entity text
+    embeddings) -> top-k entity URIs. Catches non-lexical / synonym mentions."""
+    if not kge_ready():
+        return []
+    api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        return []
+    entity_ids, _kge, text_emb = _load_arrays()
+    from openai import OpenAI
+
+    client = OpenAI(api_key=api_key)
+    prev = os.getenv("KGE_ACTIVE_CASE_ID")
+    if case_id:
+        os.environ["KGE_ACTIVE_CASE_ID"] = case_id
+    try:
+        q = _embed_query(client, query, _resolve_embedding_model())
+    finally:
+        if case_id:
+            if prev is None:
+                os.environ.pop("KGE_ACTIVE_CASE_ID", None)
+            else:
+                os.environ["KGE_ACTIVE_CASE_ID"] = prev
+    scores = text_emb @ q
+    idx = np.argsort(-scores)[:top_k]
+    return [entity_ids[i] for i in idx.tolist()]
+
+
+def build_kge_context(query: str, *, case_id: str | None = None) -> str:
+    """Canonical KGE retrieval context: text-embedding grounding + TransE
+    real-triple expansion -> shared GraphRAG output contract."""
+    seeds = text_ground(query, case_id=case_id)
+    expanded = transe_expand(seeds, top_k=EXPAND_TOP_K)
+    return assemble_context(seeds + expanded)
