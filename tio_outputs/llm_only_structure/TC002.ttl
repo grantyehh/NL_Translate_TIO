@@ -1,0 +1,52 @@
+@prefix ex: <http://example.org/tio-instance/tc002/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-plr, ex:topology, ex:cond-plr ;
+    rdfs:comment "Ensure packet loss rate between the Far Eastern Manufacturing Hub and each spoke stays below 0.1% for 99% of the time."@en .
+
+ex:exp-plr
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-plr .
+
+ex:tgt-plr
+    a icm:Target ;
+    ex:metricPredicate ex:packetLossRate ;
+    icm:valuesOfTargetProperty ex:thr-plr ;
+    ex:thresholdPredicate ex:thr-plr ;
+    ex:statisticPredicate ex:percentile99 ;
+    ex:scopePredicate ex:hubToAllSpokes ;
+    ex:methodPredicate ex:measurementMethod ;
+    ex:windowPredicate ex:timeWindow .
+
+ex:thr-plr
+    a quan:Quantity ;
+    rdf:value 0.1 ;
+    quan:unit "%" .
+
+ex:cond-plr
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-plr-value ex:thr-plr ) .
+
+ex:obs-plr
+    ex:observedMetricPredicate ex:packetLossRate .
+
+ex:obs-plr-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-plr ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:hub ;
+    ex:spokePredicate ex:spoke-1 .
+
+ex:hub
+    rdfs:label "Far Eastern Manufacturing Hub"@en .
+
+ex:spoke-1
+    rdfs:label "Spoke"@en .

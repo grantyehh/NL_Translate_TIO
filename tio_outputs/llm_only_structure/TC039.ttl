@@ -1,0 +1,50 @@
+@prefix ex: <http://example.org/tio-instance/tc039/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Taichung industrial headquarters to six plant spokes shall maintain average latency below 80 ms within the monthly SLA window."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:statisticPredicate ex:average ;
+    ex:scopePredicate ex:hubToAllSpokes ;
+    ex:windowPredicate ex:monthlySLAWindow .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 80 ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    ex:observedMetricPredicate ex:latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-latency ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate [ rdfs:label "台中工業總部"@zh ] ;
+    ex:spokePredicate [ rdfs:label "廠區分點1"@zh ] ,
+                     [ rdfs:label "廠區分點2"@zh ] ,
+                     [ rdfs:label "廠區分點3"@zh ] ,
+                     [ rdfs:label "廠區分點4"@zh ] ,
+                     [ rdfs:label "廠區分點5"@zh ] ,
+                     [ rdfs:label "廠區分點6"@zh ] .

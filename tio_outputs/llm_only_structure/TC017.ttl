@@ -1,0 +1,48 @@
+@prefix ex: <http://example.org/tio-instance/tc017/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packet-loss, ex:topology, ex:cond-packet-loss ;
+    rdfs:comment "Ensure packet loss rate between the International Convention and Exhibition Hub and each spoke stays below 0.15% for 99% of the time."@en .
+
+ex:exp-packet-loss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packet-loss .
+
+ex:tgt-packet-loss
+    a icm:Target ;
+    ex:metricPredicate ex:packet-loss-rate ;
+    icm:valuesOfTargetProperty ex:thr-packet-loss ;
+    ex:thresholdPredicate ex:thr-packet-loss ;
+    ex:statisticPredicate ex:percentile-99 ;
+    ex:scopePredicate ex:hub-to-all-spokes ;
+    ex:methodPredicate ex:measurement-method ;
+    ex:windowPredicate ex:time-window .
+
+ex:thr-packet-loss
+    a quan:Quantity ;
+    rdf:value 0.15 ;
+    quan:unit "%" .
+
+ex:cond-packet-loss
+    a log:Condition ;
+    ex:strictly-smallerThan ( ex:obs-packet-loss-value ex:thr-packet-loss ) .
+
+ex:obs-packet-loss
+    ex:observed-metric-predicate ex:packet-loss-rate .
+
+ex:obs-packet-loss-value
+    a quan:Quantity ;
+    ex:observed-value-predicate ( ex:obs-packet-loss ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate [ rdfs:label "國際會展Hub"@zh ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-1"@en ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-2"@en ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-3"@en ] .

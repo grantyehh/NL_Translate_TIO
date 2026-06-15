@@ -1,0 +1,82 @@
+@prefix ex: <http://example.org/tio-instance/tc021/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency-taoyuan, ex:exp-latency-tainan, ex:topology, ex:cond-latency-taoyuan, ex:cond-latency-tainan ;
+    rdfs:comment "Taipei headquarters to Taoyuan plant and Tainan plant, each spoke latency must stay below 40 ms for 95% of the time."@en .
+
+ex:exp-latency-taoyuan
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency-taoyuan .
+
+ex:tgt-latency-taoyuan
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:statisticPredicate ex:p95 ;
+    ex:scopePredicate ex:per-spoke-taoyuan ;
+    ex:methodPredicate ex:measured-latency ;
+    ex:windowPredicate ex:time-95-percent .
+
+ex:exp-latency-tainan
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency-tainan .
+
+ex:tgt-latency-tainan
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:statisticPredicate ex:p95 ;
+    ex:scopePredicate ex:per-spoke-tainan ;
+    ex:methodPredicate ex:measured-latency ;
+    ex:windowPredicate ex:time-95-percent .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 40 ;
+    quan:unit "ms" .
+
+ex:cond-latency-taoyuan
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-taoyuan-value ex:thr-latency ) .
+
+ex:obs-latency-taoyuan
+    ex:observed-metric-predicate ex:latency ;
+    ex:spokePredicate ex:taoyuan-plant .
+
+ex:obs-latency-taoyuan-value
+    a quan:Quantity ;
+    ex:observed-value-predicate ( ex:obs-latency-taoyuan ) .
+
+ex:cond-latency-tainan
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-tainan-value ex:thr-latency ) .
+
+ex:obs-latency-tainan
+    ex:observed-metric-predicate ex:latency ;
+    ex:spokePredicate ex:tainan-plant .
+
+ex:obs-latency-tainan-value
+    a quan:Quantity ;
+    ex:observed-value-predicate ( ex:obs-latency-tainan ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:taipei-headquarters ;
+    ex:spokePredicate ex:taoyuan-plant, ex:tainan-plant .
+
+ex:taipei-headquarters
+    rdfs:label "台北總部"@zh .
+
+ex:taoyuan-plant
+    rdfs:label "桃園廠"@zh .
+
+ex:tainan-plant
+    rdfs:label "台南廠"@zh .

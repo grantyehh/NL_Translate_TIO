@@ -317,8 +317,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Shared phase-1 evaluator for generated TIO Turtle.")
     parser.add_argument("experiment", nargs="?",
                         choices=tuple(EXPERIMENTS.keys()) + ("all",), default="all")
+    parser.add_argument("--test-cases", type=Path, default=test_cases_path(),
+                        help="Gold test-cases JSON (default: test_cases_20.json)")
     args = parser.parse_args(argv)
-    cases = json.loads(test_cases_path().read_text(encoding="utf-8"))
+    cases = json.loads(args.test_cases.read_text(encoding="utf-8"))
     keys = list(EXPERIMENTS.keys()) if args.experiment == "all" else [args.experiment]
     for key in keys:
         evaluate_experiment(key, cases)

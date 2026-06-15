@@ -1,0 +1,74 @@
+@prefix ex: <http://example.org/tio-instance/tc008/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsinput> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix pro: <http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    rdfs:comment "Ensure packet loss between Jingyao Semiconductor hub and each spoke stays below 0.01% for 99% of the time."@en .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:packetLoss evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:packetLoss ex:thr-packetloss ;
+    evsla:average evsla:average ;
+    evsla:hubToAllSpokes evsla:perSpoke ;
+    evsla:hasTimeWindow ex:tw-99pct ;
+    evsla:appliesPerSpoke ex:true-per-spoke .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value 0.01 ;
+    quan:unit "%" .
+
+ex:tw-99pct
+    a quan:Quantity ;
+    rdf:value 99 ;
+    quan:unit "%" .
+
+ex:true-per-spoke
+    a quan:Quantity ;
+    rdf:value 1 ;
+    quan:unit "boolean" .
+
+ex:cond-packetloss
+    a log:Condition ;
+    log:lessThan ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    evsla:packetLoss evsla:packetLoss .
+
+ex:obs-packetloss-value
+    a quan:Quantity ;
+    met:lastObserved ( ex:obs-packetloss ) .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2 .
+
+ex:hub
+    rdfs:label "晶耀半導體Hub"@zh .
+
+ex:spoke-1
+    rdfs:label "Spoke 1"@en .
+
+ex:spoke-2
+    rdfs:label "Spoke 2"@en .

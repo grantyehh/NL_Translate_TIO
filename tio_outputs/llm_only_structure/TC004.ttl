@@ -1,0 +1,60 @@
+@prefix ex: <http://example.org/tio-instance/tc004/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix quan: <http://example.org/quan#> .
+@prefix log: <http://example.org/log#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Ensure latency from Kangjian Medical Taipei Medical Cloud Center to all branch sites stays below 30 ms for 95% of the time."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:statisticPredicate ex:p95 ;
+    ex:scopePredicate ex:hub-to-all-spokes ;
+    ex:methodPredicate ex:measurement ;
+    ex:windowPredicate ex:time-95-percent .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 30 ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    ex:observedMetricPredicate ex:latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-latency ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:hub ;
+    ex:spokePredicate ex:spoke-1,
+                     ex:spoke-2,
+                     ex:spoke-3 .
+
+ex:hub
+    rdfs:label "康健醫療台北醫療雲中心"@zh .
+
+ex:spoke-1
+    rdfs:label "院區分點1"@zh .
+
+ex:spoke-2
+    rdfs:label "院區分點2"@zh .
+
+ex:spoke-3
+    rdfs:label "院區分點3"@zh .

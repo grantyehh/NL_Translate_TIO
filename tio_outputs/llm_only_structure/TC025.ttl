@@ -1,0 +1,55 @@
+@prefix ex: <http://example.org/tio-instance/tc025/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packet-loss, ex:topology, ex:cond-packet-loss ;
+    rdfs:comment "Kaohsiung logistics center to Pingtung delivery station and Taitung delivery station, each spoke packet loss rate stays below 0.2% for 95% of the time."@en .
+
+ex:exp-packet-loss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packet-loss .
+
+ex:tgt-packet-loss
+    a icm:Target ;
+    ex:metricPredicate ex:packet-loss-rate ;
+    icm:valuesOfTargetProperty ex:thr-packet-loss ;
+    ex:thresholdPredicate ex:thr-packet-loss ;
+    ex:statisticPredicate ex:percentile-95 ;
+    ex:scopePredicate ex:per-spoke ;
+    ex:methodPredicate ex:measurement-method ;
+    ex:windowPredicate ex:time-window .
+
+ex:thr-packet-loss
+    a quan:Quantity ;
+    rdf:value 0.2 ;
+    quan:unit "%" .
+
+ex:cond-packet-loss
+    a log:Condition ;
+    ex:strictlySmaller ( ex:obs-packet-loss-value ex:thr-packet-loss ) .
+
+ex:obs-packet-loss
+    ex:observed-metric-predicate ex:packet-loss-rate .
+
+ex:obs-packet-loss-value
+    a quan:Quantity ;
+    ex:observed-value-predicate ( ex:obs-packet-loss ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:hub-kaohsiung ;
+    ex:spokePredicate ex:spoke-pingtung, ex:spoke-taitung .
+
+ex:hub-kaohsiung
+    rdfs:label "高雄物流中心"@zh .
+
+ex:spoke-pingtung
+    rdfs:label "屏東配送站"@zh .
+
+ex:spoke-taitung
+    rdfs:label "台東配送站"@zh .

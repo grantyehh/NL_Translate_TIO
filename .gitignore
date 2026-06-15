@@ -8,6 +8,7 @@ __pycache__/
 GraphRag/cache/
 GraphRag/output/
 GraphRag/logs/
+GraphRag/index/
 graphrag_term_input/
 
 # KGE generated artifacts

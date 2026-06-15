@@ -1,0 +1,50 @@
+@prefix ex: <http://example.org/tio-instance/tc002/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    rdfs:comment "Ensure packet loss between the Far Eastern Manufacturing hub and all spokes stays below 0.1% for 99% of the time."@en .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:packetLoss evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:packetLoss ex:thr-packetloss ;
+    evsla:hubToAllSpokes evsla:hubToAllSpokes ;
+    evsla:appliesPerSpoke "false" ;
+    evsla:hasTimeWindow ex:tw-99pct .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value 0.1 ;
+    quan:unit "%" .
+
+ex:tw-99pct
+    a quan:Quantity ;
+    rdf:value 99 ;
+    quan:unit "%" .
+
+ex:cond-packetloss
+    a log:Condition .
+
+ex:topology
+    a evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
+
+ex:hub
+    rdfs:label "Far Eastern Manufacturing Hub"@en .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "Spoke"@en .

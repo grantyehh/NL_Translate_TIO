@@ -1,0 +1,62 @@
+@prefix ex: <http://example.org/tio-instance/tc021/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent, evsla:HubAndSpokeTopology ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Hung Yuan Technology requires latency from the Taipei headquarters hub to the Taoyuan plant and Tainan plant, for each spoke, to stay below 40 ms at the p95 level."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:perSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value "40"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:hasMetric evsla:latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
+
+ex:topology
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-taoyuan, ex:spoke-tainan .
+
+ex:hub-taipei
+    a evsla:HubSite ;
+    rdfs:label "台北總部"@zh .
+
+ex:spoke-taoyuan
+    a evsla:SpokeSite ;
+    rdfs:label "桃園廠"@zh .
+
+ex:spoke-tainan
+    a evsla:SpokeSite ;
+    rdfs:label "台南廠"@zh .

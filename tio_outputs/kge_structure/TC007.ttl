@@ -1,0 +1,47 @@
+@prefix ex: <http://example.org/tio-instance/tc007/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix pro: <http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Ensure latency from 海港航運高雄港營運中心 to all port branch sites stays below 80 ms for 95% of the time."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    evsla:latency evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hubToAllSpokes evsla:hubToAllSpokes ;
+    evsla:oneHourWindow evsla:oneHourWindow .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 80 ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    log:noneOf ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:latency evsla:latency ;
+    met:observedValue ( ex:obs-latency ) .
+
+ex:obs-latency-value
+    a quan:Quantity .

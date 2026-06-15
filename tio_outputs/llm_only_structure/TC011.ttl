@@ -1,0 +1,46 @@
+@prefix ex: <http://example.org/tio-instance/tc011/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-plr, ex:topology, ex:cond-plr ;
+    rdfs:comment "Ensure packet loss rate between the City Transportation Bureau hub and each spoke stays below 0.2% for 99% of the time."@en .
+
+ex:exp-plr
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-plr .
+
+ex:tgt-plr
+    a icm:Target ;
+    ex:metricPredicate ex:PacketLossRate ;
+    icm:valuesOfTargetProperty ex:thr-plr ;
+    ex:thresholdPredicate ex:thr-plr ;
+    ex:statisticPredicate ex:Percentile99 ;
+    ex:scopePredicate ex:HubToEachSpoke ;
+    ex:methodPredicate ex:ObservedMeasurement ;
+    ex:windowPredicate ex:TimeCoverage .
+
+ex:thr-plr
+    a quan:Quantity ;
+    rdf:value 0.2 ;
+    quan:unit "%" .
+
+ex:cond-plr
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-plr-value ex:thr-plr ) .
+
+ex:obs-plr
+    ex:observedMetricPredicate ex:PacketLossRate ;
+    ex:obs-plr-value a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-plr ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate [ rdfs:label "城市交通局Hub"@zh ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-1"@en ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-2"@en ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-3"@en ] .

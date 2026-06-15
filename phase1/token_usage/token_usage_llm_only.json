@@ -7,8 +7,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4514,
-    "output_tokens": 666,
-    "total_tokens": 5180,
+    "output_tokens": 669,
+    "total_tokens": 5183,
     "usage_source": "response.usage"
   },
   {
@@ -19,8 +19,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4518,
-    "output_tokens": 707,
-    "total_tokens": 5225,
+    "output_tokens": 676,
+    "total_tokens": 5194,
     "usage_source": "response.usage"
   },
   {
@@ -67,8 +67,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4510,
-    "output_tokens": 699,
-    "total_tokens": 5209,
+    "output_tokens": 701,
+    "total_tokens": 5211,
     "usage_source": "response.usage"
   },
   {
@@ -91,8 +91,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4519,
-    "output_tokens": 703,
-    "total_tokens": 5222,
+    "output_tokens": 680,
+    "total_tokens": 5199,
     "usage_source": "response.usage"
   },
   {
@@ -103,8 +103,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4512,
-    "output_tokens": 702,
-    "total_tokens": 5214,
+    "output_tokens": 707,
+    "total_tokens": 5219,
     "usage_source": "response.usage"
   },
   {
@@ -115,8 +115,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4515,
-    "output_tokens": 731,
-    "total_tokens": 5246,
+    "output_tokens": 669,
+    "total_tokens": 5184,
     "usage_source": "response.usage"
   },
   {
@@ -127,8 +127,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4517,
-    "output_tokens": 701,
-    "total_tokens": 5218,
+    "output_tokens": 704,
+    "total_tokens": 5221,
     "usage_source": "response.usage"
   },
   {
@@ -151,8 +151,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4517,
-    "output_tokens": 669,
-    "total_tokens": 5186,
+    "output_tokens": 733,
+    "total_tokens": 5250,
     "usage_source": "response.usage"
   },
   {
@@ -175,8 +175,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4510,
-    "output_tokens": 660,
-    "total_tokens": 5170,
+    "output_tokens": 703,
+    "total_tokens": 5213,
     "usage_source": "response.usage"
   },
   {
@@ -199,8 +199,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4518,
-    "output_tokens": 676,
-    "total_tokens": 5194,
+    "output_tokens": 675,
+    "total_tokens": 5193,
     "usage_source": "response.usage"
   },
   {
@@ -211,8 +211,8 @@
     "model": "gpt-5.4",
     "api": "chat.completions",
     "input_tokens": 4511,
-    "output_tokens": 702,
-    "total_tokens": 5213,
+    "output_tokens": 706,
+    "total_tokens": 5217,
     "usage_source": "response.usage"
   },
   {
@@ -237,6 +237,246 @@
     "input_tokens": 4552,
     "output_tokens": 992,
     "total_tokens": 5544,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC021",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4527,
+    "output_tokens": 703,
+    "total_tokens": 5230,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC022",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4540,
+    "output_tokens": 754,
+    "total_tokens": 5294,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC023",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4525,
+    "output_tokens": 738,
+    "total_tokens": 5263,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC024",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4535,
+    "output_tokens": 745,
+    "total_tokens": 5280,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC025",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4532,
+    "output_tokens": 706,
+    "total_tokens": 5238,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC026",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4529,
+    "output_tokens": 1098,
+    "total_tokens": 5627,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC027",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4548,
+    "output_tokens": 1052,
+    "total_tokens": 5600,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC028",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4530,
+    "output_tokens": 1069,
+    "total_tokens": 5599,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC029",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4541,
+    "output_tokens": 1118,
+    "total_tokens": 5659,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC030",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4537,
+    "output_tokens": 1004,
+    "total_tokens": 5541,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC031",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4533,
+    "output_tokens": 960,
+    "total_tokens": 5493,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC032",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4527,
+    "output_tokens": 1053,
+    "total_tokens": 5580,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC033",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4551,
+    "output_tokens": 1291,
+    "total_tokens": 5842,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC034",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4545,
+    "output_tokens": 1053,
+    "total_tokens": 5598,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC035",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4541,
+    "output_tokens": 1035,
+    "total_tokens": 5576,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC036",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4525,
+    "output_tokens": 841,
+    "total_tokens": 5366,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC037",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4525,
+    "output_tokens": 792,
+    "total_tokens": 5317,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC038",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4532,
+    "output_tokens": 848,
+    "total_tokens": 5380,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC039",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4527,
+    "output_tokens": 842,
+    "total_tokens": 5369,
+    "usage_source": "response.usage"
+  },
+  {
+    "experiment": "llm_only",
+    "ledger": "online",
+    "case_id": "TC040",
+    "stage": "turtle_generation",
+    "model": "gpt-5.4",
+    "api": "chat.completions",
+    "input_tokens": 4545,
+    "output_tokens": 1119,
+    "total_tokens": 5664,
     "usage_source": "response.usage"
   }
 ]

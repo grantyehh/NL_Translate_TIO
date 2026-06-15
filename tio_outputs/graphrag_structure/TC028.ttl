@@ -1,0 +1,92 @@
+@prefix ex: <http://example.org/tio-instance/tc028/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-taichung, ex:exp-kaohsiung, ex:topology, ex:cond-taichung, ex:cond-kaohsiung ;
+    rdfs:comment "亞翔科技要求新竹總部到台中研發中心保證頻寬不低於200Mbps，到高雄測試中心保證頻寬不低於100Mbps。"@en .
+
+ex:exp-taichung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-taichung ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    evsla:hasThreshold ex:thr-taichung ;
+    evsla:hasScope evsla:specificSpoke .
+
+ex:tgt-taichung
+    a icm:Target ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-taichung ;
+    evsla:hasThreshold ex:thr-taichung ;
+    evsla:hasScope evsla:specificSpoke .
+
+ex:thr-taichung
+    a quan:Quantity ;
+    rdf:value "200"^^xsd:decimal ;
+    quan:unit "Mbps" .
+
+ex:exp-kaohsiung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-kaohsiung ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    evsla:hasThreshold ex:thr-kaohsiung ;
+    evsla:hasScope evsla:specificSpoke .
+
+ex:tgt-kaohsiung
+    a icm:Target ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
+    evsla:hasThreshold ex:thr-kaohsiung ;
+    evsla:hasScope evsla:specificSpoke .
+
+ex:thr-kaohsiung
+    a quan:Quantity ;
+    rdf:value "100"^^xsd:decimal ;
+    quan:unit "Mbps" .
+
+ex:cond-taichung
+    a log:Condition ;
+    quan:atLeast ( ex:obs-taichung-value ex:thr-taichung ) .
+
+ex:obs-taichung
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+
+ex:obs-taichung-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-taichung ) .
+
+ex:cond-kaohsiung
+    a log:Condition ;
+    quan:atLeast ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
+
+ex:obs-kaohsiung
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+
+ex:obs-kaohsiung-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-kaohsiung ) .
+
+ex:topology
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hsinchu-hq ;
+    evsla:hasSpoke ex:taichung-rd-center, ex:kaohsiung-test-center .
+
+ex:hsinchu-hq
+    a evsla:HubSite ;
+    rdfs:label "新竹總部"@en .
+
+ex:taichung-rd-center
+    a evsla:SpokeSite ;
+    rdfs:label "台中研發中心"@en .
+
+ex:kaohsiung-test-center
+    a evsla:SpokeSite ;
+    rdfs:label "高雄測試中心"@en .

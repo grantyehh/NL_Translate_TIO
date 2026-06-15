@@ -1,0 +1,75 @@
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log:   <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/tc028/> .
+
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-bandwidth-taichung, ex:cond-bandwidth-taichung, ex:exp-bandwidth-kaohsiung, ex:cond-bandwidth-kaohsiung, ex:topology ;
+  rdfs:comment "Assure minimum guaranteed bandwidth from the hub to two specific spokes for 亞翔科技 enterprise VPN."@en .
+
+ex:tenant a evsla:Tenant ;
+  rdfs:label "亞翔科技"@zh .
+
+ex:service a evsla:EnterpriseVpnService ;
+  evsla:forTenant ex:tenant .
+
+ex:exp-bandwidth-taichung a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-bandwidth-taichung ;
+  rdfs:comment "Guaranteed bandwidth must be at least 200 Mbps from the hub to 台中研發中心."@en .
+
+ex:tgt-bandwidth-taichung a icm:Target ;
+  evsla:hasMetric evsla:guaranteedBandwidth ;
+  icm:valuesOfTargetProperty ex:thr-bandwidth-taichung ;
+  evsla:hasThreshold ex:thr-bandwidth-taichung ;
+  evsla:hasStatistic evsla:minimum ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-bandwidth-taichung a quan:Quantity ;
+  rdf:value 200 ;
+  quan:unit "Mbps" .
+
+ex:cond-bandwidth-taichung a log:Condition ;
+  quan:atLeast ( ex:obs-bandwidth-taichung-value ex:thr-bandwidth-taichung ) .
+
+ex:obs-bandwidth-taichung a met:Observation ;
+  met:observedMetric evsla:guaranteedBandwidth .
+
+ex:obs-bandwidth-taichung-value a quan:Quantity ;
+  met:observedValue ( ex:obs-bandwidth-taichung ) .
+
+ex:exp-bandwidth-kaohsiung a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-bandwidth-kaohsiung ;
+  rdfs:comment "Guaranteed bandwidth must be at least 100 Mbps from the hub to 高雄測試中心."@en .
+
+ex:tgt-bandwidth-kaohsiung a icm:Target ;
+  evsla:hasMetric evsla:guaranteedBandwidth ;
+  icm:valuesOfTargetProperty ex:thr-bandwidth-kaohsiung ;
+  evsla:hasThreshold ex:thr-bandwidth-kaohsiung ;
+  evsla:hasStatistic evsla:minimum ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-bandwidth-kaohsiung a quan:Quantity ;
+  rdf:value 100 ;
+  quan:unit "Mbps" .
+
+ex:cond-bandwidth-kaohsiung a log:Condition ;
+  quan:atLeast ( ex:obs-bandwidth-kaohsiung-value ex:thr-bandwidth-kaohsiung ) .
+
+ex:obs-bandwidth-kaohsiung a met:Observation ;
+  met:observedMetric evsla:guaranteedBandwidth .
+
+ex:obs-bandwidth-kaohsiung-value a quan:Quantity ;
+  met:observedValue ( ex:obs-bandwidth-kaohsiung ) .
+
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "新竹總部"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "台中研發中心"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "高雄測試中心"@zh ] .

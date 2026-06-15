@@ -294,12 +294,53 @@ python3 -m unittest LLM-only/test_nl_to_tio.py GraphRag/test_nl_to_tio.py KGE/KG
 - token reports: 已更新到 `phase1/token_usage/`
 - unit tests: pass
 
+## Experiment Architecture 3 — domain-graph GraphRAG + structure-only (2026-06-15)
+
+重設計 GraphRAG 為 **ontology-aware domain-graph RAG**:entry-point grounding(lexical-exact + vector)
++ 只走有意義連接屬性的有界 traversal(**排除 rdf:type/subClassOf/domain/range plumbing**)+ role-scoped
+封閉詞表 + 自含 `@prefix` context。新增 `structure_only` prompt profile(給組裝骨架、**抽掉全部 EVSLA 詞彙
+與 namespace**,operator 也交給 retrieval 供詞 + LLM 從 NL 推方向),三條 structure-only 線共用 byte-identical
+base prompt(只差 user-message 的 retrieval 區塊)。新增 20 題 hub-and-spoke 測資(TC021–040,
+`test_cases_40.json`)。設計/計畫:`docs/superpowers/specs/2026-06-15-graphrag-domain-graph-redesign-design.md`、
+`docs/superpowers/plans/2026-06-15-graphrag-domain-graph-redesign.md`。
+
+四線結果(structure-only,40 題,strict `semantic_eval`,gpt-5.4):
+
+```text
+Line                       | Parse | Composite | Tok/case
+LLM-only strong(天花板)    | 100%  |  0.9722   |  5,349
+GraphRAG-structure         | 100%  |  0.7867   |  2,369
+KGE-structure              |  95%  |  0.0051   |  8,099
+LLM-only-structure(地板)   |  85%  |  0.0000   |  1,432
+```
+
+關鍵發現:
+
+- **retrieval_information_gain = GraphRAG-structure − floor = +0.7867** —— retrieval 在「零硬寫詞彙」下
+  從 0 補到 0.79,**首次成為正貢獻**。
+- **replacement_gap = GraphRAG-structure − ceiling = −0.1855** —— 追到強配方上界的 **80.9%**,且只花
+  **2,369 tok/題(< 強配方 5,349 的一半)**。舊版 GraphRAG ~13,500 tok/題的成本問題一併解決(~5.7×↓)。
+- **KGE 仍掛(0.0051)且最貴(8,099/題)**;本輪只重設計 GraphRAG,KGE 未動,結果與先前診斷一致
+  (grounding 太吵、給不出可落地官方 URI)。
+- GraphRAG 各維度:metric / operator / threshold / scope / contract / precision **已追平天花板**
+  (**operator 0.96** —— 歷史最難、曾 0/20 的維度,「retrieval 給詞 + LLM 從 NL 推方向」成立)。
+  **缺口集中在 tenant(0.00)、time_window(0.20)、measurement_method(0.35)、topology(0.50)**。
+- caveat:KGE / floor 的 0 是因吐**非官方 namespace IRI**,被精確-IRI 評分器歸零(GraphRAG 高分證明
+  評分器有鑑別力,非 bug)。
+
+報告:`phase1/phase1_{graphrag,kge,llm_only}_structure.json` + `phase1/phase1_llm_only.json`(strong 上界,
+40 題)。`evaluate_ttl.py` 新增 `--test-cases` 以對 40 題 gold 評分。索引/artifacts:`GraphRag/index/`、
+`KGE/KGE-based-graphrag/kge_data/`(均本機生成、未入庫)。
+
 ## Next Steps
 
-0. **(active) Weak-prompt 替代性實驗**:強 prompt 下四方品質並列頂格、evaluator 飽和,改測「retrieval 能否
-   在不含領域知識的弱 prompt 下追平強-prompt 上界」。設計已定稿並 commit:
-   `docs/superpowers/specs/2026-06-13-weak-prompt-retrieval-substitution-design.md`(`b620a43`)。
-   下一步:進 writing-plans 拆實作計畫。
+0. **(active, 2026-06-15)** 縮 GraphRAG-structure 對天花板的 **0.19 replacement_gap**,集中修 4 個維度:
+   **tenant(0.00**;補 `evsla:Tenant` typing / `forTenant` relation,structure prompt 寫清楚 tenant 建模)、
+   **time_window(0.20)** 與 **measurement_method(0.35)**(查是 grounding 沒命中還是 prompt wiring)、
+   **topology(0.50**;hub/spoke 基數)。可選:重設計 KGE(仍 0.0051);wire KAG-structure 湊四方對照。
+1. **(superseded by Architecture 3)** Weak-prompt 替代性實驗:已被 structure-only 設計取代 —— structure-only
+   給組裝骨架、抽詞彙,比 all-or-nothing 的 weak prompt 更能量出 retrieval 的邊際價值。
+   原設計:`docs/superpowers/specs/2026-06-13-weak-prompt-retrieval-substitution-design.md`(`b620a43`)。
 1. 決定是否保留目前 `KAG` 作為 native KAG 結果，並另外新增 `kag_logical_form` variant。
 2. 若要做 `kag-logical-form-grounding`，新增獨立輸出目錄與第五條 comparison line，避免和 native KAG 混在一起。
 3. 將 KAG Docker compose 改成 named volumes，避免 builder KG data 因 anonymous volume 管理不清而遺失。

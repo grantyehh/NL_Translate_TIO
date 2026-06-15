@@ -1,0 +1,56 @@
+@prefix ex: <http://example.org/tio-instance/tc011/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
+    rdfs:comment "Ensure packet loss between the City Transportation Bureau hub and each spoke stays below 0.2% at the p99 level."@en .
+
+ex:exp-packetLoss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetLoss .
+
+ex:tgt-packetLoss
+    a icm:Target ;
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss ;
+    evsla:hasThreshold ex:thr-packetLoss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes .
+
+ex:thr-packetLoss
+    a quan:Quantity ;
+    rdf:value "0.2"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:cond-packetLoss
+    a log:Condition ;
+    quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
+
+ex:obs-packetLoss
+    evsla:packetLoss evsla:packetLoss .
+
+ex:obs-packetLoss-value
+    a quan:Quantity ;
+    met:value ( ex:obs-packetLoss ) .
+
+ex:topology
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "城市交通局Hub"@zh .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "Spoke"@en .

@@ -1,0 +1,63 @@
+@prefix ex: <http://example.org/tio-instance/tc037/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-loss, ex:topology, ex:cond-loss ;
+    rdfs:comment "Shengde Logistics requires packet loss rate from Linkou logistics headquarters to five branch warehouses to stay no more than 0.5% within each hourly window."@en .
+
+ex:exp-loss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-loss .
+
+ex:tgt-loss
+    a icm:Target ;
+    ex:metricPredicate ex:packetLossRate ;
+    icm:valuesOfTargetProperty ex:thr-loss ;
+    ex:thresholdPredicate ex:thr-loss ;
+    ex:statisticPredicate ex:maximum ;
+    ex:scopePredicate ex:hubToAllSpokes ;
+    ex:windowPredicate ex:hourlyWindow .
+
+ex:thr-loss
+    a quan:Quantity ;
+    rdf:value 0.5 ;
+    quan:unit "%" .
+
+ex:cond-loss
+    a log:Condition ;
+    ex:atMostOperator ( ex:obs-loss-value ex:thr-loss ) .
+
+ex:obs-loss
+    ex:observedMetricPredicate ex:packetLossRate .
+
+ex:obs-loss-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-loss ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:hub ;
+    ex:spokePredicate ex:spoke1, ex:spoke2, ex:spoke3, ex:spoke4, ex:spoke5 .
+
+ex:hub
+    rdfs:label "林口物流總部"@zh .
+
+ex:spoke1
+    rdfs:label "分倉1"@zh .
+
+ex:spoke2
+    rdfs:label "分倉2"@zh .
+
+ex:spoke3
+    rdfs:label "分倉3"@zh .
+
+ex:spoke4
+    rdfs:label "分倉4"@zh .
+
+ex:spoke5
+    rdfs:label "分倉5"@zh .

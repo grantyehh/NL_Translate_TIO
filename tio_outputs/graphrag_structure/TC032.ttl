@@ -1,0 +1,82 @@
+@prefix ex: <http://example.org/tio-instance/tc032/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
+    rdfs:comment "Xinqiao Financial requires latency from the Xinyi Financial headquarters hub to all trading-room spokes to stay below 15 ms at the p99 level, and guaranteed bandwidth to be at least 500 Mbps."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value "15"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:exp-bandwidth
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-bandwidth .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth ;
+    evsla:hasThreshold ex:thr-bandwidth ;
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:thr-bandwidth
+    a quan:Quantity ;
+    rdf:value "500"^^xsd:decimal ;
+    quan:unit "Mbps" .
+
+ex:cond-latency
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:obs-latency-value .
+
+ex:obs-latency-value
+    a quan:Quantity .
+
+ex:cond-bandwidth
+    a log:Condition ;
+    quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:obs-bandwidth-value .
+
+ex:obs-bandwidth-value
+    a quan:Quantity .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    ex:hub [ rdfs:label "信義金融總部"@zh ] ;
+    ex:spoke [ rdfs:label "交易室1"@zh ] ;
+    ex:spoke [ rdfs:label "交易室2"@zh ] .

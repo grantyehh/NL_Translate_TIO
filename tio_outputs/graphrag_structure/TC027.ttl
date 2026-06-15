@@ -1,0 +1,124 @@
+@prefix ex: <http://example.org/tio-instance/tc027/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-latency-keelung, ex:exp-loss-miaoli, ex:exp-loss-changbin, ex:topology, ex:cond-latency-keelung, ex:cond-loss-miaoli, ex:cond-loss-changbin ;
+    rdfs:comment "Taipei Energy Dispatch Center to Keelung Power Plant latency below 20 ms at p99, and to Miaoli Power Plant and Changbin Power Plant packet loss below 0.05% for the monthly SLA window."@en .
+
+ex:exp-latency-keelung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency-keelung ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:tgt-latency-keelung
+    a icm:Target ;
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value "20"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:exp-loss-miaoli
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-loss-miaoli ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:thr-loss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:tgt-loss-miaoli
+    a icm:Target ;
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-loss ;
+    evsla:hasThreshold ex:thr-loss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:exp-loss-changbin
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-loss-changbin ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:thr-loss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:tgt-loss-changbin
+    a icm:Target ;
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-loss ;
+    evsla:hasThreshold ex:thr-loss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:thr-loss
+    a quan:Quantity ;
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:cond-latency-keelung
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-keelung-value ex:thr-latency ) .
+
+ex:obs-latency-keelung
+    evsla:hasMetric evsla:latency .
+
+ex:obs-latency-keelung-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency-keelung ) .
+
+ex:cond-loss-miaoli
+    a log:Condition ;
+    quan:smaller ( ex:obs-loss-miaoli-value ex:thr-loss ) .
+
+ex:obs-loss-miaoli
+    evsla:hasMetric evsla:packetLoss .
+
+ex:obs-loss-miaoli-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-loss-miaoli ) .
+
+ex:cond-loss-changbin
+    a log:Condition ;
+    quan:smaller ( ex:obs-loss-changbin-value ex:thr-loss ) .
+
+ex:obs-loss-changbin
+    evsla:hasMetric evsla:packetLoss .
+
+ex:obs-loss-changbin-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-loss-changbin ) .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasScope evsla:specificSpoke ;
+    ex:hub [ rdfs:label "台北能源調度中心"@zh ] ;
+    ex:spoke [ rdfs:label "基隆電廠"@zh ] ;
+    ex:spoke [ rdfs:label "苗栗電廠"@zh ] ;
+    ex:spoke [ rdfs:label "彰濱電廠"@zh ] .

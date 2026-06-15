@@ -1,0 +1,58 @@
+@prefix ex: <http://example.org/tio-instance/tc037/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionslogistic> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
+    rdfs:comment "Shengde Logistics requires packet loss from the Linkou logistics headquarters hub to five spoke warehouses to stay no more than 0.5 percent at the maximum level within each one-hour window."@en .
+
+ex:exp-packetLoss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packetLoss .
+
+ex:tgt-packetLoss
+    a icm:Target ;
+    evsla:packetLoss evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss ;
+    evsla:hasThreshold ex:thr-packetLoss ;
+    evsla:maximum evsla:maximum ;
+    evsla:oneHourWindow evsla:oneHourWindow .
+
+ex:thr-packetLoss
+    a quan:Quantity ;
+    rdf:value 0.5 ;
+    quan:unit "%" .
+
+ex:cond-packetLoss
+    a log:Condition ;
+    log:matchAll ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
+
+ex:obs-packetLoss
+    evsla:packetLoss evsla:packetLoss .
+
+ex:obs-packetLoss-value
+    a quan:Quantity ;
+    set:valuesOfObjectProperty ( ex:obs-packetLoss ) .
+
+ex:topology
+    a icm:Context ;
+    log:matchOne (
+        [ rdfs:label "林口物流總部"@zh ]
+        [ rdfs:label "分倉1"@zh ]
+        [ rdfs:label "分倉2"@zh ]
+        [ rdfs:label "分倉3"@zh ]
+        [ rdfs:label "分倉4"@zh ]
+        [ rdfs:label "分倉5"@zh ]
+    ) .

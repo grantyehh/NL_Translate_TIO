@@ -1,0 +1,92 @@
+@prefix ex: <http://example.org/tio-instance/tc020/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-latency, ex:exp-loss, ex:topology, ex:cond-latency, ex:cond-loss ;
+    rdfs:comment "Ensure latency from the Taipei R&D headquarters hub to the Zhubei laboratory and Tainan manufacturing plant stays below 35 ms at p95, and packet loss between the hub and each spoke stays below 0.05% at p99."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value "35"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:exp-loss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-loss .
+
+ex:tgt-loss
+    a icm:Target ;
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-loss ;
+    evsla:hasThreshold ex:thr-loss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:perSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:thr-loss
+    a quan:Quantity ;
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:cond-latency
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:hasMetric evsla:latency ;
+    met:observedValue ( ex:obs-latency ) .
+
+ex:obs-latency-value
+    a quan:Quantity .
+
+ex:cond-loss
+    a log:Condition ;
+    quan:smaller ( ex:obs-loss-value ex:thr-loss ) .
+
+ex:obs-loss
+    evsla:hasMetric evsla:packetLoss ;
+    met:observedValue ( ex:obs-loss ) .
+
+ex:obs-loss-value
+    a quan:Quantity .
+
+ex:topology
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:site-hub ;
+    evsla:hasSpoke ex:site-spoke-zhubei, ex:site-spoke-tainan .
+
+ex:site-hub
+    a evsla:HubSite ;
+    rdfs:label "精準醫材台北研發總部"@zh .
+
+ex:site-spoke-zhubei
+    a evsla:SpokeSite ;
+    rdfs:label "竹北實驗室"@zh .
+
+ex:site-spoke-tainan
+    a evsla:SpokeSite ;
+    rdfs:label "台南製造廠"@zh .

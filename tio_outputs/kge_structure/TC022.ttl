@@ -1,0 +1,70 @@
+@prefix ex: <http://example.org/tio-instance/tc022/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    rdfs:comment "Taipei warehouse hub to each of New Taipei, Taoyuan and Taichung spokes must keep packet loss below 0.1% for 99% of the time."@en .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:packetLoss evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:perSpoke evsla:perSpoke .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value "0.1" ;
+    quan:unit "%" .
+
+ex:cond-packetloss
+    a log:Condition ;
+    log:matchAll ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    evsla:packetLoss evsla:packetLoss .
+
+ex:obs-packetloss-value
+    a quan:Quantity ;
+    met:observedValue ( ex:obs-packetloss ) .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasHub ex:site-taipei ;
+    rdfs:comment "Hub-and-spoke topology with one hub and three spokes."@en .
+
+ex:site-taipei
+    a evsla:HubSite ;
+    rdfs:label "台北倉儲中心"@zh .
+
+ex:site-newtaipei
+    a evsla:SpokeSite ;
+    rdfs:label "新北倉"@zh .
+
+ex:site-taoyuan
+    a evsla:SpokeSite ;
+    rdfs:label "桃園倉"@zh .
+
+ex:site-taichung
+    a evsla:SpokeSite ;
+    rdfs:label "台中倉"@zh .
+
+ex:topology
+    evsla:packetLoss ex:site-newtaipei, ex:site-taoyuan, ex:site-taichung .

@@ -1,0 +1,78 @@
+@prefix ex: <http://example.org/tio-instance/tc029/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+  a icm:Intent ;
+  icm:intentElements ex:exp-banqiao, ex:exp-xizhi-san-chong, ex:topology, ex:cond-banqiao, ex:cond-xizhi-san-chong ;
+  rdfs:comment "Federal Hospital requires latency from Taipei Medical Information Center to Banqiao Campus to stay below 10 ms at the 99% level, and latency to Xizhi Campus and Sanchong Campus to stay below 25 ms at the 95% level."@en .
+
+ex:exp-banqiao
+  a icm:PropertyExpectation ;
+  icm:target ex:tgt-banqiao .
+
+ex:tgt-banqiao
+  a icm:Target ;
+  ex:metricPredicate ex:latency ;
+  icm:valuesOfTargetProperty ex:thr-banqiao ;
+  ex:thresholdPredicate ex:thr-banqiao ;
+  ex:statisticPredicate ex:p99 ;
+  ex:scopePredicate ex:banqiao-scope ;
+  ex:methodPredicate ex:measurement-method ;
+  ex:windowPredicate ex:time-window .
+
+ex:thr-banqiao
+  a quan:Quantity ;
+  rdf:value 10 ;
+  quan:unit "ms" .
+
+ex:cond-banqiao
+  a log:Condition ;
+  ex:operator-smaller ( ex:obs-banqiao-value ex:thr-banqiao ) .
+
+ex:obs-banqiao
+  ex:observed-metric-predicate ex:latency .
+
+ex:obs-banqiao-value
+  a quan:Quantity ;
+  ex:observed-value-predicate ( ex:obs-banqiao ) .
+
+ex:exp-xizhi-san-chong
+  a icm:PropertyExpectation ;
+  icm:target ex:tgt-xizhi-san-chong .
+
+ex:tgt-xizhi-san-chong
+  a icm:Target ;
+  ex:metricPredicate ex:latency ;
+  icm:valuesOfTargetProperty ex:thr-xizhi-san-chong ;
+  ex:thresholdPredicate ex:thr-xizhi-san-chong ;
+  ex:statisticPredicate ex:p95 ;
+  ex:scopePredicate ex:xizhi-san-chong-scope ;
+  ex:methodPredicate ex:measurement-method ;
+  ex:windowPredicate ex:time-window .
+
+ex:thr-xizhi-san-chong
+  a quan:Quantity ;
+  rdf:value 25 ;
+  quan:unit "ms" .
+
+ex:cond-xizhi-san-chong
+  a log:Condition ;
+  ex:operator-smaller ( ex:obs-xizhi-san-chong-value ex:thr-xizhi-san-chong ) .
+
+ex:obs-xizhi-san-chong
+  ex:observed-metric-predicate ex:latency .
+
+ex:obs-xizhi-san-chong-value
+  a quan:Quantity ;
+  ex:observed-value-predicate ( ex:obs-xizhi-san-chong ) .
+
+ex:topology
+  a icm:Context ;
+  ex:hubPredicate [ rdfs:label "Taipei Medical Information Center"@en ] ;
+  ex:spokePredicate [ rdfs:label "Banqiao Campus"@en ] ;
+  ex:spokePredicate [ rdfs:label "Xizhi Campus"@en ] ;
+  ex:spokePredicate [ rdfs:label "Sanchong Campus"@en ] .

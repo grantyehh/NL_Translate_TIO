@@ -1,0 +1,90 @@
+@prefix ex: <http://example.org/tio-instance/tc040/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-loss, ex:exp-bandwidth, ex:topology, ex:cond-loss, ex:cond-bandwidth ;
+    rdfs:comment "Taipei core site to five PoP spokes: monthly maximum packet loss rate shall not exceed 0.3%, and monthly average guaranteed bandwidth shall be at least 500 Mbps."@en .
+
+ex:exp-loss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-loss .
+
+ex:tgt-loss
+    a icm:Target ;
+    ex:metricPredicate ex:packetLossRate ;
+    icm:valuesOfTargetProperty ex:thr-loss ;
+    ex:thresholdPredicate ex:thr-loss ;
+    ex:statisticPredicate ex:maximum ;
+    ex:windowPredicate ex:monthlyWindow .
+
+ex:thr-loss
+    a quan:Quantity ;
+    rdf:value 0.3 ;
+    quan:unit "%" .
+
+ex:cond-loss
+    a log:Condition ;
+    ex:strictlySmallerOrEqual ( ex:obs-loss-value ex:thr-loss ) .
+
+ex:obs-loss
+    ex:observedMetricPredicate ex:packetLossRate .
+
+ex:obs-loss-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-loss ) .
+
+ex:exp-bandwidth
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-bandwidth .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    ex:metricPredicate ex:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth ;
+    ex:thresholdPredicate ex:thr-bandwidth ;
+    ex:statisticPredicate ex:monthlyAverage ;
+    ex:windowPredicate ex:monthlyWindow .
+
+ex:thr-bandwidth
+    a quan:Quantity ;
+    rdf:value 500 ;
+    quan:unit "Mbps" .
+
+ex:cond-bandwidth
+    a log:Condition ;
+    ex:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth
+    ex:observedMetricPredicate ex:guaranteedBandwidth .
+
+ex:obs-bandwidth-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-bandwidth ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:hub ;
+    ex:spokePredicate ex:spoke1, ex:spoke2, ex:spoke3, ex:spoke4, ex:spoke5 .
+
+ex:hub
+    rdfs:label "台北核心機房"@zh .
+
+ex:spoke1
+    rdfs:label "PoP節點1"@zh .
+
+ex:spoke2
+    rdfs:label "PoP節點2"@zh .
+
+ex:spoke3
+    rdfs:label "PoP節點3"@zh .
+
+ex:spoke4
+    rdfs:label "PoP節點4"@zh .
+
+ex:spoke5
+    rdfs:label "PoP節點5"@zh .

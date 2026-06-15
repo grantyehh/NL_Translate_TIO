@@ -1,0 +1,84 @@
+@prefix ex: <http://example.org/tio-instance/tc023/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+  a icm:Intent ;
+  icm:intentElements ex:exp-bandwidth-miaoli, ex:exp-bandwidth-changhua, ex:topology, ex:cond-bandwidth-miaoli, ex:cond-bandwidth-changhua ;
+  rdfs:comment "Taifu Construction requires guaranteed bandwidth of at least 50 Mbps from the Taichung headquarters to the Miaoli site and the Changhua site, for each spoke individually."@en .
+
+ex:exp-bandwidth-miaoli
+  a icm:PropertyExpectation ;
+  icm:target ex:tgt-bandwidth-miaoli .
+
+ex:tgt-bandwidth-miaoli
+  a icm:Target ;
+  evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+  icm:valuesOfTargetProperty ex:thr-bandwidth ;
+  evsla:hasThreshold ex:thr-bandwidth .
+
+ex:exp-bandwidth-changhua
+  a icm:PropertyExpectation ;
+  icm:target ex:tgt-bandwidth-changhua .
+
+ex:tgt-bandwidth-changhua
+  a icm:Target ;
+  evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+  icm:valuesOfTargetProperty ex:thr-bandwidth ;
+  evsla:hasThreshold ex:thr-bandwidth .
+
+ex:thr-bandwidth
+  a quan:Quantity ;
+  rdf:value 50 ;
+  quan:unit "Mbps" .
+
+ex:cond-bandwidth-miaoli
+  a log:Condition ;
+  log:matchAll ( ex:obs-bandwidth-miaoli-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth-miaoli
+  evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+
+ex:obs-bandwidth-miaoli-value
+  a quan:Quantity ;
+  met:observedValue ( ex:obs-bandwidth-miaoli ) .
+
+ex:cond-bandwidth-changhua
+  a log:Condition ;
+  log:matchAll ( ex:obs-bandwidth-changhua-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth-changhua
+  evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+
+ex:obs-bandwidth-changhua-value
+  a quan:Quantity ;
+  met:observedValue ( ex:obs-bandwidth-changhua ) .
+
+ex:topology
+  a icm:Context ;
+  evsla:hasHub ex:site-taichung-hq ;
+  rdfs:comment "Hub-and-spoke topology with one hub and two spokes."@en .
+
+ex:site-taichung-hq
+  a evsla:HubSite ;
+  rdfs:label "台中總部"@zh .
+
+ex:site-miaoli
+  a evsla:SpokeSite ;
+  rdfs:label "苗栗工地"@zh .
+
+ex:site-changhua
+  a evsla:SpokeSite ;
+  rdfs:label "彰化工地"@zh .

@@ -1,0 +1,49 @@
+@prefix ex: <http://example.org/tio-instance/tc015/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix quan: <http://example.org/quan#> .
+@prefix log: <http://example.org/log#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
+    rdfs:comment "Provide guaranteed bandwidth of at least 300 Mbps from Asia Aviation Maintenance Headquarters to Xiaogang hangar."@en .
+
+ex:exp-bandwidth
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-bandwidth .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    ex:metricPredicate ex:GuaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth ;
+    ex:thresholdPredicate ex:thr-bandwidth ;
+    ex:statisticPredicate ex:Guaranteed ;
+    ex:scopePredicate ex:HubToSpoke ;
+    ex:methodPredicate ex:CommittedRate ;
+    ex:windowPredicate ex:Always .
+
+ex:thr-bandwidth
+    a quan:Quantity ;
+    rdf:value 300 ;
+    quan:unit "Mbps" .
+
+ex:cond-bandwidth
+    a log:Condition ;
+    ex:atLeastOperator ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth
+    ex:observedMetricPredicate ex:GuaranteedBandwidth ;
+    ex:obs-bandwidth-value [
+        a quan:Quantity
+    ] .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate [
+        rdfs:label "亞洲航空維修總部"@zh
+    ] ;
+    ex:spokePredicate [
+        rdfs:label "小港機棚"@zh
+    ] .

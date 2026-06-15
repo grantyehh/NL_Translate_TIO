@@ -1,0 +1,69 @@
+@prefix ex: <http://example.org/tio-instance/tc006/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionscoefficients> .
+
+ex:intent
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+    icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Provide guaranteed bandwidth of at least 500 Mbps from Beichen Securities headquarters to the Taichung trading room."@en .
+
+ex:exp-bandwidth
+    a icm:PropertyExpectation ;
+    evsla:forTenant ex:tenant ;
+    icm:target ex:tgt-bandwidth .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth ;
+    evsla:hasThreshold ex:thr-bandwidth ;
+    evsla:hasMeasurementMethod ex:mm-bandwidth .
+
+ex:thr-bandwidth
+    a quan:Quantity ;
+    rdf:value 500 ;
+    quan:unit "Mbps" .
+
+ex:cond-bandwidth
+    a log:Condition ;
+    log:matchAll ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth
+    met:observedMetric evsla:guaranteedBandwidth .
+
+ex:obs-bandwidth-value
+    a quan:Quantity ;
+    met:observedMetric ( ex:obs-bandwidth ) .
+
+ex:topology
+    a icm:Context ;
+    evsla:forTenant ex:tenant ;
+    evsla:hasHub ex:site-hq ;
+    set:resourcesWithProperty ex:site-taichung .
+
+ex:tenant
+    rdfs:label "北辰證券"@zh .
+
+ex:site-hq
+    a evsla:Site ;
+    rdfs:label "總部"@zh .
+
+ex:site-taichung
+    a evsla:Site ;
+    rdfs:label "台中交易室"@zh .
+
+ex:mm-bandwidth
+    rdfs:label "guaranteed bandwidth measurement"@en .

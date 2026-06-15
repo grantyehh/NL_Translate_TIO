@@ -1,0 +1,89 @@
+@prefix ex: <http://example.org/tio-instance/tc028/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsinput> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-1, ex:exp-2, ex:topology, ex:cond-1, ex:cond-2 ;
+    rdfs:comment "Guarantee bandwidth from Hsinchu headquarters to Taichung R&D Center at no less than 200 Mbps and to Kaohsiung Test Center at no less than 100 Mbps in a hub-and-spoke enterprise VPN."@en .
+
+ex:exp-1
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-1 .
+
+ex:tgt-1
+    a icm:Target ;
+    evsla:guaranteedBandwidth ex:site-taichung ;
+    icm:valuesOfTargetProperty ex:thr-1 ;
+    evsla:hasThreshold ex:thr-1 .
+
+ex:thr-1
+    a quan:Quantity ;
+    rdf:value 200 ;
+    quan:unit "Mbps" .
+
+ex:cond-1
+    a log:Condition ;
+    quan:greatest ( ex:obs-1-value ex:thr-1 ) .
+
+ex:obs-1
+    evsla:guaranteedBandwidth ex:site-taichung .
+
+ex:obs-1-value
+    a quan:Quantity ;
+    met:observedValue ( ex:obs-1 ) .
+
+ex:exp-2
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-2 .
+
+ex:tgt-2
+    a icm:Target ;
+    evsla:guaranteedBandwidth ex:site-kaohsiung ;
+    icm:valuesOfTargetProperty ex:thr-2 ;
+    evsla:hasThreshold ex:thr-2 .
+
+ex:thr-2
+    a quan:Quantity ;
+    rdf:value 100 ;
+    quan:unit "Mbps" .
+
+ex:cond-2
+    a log:Condition ;
+    quan:greatest ( ex:obs-2-value ex:thr-2 ) .
+
+ex:obs-2
+    evsla:guaranteedBandwidth ex:site-kaohsiung .
+
+ex:obs-2-value
+    a quan:Quantity ;
+    met:observedValue ( ex:obs-2 ) .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasSpoke ex:site-taichung, ex:site-kaohsiung ;
+    rdfs:comment "Hub-and-spoke topology with Hsinchu headquarters as hub and Taichung and Kaohsiung as spokes."@en .
+
+ex:site-hsinchu
+    a evsla:HubSite ;
+    rdfs:label "新竹總部"@zh .
+
+ex:site-taichung
+    a evsla:Site ;
+    rdfs:label "台中研發中心"@zh .
+
+ex:site-kaohsiung
+    a evsla:Site ;
+    rdfs:label "高雄測試中心"@zh .

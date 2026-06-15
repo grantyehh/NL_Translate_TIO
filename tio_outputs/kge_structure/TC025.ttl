@@ -1,0 +1,62 @@
+@prefix ex: <http://example.org/tio-instance/tc025/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsk> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    rdfs:comment "Kaohsiung logistics center to each of the Pingtung and Taitung delivery stations shall keep packet loss below 0.2% for 95% of the time."@en .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:packetLoss evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value 0.2 ;
+    quan:unit "%" .
+
+ex:cond-packetloss
+    a log:Condition ;
+    log:noneOf ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    evsla:packetLoss evsla:packetLoss .
+
+ex:obs-packetloss-value
+    a quan:Quantity ;
+    met:observedValue ( ex:obs-packetloss ) .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasHub ex:hub-kaohsiung ;
+    set:resourcesWithProperty ( ex:spoke-pingtung ex:spoke-taitung ) .
+
+ex:hub-kaohsiung
+    rdfs:label "高雄物流中心"@zh .
+
+ex:spoke-pingtung
+    a evsla:SpokeSite ;
+    rdfs:label "屏東配送站"@zh .
+
+ex:spoke-taitung
+    a evsla:SpokeSite ;
+    rdfs:label "台東配送站"@zh .

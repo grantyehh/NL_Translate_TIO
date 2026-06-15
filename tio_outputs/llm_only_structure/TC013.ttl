@@ -1,0 +1,47 @@
+@prefix ex: <http://example.org/tio-instance/tc013/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Ensure latency from the cloud education headquarters to all campus spokes stays below 60 ms for 95% of the time."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:statisticPredicate ex:p95 ;
+    ex:scopePredicate ex:hubToAllSpokes ;
+    ex:windowPredicate ex:time95Percent .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 60 ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    ex:observedMetricPredicate ex:latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-latency ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate [ rdfs:label "雲端教育總部"@zh ] ;
+    ex:spokePredicate [ rdfs:label "校區分點1"@zh ] ;
+    ex:spokePredicate [ rdfs:label "校區分點2"@zh ] ;
+    ex:spokePredicate [ rdfs:label "校區分點3"@zh ] .

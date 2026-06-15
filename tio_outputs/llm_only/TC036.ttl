@@ -1,0 +1,53 @@
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log:   <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/tc036/> .
+
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-latency, ex:cond-latency, ex:topology ;
+  rdfs:comment "Assure hub-to-all-spokes latency SLA for 全台連鎖超市 enterprise VPN."@en .
+
+ex:tenant a evsla:Tenant ;
+  rdfs:label "全台連鎖超市"@zh .
+
+ex:service a evsla:EnterpriseVpnService ;
+  evsla:forTenant ex:tenant .
+
+ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency ;
+  rdfs:comment "Average latency must stay below 60 ms from the Taipei headquarters distribution center to all six store spokes."@en .
+
+ex:tgt-latency a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency ;
+  evsla:hasThreshold ex:thr-latency ;
+  evsla:hasStatistic evsla:average ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-latency a quan:Quantity ;
+  rdf:value 60 ;
+  quan:unit "ms" .
+
+ex:cond-latency a log:Condition ;
+  quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency a met:Observation ;
+  met:observedMetric evsla:latency .
+
+ex:obs-latency-value a quan:Quantity ;
+  met:observedValue ( ex:obs-latency ) .
+
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "台北總部配送中心"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "門市分點一"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "門市分點二"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "門市分點三"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "門市分點四"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "門市分點五"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "門市分點六"@zh ] .

@@ -1,0 +1,80 @@
+@prefix ex: <http://example.org/tio-instance/tc026/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
+    rdfs:comment "Taipei headquarters to Hsinchu branch latency below 30 ms and to Kaohsiung branch latency below 60 ms, both evaluated per spoke at p95."@en .
+
+ex:exp-hsinchu
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-hsinchu .
+
+ex:tgt-hsinchu
+    a icm:Target ;
+    evsla:latency ex:latency-hsinchu ;
+    icm:valuesOfTargetProperty ex:thr-hsinchu ;
+    evsla:hasThreshold ex:thr-hsinchu ;
+    evsla:perSpoke ex:hsinchu-branch ;
+    evsla:fiveMinuteWindow ex:win-hsinchu .
+
+ex:exp-kaohsiung
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-kaohsiung .
+
+ex:tgt-kaohsiung
+    a icm:Target ;
+    evsla:latency ex:latency-kaohsiung ;
+    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
+    evsla:hasThreshold ex:thr-kaohsiung ;
+    evsla:perSpoke ex:kaohsiung-branch ;
+    evsla:fiveMinuteWindow ex:win-kaohsiung .
+
+ex:thr-hsinchu
+    a quan:Quantity ;
+    rdf:value 30 ;
+    quan:unit "ms" .
+
+ex:thr-kaohsiung
+    a quan:Quantity ;
+    rdf:value 60 ;
+    quan:unit "ms" .
+
+ex:win-hsinchu a evsla:TimeWindow .
+ex:win-kaohsiung a evsla:TimeWindow .
+
+ex:cond-hsinchu
+    a log:Condition .
+
+ex:cond-kaohsiung
+    a log:Condition .
+
+ex:obs-hsinchu
+    evsla:latency ex:latency-hsinchu .
+
+ex:obs-hsinchu-value
+    a quan:Quantity .
+
+ex:obs-kaohsiung
+    evsla:latency ex:latency-kaohsiung .
+
+ex:obs-kaohsiung-value
+    a quan:Quantity .
+
+ex:topology
+    a evsla:HubAndSpokeTopology ;
+    rdfs:comment "Hub-and-spoke topology with Taipei headquarters as hub and Hsinchu and Kaohsiung branches as spokes."@en .
+
+ex:taipei-hq
+    rdfs:label "台北總部"@zh .
+
+ex:hsinchu-branch
+    rdfs:label "新竹分行"@zh .
+
+ex:kaohsiung-branch
+    rdfs:label "高雄分行"@zh .

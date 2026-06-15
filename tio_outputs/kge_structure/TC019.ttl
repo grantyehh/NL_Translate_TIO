@@ -1,0 +1,50 @@
+@prefix ex: <http://example.org/tio-instance/tc019/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Ensure latency from the security monitoring headquarters to all branch spokes stays below 40 ms within 95% of the time."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    evsla:hasThreshold ex:thr-latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    evsla:hasScope ex:topology ;
+    ig:guaranteePeriod evsla:oneHourWindow .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 40 ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    log:matchOne ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:hasThreshold ex:thr-latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    set:valuesOfObjectProperty ( evsla:hasThreshold ex:obs-latency ) .
+
+ex:topology
+    a evsla:HubAndSpokeTopology ;
+    rdfs:comment "One hub and all branch spokes."@en .

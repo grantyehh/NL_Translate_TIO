@@ -44,5 +44,5 @@ ex:obs-latency-value a quan:Quantity ;
   met:observedValue ( ex:obs-latency ) .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub [ a evsla:HubSite ; rdfs:label "總部"@zh ] ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "星河銀行總部"@zh ] ;
   evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "所有分點"@zh ] .

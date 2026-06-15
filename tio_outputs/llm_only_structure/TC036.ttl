@@ -1,0 +1,65 @@
+@prefix ex: <http://example.org/tio-instance/tc036/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Taipei headquarters distribution center to six store spokes shall maintain average latency below 60 ms in each one-hour window."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:statisticPredicate ex:average ;
+    ex:windowPredicate ex:one-hour-window .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 60 ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    ex:observedMetricPredicate ex:latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-latency ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:hub ;
+    ex:spokePredicate ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5, ex:spoke-6 .
+
+ex:hub
+    rdfs:label "台北總部配送中心"@zh .
+
+ex:spoke-1
+    rdfs:label "門市分點1"@zh .
+
+ex:spoke-2
+    rdfs:label "門市分點2"@zh .
+
+ex:spoke-3
+    rdfs:label "門市分點3"@zh .
+
+ex:spoke-4
+    rdfs:label "門市分點4"@zh .
+
+ex:spoke-5
+    rdfs:label "門市分點5"@zh .
+
+ex:spoke-6
+    rdfs:label "門市分點6"@zh .

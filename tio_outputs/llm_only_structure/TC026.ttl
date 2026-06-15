@@ -1,0 +1,77 @@
+@prefix ex: <http://example.org/tio-instance/tc026/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix quan: <http://example.org/quan#> .
+@prefix log: <http://example.org/log#> .
+
+ex:intent
+  a icm:Intent ;
+  icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
+  rdfs:comment "Galaxy Bank requires latency from Taipei headquarters to Hsinchu branch below 30 ms and to Kaohsiung branch below 60 ms, both at p95 95%."@en .
+
+ex:exp-hsinchu
+  a icm:PropertyExpectation ;
+  icm:target ex:tgt-hsinchu .
+
+ex:tgt-hsinchu
+  a icm:Target ;
+  ex:metricPredicate ex:latency ;
+  icm:valuesOfTargetProperty ex:thr-hsinchu ;
+  ex:thresholdPredicate ex:thr-hsinchu ;
+  ex:statisticPredicate ex:p95 ;
+  ex:scopePredicate ex:path-taipei-hsinchu ;
+  ex:methodPredicate ex:measurement-method ;
+  ex:windowPredicate ex:time-window .
+
+ex:thr-hsinchu
+  a quan:Quantity ;
+  rdf:value 30 ;
+  quan:unit "ms" .
+
+ex:cond-hsinchu
+  a log:Condition ;
+  ex:strictlySmallerThan ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
+
+ex:obs-hsinchu
+  ex:observed-metric-predicate ex:latency .
+
+ex:obs-hsinchu-value
+  a quan:Quantity ;
+  ex:observed-value-predicate ( ex:obs-hsinchu ) .
+
+ex:exp-kaohsiung
+  a icm:PropertyExpectation ;
+  icm:target ex:tgt-kaohsiung .
+
+ex:tgt-kaohsiung
+  a icm:Target ;
+  ex:metricPredicate ex:latency ;
+  icm:valuesOfTargetProperty ex:thr-kaohsiung ;
+  ex:thresholdPredicate ex:thr-kaohsiung ;
+  ex:statisticPredicate ex:p95 ;
+  ex:scopePredicate ex:path-taipei-kaohsiung ;
+  ex:methodPredicate ex:measurement-method ;
+  ex:windowPredicate ex:time-window .
+
+ex:thr-kaohsiung
+  a quan:Quantity ;
+  rdf:value 60 ;
+  quan:unit "ms" .
+
+ex:cond-kaohsiung
+  a log:Condition ;
+  ex:strictlySmallerThan ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
+
+ex:obs-kaohsiung
+  ex:observed-metric-predicate ex:latency .
+
+ex:obs-kaohsiung-value
+  a quan:Quantity ;
+  ex:observed-value-predicate ( ex:obs-kaohsiung ) .
+
+ex:topology
+  a icm:Context ;
+  ex:hubPredicate [ rdfs:label "台北總部"@zh ] ;
+  ex:spokePredicate [ rdfs:label "新竹分行"@zh ] ;
+  ex:spokePredicate [ rdfs:label "高雄分行"@zh ] .

@@ -1,0 +1,103 @@
+@prefix ex: <http://example.org/tio-instance/tc020/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix pre: <http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsinput> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix ut: <http://tio.models.tmforum.org/tio/v3.6.0/Utility/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix iv: <http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:exp-packetloss, ex:topology, ex:cond-latency, ex:cond-packetloss ;
+    rdfs:comment "Ensure latency from the Taipei R&D headquarters hub to the Zhubei laboratory and Tainan manufacturing plant spokes stays below 35 ms for 95% of the time, and packet loss between the hub and each spoke stays below 0.05% for 99% of the time."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    ex:metricPredicate evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:scopePredicate evsla:hubToAllSpokes ;
+    evsla:hasTimeWindow ex:tw-95 .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value "35"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:tw-95
+    a quan:Quantity ;
+    rdf:value "95"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    ex:metricPredicate evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    ex:thresholdPredicate ex:thr-packetloss ;
+    ex:scopePredicate evsla:perSpoke ;
+    evsla:hasTimeWindow ex:tw-99 .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:tw-99
+    a quan:Quantity ;
+    rdf:value "99"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:cond-latency
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    ex:observedMetricPredicate evsla:latency ;
+    ex:observedValuePredicate ( ex:obs-latency ) .
+
+ex:obs-latency-value
+    a quan:Quantity .
+
+ex:cond-packetloss
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    ex:observedMetricPredicate evsla:packetLoss ;
+    ex:observedValuePredicate ( ex:obs-packetloss ) .
+
+ex:obs-packetloss-value
+    a quan:Quantity .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasHub ex:site-taipei-hq ;
+    evsla:hasSpoke ex:site-zhubei-lab, ex:site-tainan-plant .
+
+ex:site-taipei-hq
+    rdfs:label "精準醫材台北研發總部"@zh .
+
+ex:site-zhubei-lab
+    rdfs:label "竹北實驗室"@zh .
+
+ex:site-tainan-plant
+    rdfs:label "台南製造廠"@zh .

@@ -1,0 +1,56 @@
+@prefix ex: <http://example.org/tio-instance/tc037/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    rdfs:comment "Shengde Logistics requires packet loss from the Linkou logistics headquarters to five branch warehouses to be at most 0.5% at the maximum level within each one-hour window."@en .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasStatistic evsla:maximum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:oneHourWindow .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value "0.5"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:cond-packetloss
+    a log:Condition ;
+    quan:atMost ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    evsla:packetLoss evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:obs-packetloss-value .
+
+ex:obs-packetloss-value
+    a quan:Quantity .
+
+ex:topology
+    a icm:Context ;
+    rdfs:comment "Hub-and-spoke topology with one hub at Linkou logistics headquarters and five spoke branch warehouses."@en ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    ex:hub [ rdfs:label "林口物流總部"@zh ] ;
+    ex:spoke [ rdfs:label "分倉1"@zh ] ;
+    ex:spoke [ rdfs:label "分倉2"@zh ] ;
+    ex:spoke [ rdfs:label "分倉3"@zh ] ;
+    ex:spoke [ rdfs:label "分倉4"@zh ] ;
+    ex:spoke [ rdfs:label "分倉5"@zh ] .

@@ -1,0 +1,126 @@
+@prefix ex: <http://example.org/tio-instance/tc040/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionscoefficients> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packetloss, ex:exp-bandwidth, ex:topology, ex:cond-packetloss, ex:cond-bandwidth ;
+    rdfs:comment "聯光電信要求台北核心機房至五個PoP節點於月度SLA視窗內，封包遺失率最大值不超過0.3%，且保證頻寬月平均值不低於500Mbps。"@en ;
+    evsla:forTenant ex:tenant .
+
+ex:tenant
+    rdfs:label "聯光電信"@en .
+
+ex:service
+    rdfs:label "Taipei core site to five PoP nodes enterprise VPN service"@en ;
+    evsla:forTenant ex:tenant .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetloss ;
+    evsla:forTenant ex:tenant ;
+    evsla:serviceTarget ex:service .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    met:observedMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasMeasurementMethod ex:monthly-method-packetloss ;
+    ig:guaranteePeriod "P1M" .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value 0.3 ;
+    quan:unit "%" .
+
+ex:monthly-method-packetloss
+    quan:greatest ex:thr-packetloss ;
+    evsla:monthlySlaWindow ex:thr-packetloss .
+
+ex:exp-bandwidth
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-bandwidth ;
+    evsla:forTenant ex:tenant ;
+    evsla:serviceTarget ex:service .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    met:observedMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth ;
+    evsla:hasThreshold ex:thr-bandwidth ;
+    evsla:hasMeasurementMethod ex:monthly-method-bandwidth ;
+    ig:guaranteePeriod "P1M" .
+
+ex:thr-bandwidth
+    a quan:Quantity ;
+    rdf:value 500 ;
+    quan:unit "Mbps" .
+
+ex:monthly-method-bandwidth
+    evsla:monthlySlaWindow ex:thr-bandwidth .
+
+ex:cond-packetloss
+    a log:Condition ;
+    log:matchAll ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    met:observedMetric evsla:packetLoss ;
+    quan:greatest ex:obs-packetloss-value .
+
+ex:obs-packetloss-value
+    a quan:Quantity .
+
+ex:cond-bandwidth
+    a log:Condition ;
+    log:matchOne ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+
+ex:obs-bandwidth
+    met:observedMetric evsla:guaranteedBandwidth ;
+    quan:greatest ex:obs-bandwidth-value .
+
+ex:obs-bandwidth-value
+    a quan:Quantity .
+
+ex:topology
+    a icm:Context ;
+    evsla:forTenant ex:tenant ;
+    rdfs:label "Hub-and-spoke topology from Taipei core site to five PoP nodes"@en ;
+    set:resourcesWithProperty (
+        ex:hub
+        ex:spoke-1
+        ex:spoke-2
+        ex:spoke-3
+        ex:spoke-4
+        ex:spoke-5
+    ) .
+
+ex:hub
+    rdfs:label "台北核心機房"@en .
+
+ex:spoke-1
+    rdfs:label "PoP節點1"@en .
+
+ex:spoke-2
+    rdfs:label "PoP節點2"@en .
+
+ex:spoke-3
+    rdfs:label "PoP節點3"@en .
+
+ex:spoke-4
+    rdfs:label "PoP節點4"@en .
+
+ex:spoke-5
+    rdfs:label "PoP節點5"@en .

@@ -1,0 +1,76 @@
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log:   <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix met:   <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/tc029/> .
+
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-latency-banqiao, ex:cond-latency-banqiao, ex:exp-latency-all-spokes, ex:cond-latency-all-spokes, ex:topology ;
+  rdfs:comment "Assure hub-and-spoke latency SLA for 聯邦醫院 enterprise VPN with stricter latency to 板橋院區 and broader latency to all spokes."@en .
+
+ex:tenant a evsla:Tenant ;
+  rdfs:label "聯邦醫院"@zh .
+
+ex:service a evsla:EnterpriseVpnService ;
+  evsla:forTenant ex:tenant .
+
+ex:exp-latency-banqiao a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency-banqiao ;
+  rdfs:comment "Latency to the specific spoke 板橋院區 must stay below 10 ms at p99."@en .
+
+ex:tgt-latency-banqiao a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency-banqiao ;
+  evsla:hasThreshold ex:thr-latency-banqiao ;
+  evsla:hasStatistic evsla:p99 ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-latency-banqiao a quan:Quantity ;
+  rdf:value 10 ;
+  quan:unit "ms" .
+
+ex:cond-latency-banqiao a log:Condition ;
+  quan:smaller ( ex:obs-latency-banqiao-value ex:thr-latency-banqiao ) .
+
+ex:obs-latency-banqiao a met:Observation ;
+  met:observedMetric evsla:latency .
+
+ex:obs-latency-banqiao-value a quan:Quantity ;
+  met:observedValue ( ex:obs-latency-banqiao ) .
+
+ex:exp-latency-all-spokes a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency-all-spokes ;
+  rdfs:comment "Latency to all spokes must stay below 25 ms at p95."@en .
+
+ex:tgt-latency-all-spokes a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency-all-spokes ;
+  evsla:hasThreshold ex:thr-latency-all-spokes ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-latency-all-spokes a quan:Quantity ;
+  rdf:value 25 ;
+  quan:unit "ms" .
+
+ex:cond-latency-all-spokes a log:Condition ;
+  quan:smaller ( ex:obs-latency-all-spokes-value ex:thr-latency-all-spokes ) .
+
+ex:obs-latency-all-spokes a met:Observation ;
+  met:observedMetric evsla:latency .
+
+ex:obs-latency-all-spokes-value a quan:Quantity ;
+  met:observedValue ( ex:obs-latency-all-spokes ) .
+
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "台北醫療資訊中心"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "板橋院區"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "汐止院區"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "三重院區"@zh ] .

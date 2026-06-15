@@ -1,0 +1,62 @@
+@prefix ex: <http://example.org/tio-instance/tc005/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pre: <http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/> .
+@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsinput> .
+@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix pro: <http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/> .
+@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    rdfs:comment "Ensure packet loss between Morningstar Retail hub and all spokes stays below 0.05% at the p99 level."@en .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:packetLoss evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:packetLoss ex:thr-packetloss ;
+    evsla:hubToAllSpokes evsla:hubToAllSpokes ;
+    evsla:p99 evsla:p99 .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value 0.05 ;
+    quan:unit "%" .
+
+ex:cond-packetloss
+    a log:Condition ;
+    log:lessThan ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    evsla:packetLoss evsla:packetLoss ;
+    ex:obs-packetloss-value ( ex:obs-packetloss ) .
+
+ex:obs-packetloss-value
+    a quan:Quantity .
+
+ex:topology
+    a evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "晨星零售Hub"@zh .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "Spoke"@en .

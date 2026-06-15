@@ -1,0 +1,87 @@
+@prefix ex: <http://example.org/tio-instance/tc026/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
+    rdfs:comment "Star River Bank requires latency from Taipei headquarters to Hsinchu branch below 30 ms and to Kaohsiung branch below 60 ms, both at p95."@en .
+
+ex:exp-hsinchu
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-hsinchu .
+
+ex:tgt-hsinchu
+    a icm:Target ;
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-hsinchu ;
+    evsla:hasThreshold ex:thr-hsinchu ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:thr-hsinchu
+    a quan:Quantity ;
+    rdf:value "30"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:exp-kaohsiung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-kaohsiung .
+
+ex:tgt-kaohsiung
+    a icm:Target ;
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
+    evsla:hasThreshold ex:thr-kaohsiung ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:thr-kaohsiung
+    a quan:Quantity ;
+    rdf:value "60"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:cond-hsinchu
+    a log:Condition ;
+    quan:smaller ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
+
+ex:obs-hsinchu
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:obs-hsinchu-value .
+
+ex:obs-hsinchu-value
+    a quan:Quantity .
+
+ex:cond-kaohsiung
+    a log:Condition ;
+    quan:smaller ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
+
+ex:obs-kaohsiung
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:obs-kaohsiung-value .
+
+ex:obs-kaohsiung-value
+    a quan:Quantity .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    rdf:value ex:taipei-hq, ex:hsinchu-branch, ex:kaohsiung-branch .
+
+ex:taipei-hq
+    rdfs:label "台北總部"@zh .
+
+ex:hsinchu-branch
+    rdfs:label "新竹分行"@zh .
+
+ex:kaohsiung-branch
+    rdfs:label "高雄分行"@zh .

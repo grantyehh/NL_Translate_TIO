@@ -1,0 +1,48 @@
+@prefix ex: <http://example.org/tio-instance/tc010/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "Ensure latency from the Swift Game headquarters to all branches stays below 20 ms for 95% of the time."@en .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency .
+
+ex:tgt-latency
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    ex:thresholdPredicate ex:thr-latency ;
+    ex:statisticPredicate ex:p95 ;
+    ex:scopePredicate ex:hub-to-all-spokes ;
+    ex:methodPredicate ex:measurement-method ;
+    ex:windowPredicate ex:time-window .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 20 ;
+    quan:unit "ms" .
+
+ex:cond-latency
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    ex:observed-metric-predicate ex:latency ;
+    ex:observed-value-predicate ( ex:obs-latency ) .
+
+ex:obs-latency-value
+    a quan:Quantity .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate [ rdfs:label "迅捷遊戲總部"@zh ] ;
+    ex:spokePredicate [ rdfs:label "分點1"@zh ] ;
+    ex:spokePredicate [ rdfs:label "分點2"@zh ] ;
+    ex:spokePredicate [ rdfs:label "分點3"@zh ] .

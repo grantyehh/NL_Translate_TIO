@@ -1,0 +1,46 @@
+@prefix ex: <http://example.org/tio-instance/tc008/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-plr, ex:topology, ex:cond-plr ;
+    rdfs:comment "Ensure packet loss rate between the Jingyao Semiconductor hub and each spoke stays below 0.01% for 99% of the time."@en .
+
+ex:exp-plr
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-plr .
+
+ex:tgt-plr
+    a icm:Target ;
+    ex:metricPredicate ex:packet-loss-rate ;
+    icm:valuesOfTargetProperty ex:thr-plr ;
+    ex:thresholdPredicate ex:thr-plr ;
+    ex:statisticPredicate ex:percentile-99 ;
+    ex:scopePredicate ex:hub-to-all-spokes ;
+    ex:methodPredicate ex:measurement-method ;
+    ex:windowPredicate ex:time-window .
+
+ex:thr-plr
+    a quan:Quantity ;
+    rdf:value 0.01 ;
+    quan:unit "%" .
+
+ex:cond-plr
+    a log:Condition ;
+    ex:strictly-smallerThan ( ex:obs-plr-value ex:thr-plr ) .
+
+ex:obs-plr
+    ex:observed-metric-predicate ex:packet-loss-rate ;
+    ex:obs-plr-value a quan:Quantity ;
+    ex:observed-value-predicate ( ex:obs-plr ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate [ rdfs:label "晶耀半導體Hub"@zh ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-1"@en ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-2"@en ] ;
+    ex:spokePredicate [ rdfs:label "Spoke-3"@en ] .

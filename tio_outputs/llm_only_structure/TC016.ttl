@@ -1,0 +1,57 @@
+@prefix ex: <http://example.org/tio-instance/tc016/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
+
+ex:intent
+    a icm:Intent ;
+    icm:intentElements ex:exp-delay, ex:topology, ex:cond-delay ;
+    rdfs:comment "Ensure latency from the Smart Agriculture hub to all spokes stays below 100 ms for 95% of the time."@en .
+
+ex:exp-delay
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-delay .
+
+ex:tgt-delay
+    a icm:Target ;
+    ex:metricPredicate ex:latency ;
+    icm:valuesOfTargetProperty ex:thr-delay ;
+    ex:thresholdPredicate ex:thr-delay ;
+    ex:statisticPredicate ex:p95 ;
+    ex:scopePredicate ex:hubToAllSpokes ;
+    ex:windowPredicate ex:time95 .
+
+ex:thr-delay
+    a quan:Quantity ;
+    rdf:value 100 ;
+    quan:unit "ms" .
+
+ex:cond-delay
+    a log:Condition ;
+    ex:strictlySmallerThan ( ex:obs-delay-value ex:thr-delay ) .
+
+ex:obs-delay
+    ex:observedMetricPredicate ex:latency .
+
+ex:obs-delay-value
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-delay ) .
+
+ex:topology
+    a icm:Context ;
+    ex:hubPredicate ex:hub ;
+    ex:spokePredicate ex:spoke-1, ex:spoke-2, ex:spoke-3 .
+
+ex:hub
+    rdfs:label "Smart Agriculture Hub"@en .
+
+ex:spoke-1
+    rdfs:label "Spoke 1"@en .
+
+ex:spoke-2
+    rdfs:label "Spoke 2"@en .
+
+ex:spoke-3
+    rdfs:label "Spoke 3"@en .
