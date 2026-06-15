@@ -1,36 +1,31 @@
 @prefix ex: <http://example.org/tio-instance/tc036/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
 @prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionslogistic> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix quan: <http://qudt.org/schema/qudt/> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:SlaExpectation ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Taipei headquarters distribution center to six branch stores requires average latency below 60 ms in a one-hour window."@en .
+    rdfs:comment "Taipei headquarters distribution center to six store branches requires hub-to-all-spokes average latency below 60 ms in a one-hour window."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-latency .
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:latency evsla:latency ;
+    evsla:hasMetric evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
-    evsla:average evsla:average ;
-    evsla:perSpoke evsla:perSpoke ;
-    evsla:twamp evsla:twamp ;
+    evsla:hasStatistic evsla:average ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:oneHourWindow .
 
 ex:thr-latency
@@ -39,10 +34,37 @@ ex:thr-latency
     quan:unit "ms" .
 
 ex:cond-latency
-    a log:Condition .
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:latency evsla:latency .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
+
+ex:topology
+    a icm:Context ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hubToAllSpokes [
+        rdfs:label "Taipei headquarters distribution center"@en
+    ] ;
+    evsla:perSpoke [
+        rdfs:label "Store branch 1"@en
+    ] ,
+    [
+        rdfs:label "Store branch 2"@en
+    ] ,
+    [
+        rdfs:label "Store branch 3"@en
+    ] ,
+    [
+        rdfs:label "Store branch 4"@en
+    ] ,
+    [
+        rdfs:label "Store branch 5"@en
+    ] ,
+    [
+        rdfs:label "Store branch 6"@en
+    ] .

@@ -1,62 +1,57 @@
 @prefix ex: <http://example.org/tio-instance/tc025/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsk> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
-    rdfs:comment "Kaohsiung logistics center to each of the Pingtung and Taitung delivery stations shall keep packet loss below 0.2% for 95% of the time."@en .
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
+    rdfs:comment "Kaohsiung logistics center to Pingtung delivery station and Taitung delivery station, packet loss per spoke stays below 0.2% at the p95 level."@en .
 
-ex:exp-packetloss
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-packetloss .
+ex:exp-packetLoss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetLoss .
 
-ex:tgt-packetloss
+ex:tgt-packetLoss
     a icm:Target ;
-    evsla:packetLoss evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss .
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss ;
+    evsla:hasThreshold ex:thr-packetLoss ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:perSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
-ex:thr-packetloss
+ex:thr-packetLoss
     a quan:Quantity ;
-    rdf:value 0.2 ;
+    rdf:value "0.2"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:cond-packetloss
+ex:cond-packetLoss
     a log:Condition ;
-    log:noneOf ( ex:obs-packetloss-value ex:thr-packetloss ) .
+    quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
-ex:obs-packetloss
-    evsla:packetLoss evsla:packetLoss .
+ex:obs-packetLoss
+    met:observedMetric evsla:packetLoss .
 
-ex:obs-packetloss-value
+ex:obs-packetLoss-value
     a quan:Quantity ;
-    met:observedValue ( ex:obs-packetloss ) .
+    met:metricValue ( ex:obs-packetLoss ) .
 
 ex:topology
     a icm:Context ;
-    evsla:hasHub ex:hub-kaohsiung ;
-    set:resourcesWithProperty ( ex:spoke-pingtung ex:spoke-taitung ) .
-
-ex:hub-kaohsiung
-    rdfs:label "高雄物流中心"@zh .
-
-ex:spoke-pingtung
-    a evsla:SpokeSite ;
-    rdfs:label "屏東配送站"@zh .
-
-ex:spoke-taitung
-    a evsla:SpokeSite ;
-    rdfs:label "台東配送站"@zh .
+    evsla:hubToAllSpokes [
+        rdfs:label "高雄物流中心"@zh
+    ] ;
+    evsla:specificSpoke [
+        rdfs:label "屏東配送站"@zh
+    ] ,
+    [
+        rdfs:label "台東配送站"@zh
+    ] .

@@ -1,96 +1,89 @@
 @prefix ex: <http://example.org/tio-instance/tc030/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
 @prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionscoefficients> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-loss, ex:exp-bw, ex:topology, ex:cond-loss, ex:cond-bw ;
-    rdfs:comment "Enterprise VPN hub-and-spoke SLA: Taipei hub to Tainan packet loss below 0.01% for 99% time, and Taipei hub to Kaohsiung guaranteed bandwidth at least 1000 Mbps, for tenant Red Telecom."@en .
+    a icm:Intent, evsla:SlaExpectation ;
+    icm:intentElements ex:exp-packetloss, ex:exp-bandwidth, ex:topology, ex:cond-packetloss, ex:cond-bandwidth ;
+    rdfs:comment "Taipei hub to Tainan spoke packet loss shall stay below 0.01% at p99 level, and Taipei hub to Kaohsiung spoke guaranteed bandwidth shall be at least 1000 Mbps."@en .
 
-ex:service
-    a evsla:EnterpriseVpnService ;
-    evsla:forTenant ex:tenant .
-
-ex:tenant
-    rdfs:label "瑞德電信"@zh .
-
-ex:exp-loss
+ex:exp-packetloss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    evsla:forTenant ex:tenant ;
-    evsla:serviceTarget ex:service ;
-    icm:target ex:tgt-loss .
+    icm:target ex:tgt-packetloss .
 
-ex:tgt-loss
+ex:tgt-packetloss
     a icm:Target ;
-    met:observedMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-loss ;
-    evsla:hasThreshold ex:thr-loss .
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
-ex:thr-loss
+ex:thr-packetloss
     a quan:Quantity ;
-    rdf:value 0.01 ;
+    rdf:value "0.01"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:exp-bw
+ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    evsla:forTenant ex:tenant ;
-    evsla:serviceTarget ex:service ;
-    icm:target ex:tgt-bw .
+    icm:target ex:tgt-bandwidth .
 
-ex:tgt-bw
+ex:tgt-bandwidth
     a icm:Target ;
-    met:observedMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bw ;
-    evsla:hasThreshold ex:thr-bw .
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth ;
+    evsla:hasThreshold ex:thr-bandwidth ;
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
-ex:thr-bw
+ex:thr-bandwidth
     a quan:Quantity ;
-    rdf:value 1000 ;
+    rdf:value "1000"^^xsd:decimal ;
     quan:unit "Mbps" .
 
-ex:cond-loss
+ex:cond-packetloss
     a log:Condition ;
-    rdfs:comment "below threshold"@en .
+    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
 
-ex:obs-loss
-    met:observedMetric evsla:packetLoss .
+ex:obs-packetloss
+    evsla:hasMetric evsla:packetLoss .
 
-ex:obs-loss-value
-    a quan:Quantity .
+ex:obs-packetloss-value
+    a quan:Quantity ;
+    met:observedValue ( ex:obs-packetloss ) .
 
-ex:cond-bw
+ex:cond-bandwidth
     a log:Condition ;
-    rdfs:comment "at least threshold"@en .
+    quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
-ex:obs-bw
-    met:observedMetric evsla:guaranteedBandwidth .
+ex:obs-bandwidth
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
-ex:obs-bw-value
-    a quan:Quantity .
+ex:obs-bandwidth-value
+    a quan:Quantity ;
+    met:observedValue ( ex:obs-bandwidth ) .
 
 ex:topology
-    evsla:forTenant ex:tenant ;
-    rdfs:comment "Hub-and-spoke topology with Taipei as hub and Tainan, Kaohsiung as spokes."@en ;
-    ex:hub ex:taipei ;
-    ex:spoke ex:tainan, ex:kaohsiung .
+    a icm:Context ;
+    evsla:hasHub ex:site-taipei ;
+    evsla:hasSpoke ex:site-tainan, ex:site-kaohsiung .
 
-ex:taipei
+ex:site-taipei
     rdfs:label "台北機房"@zh .
 
-ex:tainan
+ex:site-tainan
     rdfs:label "台南機房"@zh .
 
-ex:kaohsiung
+ex:site-kaohsiung
     rdfs:label "高雄機房"@zh .

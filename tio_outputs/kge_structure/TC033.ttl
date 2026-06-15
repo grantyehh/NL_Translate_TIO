@@ -1,108 +1,119 @@
 @prefix ex: <http://example.org/tio-instance/tc033/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
 @prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:EnterpriseVpnService ;
+    a icm:Intent, evsla:SlaExpectation ;
     icm:intentElements ex:exp-latency, ex:exp-loss, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-loss, ex:cond-bandwidth ;
-    rdfs:comment "Enterprise VPN hub-and-spoke SLA from Taichung pharmaceutical plant headquarters to all branches: latency below 50 ms for 95% of time, packet loss below 0.1% for 99% of time, and guaranteed bandwidth at least 100 Mbps."@en .
+    rdfs:comment "Taichung pharmaceutical plant headquarters to all spokes: latency below 50 ms at p95, packet loss below 0.1% at p99, and guaranteed bandwidth at least 100 Mbps."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-latency .
 
 ex:tgt-latency
     a icm:Target ;
-    met:observedMetric evsla:latency ;
+    evsla:hasMetric evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-latency
     a quan:Quantity ;
-    rdf:value 50 ;
+    rdf:value "50"^^xsd:decimal ;
     quan:unit "ms" .
 
 ex:exp-loss
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-loss .
 
 ex:tgt-loss
     a icm:Target ;
-    met:observedMetric evsla:packetLoss ;
+    evsla:hasMetric evsla:packetLoss ;
     icm:valuesOfTargetProperty ex:thr-loss ;
     evsla:hasThreshold ex:thr-loss ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-loss
     a quan:Quantity ;
-    rdf:value 0.1 ;
+    rdf:value "0.1"^^xsd:decimal ;
     quan:unit "%" .
 
 ex:exp-bandwidth
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-bandwidth .
 
 ex:tgt-bandwidth
     a icm:Target ;
-    met:observedMetric evsla:guaranteedBandwidth ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
-    rdf:value 100 ;
+    rdf:value "100"^^xsd:decimal ;
     quan:unit "Mbps" .
 
 ex:cond-latency
     a log:Condition ;
-    log:matchAll ( ex:obs-latency-value ex:thr-latency ) .
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    met:observedMetric evsla:latency ;
-    ex:obs-latency-value ( ex:obs-latency ) .
+    met:metric evsla:latency ;
+    met:metricValue ex:obs-latency-value .
 
 ex:obs-latency-value
     a quan:Quantity .
 
 ex:cond-loss
     a log:Condition ;
-    log:matchAll ( ex:obs-loss-value ex:thr-loss ) .
+    quan:smaller ( ex:obs-loss-value ex:thr-loss ) .
 
 ex:obs-loss
-    met:observedMetric evsla:packetLoss ;
-    ex:obs-loss-value ( ex:obs-loss ) .
+    met:metric evsla:packetLoss ;
+    met:metricValue ex:obs-loss-value .
 
 ex:obs-loss-value
     a quan:Quantity .
 
 ex:cond-bandwidth
     a log:Condition ;
-    log:matchOne ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+    quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    met:observedMetric evsla:guaranteedBandwidth ;
-    ex:obs-bandwidth-value ( ex:obs-bandwidth ) .
+    met:metric evsla:guaranteedBandwidth ;
+    met:metricValue ex:obs-bandwidth-value .
 
 ex:obs-bandwidth-value
     a quan:Quantity .
 
 ex:topology
-    a evsla:HubAndSpokeTopology ;
-    rdfs:comment "One hub in Taichung pharmaceutical plant headquarters connected to all branch spokes."@en ;
-    ex:hub [ rdfs:label "台中藥廠總部"@zh ] ;
-    ex:spoke [ rdfs:label "分點1"@zh ],
-             [ rdfs:label "分點2"@zh ],
-             [ rdfs:label "分點3"@zh ] .
+    a icm:Context ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hubToAllSpokes ex:hub, ex:spoke-1, ex:spoke-2 .
+
+ex:hub
+    rdfs:label "台中藥廠總部"@zh .
+
+ex:spoke-1
+    rdfs:label "分點1"@zh .
+
+ex:spoke-2
+    rdfs:label "分點2"@zh .

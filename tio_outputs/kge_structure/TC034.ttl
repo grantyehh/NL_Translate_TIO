@@ -1,108 +1,83 @@
 @prefix ex: <http://example.org/tio-instance/tc034/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
-@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionscoefficients> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
     a icm:Intent ;
     icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
-    rdfs:comment "South China Electric requires packet loss from Kaohsiung main plant to Tainan, Chiayi and Pingtung plants to stay below 0.02% for 99% of the time, and guaranteed bandwidth to be no less than 200 Mbps."@en ;
-    evsla:forTenant ex:tenant ;
-    evsla:serviceTarget ex:vpn-service .
-
-ex:tenant
-    rdfs:label "華南電機"@zh .
-
-ex:vpn-service
-    a evsla:EnterpriseVpnService ;
-    evsla:forTenant ex:tenant .
+    rdfs:comment "Kaohsiung main plant to Tainan, Chiayi, and Pingtung spoke sites shall have packet loss below 0.02% at p99 level, and guaranteed bandwidth at least 200 Mbps."@en .
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss ;
-    evsla:forTenant ex:tenant ;
-    evsla:serviceTarget ex:vpn-service ;
-    evsla:hasThreshold ex:thr-packetLoss .
+    icm:target ex:tgt-packetLoss .
 
 ex:tgt-packetLoss
     a icm:Target ;
-    evsla:packetLoss evsla:packetLoss ;
+    evsla:hasMetric evsla:packetLoss ;
     icm:valuesOfTargetProperty ex:thr-packetLoss ;
-    evsla:hasThreshold ex:thr-packetLoss .
+    evsla:hasThreshold ex:thr-packetLoss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-packetLoss
     a quan:Quantity ;
-    rdf:value "0.02" ;
+    rdf:value "0.02"^^xsd:decimal ;
     quan:unit "%" .
 
 ex:exp-guaranteedBandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-guaranteedBandwidth ;
-    evsla:forTenant ex:tenant ;
-    evsla:serviceTarget ex:vpn-service ;
-    evsla:hasThreshold ex:thr-guaranteedBandwidth .
+    icm:target ex:tgt-guaranteedBandwidth .
 
 ex:tgt-guaranteedBandwidth
     a icm:Target ;
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
-    evsla:hasThreshold ex:thr-guaranteedBandwidth .
+    evsla:hasThreshold ex:thr-guaranteedBandwidth ;
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-guaranteedBandwidth
     a quan:Quantity ;
-    rdf:value "200" ;
+    rdf:value "200"^^xsd:decimal ;
     quan:unit "Mbps" .
 
 ex:cond-packetLoss
     a log:Condition ;
-    rdfs:comment "packet loss below threshold"@en .
+    quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
 ex:obs-packetLoss
-    met:observedMetric evsla:packetLoss .
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:obs-packetLoss-value .
 
 ex:obs-packetLoss-value
     a quan:Quantity .
 
 ex:cond-guaranteedBandwidth
     a log:Condition ;
-    rdfs:comment "guaranteed bandwidth at least threshold"@en .
+    quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
 ex:obs-guaranteedBandwidth
-    met:observedMetric evsla:guaranteedBandwidth .
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:obs-guaranteedBandwidth-value .
 
 ex:obs-guaranteedBandwidth-value
     a quan:Quantity .
 
 ex:topology
     a icm:Context ;
-    evsla:forTenant ex:tenant ;
-    rdfs:comment "Hub-and-spoke topology with Kaohsiung as hub and Tainan, Chiayi, and Pingtung as spokes."@en ;
-    ex:hub ex:site-kaohsiung ;
-    ex:spoke ex:site-tainan, ex:site-chiayi, ex:site-pingtung .
-
-ex:site-kaohsiung
-    a evsla:Site ;
-    rdfs:label "高雄電機總廠"@zh .
-
-ex:site-tainan
-    a evsla:Site ;
-    rdfs:label "台南廠"@zh .
-
-ex:site-chiayi
-    a evsla:Site ;
-    rdfs:label "嘉義廠"@zh .
-
-ex:site-pingtung
-    a evsla:Site ;
-    rdfs:label "屏東廠"@zh .
+    evsla:hasScope evsla:hubToAllSpokes ;
+    ex:hub [ rdfs:label "高雄電機總廠"@zh ] ;
+    ex:spoke [ rdfs:label "台南廠"@zh ] ;
+    ex:spoke [ rdfs:label "嘉義廠"@zh ] ;
+    ex:spoke [ rdfs:label "屏東廠"@zh ] .

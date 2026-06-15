@@ -1,65 +1,62 @@
 @prefix ex: <http://example.org/tio-instance/tc021/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionslogistic> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:HubAndSpokeTopology ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Latency from the Taipei hub to the Taoyuan and Tainan spokes must stay below 40 ms at the p95 level for each spoke."@en .
+    rdfs:comment "Taipei headquarters to Taoyuan plant and Tainan plant: latency for each spoke must stay below 40 ms at p95."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-latency .
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:latency evsla:latency ;
+    evsla:hasMetric evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
-    evsla:p95 evsla:p95 ;
-    evsla:perSpoke evsla:perSpoke ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow ;
-    evsla:twamp evsla:twamp .
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:perSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-latency
     a quan:Quantity ;
-    rdf:value 40 ;
+    rdf:value "40"^^xsd:decimal ;
     quan:unit "ms" .
 
 ex:cond-latency
     a log:Condition ;
-    log:noneOf ( ex:obs-latency-value ex:thr-latency ) .
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:latency evsla:latency .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
     a quan:Quantity ;
-    set:isMember ( ex:obs-latency ) .
+    fun:resultOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    rdfs:label "Hub-and-spoke topology with Taipei headquarters as hub and Taoyuan plant and Tainan plant as spokes."@en ;
-    evsla:hasSpoke ex:spoke-taoyuan, ex:spoke-tainan .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:site-taipei-hq ;
+    evsla:hasSpoke ex:site-taoyuan-plant, ex:site-tainan-plant .
 
-ex:hub
+ex:site-taipei-hq
+    a evsla:HubSite ;
     rdfs:label "台北總部"@zh .
 
-ex:spoke-taoyuan
+ex:site-taoyuan-plant
     a evsla:SpokeSite ;
     rdfs:label "桃園廠"@zh .
 
-ex:spoke-tainan
+ex:site-tainan-plant
     a evsla:SpokeSite ;
     rdfs:label "台南廠"@zh .

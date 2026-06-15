@@ -1,56 +1,51 @@
 @prefix ex: <http://example.org/tio-instance/tc017/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix log: <http://www.w3.org/2000/10/swap/log#> .
-@prefix pre: <http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/> .
-@prefix ut: <http://tio.models.tmforum.org/tio/v3.6.0/Utility/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
-@prefix pro: <http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:SlaExpectation ;
     icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
-    rdfs:comment "Ensure packet loss between the International Convention and Exhibition Hub and each spoke stays below 0.15% for 99% of the time."@en .
+    rdfs:comment "Ensure packet loss between the International Convention Center hub and all spokes stays below 0.15% at the p99 level."@en .
 
 ex:exp-packetloss
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-packetloss .
 
 ex:tgt-packetloss
     a icm:Target ;
-    evsla:packetLoss evsla:packetLoss ;
+    evsla:hasMetric evsla:packetLoss ;
     icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:packetLoss ex:thr-packetloss ;
-    evsla:hubToAllSpokes evsla:hubToAllSpokes ;
-    evsla:appliesPerSpoke "true" .
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-packetloss
     a quan:Quantity ;
-    rdf:value 0.15 ;
+    rdf:value "0.15"^^xsd:decimal ;
     quan:unit "%" .
 
 ex:cond-packetloss
     a log:Condition ;
-    log:lessThan ( ex:obs-packetloss-value ex:thr-packetloss ) .
+    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
 
 ex:obs-packetloss
-    evsla:packetLoss evsla:packetLoss .
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:obs-packetloss-value .
 
 ex:obs-packetloss-value
-    a quan:Quantity ;
-    evsla:packetLoss ( ex:obs-packetloss ) .
+    a quan:Quantity .
 
 ex:topology
-    a icm:Context ;
+    a icm:Context, evsla:HubAndSpokeTopology ;
     evsla:hasHub ex:hub ;
     evsla:hasSpoke ex:spoke-1 .
 

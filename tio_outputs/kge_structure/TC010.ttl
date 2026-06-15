@@ -1,53 +1,57 @@
 @prefix ex: <http://example.org/tio-instance/tc010/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
 @prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure latency from the Swift Game headquarters hub to all branch spokes stays below 20 ms for 95% of the time."@en .
+  a icm:Intent, evsla:SlaExpectation ;
+  icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+  rdfs:comment "Ensure latency from the Swift Game headquarters to all branch sites stays below 20 ms at the p95 level."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency .
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency ;
+  evsla:hasMetric evsla:latency ;
+  evsla:hasThreshold ex:thr-latency ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement ;
+  evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:tgt-latency
-    a icm:Target ;
-    met:observedMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasScope ex:topology .
+  a icm:Target ;
+  evsla:latency evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency ;
+  evsla:hasThreshold ex:thr-latency ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement ;
+  evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-latency
-    a quan:Quantity ;
-    rdf:value 20 ;
-    quan:unit "ms" .
+  a quan:Quantity ;
+  rdf:value "20"^^xsd:decimal ;
+  quan:unit "ms" .
 
 ex:cond-latency
-    a log:Condition ;
-    log:noneOf ( ex:obs-latency-value ex:thr-latency ) .
+  a log:Condition ;
+  quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    met:observedMetric evsla:latency ;
-    evsla:hasScope ex:topology .
+  evsla:latency evsla:latency ;
+  icm:valuesOfTargetProperty ex:obs-latency-value .
 
 ex:obs-latency-value
-    a quan:Quantity ;
-    met:observedMetric ( ex:obs-latency ) .
+  a quan:Quantity .
 
 ex:topology
-    a evsla:HubAndSpokeTopology ;
-    rdfs:label "hub-and-spoke topology for Swift Game headquarters and all branches"@en ;
-    ex:hub [ rdfs:label "迅捷遊戲總部"@zh ] ;
-    ex:spoke [ rdfs:label "所有分點"@zh ] .
+  a icm:Context ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  ex:hub [ rdfs:label "迅捷遊戲總部"@zh ] ;
+  ex:spoke [ rdfs:label "分點1"@zh ] .

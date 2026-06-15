@@ -1,40 +1,32 @@
 @prefix ex: <http://example.org/tio-instance/tc039/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionslogistic> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:SlaExpectation ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
     rdfs:comment "Taichung industrial headquarters to six plant spokes requires average latency below 80 ms within the monthly SLA window."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-latency .
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:serviceTarget ex:topology ;
-    evsla:latency ex:latency-metric ;
+    evsla:hasMetric evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow ;
-    evsla:hasMeasurementMethod evsla:twamp .
-
-ex:latency-metric
-    a rdf:Property .
+    evsla:hasStatistic evsla:average ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -43,38 +35,37 @@ ex:thr-latency
 
 ex:cond-latency
     a log:Condition ;
-    log:noneOf ( ex:obs-latency-value ex:thr-latency ) .
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    met:observedMetric evsla:latency .
+    evsla:hasMetric evsla:latency ;
+    evsla:hasThreshold ex:obs-latency-value .
 
 ex:obs-latency-value
-    a quan:Quantity ;
-    met:lastObserved ( ex:obs-latency ) .
+    a quan:Quantity .
 
 ex:topology
     a icm:Context ;
-    rdfs:comment "Hub-and-spoke topology with one hub and six spokes."@en ;
-    evsla:serviceTarget ex:hub ;
-    evsla:serviceTarget ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5, ex:spoke-6 .
+    evsla:hubToAllSpokes ex:hub ;
+    evsla:perSpoke ex:spoke1, ex:spoke2, ex:spoke3, ex:spoke4, ex:spoke5, ex:spoke6 .
 
 ex:hub
     rdfs:label "台中工業總部"@zh .
 
-ex:spoke-1
+ex:spoke1
     rdfs:label "廠區分點1"@zh .
 
-ex:spoke-2
+ex:spoke2
     rdfs:label "廠區分點2"@zh .
 
-ex:spoke-3
+ex:spoke3
     rdfs:label "廠區分點3"@zh .
 
-ex:spoke-4
+ex:spoke4
     rdfs:label "廠區分點4"@zh .
 
-ex:spoke-5
+ex:spoke5
     rdfs:label "廠區分點5"@zh .
 
-ex:spoke-6
+ex:spoke6
     rdfs:label "廠區分點6"@zh .

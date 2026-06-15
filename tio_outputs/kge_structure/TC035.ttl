@@ -1,41 +1,32 @@
 @prefix ex: <http://example.org/tio-instance/tc035/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
 @prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionscoefficients> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix pre: <http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/> .
-@prefix ut: <http://tio.models.tmforum.org/tio/v3.6.0/Utility/> .
-@prefix iv: <http://tio.models.tmforum.org/tio/v3.6.0/IntentValidityOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:HubAndSpokeTopology ;
     icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
-    evsla:forTenant ex:tenant ;
-    rdfs:comment "Tai Sheng Aerospace requires latency from the Taoyuan aerospace manufacturing headquarters to the Taichung parts plant and Kaohsiung assembly plant to stay below 25 ms for 95% of the time, and guaranteed bandwidth to be no less than 300 Mbps."@en .
+    rdfs:comment "Taisheng Aerospace requires latency from Taoyuan aerospace manufacturing headquarters to the Taichung parts plant and Kaohsiung assembly plant to stay below 25 ms at the p95 level, and guaranteed bandwidth to be at least 300 Mbps."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
-    evsla:forTenant ex:tenant ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-latency .
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:serviceTarget ex:topology ;
-    evsla:latency ex:latency-metric ;
+    evsla:hasMetric evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow ex:timewindow-95 .
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -43,17 +34,18 @@ ex:thr-latency
     quan:unit "ms" .
 
 ex:exp-bandwidth
-    a icm:PropertyExpectation ;
-    evsla:forTenant ex:tenant ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-bandwidth .
 
 ex:tgt-bandwidth
     a icm:Target ;
-    evsla:serviceTarget ex:topology ;
-    evsla:guaranteedBandwidth ex:bandwidth-metric ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -62,41 +54,39 @@ ex:thr-bandwidth
 
 ex:cond-latency
     a log:Condition ;
-    log:matchAll ( ex:obs-latency-value ex:thr-latency ) .
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    met:observedMetric evsla:latency ;
-    met:observedValue ( ex:obs-latency ) .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:cond-bandwidth
     a log:Condition ;
-    log:matchOne ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+    quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    met:observedMetric evsla:guaranteedBandwidth ;
-    met:observedValue ( ex:obs-bandwidth ) .
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-bandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-bandwidth ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:forTenant ex:tenant ;
-    ex:hub ex:site-hub ;
-    ex:spoke ex:site-spoke-taichung, ex:site-spoke-kaohsiung .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taoyuan ;
+    evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
 
-ex:site-hub
+ex:hub-taoyuan
     a evsla:HubSite ;
     rdfs:label "桃園航太製造總部"@zh .
 
-ex:site-spoke-taichung
+ex:spoke-taichung
+    a evsla:SpokeSite ;
     rdfs:label "台中零件廠"@zh .
 
-ex:site-spoke-kaohsiung
+ex:spoke-kaohsiung
+    a evsla:SpokeSite ;
     rdfs:label "高雄組裝廠"@zh .
-
-ex:tenant
-    rdfs:label "泰盛航太"@zh .

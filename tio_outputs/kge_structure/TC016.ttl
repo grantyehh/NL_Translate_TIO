@@ -1,63 +1,58 @@
 @prefix ex: <http://example.org/tio-instance/tc016/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
-@prefix pre: <http://tio.models.tmforum.org/tio/v3.6.0/PreferenceOfHandlingOutcomes/> .
-@prefix ut: <http://tio.models.tmforum.org/tio/v3.6.0/Utility/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions> .
-@prefix pro: <http://tio.models.tmforum.org/tio/v3.6.0/IntentProbing/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure hub-to-all-spokes latency stays below 100 ms for 95% of the time."@en .
+  a icm:Intent, evsla:SlaExpectation ;
+  icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+  rdfs:comment "Ensure latency from the smart agriculture hub to all spokes stays below 100 ms at the p95 level."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency .
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency .
 
 ex:tgt-latency
-    a icm:Target ;
-    evsla:latency evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    met:observedValue ex:thr-latency ;
-    evsla:hubToAllSpokes evsla:hubToAllSpokes .
+  a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency ;
+  evsla:hasThreshold ex:thr-latency ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement ;
+  evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:thr-latency
-    a quan:Quantity ;
-    rdf:value "100"^^xsd:decimal ;
-    quan:unit "ms" .
+  a quan:Quantity ;
+  rdf:value "100"^^xsd:decimal ;
+  quan:unit "ms" .
 
 ex:cond-latency
-    a log:Condition ;
-    log:noneOf ( ex:obs-latency-value ex:thr-latency ) .
+  a log:Condition ;
+  quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:latency evsla:latency ;
-    met:observedValue ex:obs-latency-value .
+  evsla:hasMetric evsla:latency ;
+  met:observedValue ( ex:obs-latency ) .
 
 ex:obs-latency-value
-    a quan:Quantity ;
-    rdf:value "100"^^xsd:decimal ;
-    quan:unit "ms" .
+  a quan:Quantity .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasHub ex:hub ;
-    evsla:hasSpoke ex:spoke-1 .
+  a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub ex:hub ;
+  evsla:hasSpoke ex:spoke-1 .
 
 ex:hub
-    a evsla:HubSite ;
-    rdfs:label "智慧農業Hub"@zh .
+  a evsla:HubSite ;
+  rdfs:label "智慧農業Hub"@zh .
 
 ex:spoke-1
-    a evsla:SpokeSite ;
-    rdfs:label "All Spokes"@en .
+  a evsla:SpokeSite ;
+  rdfs:label "Spoke"@en .

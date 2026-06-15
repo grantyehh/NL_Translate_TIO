@@ -332,12 +332,54 @@ LLM-only-structure(地板)   |  85%  |  0.0000   |  1,432
 40 題)。`evaluate_ttl.py` 新增 `--test-cases` 以對 40 題 gold 評分。索引/artifacts:`GraphRag/index/`、
 `KGE/KGE-based-graphrag/kge_data/`(均本機生成、未入庫)。
 
+## Experiment Architecture 4 — canonical KGE redesign (2026-06-15)
+
+把 KGE 從「誤用版」重設計成正統版:**text-embedding dense grounding(入口,吃同義詞)+ TransE
+link-prediction 的正統用法(只排序真實 triple、永不合成)+ 共用 GraphRAG 的輸出契約**
+(`resource_index`/`graph_relations`/`context_builder`)。移除三個誤用:TransE entity-cosine
+neighbor expansion、predicted-triples-as-facts dump、百科 term-hint dump。設計/計畫:
+`docs/superpowers/specs/2026-06-15-kge-canonical-redesign-design.md`、
+`docs/superpowers/plans/2026-06-15-kge-canonical-redesign.md`。
+
+KGE-structure 重設計前後(40 題,strict `semantic_eval`):
+
+```text
+                 | Composite | Tok/case | Parse
+KGE 舊版(誤用)  |  0.0051   |  8,099   |  95%
+KGE 正統版        |  0.7540   |  2,292   | 100%
+```
+
+放回四線:
+
+```text
+Line                       | Composite | Tok/case
+LLM-only strong(天花板)    |  0.9722   |  5,349
+GraphRAG-structure         |  0.7867   |  2,369
+KGE-structure(正統)       |  0.7540   |  2,292
+LLM-only-structure(地板)   |  0.0000   |  1,432
+```
+
+關鍵發現:
+
+- **0.0051 → 0.7540(~148×),token 8,099 → 2,292(3.5×↓)**:把垃圾糾正成可用。
+- **KGE vs GraphRAG = −0.0327(幾乎打平),token 還略低。**
+- **為何收斂(印證 spec §11)**:重設計後 KGE 與 GraphRAG **只差「選種子機制」**(KGE = text-emb +
+  TransE 真實擴張;GraphRAG = lexical + 確定性 traversal),其後「種子 → 輸出」機器、序列化、prompt
+  **完全共用**。而在這小而固定的 schema 上,**到達的角色集是 schema 事實**—— ground 到任一 SLA value
+  詞,hub-activation 就點亮整個角色菜單 —— 所以兩種選種子機制**殊途同歸**,分數與 token 都貼近。殘差
+  來自 grounded-terms 區塊的細微差異與 KGE 的 TransE 擴張。
+- **caveat**:此收斂是「小固定 schema」的性質、非普世;在更大 / 開放 / 詞彙易變的領域,grounding 對不對
+  會成關鍵變數,KGE 的 embedding / 同義詞 robustness 可能拉開差距。
+
+報告:`phase1/phase1_kge_structure.json`(已更新為正統版);`token_usage_kge.json` 含 KGE artifact 訓練的 prep token。
+
 ## Next Steps
 
-0. **(active, 2026-06-15)** 縮 GraphRAG-structure 對天花板的 **0.19 replacement_gap**,集中修 4 個維度:
-   **tenant(0.00**;補 `evsla:Tenant` typing / `forTenant` relation,structure prompt 寫清楚 tenant 建模)、
-   **time_window(0.20)** 與 **measurement_method(0.35)**(查是 grounding 沒命中還是 prompt wiring)、
-   **topology(0.50**;hub/spoke 基數)。可選:重設計 KGE(仍 0.0051);wire KAG-structure 湊四方對照。
+0. **(active, 2026-06-15)** 縮 structure-only 兩條 retrieval(GraphRAG 0.79、KGE 0.75)對天花板(0.97)的
+   差距,集中修兩條共同的弱維度:**tenant(0.00**;補 `evsla:Tenant` typing / `forTenant` relation,
+   structure prompt 寫清楚 tenant 建模)、**time_window(~0.15)** 與 **measurement_method(~0.37)**
+   (查 grounding 命中 vs prompt wiring)、**topology(~0.46**;hub/spoke 基數)。可選:wire
+   KAG-structure 湊四方對照。
 1. **(superseded by Architecture 3)** Weak-prompt 替代性實驗:已被 structure-only 設計取代 —— structure-only
    給組裝骨架、抽詞彙,比 all-or-nothing 的 weak prompt 更能量出 retrieval 的邊際價值。
    原設計:`docs/superpowers/specs/2026-06-13-weak-prompt-retrieval-substitution-design.md`(`b620a43`)。

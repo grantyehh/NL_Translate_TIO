@@ -1,82 +1,91 @@
 @prefix ex: <http://example.org/tio-instance/tc027/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
 @prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctionsinput> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ex:intent
-    a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-latency, ex:exp-packetloss, ex:topology, ex:cond-latency, ex:cond-packetloss ;
-    rdfs:comment "Taipei energy dispatch center to Keelung power plant latency below 20 ms at p99, and to Miaoli and Changbin power plants packet loss below 0.05% at p99."@en .
+ex:intent a icm:Intent, evsla:SlaExpectation ;
+  icm:intentElements ex:exp-latency-keelung, ex:exp-loss-miaoli, ex:exp-loss-changbin, ex:topology, ex:cond-latency-keelung, ex:cond-loss-miaoli, ex:cond-loss-changbin ;
+  rdfs:comment "Taipei Energy Dispatch Center to Keelung Power Plant latency must stay below 20 ms at p99, and to Miaoli Power Plant and Changbin Power Plant packet loss must stay below 0.05% for 99% time."@en .
 
-ex:exp-latency
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency .
+ex:exp-latency-keelung a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency-keelung .
 
-ex:tgt-latency
-    a icm:Target ;
-    met:observedMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:p99 evsla:p99 .
+ex:tgt-latency-keelung a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency-keelung ;
+  evsla:hasThreshold ex:thr-latency-keelung ;
+  evsla:hasStatistic evsla:p99 ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:twamp .
 
-ex:thr-latency
-    a quan:Quantity ;
-    rdf:value 20 ;
-    quan:unit "ms" .
+ex:thr-latency-keelung a quan:Quantity ;
+  rdf:value "20"^^xsd:decimal ;
+  quan:unit "ms" .
 
-ex:exp-packetloss
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-packetloss .
+ex:exp-loss-miaoli a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-loss-miaoli .
 
-ex:tgt-packetloss
-    a icm:Target ;
-    met:observedMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
-    evsla:p99 evsla:p99 .
+ex:tgt-loss-miaoli a icm:Target ;
+  evsla:hasMetric evsla:packetLoss ;
+  icm:valuesOfTargetProperty ex:thr-loss-shared ;
+  evsla:hasThreshold ex:thr-loss-shared ;
+  evsla:hasStatistic evsla:p99 ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasTimeWindow evsla:monthlySlaWindow ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement .
 
-ex:thr-packetloss
-    a quan:Quantity ;
-    rdf:value 0.05 ;
-    quan:unit "%" .
+ex:exp-loss-changbin a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-loss-changbin .
 
-ex:cond-latency
-    a log:Condition ;
-    log:noneOf ( ex:obs-latency-value ex:thr-latency ) .
+ex:tgt-loss-changbin a icm:Target ;
+  evsla:hasMetric evsla:packetLoss ;
+  icm:valuesOfTargetProperty ex:thr-loss-shared ;
+  evsla:hasThreshold ex:thr-loss-shared ;
+  evsla:hasStatistic evsla:p99 ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasTimeWindow evsla:monthlySlaWindow ;
+  evsla:hasMeasurementMethod evsla:activeMeasurement .
 
-ex:obs-latency
-    a met:Observation ;
-    met:observedMetric evsla:latency ;
-    ex:obs-latency-value ex:obs-latency .
+ex:thr-loss-shared a quan:Quantity ;
+  rdf:value "0.05"^^xsd:decimal ;
+  quan:unit "%" .
 
-ex:obs-latency-value
-    a quan:Quantity .
+ex:cond-latency-keelung a log:Condition ;
+  quan:smaller ( ex:obs-latency-keelung-value ex:thr-latency-keelung ) .
 
-ex:cond-packetloss
-    a log:Condition ;
-    log:noneOf ( ex:obs-packetloss-value ex:thr-packetloss ) .
+ex:obs-latency-keelung evsla:latency evsla:latency ;
+  rdf:value ex:obs-latency-keelung-value .
 
-ex:obs-packetloss
-    a met:Observation ;
-    met:observedMetric evsla:packetLoss ;
-    ex:obs-packetloss-value ex:obs-packetloss .
+ex:obs-latency-keelung-value a quan:Quantity .
 
-ex:obs-packetloss-value
-    a quan:Quantity .
+ex:cond-loss-miaoli a log:Condition ;
+  quan:smaller ( ex:obs-loss-miaoli-value ex:thr-loss-shared ) .
 
-ex:topology
-    a icm:Context ;
-    ex:hub [ rdfs:label "台北能源調度中心"@zh ] ;
-    ex:spoke [ rdfs:label "基隆電廠"@zh ] ;
-    ex:spoke [ rdfs:label "苗栗電廠"@zh ] ;
-    ex:spoke [ rdfs:label "彰濱電廠"@zh ] .
+ex:obs-loss-miaoli evsla:packetLoss evsla:packetLoss ;
+  rdf:value ex:obs-loss-miaoli-value .
+
+ex:obs-loss-miaoli-value a quan:Quantity .
+
+ex:cond-loss-changbin a log:Condition ;
+  quan:smaller ( ex:obs-loss-changbin-value ex:thr-loss-shared ) .
+
+ex:obs-loss-changbin evsla:packetLoss evsla:packetLoss ;
+  rdf:value ex:obs-loss-changbin-value .
+
+ex:obs-loss-changbin-value a quan:Quantity .
+
+ex:topology a icm:Context ;
+  rdfs:comment "Hub-and-spoke topology with one hub and three spokes."@en ;
+  evsla:hasScope evsla:specificSpoke ;
+  rdf:value ex:site-taipei-edc, ex:site-keelung-plant, ex:site-miaoli-plant, ex:site-changbin-plant .
+
+ex:site-taipei-edc rdfs:label "台北能源調度中心"@zh .
+ex:site-keelung-plant rdfs:label "基隆電廠"@zh .
+ex:site-miaoli-plant rdfs:label "苗栗電廠"@zh .
+ex:site-changbin-plant rdfs:label "彰濱電廠"@zh .

@@ -1,84 +1,94 @@
 @prefix ex: <http://example.org/tio-instance/tc031/> .
-@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
-@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
-@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix met: <http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
 @prefix fun: <http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/> .
-@prefix mf: <http://tio.models.tmforum.org/tio/v3.6.0/MathFunctions/> .
-@prefix set: <http://tio.models.tmforum.org/tio/v3.6.0/SetOperators/> .
-@prefix pbi: <http://tio.models.tmforum.org/tio/v3.6.0/ProposalBestIntent/> .
-@prefix insp: <http://tio.models.tmforum.org/tio/v3.6.0/IntentSpecification/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:SlaExpectation ;
     icm:intentElements ex:exp-latency, ex:exp-packetloss, ex:topology, ex:cond-latency, ex:cond-packetloss ;
-    rdfs:comment "Hub-and-spoke enterprise VPN SLA: latency from Taipei data center to all spokes stays below 30 ms at p95, and packet loss stays below 0.05% at p95."@en .
+    rdfs:comment "Yingsheng Technology requires latency from the Taipei data center hub to all spokes to stay below 30 ms at the p95 level, and packet loss to stay below 0.05 at the p99 level."@en .
 
 ex:exp-latency
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency .
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp .
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:latency evsla:latency ;
+    evsla:hasMetric evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
-    evsla:p95 evsla:p95 ;
-    evsla:twamp evsla:twamp ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp .
 
 ex:thr-latency
     a quan:Quantity ;
-    rdf:value 30 ;
+    rdf:value "30"^^xsd:decimal ;
     quan:unit "ms" .
-
-ex:exp-packetloss
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-packetloss .
-
-ex:tgt-packetloss
-    a icm:Target ;
-    evsla:packetLoss evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
-    evsla:p95 evsla:p95 ;
-    evsla:twamp evsla:twamp ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
-
-ex:thr-packetloss
-    a quan:Quantity ;
-    rdf:value 0.05 ;
-    quan:unit "%" .
 
 ex:cond-latency
     a log:Condition ;
-    log:matchAll ( ex:obs-latency-value ex:thr-latency ) .
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:latency evsla:latency .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
     a quan:Quantity ;
-    evsla:hasThreshold ( ex:obs-latency ) .
+    met:metricValue ( ex:obs-latency ) .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetloss ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit "%" .
 
 ex:cond-packetloss
     a log:Condition ;
-    log:matchAll ( ex:obs-packetloss-value ex:thr-packetloss ) .
+    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
 
 ex:obs-packetloss
-    evsla:packetLoss evsla:packetLoss .
+    evsla:hasMetric evsla:packetLoss .
 
 ex:obs-packetloss-value
     a quan:Quantity ;
-    evsla:hasThreshold ( ex:obs-packetloss ) .
+    met:metricValue ( ex:obs-packetloss ) .
 
 ex:topology
     a icm:Context ;
-    ex:hub [ rdfs:label "台北數據中心"@zh ] ;
-    ex:spoke [ rdfs:label "分點1"@zh ] ;
-    ex:spoke [ rdfs:label "分點2"@zh ] ;
-    ex:spoke [ rdfs:label "分點3"@zh ] .
+    evsla:hubSite ex:hub-taipei-datacenter ;
+    evsla:spokeSite ex:spoke-1 .
+
+ex:hub-taipei-datacenter
+    rdfs:label "台北數據中心"@zh .
+
+ex:spoke-1
+    rdfs:label "所有分點"@zh .
