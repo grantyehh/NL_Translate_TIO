@@ -7,7 +7,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from evsla_prompt import build_evsla_system_prompt
-from kge.retrieve import format_kge_context_for_prompt, kge_ready
+from kge.retrieve import kge_ready
+from kge.select import build_kge_context
 from token_usage import record_usage, reset_usage_ledger
 
 CHAT_MODEL = "gpt-5.4"
@@ -237,7 +238,7 @@ def main() -> None:
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
-        kge_context = format_kge_context_for_prompt(tc["nl_intent"], case_id=tc["id"])
+        kge_context = build_kge_context(tc["nl_intent"], case_id=tc["id"])
 
         turtle_result = generate_turtle_code(
             tc["nl_intent"],

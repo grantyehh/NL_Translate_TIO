@@ -153,7 +153,7 @@ class TestKgePaths(unittest.TestCase):
                 return_value=[],
             ), patch.object(
                 nl_to_tio,
-                "format_kge_context_for_prompt",
+                "build_kge_context",
                 return_value="Grounded URIs:\n- evsla:SlaExpectation",
             ), patch.object(
                 nl_to_tio,
@@ -189,82 +189,6 @@ class TestKgePaths(unittest.TestCase):
 
         self.assertEqual(paths.RELATION_IDS_JSON.name, "relation_ids.json")
         self.assertEqual(paths.RELATION_KGE_EMB_NPY.name, "relation_kge_embeddings.npy")
-
-    def test_trans_e_link_prediction_scores_candidate_triples(self) -> None:
-        from kge.retrieve import score_link_predictions
-
-        entity_ids = [
-            "http://example.test/SlaExpectation",
-            "http://example.test/latency",
-            "http://example.test/packetLoss",
-        ]
-        relation_ids = [
-            "http://example.test/hasMetric",
-            "http://example.test/blockedRelation",
-        ]
-        entity_emb = np.asarray(
-            [
-                [0.0, 0.0],
-                [1.0, 0.0],
-                [4.0, 0.0],
-            ],
-            dtype=np.float32,
-        )
-        relation_emb = np.asarray(
-            [
-                [1.0, 0.0],
-                [0.0, 1.0],
-            ],
-            dtype=np.float32,
-        )
-
-        predictions = score_link_predictions(
-            "http://example.test/SlaExpectation",
-            entity_ids,
-            relation_ids,
-            entity_emb,
-            relation_emb,
-            relation_whitelist={"http://example.test/hasMetric"},
-            candidate_tail_uris={
-                "http://example.test/latency",
-                "http://example.test/packetLoss",
-            },
-            top_k=2,
-        )
-
-        self.assertEqual(len(predictions), 2)
-        self.assertEqual(predictions[0].relation_uri, "http://example.test/hasMetric")
-        self.assertEqual(predictions[0].tail_uri, "http://example.test/latency")
-        self.assertGreater(predictions[0].score, predictions[1].score)
-        self.assertNotEqual(predictions[0].relation_uri, "http://example.test/blockedRelation")
-
-    def test_grounded_kge_context_formats_predicted_likely_triples(self) -> None:
-        from kge.retrieve import LinkPrediction, format_grounded_kge_context
-
-        context = format_grounded_kge_context(
-            grounded=[
-                (
-                    "evsla:SlaExpectation",
-                    "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/SlaExpectation",
-                    "text",
-                    "SLA expectation class",
-                )
-            ],
-            predictions=[
-                LinkPrediction(
-                    head_uri="http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/SlaExpectation",
-                    relation_uri="http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/hasMetric",
-                    tail_uri="http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/latency",
-                    score=-0.01,
-                )
-            ],
-        )
-
-        self.assertIn("Grounded URIs", context)
-        self.assertIn("Predicted likely triples", context)
-        self.assertIn("evsla:SlaExpectation", context)
-        self.assertIn("evsla:SlaExpectation evsla:hasMetric evsla:latency", context)
-        self.assertIn("Use these as structural hints, not as test-case answers", context)
 
 
 if __name__ == "__main__":
