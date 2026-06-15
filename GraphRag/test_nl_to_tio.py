@@ -6,14 +6,39 @@ import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-
-os.environ.setdefault("OPENAI_API_KEY", "test-key")
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import nl_to_tio  # noqa: E402
 
 
+# ---------------------------------------------------------------------------
+# Task E1 required offline tests
+# ---------------------------------------------------------------------------
+
+def test_output_path_uses_profile_suffix():
+    nl_to_tio.PROFILE = "structure_only"
+    p = nl_to_tio.output_path_for_case(Path(nl_to_tio.__file__).resolve().parent, "TC001")
+    assert p.parent.name == "graphrag_structure"
+    nl_to_tio.PROFILE = "strong"
+    p2 = nl_to_tio.output_path_for_case(Path(nl_to_tio.__file__).resolve().parent, "TC001")
+    assert p2.parent.name == "graphrag"
+
+
+def test_no_seed_selection_caller_present():
+    assert not hasattr(nl_to_tio, "_seed_llm_caller")
+
+
+# ---------------------------------------------------------------------------
+# Existing offline tests (no API calls)
+# ---------------------------------------------------------------------------
+
 class TestGraphRagPaths(unittest.TestCase):
+    def setUp(self):
+        # Reset profile to default between tests
+        nl_to_tio.PROFILE = "strong"
+        nl_to_tio.WEAK = False
+
     def test_default_test_cases_path_points_to_repo_root_shared_file(self) -> None:
         root = Path("/tmp/example/CHT/GraphRag")
         expected = Path("/tmp/example/CHT/test_cases_20.json").resolve()
@@ -66,64 +91,29 @@ class TestGraphRagPaths(unittest.TestCase):
         completion.choices = [Mock(message=Mock(content="ex:i a icm:Intent ."))]
         completion.usage = Mock(prompt_tokens=20, completion_tokens=10, total_tokens=30)
 
+        mock_client = Mock()
+        mock_client.chat.completions.create.return_value = completion
+
         with tempfile.TemporaryDirectory() as tmp:
             usage_path = Path(tmp) / "token_usage_graphrag.json"
-            with patch.object(
-                nl_to_tio.client.chat.completions,
-                "create",
-                return_value=completion,
-            ), patch.object(nl_to_tio, "token_usage_path", return_value=usage_path):
-                result = nl_to_tio.generate_turtle_code(
-                    "確保延遲低於 50ms",
-                    "context",
-                    "TC001",
-                    "",
-                )
+            original_client = nl_to_tio.client
+            nl_to_tio.client = mock_client
+            try:
+                with patch.object(nl_to_tio, "token_usage_path", return_value=usage_path):
+                    result = nl_to_tio.generate_turtle_code(
+                        "確保延遲低於 50ms",
+                        "context",
+                        "TC001",
+                        "",
+                    )
+            finally:
+                nl_to_tio.client = original_client
 
             self.assertEqual(result, "ex:i a icm:Intent .")
             rows = json.loads(usage_path.read_text(encoding="utf-8"))
             self.assertEqual(rows[0]["experiment"], "graphrag")
             self.assertEqual(rows[0]["stage"], "turtle_generation")
             self.assertEqual(rows[0]["total_tokens"], 30)
-
-
-class TestSubgraphRetrievalIntegration(unittest.TestCase):
-    def test_build_subgraph_context_for_intent_uses_typed_traversal(self):
-        # Smoke: real TTL + mocked LLM/embedding callers produce a non-empty
-        # subgraph string containing at least one evsla URI.
-        from pathlib import Path
-        import json
-
-        from ontology_graph import (
-            build_comment_index,
-            build_label_index,
-            load_ontology,
-            typed_bfs_subgraph,
-        )
-        from subgraph_retriever import build_subgraph_context
-
-        ttl_dir = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
-        g = load_ontology(ttl_dir)
-        label_idx = build_label_index(g)
-        comment_idx = build_comment_index(g)
-
-        def fake_seed_caller(prompt):
-            return json.dumps(["twamp", "p95 statistic", "sla expectation"])
-
-        def fake_embed_caller(items):
-            return [[0.0, 0.0] for _ in items]
-
-        ctx = build_subgraph_context(
-            "確保總部至所有分點延遲在95%時間內低於50ms。",
-            label_index=label_idx,
-            comment_index=comment_idx,
-            seed_caller=fake_seed_caller,
-            embed_caller=fake_embed_caller,
-            bfs_fn=lambda seeds, hops: typed_bfs_subgraph(g, seeds, hops),
-        )
-
-        self.assertIn("evsla:", ctx)
-        self.assertIn("# triples", ctx)
 
 
 if __name__ == "__main__":

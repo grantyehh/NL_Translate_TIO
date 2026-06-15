@@ -6,40 +6,29 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from dotenv import load_dotenv
-from openai import OpenAI
 from evsla_prompt import build_evsla_system_prompt
 from token_usage import record_usage, reset_usage_ledger
-from ontology_graph import (
-    build_comment_index,
-    build_label_index,
-    load_ontology,
-    typed_bfs_subgraph,
-)
-from subgraph_retriever import build_subgraph_context
-
-# 加載環境變數
-load_dotenv()
-
-# 初始化 OpenAI 客戶端 (會自動讀取 OPENAI_API_KEY)
-# 如果你的 .env 中使用的是 GRAPHRAG_API_KEY，我們手動指定一下
-api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
-if not api_key:
-    print(
-        "Error: Missing API key. Please set GRAPHRAG_API_KEY or OPENAI_API_KEY "
-        "in your environment or .env file.",
-        file=sys.stderr,
-    )
-    sys.exit(1)
-client = OpenAI(api_key=api_key)
+from ontology_graph import load_ontology
 
 CHAT_MODEL = "gpt-5.4"
 
-WEAK = False  # set True by --weak-prompt: weak system prompt + no few-shot + _weak outputs
+WEAK = False  # legacy flag: True maps to PROFILE="weak"
+PROFILE = "strong"  # choices: "strong", "weak", "structure_only"
 
 TTL_DIR = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
 EMBED_MODEL = "text-embedding-3-small"
 ACTIVE_CASE_ID: str | None = None
+
+# Populated in main(); exposed at module level so tests can patch it.
+client = None
+
+
+def _experiment_key() -> str:
+    if PROFILE == "structure_only":
+        return "graphrag_structure"
+    if PROFILE == "weak":
+        return "graphrag_weak"
+    return "graphrag"
 
 
 def default_test_cases_path(root: Path) -> Path:
@@ -48,6 +37,10 @@ def default_test_cases_path(root: Path) -> Path:
 
 def default_few_shot_path(root: Path) -> Path:
     return (root.parent / "few_shot_samples.json").resolve()
+
+
+def default_structure_only_few_shot_path(root: Path) -> Path:
+    return (root.parent / "few_shot_structure_only.json").resolve()
 
 
 def load_few_shot_samples(path: Path) -> list[dict]:
@@ -73,16 +66,16 @@ def format_few_shot_block(examples: list[dict]) -> str:
 
 
 def output_path_for_case(root: Path, tc_id: str) -> Path:
-    return root.parent / "tio_outputs" / ("graphrag" + ("_weak" if WEAK else "")) / f"{tc_id}.ttl"
+    return root.parent / "tio_outputs" / _experiment_key() / f"{tc_id}.ttl"
 
 
 def token_usage_path(root: Path | None = None) -> Path:
     root = root or Path(__file__).resolve().parent
-    return root.parent / "phase1" / "token_usage" / f"token_usage_graphrag{'_weak' if WEAK else ''}.json"
+    return root.parent / "phase1" / "token_usage" / f"token_usage_{_experiment_key()}.json"
 
 
 def build_system_prompt(tc_id: str) -> str:
-    return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG", weak_prompt=WEAK)
+    return build_evsla_system_prompt(tc_id, retrieval_mode="GraphRAG", profile=PROFILE)
 
 
 def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
@@ -122,7 +115,7 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
         )
         record_usage(
             token_usage_path(),
-            experiment="graphrag" + ("_weak" if WEAK else ""),
+            experiment=_experiment_key(),
             ledger="online",
             case_id=tc_id,
             stage="turtle_generation",
@@ -139,32 +132,13 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
 generate_jsonld_code = generate_turtle_code
 
 
-def _seed_llm_caller(prompt: str) -> str:
-    response = client.chat.completions.create(
-        model=CHAT_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0,
-    )
-    record_usage(
-        token_usage_path(),
-        experiment="graphrag" + ("_weak" if WEAK else ""),
-        ledger="online",
-        case_id=ACTIVE_CASE_ID,
-        stage="seed_selection",
-        model=CHAT_MODEL,
-        api="chat.completions",
-        response=response,
-    )
-    return (response.choices[0].message.content or "").strip()
-
-
 def _embed_caller(items: list[str]) -> list[list[float]]:
     if not items:
         return []
     resp = client.embeddings.create(model=EMBED_MODEL, input=items)
     record_usage(
         token_usage_path(),
-        experiment="graphrag" + ("_weak" if WEAK else ""),
+        experiment=_experiment_key(),
         ledger="online",
         case_id=ACTIVE_CASE_ID,
         stage="embedding",
@@ -176,8 +150,10 @@ def _embed_caller(items: list[str]) -> list[list[float]]:
 
 
 def main() -> None:
-    global ACTIVE_CASE_ID
+    global ACTIVE_CASE_ID, WEAK, PROFILE, client
+
     root = Path(__file__).resolve().parent
+
     parser = argparse.ArgumentParser(description="NL to TIO Turtle via GraphRAG + OpenAI.")
     parser.add_argument(
         "--test-cases",
@@ -199,14 +175,49 @@ def main() -> None:
     parser.add_argument(
         "--weak-prompt",
         action="store_true",
-        help="Weak system prompt + no few-shot + _weak outputs",
+        help="Weak system prompt + no few-shot + _weak outputs (maps to --prompt-profile weak)",
+    )
+    parser.add_argument(
+        "--prompt-profile",
+        choices=["strong", "weak", "structure_only"],
+        default="strong",
+        help="Prompt profile: strong (default), weak, or structure_only",
     )
     args = parser.parse_args()
 
-    global WEAK
-    WEAK = args.weak_prompt
+    # --weak-prompt is legacy; it maps to profile="weak"
     if args.weak_prompt:
+        PROFILE = "weak"
+        WEAK = True
         args.no_few_shot = True
+    else:
+        PROFILE = args.prompt_profile
+        WEAK = PROFILE == "weak"
+        if PROFILE == "weak":
+            args.no_few_shot = True
+
+    # Lazy API setup — only runs when main() is called, not on import
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        pass  # dotenv optional; env vars may already be set
+
+    try:
+        from openai import OpenAI
+    except ImportError as e:
+        print(f"Error: openai package not installed: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print(
+            "Error: Missing API key. Please set GRAPHRAG_API_KEY or OPENAI_API_KEY "
+            "in your environment or .env file.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    client = OpenAI(api_key=api_key)
 
     test_cases_path = (
         args.test_cases.resolve() if args.test_cases.is_absolute() else (root / args.test_cases).resolve()
@@ -218,35 +229,41 @@ def main() -> None:
 
     few_shot_block = ""
     if not args.no_few_shot:
-        examples = load_few_shot_samples(few_shot_path)
+        # structure_only uses a sanitized few-shot file with no EVSLA vocab
+        if PROFILE == "structure_only":
+            fs_path = default_structure_only_few_shot_path(root)
+        else:
+            fs_path = few_shot_path
+        examples = load_few_shot_samples(fs_path)
         few_shot_block = format_few_shot_block(examples)
         if examples:
-            print(f"Loaded {len(examples)} few-shot example(s) from {few_shot_path}")
+            print(f"Loaded {len(examples)} few-shot example(s) from {fs_path}")
         else:
-            print(f"No few-shot examples loaded (missing or empty: {few_shot_path})")
+            print(f"No few-shot examples loaded (missing or empty: {fs_path})")
 
     output_dir = output_path_for_case(root, "TC000").parent
     output_dir.mkdir(parents=True, exist_ok=True)
     reset_usage_ledger(token_usage_path(root), "online")
 
     print("--- Loading TIO ontology and building indexes ---")
+    import numpy as np
+    from resource_index import build_resource_index
+    from subgraph_retriever import build_retrieval_context
+
     graph = load_ontology(TTL_DIR)
-    label_idx = build_label_index(graph)
-    comment_idx = build_comment_index(graph)
+    resources = build_resource_index(graph)
+    emb_path = root / "index" / "resource_embeddings.npy"
+    embeddings = np.load(emb_path) if emb_path.is_file() else None
 
     for tc in test_cases:
         ACTIVE_CASE_ID = tc["id"]
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
-        print("--- Retrieving TIO subgraph via typed traversal ---")
-        tio_context = build_subgraph_context(
-            tc["nl_intent"],
-            label_index=label_idx,
-            comment_index=comment_idx,
-            seed_caller=_seed_llm_caller,
-            embed_caller=_embed_caller,
-            bfs_fn=lambda seeds, hops, g=graph: typed_bfs_subgraph(g, seeds, hops),
-        )
+        print("--- Retrieving TIO subgraph via domain-graph pipeline ---")
+        qv = None
+        if embeddings is not None:
+            qv = np.asarray(_embed_caller([tc["nl_intent"]])[0], dtype=np.float32)
+        tio_context = build_retrieval_context(tc["nl_intent"], graph, resources, embeddings, qv)
 
         if tio_context:
             turtle_result = generate_turtle_code(
