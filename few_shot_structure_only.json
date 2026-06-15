@@ -1,0 +1,9 @@
+{
+  "examples": [
+    {
+      "pattern": "single-metric skeleton",
+      "nl_intent": "Tenant X requires the hub-to-all-spokes <metric> to stay <comparison> <value><unit> at the <statistic> level.",
+      "turtle": "ex:intent a icm:Intent ; icm:intentElements ex:exp-1, ex:topology, ex:cond-1 ; rdfs:comment \"skeleton example\"@en .\nex:exp-1 a icm:PropertyExpectation ; icm:target ex:tgt-1 .\nex:tgt-1 a icm:Target ; ex:metricPredicate ex:metricTerm ; icm:valuesOfTargetProperty ex:thr-1 ; ex:thresholdPredicate ex:thr-1 ; ex:statisticPredicate ex:statisticTerm ; ex:scopePredicate ex:scopeTerm ; ex:methodPredicate ex:methodTerm ; ex:windowPredicate ex:windowTerm .\nex:thr-1 a quan:Quantity ; rdf:value 0 ; quan:unit \"unit\" .\nex:cond-1 a log:Condition ; ex:operatorTerm ( ex:obs-1-value ex:thr-1 ) .\nex:topology a icm:Context ; ex:hubPredicate [ rdfs:label \"hub\"@en ] ; ex:spokePredicate [ rdfs:label \"spoke\"@en ] ."
+    }
+  ]
+}
