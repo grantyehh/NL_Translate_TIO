@@ -4,10 +4,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from ontology_graph import load_ontology
-from resource_index import build_resource_index
-from subgraph_retriever import ground_query, build_retrieval_context
+from resource_index import build_resource_index, OntologyResource
+from subgraph_retriever import ground_query, build_retrieval_context, _lexical
 
 TTL_DIR = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
+
+def test_short_alias_does_not_falsely_ground():
+    # a single-character curie-local name must not perfectly match an unrelated query
+    short = OntologyResource(uri="x", curie="mf:c", labels=(), alt_labels=(),
+                             comment="", role="instance", rdf_types=(), role_class=None)
+    assert _lexical("latency packet loss", short) < 1.0
+    latency = OntologyResource(uri="y", curie="evsla:latency", labels=("Latency Metric Property",),
+                               alt_labels=(), comment="", role="property", rdf_types=(), role_class="Metric")
+    assert _lexical("latency", latency) == 1.0
+
 
 def test_exact_label_grounds_to_correct_uri():
     resources = build_resource_index(load_ontology(TTL_DIR))

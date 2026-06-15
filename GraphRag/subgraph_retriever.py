@@ -37,7 +37,7 @@ def _lexical(query: str, r: OntologyResource) -> float:
     qtok = set(q.split())
     best = 0.0
     for alias in _aliases(r):
-        if alias == q or alias in q:
+        if alias == q or alias in qtok or (len(alias) > 2 and alias in q):
             return 1.0
         atok = set(alias.split())
         if atok and atok <= qtok:

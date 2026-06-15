@@ -254,7 +254,13 @@ def main() -> None:
     resources = build_resource_index(graph)
     emb_path = root / "index" / "resource_embeddings.npy"
     embeddings = np.load(emb_path) if emb_path.is_file() else None
+    if embeddings is not None and len(embeddings) != len(resources):
+        raise SystemExit(
+            f"Stale index: resource_embeddings.npy has {len(embeddings)} rows but "
+            f"ontology has {len(resources)} resources. Rebuild: python GraphRag/build_index.py"
+        )
 
+    written = 0
     for tc in test_cases:
         ACTIVE_CASE_ID = tc["id"]
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
@@ -277,11 +283,14 @@ def main() -> None:
                 file_path = output_path_for_case(root, tc["id"])
                 file_path.parent.mkdir(parents=True, exist_ok=True)
                 file_path.write_text(turtle_result, encoding="utf-8")
+                written += 1
                 print(f"Successfully saved Turtle to: {file_path}")
                 print("-" * 30)
                 print(turtle_result)
                 print("-" * 30)
         ACTIVE_CASE_ID = None
+
+    print(f"Wrote {written}/{len(test_cases)} TTL files to {output_dir}")
 
 
 if __name__ == "__main__":
