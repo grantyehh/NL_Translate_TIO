@@ -1,28 +1,26 @@
 import importlib.util
 import json
-import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-
-os.environ.setdefault("OPENAI_API_KEY", "test-key")
-
-
-def load_module():
-    path = Path(__file__).resolve().parent / "nl_to_tio.py"
-    spec = importlib.util.spec_from_file_location("llm_only_nl_to_tio", path)
-    module = importlib.util.module_from_spec(spec)
-    assert spec and spec.loader
-    spec.loader.exec_module(module)
-    return module
-
-
-nl_to_tio = load_module()
+# Load LLM-only nl_to_tio.py with a unique module name to avoid collision
+# with GraphRag/nl_to_tio.py when pytest collects both directories together.
+_MODULE_PATH = Path(__file__).resolve().parent / "nl_to_tio.py"
+_spec = importlib.util.spec_from_file_location("llm_only_nl_to_tio", _MODULE_PATH)
+nl_to_tio = importlib.util.module_from_spec(_spec)
+sys.modules["llm_only_nl_to_tio"] = nl_to_tio
+_spec.loader.exec_module(nl_to_tio)
 
 
 class TestLlmOnlyPaths(unittest.TestCase):
+    def setUp(self):
+        # Reset profile to default between tests
+        nl_to_tio.PROFILE = "strong"
+        nl_to_tio.WEAK = False
+
     def test_default_test_cases_path_points_to_repo_root_shared_file(self) -> None:
         root = Path("/tmp/example/CHT/LLM-only")
         expected = Path("/tmp/example/CHT/test_cases_20.json").resolve()
@@ -75,18 +73,22 @@ class TestLlmOnlyPaths(unittest.TestCase):
         completion.choices = [Mock(message=Mock(content="ex:i a icm:Intent ."))]
         completion.usage = Mock(prompt_tokens=10, completion_tokens=5, total_tokens=15)
 
+        mock_client = Mock()
+        mock_client.chat.completions.create.return_value = completion
+
         with tempfile.TemporaryDirectory() as tmp:
             usage_path = Path(tmp) / "token_usage_llm_only.json"
-            with patch.object(
-                nl_to_tio.client.chat.completions,
-                "create",
-                return_value=completion,
-            ), patch.object(nl_to_tio, "token_usage_path", return_value=usage_path):
-                result = nl_to_tio.generate_turtle_code(
-                    "確保延遲低於 50ms",
-                    "TC001",
-                    "",
-                )
+            original_client = nl_to_tio.client
+            nl_to_tio.client = mock_client
+            try:
+                with patch.object(nl_to_tio, "token_usage_path", return_value=usage_path):
+                    result = nl_to_tio.generate_turtle_code(
+                        "確保延遲低於 50ms",
+                        "TC001",
+                        "",
+                    )
+            finally:
+                nl_to_tio.client = original_client
 
             self.assertEqual(result, "ex:i a icm:Intent .")
             rows = json.loads(usage_path.read_text(encoding="utf-8"))
