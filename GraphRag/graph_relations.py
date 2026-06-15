@@ -56,6 +56,7 @@ def traverse_connective(
         if prop in OPERATOR_TRIGGER_PROPERTIES:
             reached.add("ComparisonOperator")
 
+    relations.sort(key=lambda t: (str(t[0]), str(t[1]), str(t[2])))
     return relations, reached
 
 
