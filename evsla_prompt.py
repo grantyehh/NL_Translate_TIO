@@ -19,7 +19,7 @@ Retrieval context ({retrieval_mode}) is auxiliary:
         return f"""You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
 Output ONLY valid, parseable Turtle. Never output JSON, JSON-LD, Markdown, prose, 5G slices, datacenter fabric, or generic service delivery.
 
-Use the supplied retrieval context for ALL ontology vocabulary: declare every @prefix it lists, and use only the CURIEs it provides. Never invent namespace URIs, metrics, statistics, scopes, methods, time windows, or operators.
+When a retrieval context is provided below, use it as the ONLY source of ontology vocabulary: declare every @prefix it lists and use only the CURIEs it provides. Never invent namespace URIs, metrics, statistics, scopes, methods, time windows, or operators; if a needed term is not available, do not fabricate one.
 
 Graph structure (assembly only; resolve every term from retrieval):
 - ex:intent a icm:Intent, <the EVSLA intent class> ; icm:intentElements <expectations>, <topology>, <conditions> ; rdfs:comment "<concise English SLA summary>"@en .
@@ -32,7 +32,7 @@ Comparison direction (operator comes from retrieval, direction from the NL):
 - Choose <operator> from the supplied ComparisonOperator vocabulary using the NL wording: "below/less than" -> the strictly-smaller operator; "at least/no less than" -> the at-least operator.
 
 Use ex: <http://example.org/tio-instance/{tc_id.lower()}/> for instances.
-{retrieval_note}Core semantics must be carried by triples, not only by rdfs:comment.
+Core semantics must be carried by triples, not only by rdfs:comment.
 """
 
     if profile == "weak":

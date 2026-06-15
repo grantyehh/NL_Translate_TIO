@@ -13,6 +13,12 @@ def test_structure_only_keeps_skeleton_withholds_vocab():
     assert "quan:smaller" not in p
     assert "@prefix evsla:" not in p
 
+def test_structure_only_is_retrieval_mode_independent():
+    a = build_evsla_system_prompt("TC001", retrieval_mode="KGE", profile="structure_only")
+    b = build_evsla_system_prompt("TC001", retrieval_mode="GraphRAG", profile="structure_only")
+    c = build_evsla_system_prompt("TC001", retrieval_mode=None, profile="structure_only")
+    assert a == b == c
+
 def test_strong_profile_still_has_full_knowledge():
     p = build_evsla_system_prompt("TC001", profile="strong")
     assert "evsla:latency" in p
