@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 def build_evsla_system_prompt(tc_id: str, retrieval_mode: str | None = None,
-                              weak_prompt: bool = False) -> str:
+                              weak_prompt: bool = False, profile: str | None = None) -> str:
     retrieval_note = ""
     if retrieval_mode:
         retrieval_note = f"""
@@ -12,7 +12,30 @@ Retrieval context ({retrieval_mode}) is auxiliary:
 - Do not copy retrieval prose into description.
 """
 
-    if weak_prompt:
+    if profile is None:
+        profile = "weak" if weak_prompt else "strong"
+
+    if profile == "structure_only":
+        return f"""You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
+Output ONLY valid, parseable Turtle. Never output JSON, JSON-LD, Markdown, prose, 5G slices, datacenter fabric, or generic service delivery.
+
+Use the supplied retrieval context for ALL ontology vocabulary: declare every @prefix it lists, and use only the CURIEs it provides. Never invent namespace URIs, metrics, statistics, scopes, methods, time windows, or operators.
+
+Graph structure (assembly only; resolve every term from retrieval):
+- ex:intent a icm:Intent, <the EVSLA intent class> ; icm:intentElements <expectations>, <topology>, <conditions> ; rdfs:comment "<concise English SLA summary>"@en .
+- One PropertyExpectation per SLA metric, each with an icm:Target carrying: the metric predicate, icm:valuesOfTargetProperty and a shared threshold node (both quan:Quantity with rdf:value + quan:unit), plus the statistic / scope / measurement-method / time-window predicates.
+- Hub-and-spoke context: one topology node with one hub and one node per spoke.
+
+Comparison direction (operator comes from retrieval, direction from the NL):
+- For each metric add: ex:cond-<m> a log:Condition ; <operator> ( ex:obs-<m>-value ex:thr-<m> ) .
+  ex:obs-<m> <observed-metric-predicate> <the metric> ; ex:obs-<m>-value a quan:Quantity ; <observed-value-predicate> ( ex:obs-<m> ) .
+- Choose <operator> from the supplied ComparisonOperator vocabulary using the NL wording: "below/less than" -> the strictly-smaller operator; "at least/no less than" -> the at-least operator.
+
+Use ex: <http://example.org/tio-instance/{tc_id.lower()}/> for instances.
+{retrieval_note}Core semantics must be carried by triples, not only by rdfs:comment.
+"""
+
+    if profile == "weak":
         # No hand-coded domain knowledge: no EVSLA terms, no metric mappings, no
         # structure, no operator pattern, no TIO namespace URIs. Domain knowledge
         # must come from retrieval (Arm 2) or nowhere (the floor).
