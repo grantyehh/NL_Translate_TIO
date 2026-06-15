@@ -802,5 +802,17 @@
     "output_tokens": 0,
     "total_tokens": 81,
     "usage_source": "response.usage"
+  },
+  {
+    "experiment": "kge",
+    "ledger": "online",
+    "case_id": "TC001",
+    "stage": "retrieval_embedding",
+    "model": "text-embedding-3-small",
+    "api": "embeddings",
+    "input_tokens": 38,
+    "output_tokens": 0,
+    "total_tokens": 38,
+    "usage_source": "response.usage"
   }
 ]
