@@ -100,13 +100,17 @@ class TestKgePaths(unittest.TestCase):
         completion.choices = [Mock(message=Mock(content="ex:i a icm:Intent ."))]
         completion.usage = Mock(prompt_tokens=30, completion_tokens=10, total_tokens=40)
 
+        mock_client = Mock()
+        mock_client.chat.completions.create.return_value = completion
+
         with TemporaryDirectory() as tmp:
             usage_path = Path(tmp) / "token_usage_kge.json"
-            with patch.object(nl_to_tio.client.chat.completions, "create", return_value=completion) as create, patch.object(
+            with patch.object(nl_to_tio, "client", mock_client), patch.object(
                 nl_to_tio,
                 "token_usage_path",
                 return_value=usage_path,
             ):
+                create = mock_client.chat.completions.create
                 result = nl_to_tio.generate_turtle_code(
                     "確保延遲低於 50ms",
                     "TC001",
