@@ -30,3 +30,14 @@ def test_transe_expand_returns_only_real_entities():
 
 def test_transe_expand_empty_for_unknown_seed():
     assert select.transe_expand(["http://example.org/not-an-entity"], top_k=8) == []
+
+def test_assemble_context_clean_and_scoped():
+    ctx = select.assemble_context([LATENCY])
+    assert "### Canonical prefixes" in ctx
+    assert "evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/>" in ctx
+    assert "evsla:latency" in ctx
+    assert "Statistic:" in ctx and "Scope:" in ctx
+    assert "TransE score=" not in ctx
+    assert "Predicted likely triples" not in ctx
+    for bad in (" rdfs:subClassOf ", " rdfs:domain ", " rdfs:range "):
+        assert bad not in ctx

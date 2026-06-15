@@ -36,3 +36,64 @@ def transe_expand(seed_uris: list[str], *, top_k: int = 8) -> list[str]:
             if e not in seeds and e not in out:
                 out.append(e)
     return out
+
+
+from rdflib import URIRef  # noqa: E402
+
+from ontology_graph import load_ontology  # noqa: E402
+from resource_index import build_resource_index, to_curie  # noqa: E402
+from graph_relations import (  # noqa: E402
+    traverse_connective,
+    closed_vocab_for_reached_roles,
+)
+from context_builder import serialize_context  # noqa: E402
+from kge.paths import ONTOLOGY_DIR  # noqa: E402
+
+_GRAPH = None
+_RESOURCES = None
+
+
+def _ontology():
+    """Load + index the ontology once (cached); avoids re-parsing per case."""
+    global _GRAPH, _RESOURCES
+    if _GRAPH is None:
+        _GRAPH = load_ontology(ONTOLOGY_DIR)
+        _RESOURCES = build_resource_index(_GRAPH)
+    return _GRAPH, _RESOURCES
+
+
+def assemble_context(grounded_uris: list[str]) -> str:
+    """Turn an embedding-selected grounded URI set into the SHARED GraphRAG
+    output contract (@prefix + grounded terms + connective relations + closed
+    vocab). Mirrors GraphRag.subgraph_retriever.build_retrieval_context, but the
+    seeds come from KGE selection rather than lexical/deterministic grounding."""
+    graph, resources = _ontology()
+    by_uri = {r.uri: r for r in resources}
+    seen: list[str] = []
+    for u in grounded_uris:
+        if u not in seen:
+            seen.append(u)
+    grounded_uris = seen
+
+    relations_raw, reached = traverse_connective(graph, [URIRef(u) for u in grounded_uris])
+    for u in grounded_uris:
+        r = by_uri.get(u)
+        if r and r.role_class:
+            reached.add(r.role_class)
+
+    relations = [
+        (to_curie(str(s)), to_curie(str(p)), to_curie(str(o)))
+        for s, p, o in relations_raw
+    ]
+    grounded = [
+        (
+            (by_uri[u].labels[0] if by_uri[u].labels else by_uri[u].curie),
+            by_uri[u].curie,
+            "; ".join(by_uri[u].rdf_types) or "resource",
+            by_uri[u].comment[:160],
+        )
+        for u in grounded_uris
+        if u in by_uri and by_uri[u].role_class is not None
+    ]
+    vocab = closed_vocab_for_reached_roles(reached, resources)
+    return serialize_context(grounded, relations, vocab)
