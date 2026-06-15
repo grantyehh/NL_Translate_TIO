@@ -18,10 +18,12 @@ def test_context_is_self_contained_and_role_scoped():
     graph = load_ontology(TTL_DIR)
     resources = build_resource_index(graph)
     ctx = build_retrieval_context(
-        "確保總部至所有分點之延遲在95%的時間內低於50ms",
-        graph=graph, resources=resources, embeddings=None, query_vector=None,
+        "latency", graph=graph, resources=resources, embeddings=None, query_vector=None,
     )
     assert "evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/>" in ctx
     assert "evsla:latency" in ctx
     assert "Statistic:" in ctx and "Scope:" in ctx
     assert "ComparisonOperator:" in ctx
+    # query-scoping: a latency-only query must NOT pull topology wiring
+    assert "hasSpoke" not in ctx
+    assert "HubSite" not in ctx

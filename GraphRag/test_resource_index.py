@@ -36,6 +36,11 @@ def test_to_curie_known_namespaces():
     assert to_curie(TIO + "EnterpriseVpnSlaOntology/latency") == "evsla:latency"
     assert to_curie(TIO + "QuantityOntology/smaller") == "quan:smaller"
 
+def test_metric_role_is_evsla_scoped():
+    resources = build_resource_index(load_ontology(TTL_DIR))
+    metric_curies = [r.curie for r in resources if r.role_class == "Metric"]
+    assert set(metric_curies) == {"evsla:latency", "evsla:packetLoss", "evsla:guaranteedBandwidth"}
+
 import json
 import numpy as np
 

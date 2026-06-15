@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from rdflib import Graph, URIRef
-from rdflib.namespace import RDFS
+from rdflib.namespace import RDF, RDFS
 
 from resource_index import OntologyResource, TIO
 
@@ -38,17 +38,47 @@ def _to_curie(node: URIRef) -> str:
 def traverse_connective(
     graph: Graph, grounded: list[URIRef]
 ) -> tuple[list[tuple[URIRef, URIRef, URIRef]], set[str]]:
-    relations: list[tuple[URIRef, URIRef, URIRef]] = []
-    reached: set[str] = set()
+    grounded_set = {g for g in grounded if isinstance(g, URIRef)}
 
+    prop_info: dict[URIRef, tuple[list, list]] = {}
     for prop in CONNECTIVE_PROPERTIES:
         domains = list(graph.objects(prop, RDFS.domain))
         ranges = list(graph.objects(prop, RDFS.range))
-        for dom in domains:
-            for rng in ranges:
-                relations.append((dom, prop, rng))
-        for rng in ranges:
-            rng_curie = _to_curie(rng) if isinstance(rng, URIRef) else str(rng)
+        prop_info[prop] = (domains, ranges)
+
+    def _directly_hit(domains, ranges) -> bool:
+        for g in grounded_set:
+            if g in domains or g in ranges:
+                return True
+            for r in ranges:
+                if isinstance(r, URIRef) and (g, RDF.type, r) in graph:
+                    return True
+        return False
+
+    # Hubs (property domains) that a grounded seed directly connects to.
+    # Reaching a hub exposes ALL its connective role edges (spec 7.2).
+    active_hubs: set = set()
+    fortenant_active = False
+    for prop, (domains, ranges) in prop_info.items():
+        if _directly_hit(domains, ranges):
+            if domains:
+                active_hubs.update(d for d in domains if isinstance(d, URIRef))
+            else:
+                fortenant_active = True  # forTenant has no rdfs:domain
+
+    relations: list[tuple[URIRef, URIRef, URIRef]] = []
+    reached: set[str] = set()
+    for prop, (domains, ranges) in prop_info.items():
+        if domains:
+            if not any(d in active_hubs for d in domains):
+                continue
+        elif not fortenant_active:
+            continue
+        for d in domains:
+            for r in ranges:
+                relations.append((d, prop, r))
+        for r in ranges:
+            rng_curie = _to_curie(r) if isinstance(r, URIRef) else str(r)
             if prop in METRIC_PROPERTIES:
                 reached.add("Metric")
             elif rng_curie in RANGE_ROLE:

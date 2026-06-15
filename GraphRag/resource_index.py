@@ -6,6 +6,7 @@ from rdflib import Graph, URIRef
 from rdflib.namespace import RDF, RDFS, SKOS
 
 TIO = "http://tio.models.tmforum.org/tio/v3.6.0/"
+EVSLA_NS = TIO + "EnterpriseVpnSlaOntology/"
 PREFIX_MAP = [
     ("evsla", TIO + "EnterpriseVpnSlaOntology/"),
     ("icm", TIO + "IntentCommonModel/"),
@@ -77,7 +78,7 @@ def _derive_role_class(subj: URIRef, types: list[URIRef], graph: Graph) -> str |
     for t in types:
         if t in CLASS_ROLE:
             return CLASS_ROLE[t]
-    if (subj, RDFS.subPropertyOf, MET_METRIC) in graph:
+    if str(subj).startswith(EVSLA_NS) and (subj, RDFS.subPropertyOf, MET_METRIC) in graph:
         return "Metric"
     return None
 
