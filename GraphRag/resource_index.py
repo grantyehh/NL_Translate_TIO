@@ -14,6 +14,17 @@ PREFIX_MAP = [
     ("quan", TIO + "QuantityOntology/"),
     ("fun", TIO + "FunctionOntology/"),
     ("log", TIO + "LogicalOperators/"),
+    # Additional TIO sub-namespaces from ontology @prefix declarations
+    ("ig", TIO + "IntentGuaranteeOntology/"),
+    ("insp", TIO + "IntentSpecification/"),
+    ("iv", TIO + "IntentValidityOntology/"),
+    # mf: declared without trailing slash in TTL (mf:logistic → MathFunctionslogistic)
+    ("mf", TIO + "MathFunctions"),
+    ("pbi", TIO + "ProposalBestIntent/"),
+    ("pre", TIO + "PreferenceOfHandlingOutcomes/"),
+    ("pro", TIO + "IntentProbing/"),
+    ("set", TIO + "SetOperators/"),
+    ("ut", TIO + "Utility/"),
     ("rdf", str(RDF)),
     ("rdfs", str(RDFS)),
     ("skos", str(SKOS)),
@@ -75,9 +86,9 @@ def build_resource_index(graph: Graph) -> list[OntologyResource]:
     subjects = {s for s in graph.subjects() if isinstance(s, URIRef) and str(s).startswith(TIO)}
     out: list[OntologyResource] = []
     for s in subjects:
-        labels = tuple(str(o) for o in graph.objects(s, RDFS.label))
-        alt = tuple(str(o) for o in graph.objects(s, SKOS.altLabel))
-        comments = [str(o) for o in graph.objects(s, RDFS.comment)]
+        labels = tuple(sorted(str(o) for o in graph.objects(s, RDFS.label)))
+        alt = tuple(sorted(str(o) for o in graph.objects(s, SKOS.altLabel)))
+        comments = sorted(str(o) for o in graph.objects(s, RDFS.comment))
         types = list(graph.objects(s, RDF.type))
         out.append(
             OntologyResource(
@@ -87,7 +98,7 @@ def build_resource_index(graph: Graph) -> list[OntologyResource]:
                 alt_labels=alt,
                 comment=comments[0] if comments else "",
                 role=_role(types),
-                rdf_types=tuple(to_curie(str(t)) for t in types),
+                rdf_types=tuple(sorted(to_curie(str(t)) for t in types)),
                 role_class=_derive_role_class(s, types, graph),
             )
         )

@@ -4,7 +4,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from ontology_graph import load_ontology
-from resource_index import build_resource_index
+from resource_index import build_resource_index, to_curie, TIO
 
 TTL_DIR = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
 
@@ -30,3 +30,8 @@ def test_full_iri_and_labels_preserved():
     )
     assert any("latency" in lbl.lower() for lbl in idx["evsla:latency"].labels)
     assert "TWAMP" in idx["evsla:twamp"].alt_labels
+
+
+def test_to_curie_known_namespaces():
+    assert to_curie(TIO + "EnterpriseVpnSlaOntology/latency") == "evsla:latency"
+    assert to_curie(TIO + "QuantityOntology/smaller") == "quan:smaller"
