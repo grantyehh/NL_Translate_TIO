@@ -1,0 +1,37 @@
+@prefix tio: <https://tio.example.org/tio#> .
+@prefix ex: <https://tio.example.org/testcases/TC013#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent a tio:Intent ;
+    tio:targets ex:vpnService ;
+    tio:requires ex:slaLatency .
+
+ex:vpnService a tio:EnterpriseVpnHubSpokeService ;
+    tio:hasTopology tio:HubAndSpokeTopology ;
+    tio:hasHub ex:cloudEducationHeadquarters ;
+    tio:hasSpoke ex:allCampusBranches .
+
+ex:cloudEducationHeadquarters a tio:VpnSite ;
+    tio:siteRole tio:Hub .
+
+ex:allCampusBranches a tio:VpnSiteGroup ;
+    tio:siteRole tio:Spoke ;
+    tio:groupCoverage tio:AllSites .
+
+ex:slaLatency a tio:LatencySla ;
+    tio:appliesTo ex:hubToAllSpokesPathSet ;
+    tio:hasMetric tio:OneWayLatency ;
+    tio:hasThreshold ex:latencyThreshold ;
+    tio:hasComplianceCondition ex:latencyCompliance .
+
+ex:hubToAllSpokesPathSet a tio:TrafficPathSet ;
+    tio:source ex:cloudEducationHeadquarters ;
+    tio:destination ex:allCampusBranches .
+
+ex:latencyThreshold a tio:Threshold ;
+    tio:lessThan "60"^^xsd:decimal ;
+    tio:unit tio:Millisecond .
+
+ex:latencyCompliance a tio:PercentileCompliance ;
+    tio:percentile "95"^^xsd:decimal ;
+    tio:evaluationRelation tio:LessThanThreshold .

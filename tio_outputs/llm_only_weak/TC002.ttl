@@ -1,0 +1,64 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix ex: <http://example.org/tio-instance/tc002/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-tc002
+    rdf:type tio:Intent ;
+    tio:hasExpectation ex:expectation-tc002 ;
+    tio:hasTarget ex:vpn-service-tc002 .
+
+ex:vpn-service-tc002
+    rdf:type tio:ConnectivityService ;
+    tio:hasTopology ex:hubspoke-topology-tc002 .
+
+ex:hubspoke-topology-tc002
+    rdf:type tio:HubAndSpokeTopology ;
+    tio:hasHub ex:site-hub-fareast-manufacturing ;
+    tio:hasSpoke ex:site-spoke-1 ,
+                 ex:site-spoke-2 ,
+                 ex:site-spoke-3 .
+
+ex:site-hub-fareast-manufacturing
+    rdf:type tio:Site .
+
+ex:site-spoke-1
+    rdf:type tio:Site .
+
+ex:site-spoke-2
+    rdf:type tio:Site .
+
+ex:site-spoke-3
+    rdf:type tio:Site .
+
+ex:expectation-tc002
+    rdf:type tio:DeliveryExpectation ;
+    tio:hasTarget ex:hubspoke-topology-tc002 ;
+    tio:hasCondition ex:packet-loss-condition-tc002 .
+
+ex:packet-loss-condition-tc002
+    rdf:type tio:SLACondition ;
+    tio:appliesTo ex:hub-to-spokes-path-set-tc002 ;
+    tio:hasMetric ex:packet-loss-metric-tc002 ;
+    tio:hasThreshold ex:packet-loss-threshold-tc002 ;
+    tio:hasApplicability ex:time-applicability-tc002 .
+
+ex:hub-to-spokes-path-set-tc002
+    rdf:type tio:PathSet ;
+    tio:hasSource ex:site-hub-fareast-manufacturing ;
+    tio:hasDestination ex:site-spoke-1 ,
+                       ex:site-spoke-2 ,
+                       ex:site-spoke-3 .
+
+ex:packet-loss-metric-tc002
+    rdf:type tio:PacketLossMetric .
+
+ex:packet-loss-threshold-tc002
+    rdf:type tio:Threshold ;
+    tio:operator tio:LessThan ;
+    tio:value "0.1"^^xsd:decimal ;
+    tio:unit "%" .
+
+ex:time-applicability-tc002
+    rdf:type tio:PercentileApplicability ;
+    tio:percentage "99"^^xsd:decimal .

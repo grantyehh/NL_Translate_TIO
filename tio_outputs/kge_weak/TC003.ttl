@@ -1,0 +1,34 @@
+@prefix ex: <http://example.org/tio-instance/tc003/> .
+@prefix tio: <http://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <http://tio.models.tmforum.org/evsla#> .
+@prefix icm: <http://tio.models.tmforum.org/icm#> .
+@prefix cat: <http://tio.models.tmforum.org/tio/v3.6.0/catalog#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC003 a tio:Intent ;
+    tio:hasExpectation ex:expectation-bandwidth ;
+    tio:targets ex:vpn-service-TC003 .
+
+ex:vpn-service-TC003 a evsla:EnterpriseVirtualPrivateNetwork ;
+    tio:hasServiceTopology evsla:HubAndSpoke ;
+    evsla:hasHubSite ex:site-headquarters ;
+    evsla:hasSpokeSite ex:site-kaohsiung-warehouse .
+
+ex:site-headquarters a evsla:Site ;
+    tio:name "宏海物流總部" .
+
+ex:site-kaohsiung-warehouse a evsla:Site ;
+    tio:name "高雄倉儲中心" .
+
+ex:expectation-bandwidth a tio:DeliveryExpectation ;
+    tio:target ex:vpn-service-TC003 ;
+    tio:hasParameter ex:param-guaranteed-bandwidth .
+
+ex:param-guaranteed-bandwidth a icm:Condition ;
+    icm:metric cat:Bandwidth ;
+    icm:statistic cat:Minimum ;
+    icm:scope cat:EndToEnd ;
+    icm:method cat:Guaranteed ;
+    icm:operator cat:GreaterThanOrEqual ;
+    icm:value "100"^^xsd:decimal ;
+    icm:unit "Mbps" .

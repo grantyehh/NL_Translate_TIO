@@ -1,0 +1,73 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix ex: <http://example.org/tio-instance/tc017/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-TC017
+    a tio:Intent ;
+    tio:hasExpectation ex:expectation-TC017-packetloss .
+
+ex:expectation-TC017-packetloss
+    a tio:Expectation ;
+    tio:target ex:service-TC017 ;
+    tio:deliveryType ex:hubspoke-vpn-delivery-TC017 ;
+    tio:parameter ex:param-TC017-packetloss-threshold ,
+                  ex:param-TC017-compliance-window .
+
+ex:service-TC017
+    a tio:Service ;
+    tio:topology ex:topology-TC017-hubspoke .
+
+ex:topology-TC017-hubspoke
+    a tio:HubSpokeTopology ;
+    tio:hasHub ex:site-hub-international-exhibition ;
+    tio:hasSpoke ex:site-spoke-1 ,
+                 ex:site-spoke-2 ,
+                 ex:site-spoke-3 .
+
+ex:site-hub-international-exhibition
+    a tio:Site ;
+    tio:role "Hub"^^xsd:string ;
+    tio:name "國際會展Hub"^^xsd:string .
+
+ex:site-spoke-1
+    a tio:Site ;
+    tio:role "Spoke"^^xsd:string .
+
+ex:site-spoke-2
+    a tio:Site ;
+    tio:role "Spoke"^^xsd:string .
+
+ex:site-spoke-3
+    a tio:Site ;
+    tio:role "Spoke"^^xsd:string .
+
+ex:hubspoke-vpn-delivery-TC017
+    a tio:DeliveryType ;
+    tio:serviceType "EnterpriseVPNHubSpoke"^^xsd:string ;
+    tio:connectivityScope ex:scope-TC017-hub-to-all-spokes .
+
+ex:scope-TC017-hub-to-all-spokes
+    a tio:ConnectivityScope ;
+    tio:from ex:site-hub-international-exhibition ;
+    tio:to ex:all-spokes-group-TC017 .
+
+ex:all-spokes-group-TC017
+    a tio:EndpointGroup ;
+    tio:hasMember ex:site-spoke-1 ,
+                  ex:site-spoke-2 ,
+                  ex:site-spoke-3 .
+
+ex:param-TC017-packetloss-threshold
+    a tio:Parameter ;
+    tio:name "packetLossRate"^^xsd:string ;
+    tio:operator "lessThan"^^xsd:string ;
+    tio:value "0.15"^^xsd:decimal ;
+    tio:unit "percent"^^xsd:string .
+
+ex:param-TC017-compliance-window
+    a tio:Parameter ;
+    tio:name "timeCompliance"^^xsd:string ;
+    tio:operator "greaterThanOrEqual"^^xsd:string ;
+    tio:value "99"^^xsd:decimal ;
+    tio:unit "percentOfTime"^^xsd:string .

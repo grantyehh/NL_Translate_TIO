@@ -1,0 +1,47 @@
+@prefix ex: <http://example.org/tio-instance/tc012/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+
+ex:intent1 a tio:Intent ;
+    tio:targets ex:vpnService1 ;
+    tio:hasExpectation ex:expectation1 ;
+    rdfs:comment "提供藍海保險總部至花蓮服務中心150Mbps以上保證頻寬。"@zh-Hant .
+
+ex:vpnService1 a tio:EnterpriseVPNService ,
+        tio:HubSpokeVPNService ;
+    tio:hasTopology tio:HubSpoke ;
+    tio:hasEndpoint ex:siteHQ ,
+        ex:siteHualienServiceCenter ;
+    tio:hasHub ex:siteHQ ;
+    tio:hasSpoke ex:siteHualienServiceCenter .
+
+ex:siteHQ a tio:Site ;
+    rdfs:label "藍海保險總部"@zh-Hant .
+
+ex:siteHualienServiceCenter a tio:Site ;
+    rdfs:label "花蓮服務中心"@zh-Hant .
+
+ex:expectation1 a tio:ServiceLevelExpectation ;
+    tio:onService ex:vpnService1 ;
+    tio:hasObjective ex:objective1 .
+
+ex:objective1 a evsla:ServiceLevelObjective ;
+    evsla:hasMetric ex:bandwidthMetric1 ;
+    evsla:hasConstraint ex:constraint1 ;
+    evsla:appliesTo ex:path1 .
+
+ex:path1 a tio:TrafficPath ;
+    tio:source ex:siteHQ ;
+    tio:destination ex:siteHualienServiceCenter .
+
+ex:bandwidthMetric1 a evsla:BandwidthMetric ;
+    evsla:hasStatistic evsla:Guaranteed ;
+    evsla:hasScope evsla:EndToEnd ;
+    evsla:hasMethod evsla:ProvisionedCapacity .
+
+ex:constraint1 a evsla:AtLeastConstraint ;
+    evsla:thresholdValue "150"^^xsd:decimal ;
+    evsla:thresholdUnit evsla:Mbps .

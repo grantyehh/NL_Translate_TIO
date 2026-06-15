@@ -1,0 +1,64 @@
+@prefix ex: <http://example.org/tio-instance/tc004/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityKinds/> .
+
+ex:intent-TC004
+    evsla:forTenant ex:tenant-KangJianMedical ;
+    evsla:hasTopology ex:topology-TC004 ;
+    icm:target ex:vpn-service-TC004 ;
+    ig:hasGuarantee ex:guarantee-TC004 ;
+    rdfs:comment "Ensure latency from KangJian Medical Taipei Medical Cloud Center to all branch hospital sites stays below 30 ms for 95% of the time."@en .
+
+ex:tenant-KangJianMedical
+    rdfs:comment "康健醫療"@zh-Hant .
+
+ex:vpn-service-TC004
+    evsla:forTenant ex:tenant-KangJianMedical ;
+    evsla:hasTopology ex:topology-TC004 ;
+    rdfs:comment "Enterprise VPN service between the Taipei medical cloud hub and all spoke hospital sites."@en .
+
+ex:topology-TC004
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-KangJianMedical ;
+    evsla:hasHub ex:site-TaipeiMedicalCloudCenter ;
+    evsla:hasSpoke ex:allSpokeSites-TC004 .
+
+ex:site-TaipeiMedicalCloudCenter
+    rdfs:comment "台北醫療雲中心"@zh-Hant .
+
+ex:allSpokeSites-TC004
+    rdf:type evsla:SpokeSite ;
+    rdfs:comment "所有院區分點"@zh-Hant .
+
+ex:guarantee-TC004
+    evsla:serviceTarget ex:vpn-service-TC004 ;
+    evsla:forTenant ex:tenant-KangJianMedical ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:statistic-p95 ;
+    evsla:hasThreshold ex:latency-threshold-30ms ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:hasMeasurementMethod ex:method-observed-latency ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.95"^^xsd:decimal .
+
+ex:statistic-p95
+    rdfs:comment "95th percentile"@en .
+
+ex:scope-hub-to-each-spoke
+    rdfs:comment "Latency is evaluated from the hub site to each spoke site independently."@en .
+
+ex:method-observed-latency
+    rdfs:comment "Observed end-to-end hub-to-spoke latency measurement method."@en .
+
+ex:latency-threshold-30ms
+    rdf:value "30"^^xsd:decimal ;
+    quan:unit ex:unit-ms .
+
+ex:unit-ms
+    rdfs:comment "milliseconds"@en .

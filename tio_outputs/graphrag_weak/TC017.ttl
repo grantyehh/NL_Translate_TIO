@@ -1,0 +1,57 @@
+@prefix ex: <http://example.org/tio-instance/tc017/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://example.org/quantity#> .
+
+ex:intentTC017
+    icm:context ex:topologyTC017 ;
+    ig:hasGuarantee ex:packetLossGuaranteeTC017 ;
+    imo:owner ex:intentOwner ;
+    rdfs:comment "確保國際會展Hub與各Spoke間封包遺失率低於0.15%（99%時間）。" .
+
+ex:topologyTC017
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:internationalExhibitionHub ;
+    evsla:hasSpoke ex:spokeSite1 ;
+    evsla:forTenant ex:tenantTC017 .
+
+ex:internationalExhibitionHub
+    rdf:type evsla:Site .
+
+ex:spokeSite1
+    rdf:type evsla:SpokeSite .
+
+ex:packetLossGuaranteeTC017
+    evsla:serviceTarget ex:vpnServiceTC017 ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:packetLossThresholdTC017 ;
+    evsla:hasStatistic ex:statisticP99Time ;
+    evsla:hasScope ex:hubToEachSpokeScope ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    evsla:hasTopology ex:topologyTC017 ;
+    ig:confidenceLevel "0.99"^^xsd:decimal .
+
+ex:vpnServiceTC017
+    evsla:forTenant ex:tenantTC017 ;
+    evsla:hasTopology ex:topologyTC017 .
+
+ex:packetLossThresholdTC017
+    rdf:value "0.15"^^xsd:decimal ;
+    quan:unit ex:PercentUnit .
+
+ex:statisticP99Time
+    rdf:value "0.99"^^xsd:decimal .
+
+ex:hubToEachSpokeScope
+    rdfs:comment "hub-to-spoke path, evaluated independently for each spoke" .
+
+ex:tenantTC017
+    rdfs:comment "TC017 tenant" .
+
+ex:PercentUnit
+    rdfs:label "percent" .

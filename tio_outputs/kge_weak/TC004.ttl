@@ -1,0 +1,47 @@
+@prefix ex: <http://example.org/tio-instance/tc004/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0/> .
+@prefix evsla: <https://w3id.org/eva/elements/sla#> .
+@prefix icm: <https://w3id.org/italia/onto/ICM/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-TC004
+    a tio:Intent ;
+    tio:hasExpectation ex:expectation-TC004-latency .
+
+ex:expectation-TC004-latency
+    a tio:Expectation ;
+    tio:target ex:service-TC004 ;
+    tio:hasCondition ex:condition-TC004-latency .
+
+ex:service-TC004
+    a evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubAndSpokeTopology ;
+    evsla:hasHubSite ex:site-taipei-medical-cloud-center ;
+    evsla:hasSpokeSite ex:site-all-branch-clinics .
+
+ex:site-taipei-medical-cloud-center
+    a evsla:ServiceSite ;
+    rdf:value "康健醫療台北醫療雲中心" .
+
+ex:site-all-branch-clinics
+    a evsla:ServiceSiteGroup ;
+    rdf:value "所有院區分點" .
+
+ex:condition-TC004-latency
+    a tio:Condition ;
+    tio:onProperty ex:latency-metric-TC004 ;
+    tio:operator tio:atMost ;
+    tio:threshold ex:threshold-TC004-latency .
+
+ex:latency-metric-TC004
+    a evsla:OneWayLatencyMetric ;
+    evsla:hasStatistic icm:Percentile ;
+    evsla:hasPercentile "95"^^xsd:decimal ;
+    evsla:hasScope evsla:HubToAllSpokesScope ;
+    evsla:hasMeasurementMethod evsla:TimeBasedObservation .
+
+ex:threshold-TC004-latency
+    a tio:QuantitativeValue ;
+    tio:value "30"^^xsd:decimal ;
+    tio:unit "ms" .

@@ -1,0 +1,52 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix ex: <http://example.org/tio-instance/tc007/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC007
+    a tio:Intent ;
+    tio:hasExpectation ex:expectation-latency-95p ;
+    tio:hasTarget ex:vpn-service-haigang-shipping ;
+    tio:name "TC007 Enterprise VPN Hub-and-Spoke SLA Intent"^^xsd:string .
+
+ex:vpn-service-haigang-shipping
+    a tio:ConnectivityService ;
+    tio:hasTopology ex:topology-hub-spoke ;
+    tio:hasEndpoint ex:site-kaohsiung-port-operations-center ,
+                    ex:site-all-port-branch-stations ;
+    tio:name "Harbor Shipping Kaohsiung Port Operations Center to all port branch stations VPN"^^xsd:string .
+
+ex:topology-hub-spoke
+    a tio:HubSpokeTopology ;
+    tio:name "Hub-and-Spoke Topology"^^xsd:string .
+
+ex:site-kaohsiung-port-operations-center
+    a tio:ServiceSite ;
+    tio:role "hub"^^xsd:string ;
+    tio:name "Kaohsiung Port Operations Center"^^xsd:string .
+
+ex:site-all-port-branch-stations
+    a tio:ServiceSite ;
+    tio:role "spokes"^^xsd:string ;
+    tio:name "All Port Branch Stations"^^xsd:string .
+
+ex:expectation-latency-95p
+    a tio:Expectation ;
+    tio:hasParameter ex:param-one-way-latency ;
+    tio:appliesTo ex:pathset-hub-to-all-spokes ;
+    tio:name "Latency below 80ms for 95 percent of time"^^xsd:string .
+
+ex:pathset-hub-to-all-spokes
+    a tio:TrafficPathSet ;
+    tio:source ex:site-kaohsiung-port-operations-center ;
+    tio:destination ex:site-all-port-branch-stations ;
+    tio:name "Hub to all spokes paths"^^xsd:string .
+
+ex:param-one-way-latency
+    a tio:QoSConstraint ;
+    tio:metric "latency"^^xsd:string ;
+    tio:operator "lessThan"^^xsd:string ;
+    tio:value "80"^^xsd:decimal ;
+    tio:unit "ms"^^xsd:string ;
+    tio:percentile "95"^^xsd:decimal ;
+    tio:timeCoverage "0.95"^^xsd:decimal .

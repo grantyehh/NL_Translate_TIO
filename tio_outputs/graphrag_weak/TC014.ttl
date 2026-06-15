@@ -1,0 +1,62 @@
+@prefix ex: <http://example.org/tio-instance/tc014/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://example.org/quantity#> .
+
+ex:intent-TC014
+    evsla:forTenant ex:tenant-UnitedMedia ;
+    evsla:hasTopology ex:topology-hubspoke-um ;
+    ig:hasGuarantee ex:guarantee-packetloss ;
+    rdfs:comment "確保聯合媒體Hub與各Spoke間封包遺失率低於0.05%（99%時間）。"@zh .
+
+ex:tenant-UnitedMedia
+    rdfs:label "聯合媒體"@zh .
+
+ex:topology-hubspoke-um
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-UnitedMedia ;
+    evsla:hasHub ex:site-hub ;
+    evsla:hasSpoke ex:spoke-site-group .
+
+ex:site-hub
+    rdfs:label "聯合媒體Hub"@zh .
+
+ex:spoke-site-group
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "各Spoke"@zh .
+
+ex:guarantee-packetloss
+    evsla:serviceTarget ex:vpn-service-um ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:threshold-packetloss ;
+    evsla:hasStatistic ex:statistic-time-compliance ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:hasTimeWindow ex:timewindow-sla ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.99"^^xsd:decimal .
+
+ex:vpn-service-um
+    evsla:forTenant ex:tenant-UnitedMedia ;
+    evsla:hasTopology ex:topology-hubspoke-um ;
+    rdfs:label "聯合媒體企業VPN服務"@zh .
+
+ex:threshold-packetloss
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit ex:unit-percent .
+
+ex:unit-percent
+    rdfs:label "percent"@en .
+
+ex:statistic-time-compliance
+    rdfs:label "99%時間符合門檻"@zh .
+
+ex:scope-hub-to-each-spoke
+    rdfs:label "Hub與每個Spoke之間"@zh .
+
+ex:timewindow-sla
+    rdfs:label "SLA evaluation window"@en .

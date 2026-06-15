@@ -1,0 +1,28 @@
+@prefix ex: <http://example.org/tio-instance/tc015/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC015 rdf:type tio:Intent ;
+    tio:targets ex:vpn-service-TC015 ;
+    tio:requires ex:sla-TC015 .
+
+ex:vpn-service-TC015 rdf:type tio:EnterpriseVPNService ;
+    tio:topology tio:HubAndSpoke ;
+    tio:hasHubSite ex:site-asia-aircraft-maintenance-hq ;
+    tio:hasSpokeSite ex:site-xiaogang-hangar .
+
+ex:site-asia-aircraft-maintenance-hq rdf:type tio:Site ;
+    tio:siteName "亞洲航空維修總部"^^xsd:string .
+
+ex:site-xiaogang-hangar rdf:type tio:Site ;
+    tio:siteName "小港機棚"^^xsd:string .
+
+ex:sla-TC015 rdf:type tio:ServiceLevelAgreement ;
+    tio:appliesTo ex:vpn-service-TC015 ;
+    tio:hasGuaranteedBandwidth ex:bandwidth-guarantee-TC015 .
+
+ex:bandwidth-guarantee-TC015 rdf:type tio:GuaranteedBandwidth ;
+    tio:minimumBandwidthValue "300"^^xsd:decimal ;
+    tio:bandwidthUnit tio:Mbps ;
+    tio:comparisonOperator tio:AtLeast .

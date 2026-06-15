@@ -1,0 +1,35 @@
+@prefix tio: <https://example.org/tio#> .
+@prefix ex: <https://example.org/testcases/TC016#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:EnterpriseVpnIntent_TC016 a tio:EnterpriseVpnIntent ;
+    tio:hasTopology ex:HubSpokeTopology_TC016 ;
+    tio:hasSlaIntent ex:LatencySla_TC016 .
+
+ex:HubSpokeTopology_TC016 a tio:HubSpokeTopology ;
+    tio:hasHub ex:SmartAgricultureHub_TC016 ;
+    tio:hasSpokeScope ex:AllSpokes_TC016 .
+
+ex:SmartAgricultureHub_TC016 a tio:VpnHub ;
+    tio:serviceDomain "smart-agriculture"^^xsd:string .
+
+ex:AllSpokes_TC016 a tio:AllSpokesScope .
+
+ex:LatencySla_TC016 a tio:LatencySlaIntent ;
+    tio:appliesFrom ex:SmartAgricultureHub_TC016 ;
+    tio:appliesTo ex:AllSpokes_TC016 ;
+    tio:hasMetric tio:Latency ;
+    tio:hasThreshold ex:LatencyThreshold_TC016 ;
+    tio:hasComplianceCondition ex:Compliance95Percent_TC016 .
+
+ex:LatencyThreshold_TC016 a tio:Threshold ;
+    tio:lessThan ex:LatencyValue_TC016 .
+
+ex:LatencyValue_TC016 a tio:MetricValue ;
+    tio:numericValue "100"^^xsd:decimal ;
+    tio:unit "ms"^^xsd:string .
+
+ex:Compliance95Percent_TC016 a tio:ComplianceCondition ;
+    tio:percentile "95"^^xsd:decimal ;
+    tio:timeScope tio:ObservationPeriod .

@@ -1,0 +1,80 @@
+@prefix ex: <http://example.org/tio-instance/tc013/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
+
+ex:intent-TC013
+    rdf:type icm:Intent ;
+    evsla:forTenant ex:tenant-cloud-education ;
+    icm:context ex:topology-TC013 ;
+    ig:hasGuarantee ex:latency-guarantee-TC013 ;
+    rdfs:comment "Ensure latency from the cloud education headquarters to all campus branch sites stays below 60 ms for 95% of the time."@en .
+
+ex:tenant-cloud-education
+    rdf:type rdfs:Resource ;
+    rdfs:label "Cloud Education Tenant"@en .
+
+ex:vpn-service-TC013
+    rdf:type rdfs:Resource ;
+    evsla:forTenant ex:tenant-cloud-education ;
+    evsla:hasTopology ex:topology-TC013 ;
+    rdfs:label "Cloud Education HQ-to-Campus VPN Service"@en .
+
+ex:topology-TC013
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-cloud-education ;
+    evsla:hasHub ex:site-headquarters ;
+    evsla:hasSpoke ex:all-campus-spokes ;
+    rdfs:label "Hub-and-spoke topology for cloud education HQ and campus sites"@en .
+
+ex:site-headquarters
+    rdf:type evsla:Site ;
+    rdfs:label "Cloud Education Headquarters"@en .
+
+ex:all-campus-spokes
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "All Campus Branch Sites"@en .
+
+ex:latency-guarantee-TC013
+    rdf:type rdfs:Resource ;
+    evsla:serviceTarget ex:vpn-service-TC013 ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:statistic-p95 ;
+    evsla:hasThreshold ex:threshold-60ms ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:hasMeasurementMethod ex:measurement-method-passive-latency ;
+    evsla:hasTimeWindow ex:time-window-service-lifetime ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.95"^^xsd:decimal ;
+    rdfs:comment "Latency SLA evaluated independently for each spoke from the headquarters hub."@en .
+
+ex:statistic-p95
+    rdf:type rdfs:Resource ;
+    rdfs:label "95th percentile compliance"@en .
+
+ex:threshold-60ms
+    rdf:type quan:Quantity ;
+    rdf:value "60"^^xsd:decimal ;
+    quan:unit ex:unit-millisecond .
+
+ex:unit-millisecond
+    rdf:type rdfs:Resource ;
+    rdfs:label "millisecond"@en .
+
+ex:scope-hub-to-each-spoke
+    rdf:type rdfs:Resource ;
+    rdfs:label "Hub to each spoke path"@en .
+
+ex:measurement-method-passive-latency
+    rdf:type rdfs:Resource ;
+    rdfs:label "Latency measurement method"@en ;
+    rdfs:comment "Observed end-to-end latency between the headquarters hub and each spoke site."@en .
+
+ex:time-window-service-lifetime
+    rdf:type rdfs:Resource ;
+    rdfs:label "Service lifetime evaluation window"@en .

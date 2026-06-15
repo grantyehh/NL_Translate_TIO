@@ -1,0 +1,66 @@
+@prefix ex: <http://example.org/tio-instance/tc008/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityKindsAndUnits/> .
+
+ex:intent-TC008
+    rdf:type icm:Intent ;
+    evsla:forTenant ex:tenant-jingyao-semi ;
+    evsla:hasTopology ex:topology-hub-spoke ;
+    ig:hasGuarantee ex:guarantee-packetloss ;
+    rdfs:comment "Ensure packet loss between the hub and each spoke remains below 0.01% for 99% of the time."@en .
+
+ex:tenant-jingyao-semi
+    rdfs:label "晶耀半導體"@zh ;
+    rdfs:label "Jingyao Semiconductor"@en .
+
+ex:topology-hub-spoke
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-jingyao-semi ;
+    evsla:hasHub ex:site-hub ;
+    evsla:hasSpoke ex:site-spoke-group ;
+    rdfs:comment "Hub-and-spoke enterprise VPN topology for Jingyao Semiconductor."@en .
+
+ex:site-hub
+    rdf:type evsla:Site ;
+    rdfs:label "Hub"@en .
+
+ex:site-spoke-group
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "各 Spoke"@zh ;
+    rdfs:label "Each Spoke"@en .
+
+ex:guarantee-packetloss
+    evsla:serviceTarget ex:vpn-service ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:threshold-packetloss ;
+    evsla:hasStatistic ex:statistic-time-compliance ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.99"^^xsd:decimal ;
+    ig:guaranteePeriod "P1M"^^xsd:duration ;
+    ig:guaranteePeriodUpdateInterval "P1M"^^xsd:duration ;
+    rdfs:comment "Packet loss SLA guarantee for hub-to-spoke paths, evaluated independently per spoke."@en .
+
+ex:vpn-service
+    evsla:forTenant ex:tenant-jingyao-semi ;
+    evsla:hasTopology ex:topology-hub-spoke ;
+    rdfs:label "Enterprise VPN Service"@en .
+
+ex:threshold-packetloss
+    rdf:value "0.01"^^xsd:decimal ;
+    quan:unit ex:unit-percent .
+
+ex:unit-percent
+    rdfs:label "%" .
+
+ex:statistic-time-compliance
+    rdfs:label "99% of time"@en .
+
+ex:scope-hub-to-each-spoke
+    rdfs:label "between hub and each spoke"@en .

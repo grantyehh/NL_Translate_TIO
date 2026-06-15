@@ -1,0 +1,23 @@
+@prefix tio: <https://tio.example.com/tio#> .
+@prefix ex: <https://tio.example.com/testcases/TC014#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 a tio:EnterpriseVpnHubSpokeSlaIntent ;
+    tio:hasTopologyType tio:HubAndSpoke ;
+    tio:hasHub ex:hub1 ;
+    tio:hasSpoke ex:spokeSet1 ;
+    tio:hasSlaObjective ex:lossObjective1 ;
+    tio:appliesToTrafficDirection tio:HubToSpoke, tio:SpokeToHub .
+
+ex:hub1 a tio:VpnHub ;
+    tio:entityName "聯合媒體Hub" .
+
+ex:spokeSet1 a tio:VpnSpokeGroup ;
+    tio:memberScope tio:AllSpokes .
+
+ex:lossObjective1 a tio:PacketLossObjective ;
+    tio:hasMetric tio:PacketLossRate ;
+    tio:comparisonOperator tio:LessThan ;
+    tio:targetValue "0.0005"^^xsd:decimal ;
+    tio:hasUnit tio:Ratio ;
+    tio:timeCompliancePercentage "99"^^xsd:decimal .

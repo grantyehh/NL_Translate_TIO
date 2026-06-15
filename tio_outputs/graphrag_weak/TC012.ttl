@@ -1,0 +1,36 @@
+@prefix ex: <http://example.org/tio-instance/tc012/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-tc012 a tio:Intent ;
+    tio:hasExpectation ex:expectation-tc012 ;
+    tio:targets ex:vpn-service-tc012 .
+
+ex:vpn-service-tc012 a evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubSpoke ;
+    evsla:hasHubSite ex:site-hq ;
+    evsla:hasSpokeSite ex:site-hualien-sc .
+
+ex:site-hq a evsla:Site ;
+    evsla:siteName "藍海保險總部"^^xsd:string .
+
+ex:site-hualien-sc a evsla:Site ;
+    evsla:siteName "花蓮服務中心"^^xsd:string .
+
+ex:expectation-tc012 a evsla:SLAExpectation ;
+    evsla:appliesTo ex:vpn-service-tc012 ;
+    evsla:hasObjective ex:bandwidth-objective-tc012 .
+
+ex:bandwidth-objective-tc012 a evsla:ServiceLevelObjective ;
+    evsla:hasMetric evsla:GuaranteedBandwidth ;
+    evsla:hasStatistic evsla:Minimum ;
+    evsla:hasScope evsla:EndToEnd ;
+    evsla:hasMethod evsla:Assured ;
+    evsla:hasThreshold ex:bandwidth-threshold-tc012 .
+
+ex:bandwidth-threshold-tc012 a evsla:Threshold ;
+    evsla:comparisonOperator evsla:AtLeast ;
+    evsla:thresholdValue "150"^^xsd:decimal ;
+    evsla:unit "Mbps"^^xsd:string .

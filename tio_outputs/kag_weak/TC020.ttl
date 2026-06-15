@@ -1,0 +1,72 @@
+@prefix ex: <http://example.com/TC020#> .
+@prefix tio: <http://example.com/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent1 rdf:type tio:EnterpriseVpnHubSpokeSlaIntent ;
+    tio:hasTopology ex:topology1 ;
+    tio:hasHub ex:site_taipei_rnd_hq ;
+    tio:hasSpoke ex:site_zhubei_lab , ex:site_tainan_factory ;
+    tio:hasSlo ex:slo_latency_zhubei , ex:slo_latency_tainan , ex:slo_loss_zhubei , ex:slo_loss_tainan .
+
+ex:topology1 rdf:type tio:HubSpokeTopology .
+
+ex:site_taipei_rnd_hq rdf:type tio:HubSite ;
+    tio:siteName "精準醫材台北研發總部" .
+
+ex:site_zhubei_lab rdf:type tio:SpokeSite ;
+    tio:siteName "竹北實驗室" .
+
+ex:site_tainan_factory rdf:type tio:SpokeSite ;
+    tio:siteName "台南製造廠" .
+
+ex:slo_latency_zhubei rdf:type tio:OneWayLatencySlo ;
+    tio:appliesToPath ex:path_taipei_to_zhubei ;
+    tio:metricName "latency" ;
+    tio:lessThan ex:latency_threshold_35ms ;
+    tio:timeCoveragePercent "95" ;
+    tio:percentileBasis "time" .
+
+ex:slo_latency_tainan rdf:type tio:OneWayLatencySlo ;
+    tio:appliesToPath ex:path_taipei_to_tainan ;
+    tio:metricName "latency" ;
+    tio:lessThan ex:latency_threshold_35ms ;
+    tio:timeCoveragePercent "95" ;
+    tio:percentileBasis "time" .
+
+ex:slo_loss_zhubei rdf:type tio:PacketLossSlo ;
+    tio:appliesToPath ex:path_hub_zhubei ;
+    tio:metricName "packetLossRate" ;
+    tio:lessThan ex:loss_threshold_0_05pct ;
+    tio:timeCoveragePercent "99" ;
+    tio:percentileBasis "time" .
+
+ex:slo_loss_tainan rdf:type tio:PacketLossSlo ;
+    tio:appliesToPath ex:path_hub_tainan ;
+    tio:metricName "packetLossRate" ;
+    tio:lessThan ex:loss_threshold_0_05pct ;
+    tio:timeCoveragePercent "99" ;
+    tio:percentileBasis "time" .
+
+ex:path_taipei_to_zhubei rdf:type tio:TrafficPath ;
+    tio:sourceSite ex:site_taipei_rnd_hq ;
+    tio:destinationSite ex:site_zhubei_lab .
+
+ex:path_taipei_to_tainan rdf:type tio:TrafficPath ;
+    tio:sourceSite ex:site_taipei_rnd_hq ;
+    tio:destinationSite ex:site_tainan_factory .
+
+ex:path_hub_zhubei rdf:type tio:TrafficPath ;
+    tio:sourceSite ex:site_taipei_rnd_hq ;
+    tio:destinationSite ex:site_zhubei_lab .
+
+ex:path_hub_tainan rdf:type tio:TrafficPath ;
+    tio:sourceSite ex:site_taipei_rnd_hq ;
+    tio:destinationSite ex:site_tainan_factory .
+
+ex:latency_threshold_35ms rdf:type tio:Threshold ;
+    tio:maxValue "35" ;
+    tio:unit "ms" .
+
+ex:loss_threshold_0_05pct rdf:type tio:Threshold ;
+    tio:maxValue "0.05" ;
+    tio:unit "percent" .

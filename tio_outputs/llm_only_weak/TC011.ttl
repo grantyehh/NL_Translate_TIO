@@ -1,0 +1,49 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v1/> .
+@prefix ex: <http://example.org/tio-instance/tc011/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-TC011
+    a tio:Intent ;
+    tio:hasExpectation ex:deliveryExpectation-TC011 .
+
+ex:deliveryExpectation-TC011
+    a tio:DeliveryExpectation ;
+    tio:target ex:vpnService-TC011 ;
+    tio:requirement ex:packetLossRequirement-TC011 .
+
+ex:vpnService-TC011
+    a tio:Service ;
+    tio:serviceType "EnterpriseVPNHubAndSpoke" ;
+    tio:hasTopology ex:topology-TC011 .
+
+ex:topology-TC011
+    a tio:HubAndSpokeTopology ;
+    tio:hasHub ex:hub-CityTrafficBureau ;
+    tio:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3 ;
+    tio:allHubToSpokePathsSubjectTo ex:packetLossRequirement-TC011 .
+
+ex:hub-CityTrafficBureau
+    a tio:HubSite .
+
+ex:spoke-1
+    a tio:SpokeSite .
+
+ex:spoke-2
+    a tio:SpokeSite .
+
+ex:spoke-3
+    a tio:SpokeSite .
+
+ex:packetLossRequirement-TC011
+    a tio:Requirement ;
+    tio:appliesTo ex:hubToSpokeConnectivity-TC011 ;
+    tio:metricName "packetLossRate" ;
+    tio:comparisonOperator tio:LessThan ;
+    tio:threshold "0.2"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    tio:unit "%" ;
+    tio:percentile "99"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+
+ex:hubToSpokeConnectivity-TC011
+    a tio:ConnectivityScope ;
+    tio:from ex:hub-CityTrafficBureau ;
+    tio:to ex:spoke-1, ex:spoke-2, ex:spoke-3 .

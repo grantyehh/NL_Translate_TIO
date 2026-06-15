@@ -1,0 +1,57 @@
+@prefix ex: <http://example.org/tio-instance/tc018/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla/v1.0.0#> .
+
+ex:intent-TC018
+    a tio:Intent ;
+    tio:hasExpectation ex:expectation-bandwidth-TC018 ;
+    rdfs:label "TC018 Enterprise VPN hub-and-spoke SLA intent" .
+
+ex:expectation-bandwidth-TC018
+    a evsla:ServiceLevelExpectation ;
+    evsla:target ex:vpn-service-TC018 ;
+    evsla:parameter ex:parameter-guaranteed-bandwidth-TC018 ;
+    rdfs:label "Guaranteed bandwidth expectation for East Coast Tourism HQ to Green Island Service Station" .
+
+ex:vpn-service-TC018
+    a evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubAndSpokeTopology ;
+    evsla:hasEndpoint ex:endpoint-east-coast-tourism-hq ,
+                      ex:endpoint-green-island-service-station ;
+    rdfs:label "Enterprise VPN service for TC018" .
+
+ex:endpoint-east-coast-tourism-hq
+    a evsla:ServiceSite ;
+    rdfs:label "東岸觀光總部" .
+
+ex:endpoint-green-island-service-station
+    a evsla:ServiceSite ;
+    rdfs:label "綠島服務站" .
+
+ex:parameter-guaranteed-bandwidth-TC018
+    a evsla:ServiceLevelParameter ;
+    evsla:metric ex:metric-bandwidth-TC018 ;
+    evsla:statistic evsla:Minimum ;
+    evsla:scope ex:scope-east-to-green-island-TC018 ;
+    evsla:method evsla:Guaranteed ;
+    evsla:value ex:value-80mbps-TC018 ;
+    rdfs:label "Guaranteed bandwidth not less than 80 Mbps" .
+
+ex:metric-bandwidth-TC018
+    a evsla:Bandwidth ;
+    rdfs:label "Bandwidth" .
+
+ex:scope-east-to-green-island-TC018
+    a evsla:TrafficScope ;
+    evsla:src ex:endpoint-east-coast-tourism-hq ;
+    evsla:dst ex:endpoint-green-island-service-station ;
+    rdfs:label "Traffic scope from East Coast Tourism HQ to Green Island Service Station" .
+
+ex:value-80mbps-TC018
+    a evsla:ScalarValue ;
+    evsla:numericValue "80"^^xsd:decimal ;
+    evsla:unit evsla:Mbps ;
+    rdfs:label "80 Mbps" .

@@ -1,0 +1,31 @@
+@prefix ex: <http://example.org/tio-instance/tc006/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-tc006 a tio:Intent ;
+    tio:hasService ex:enterprise-vpn-service-tc006 .
+
+ex:enterprise-vpn-service-tc006 a evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubAndSpoke ;
+    evsla:hasHubSite ex:site-headquarters ;
+    evsla:hasSpokeSite ex:site-taichung-trading-room ;
+    evsla:hasSLA ex:sla-tc006 .
+
+ex:site-headquarters a evsla:CustomerSite ;
+    evsla:siteName "北辰證券總部" .
+
+ex:site-taichung-trading-room a evsla:CustomerSite ;
+    evsla:siteName "台中交易室" .
+
+ex:sla-tc006 a evsla:SLA ;
+    evsla:hasObjective ex:bandwidth-objective-tc006 .
+
+ex:bandwidth-objective-tc006 a evsla:ServiceLevelObjective ;
+    evsla:hasMetric ex:guaranteed-bandwidth-metric-tc006 ;
+    evsla:hasComparator evsla:GreaterThanOrEqual ;
+    evsla:hasValue "500"^^xsd:decimal ;
+    evsla:hasUnit evsla:Mbps ;
+    evsla:hasScope evsla:EndToEnd ;
+    evsla:hasMeasurementMethod evsla:GuaranteedBandwidthMeasurement .

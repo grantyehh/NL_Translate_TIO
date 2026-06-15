@@ -1,0 +1,2025 @@
+[
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC001.ttl",
+    "case_id": "TC001",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 43,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKindsAndUnits/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKindsAndUnits/unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.2,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC002.ttl",
+    "case_id": "TC002",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 28,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKinds/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKinds/unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SpokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKinds/Quantity"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC003.ttl",
+    "case_id": "TC003",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 28,
+    "prefix_checks": {
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#destinationSite",
+      "http://example.org/evsla#forConnection",
+      "http://example.org/evsla#hasComparator",
+      "http://example.org/evsla#hasHubSite",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasObjective",
+      "http://example.org/evsla#hasSLA",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSite",
+      "http://example.org/evsla#hasSpokeSite",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#hasUnit",
+      "http://example.org/evsla#hasValue",
+      "http://example.org/evsla#siteName",
+      "http://example.org/evsla#sourceSite",
+      "http://example.org/tio#hasService"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#BandwidthMetric",
+      "http://example.org/evsla#EnterpriseVPNService",
+      "http://example.org/evsla#SLA",
+      "http://example.org/evsla#SLO",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SiteToSiteConnection",
+      "http://example.org/tio#Intent"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC004.ttl",
+    "case_id": "TC004",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 31,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKinds/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKinds/unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC005.ttl",
+    "case_id": "TC005",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 29,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC006.ttl",
+    "case_id": "TC006",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 29,
+    "prefix_checks": {
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#destinationSite",
+      "http://example.org/evsla#hasHubSite",
+      "http://example.org/evsla#hasSpokeSite",
+      "http://example.org/evsla#sourceSite",
+      "http://example.org/evsla#topology",
+      "http://example.org/tio#comparisonOperator",
+      "http://example.org/tio#hasCondition",
+      "http://example.org/tio#hasExpectation",
+      "http://example.org/tio#hasService",
+      "http://example.org/tio#measurementMethod",
+      "http://example.org/tio#metric",
+      "http://example.org/tio#scope",
+      "http://example.org/tio#statistic",
+      "http://example.org/tio#target",
+      "http://example.org/tio#threshold",
+      "http://example.org/tio#unit",
+      "http://example.org/tio#value"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#EnterpriseVPNService",
+      "http://example.org/evsla#Site",
+      "http://example.org/tio#Condition",
+      "http://example.org/tio#Expectation",
+      "http://example.org/tio#Intent",
+      "http://example.org/tio#QuantitativeValue",
+      "http://example.org/tio#Scope"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC007.ttl",
+    "case_id": "TC007",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 36,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://example.org/quantity#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://example.org/quantity#unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#SpokeSite",
+      "http://example.org/quantity#Quantity"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC008.ttl",
+    "case_id": "TC008",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 35,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKindsAndUnits/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://tio.models.tmforum.org/tio/v3.6.0/QuantityKindsAndUnits/unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.2,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC009.ttl",
+    "case_id": "TC009",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 21,
+    "prefix_checks": {
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#comparisonOperator",
+      "http://example.org/evsla#hasObjective",
+      "http://example.org/evsla#measurementMethod",
+      "http://example.org/evsla#metric",
+      "http://example.org/evsla#scope",
+      "http://example.org/evsla#statistic",
+      "http://example.org/evsla#targetValue",
+      "http://example.org/evsla#unit",
+      "http://example.org/tio#hasHubSite",
+      "http://example.org/tio#hasSLA",
+      "http://example.org/tio#hasService",
+      "http://example.org/tio#hasSpokeSite",
+      "http://example.org/tio#serviceTopology",
+      "http://example.org/tio#siteName"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#ServiceLevelAgreement",
+      "http://example.org/evsla#ServiceLevelObjective",
+      "http://example.org/tio#EnterpriseVPNService",
+      "http://example.org/tio#Intent",
+      "http://example.org/tio#Site"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC010.ttl",
+    "case_id": "TC010",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 25,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://example.org/quantity#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://example.org/quantity#unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC011.ttl",
+    "case_id": "TC011",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 34,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC012.ttl",
+    "case_id": "TC012",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 24,
+    "prefix_checks": {
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesTo",
+      "http://example.org/evsla#comparisonOperator",
+      "http://example.org/evsla#hasHubSite",
+      "http://example.org/evsla#hasMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasObjective",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpokeSite",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#siteName",
+      "http://example.org/evsla#thresholdValue",
+      "http://example.org/evsla#unit",
+      "http://example.org/tio#hasExpectation",
+      "http://example.org/tio#targets"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#EnterpriseVPNService",
+      "http://example.org/evsla#SLAExpectation",
+      "http://example.org/evsla#ServiceLevelObjective",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#Threshold",
+      "http://example.org/tio#Intent"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC013.ttl",
+    "case_id": "TC013",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 45,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://qudt.org/schema/qudt/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://qudt.org/schema/qudt/unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SpokeSite",
+      "http://qudt.org/schema/qudt/Quantity"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.2,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC014.ttl",
+    "case_id": "TC014",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 29,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://example.org/quantity#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://example.org/quantity#unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC015.ttl",
+    "case_id": "TC015",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 21,
+    "prefix_checks": {
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#comparisonOperator",
+      "http://example.org/evsla#hasHubSite",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasSLA",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpokeSite",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#hasUnit",
+      "http://example.org/evsla#metricName",
+      "http://example.org/evsla#value",
+      "http://example.org/tio#hasService"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#BandwidthMetric",
+      "http://example.org/evsla#EnterpriseVPNService",
+      "http://example.org/evsla#SLA",
+      "http://example.org/evsla#ServiceSite",
+      "http://example.org/evsla#Threshold",
+      "http://example.org/tio#Intent"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC016.ttl",
+    "case_id": "TC016",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 40,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://example.org/quantity#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://example.org/quantity#unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC017.ttl",
+    "case_id": "TC017",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 26,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://example.org/quantity#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://example.org/quantity#unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC018.ttl",
+    "case_id": "TC018",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 22,
+    "prefix_checks": {
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesTo",
+      "http://example.org/evsla#hasConstraint",
+      "http://example.org/evsla#hasHubSite",
+      "http://example.org/evsla#hasMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasObjective",
+      "http://example.org/evsla#hasSLA",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpokeSite",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#hasUnit",
+      "http://example.org/evsla#hasValue",
+      "http://example.org/tio#hasService"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#AtLeastConstraint",
+      "http://example.org/evsla#BandwidthMetric",
+      "http://example.org/evsla#EnterpriseVPNService",
+      "http://example.org/evsla#SLA",
+      "http://example.org/evsla#SLAObjective",
+      "http://example.org/evsla#Site",
+      "http://example.org/tio#Intent"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC019.ttl",
+    "case_id": "TC019",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 29,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://example.org/quantity#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://example.org/quantity#unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SpokeSite",
+      "http://example.org/quantity#Quantity"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/graphrag_weak/TC020.ttl",
+    "case_id": "TC020",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 59,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "imo": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://example.org/quantity#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/evsla#appliesPerSpoke",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasMeasurementMethod",
+      "http://example.org/evsla#hasMetric",
+      "http://example.org/evsla#hasScope",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#hasStatistic",
+      "http://example.org/evsla#hasThreshold",
+      "http://example.org/evsla#hasTimeWindow",
+      "http://example.org/evsla#hasTopology",
+      "http://example.org/evsla#serviceTarget",
+      "http://example.org/quantity#unit"
+    ],
+    "unknown_types": [
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#Site",
+      "http://example.org/evsla#SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.2,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target",
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  }
+]

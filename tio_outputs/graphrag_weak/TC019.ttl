@@ -1,0 +1,62 @@
+@prefix ex: <http://example.org/tio-instance/tc019/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://example.org/quantity#> .
+
+ex:intentTC019
+    evsla:forTenant ex:tenantSecurityMonitoring ;
+    evsla:hasTopology ex:topologyTC019 ;
+    icm:target ex:vpnServiceTC019 ;
+    ig:hasGuarantee ex:latencyGuaranteeTC019 ;
+    rdfs:comment "確保安全監控總部至所有分點之延遲在95%的時間內低於40ms。"@zh .
+
+ex:vpnServiceTC019
+    evsla:forTenant ex:tenantSecurityMonitoring ;
+    evsla:hasTopology ex:topologyTC019 .
+
+ex:topologyTC019
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenantSecurityMonitoring ;
+    evsla:hasHub ex:securityMonitoringHQ ;
+    evsla:hasSpoke ex:allBranchSpokes .
+
+ex:securityMonitoringHQ
+    rdf:type evsla:Site .
+
+ex:allBranchSpokes
+    rdf:type evsla:SpokeSite .
+
+ex:tenantSecurityMonitoring
+    rdfs:comment "Security monitoring enterprise tenant."@en .
+
+ex:latencyGuaranteeTC019
+    evsla:serviceTarget ex:vpnServiceTC019 ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:p95Statistic ;
+    evsla:hasThreshold ex:latencyThreshold40ms ;
+    evsla:hasScope ex:hubToEachSpokeScope ;
+    evsla:hasTimeWindow ex:serviceLifetimeWindow ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.95"^^xsd:decimal .
+
+ex:p95Statistic
+    rdfs:comment "95th percentile latency statistic."@en .
+
+ex:hubToEachSpokeScope
+    rdfs:comment "Latency measured from the hub site to each spoke site independently across all spokes in the hub-and-spoke topology."@en .
+
+ex:serviceLifetimeWindow
+    rdfs:comment "Evaluation applies over the service lifetime when no explicit shorter SLA window is provided."@en .
+
+ex:latencyThreshold40ms
+    rdf:type quan:Quantity ;
+    rdf:value "40"^^xsd:decimal ;
+    quan:unit ex:Millisecond .
+
+ex:Millisecond
+    rdfs:comment "milliseconds"@en .

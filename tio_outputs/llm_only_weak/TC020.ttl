@@ -1,0 +1,66 @@
+@prefix tio: <https://tio.example.org/tio#> .
+@prefix ex: <http://example.org/tio-instance/tc020/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-tc020
+    rdf:type tio:Intent ;
+    tio:hasServiceType tio:EnterpriseVPNHubSpoke ;
+    tio:hasTopology ex:topology-hubspoke-1 ;
+    tio:hasEndpoint ex:site-taipei-rd-hq ,
+                    ex:site-zhubei-lab ,
+                    ex:site-tainan-manufacturing ;
+    tio:hasExpectation ex:latency-slo-hub-zhubei ,
+                       ex:latency-slo-hub-tainan ,
+                       ex:loss-slo-hub-zhubei ,
+                       ex:loss-slo-hub-tainan .
+
+ex:topology-hubspoke-1
+    rdf:type tio:HubSpokeTopology ;
+    tio:hasHub ex:site-taipei-rd-hq ;
+    tio:hasSpoke ex:site-zhubei-lab ,
+                 ex:site-tainan-manufacturing .
+
+ex:site-taipei-rd-hq
+    rdf:type tio:Site ;
+    tio:siteName "精準醫材台北研發總部"@zh .
+
+ex:site-zhubei-lab
+    rdf:type tio:Site ;
+    tio:siteName "竹北實驗室"@zh .
+
+ex:site-tainan-manufacturing
+    rdf:type tio:Site ;
+    tio:siteName "台南製造廠"@zh .
+
+ex:latency-slo-hub-zhubei
+    rdf:type tio:LatencyExpectation ;
+    tio:appliesToTopology ex:topology-hubspoke-1 ;
+    tio:sourceSite ex:site-taipei-rd-hq ;
+    tio:destinationSite ex:site-zhubei-lab ;
+    tio:maximumLatencyMs "35"^^xsd:decimal ;
+    tio:timeCoveragePercent "95"^^xsd:decimal .
+
+ex:latency-slo-hub-tainan
+    rdf:type tio:LatencyExpectation ;
+    tio:appliesToTopology ex:topology-hubspoke-1 ;
+    tio:sourceSite ex:site-taipei-rd-hq ;
+    tio:destinationSite ex:site-tainan-manufacturing ;
+    tio:maximumLatencyMs "35"^^xsd:decimal ;
+    tio:timeCoveragePercent "95"^^xsd:decimal .
+
+ex:loss-slo-hub-zhubei
+    rdf:type tio:PacketLossExpectation ;
+    tio:appliesToTopology ex:topology-hubspoke-1 ;
+    tio:sourceSite ex:site-taipei-rd-hq ;
+    tio:destinationSite ex:site-zhubei-lab ;
+    tio:maximumPacketLossPercent "0.05"^^xsd:decimal ;
+    tio:timeCoveragePercent "99"^^xsd:decimal .
+
+ex:loss-slo-hub-tainan
+    rdf:type tio:PacketLossExpectation ;
+    tio:appliesToTopology ex:topology-hubspoke-1 ;
+    tio:sourceSite ex:site-taipei-rd-hq ;
+    tio:destinationSite ex:site-tainan-manufacturing ;
+    tio:maximumPacketLossPercent "0.05"^^xsd:decimal ;
+    tio:timeCoveragePercent "99"^^xsd:decimal .

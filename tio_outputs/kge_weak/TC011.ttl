@@ -1,0 +1,39 @@
+@prefix ex: <http://example.org/tio-instance/tc011/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://w3id.org/eiffel/evsla#> .
+@prefix icm: <https://w3id.org/italia/onto/ICM/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent a tio:Intent ;
+  tio:hasExpectation ex:deliveryExpectation .
+
+ex:deliveryExpectation a tio:DeliveryExpectation ;
+  tio:target ex:vpnService ;
+  tio:params ex:packetLossCondition .
+
+ex:vpnService a tio:ConnectivityService ;
+  tio:topology tio:HubAndSpoke .
+
+ex:packetLossCondition a tio:Condition ;
+  tio:metric ex:packetLossMetric ;
+  tio:operator tio:lessThan ;
+  tio:value "0.2"^^xsd:decimal ;
+  tio:unit "%" ;
+  tio:appliesTo ex:hubToSpokeScope ;
+  tio:qualifier ex:timeCoverageQualifier .
+
+ex:packetLossMetric a evsla:PacketLossRatio .
+
+ex:hubToSpokeScope a tio:Scope ;
+  tio:source ex:cityTrafficBureauHub ;
+  tio:destination ex:allSpokes .
+
+ex:cityTrafficBureauHub a tio:Hub ;
+  tio:name "城市交通局Hub" .
+
+ex:allSpokes a tio:SpokeGroup ;
+  tio:name "各Spoke" .
+
+ex:timeCoverageQualifier a tio:Percentile ;
+  tio:value "99"^^xsd:decimal ;
+  tio:unit "%" .

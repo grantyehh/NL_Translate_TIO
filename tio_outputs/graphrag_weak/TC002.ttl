@@ -1,0 +1,58 @@
+@prefix ex: <http://example.org/tio-instance/tc002/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityKinds/> .
+
+ex:TC002Intent
+    evsla:forTenant ex:FarEasternManufacturing ;
+    evsla:hasTopology ex:TC002Topology ;
+    ig:hasGuarantee ex:TC002PacketLossGuarantee .
+
+ex:TC002Topology
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:FarEasternManufacturing ;
+    evsla:hasHub ex:FarEasternManufacturingHub ;
+    evsla:hasSpoke ex:SpokeSite1 , ex:SpokeSite2 , ex:SpokeSite3 .
+
+ex:FarEasternManufacturingHub
+    rdf:type evsla:Site .
+
+ex:SpokeSite1
+    rdf:type evsla:SpokeSite .
+
+ex:SpokeSite2
+    rdf:type evsla:SpokeSite .
+
+ex:SpokeSite3
+    rdf:type evsla:SpokeSite .
+
+ex:TC002PacketLossGuarantee
+    evsla:forTenant ex:FarEasternManufacturing ;
+    evsla:serviceTarget ex:TC002Intent ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:PacketLossThreshold001Percent ;
+    evsla:hasStatistic ex:LessThanThreshold ;
+    evsla:hasScope ex:HubToEachSpokeScope ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.99"^^xsd:decimal .
+
+ex:PacketLossThreshold001Percent
+    rdf:type quan:Quantity ;
+    rdf:value "0.1"^^xsd:decimal ;
+    quan:unit ex:PercentUnit .
+
+ex:LessThanThreshold
+    rdfs:comment "Observed packet loss must be lower than the specified threshold." .
+
+ex:HubToEachSpokeScope
+    rdfs:comment "Guarantee applies between the hub and each spoke independently." .
+
+ex:FarEasternManufacturing
+    rdfs:comment "Far Eastern Manufacturing tenant." .
+
+ex:PercentUnit
+    rdfs:comment "Percent unit." .

@@ -1,0 +1,68 @@
+@prefix ex: <http://example.org/tio-instance/tc011/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
+
+ex:intent-TC011
+    evsla:forTenant ex:tenant-CityTrafficBureau ;
+    evsla:hasTopology ex:topology-TC011 ;
+    ig:hasGuarantee ex:guarantee-TC011 ;
+    icm:target ex:vpnService-TC011 ;
+    rdfs:comment "確保城市交通局Hub與各Spoke間封包遺失率低於0.2%（99%時間）。"@zh .
+
+ex:tenant-CityTrafficBureau
+    rdfs:comment "城市交通局"@zh .
+
+ex:vpnService-TC011
+    evsla:forTenant ex:tenant-CityTrafficBureau ;
+    evsla:hasTopology ex:topology-TC011 .
+
+ex:topology-TC011
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-CityTrafficBureau ;
+    evsla:hasHub ex:hub-CityTrafficBureau ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2 .
+
+ex:hub-CityTrafficBureau
+    rdfs:comment "城市交通局 Hub"@zh .
+
+ex:spoke-1
+    rdf:type evsla:SpokeSite ;
+    rdfs:comment "Spoke 1"@zh .
+
+ex:spoke-2
+    rdf:type evsla:SpokeSite ;
+    rdfs:comment "Spoke 2"@zh .
+
+ex:guarantee-TC011
+    ig:confidenceLevel "0.99"^^xsd:decimal ;
+    ig:guaranteePeriod "P1M"^^xsd:duration ;
+    evsla:serviceTarget ex:vpnService-TC011 ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:threshold-packetloss-0_2pct ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    evsla:hasTimeWindow "P1M"^^xsd:duration ;
+    evsla:hasMeasurementMethod ex:measurementMethod-packetloss-rate ;
+    evsla:hasStatistic ex:statistic-time-compliance .
+
+ex:threshold-packetloss-0_2pct
+    quan:unit ex:unit-percent ;
+    rdf:value "0.2"^^xsd:decimal .
+
+ex:unit-percent
+    rdfs:comment "percent"@en .
+
+ex:scope-hub-to-each-spoke
+    rdfs:comment "Hub 與各 Spoke 間，逐一 Spoke 評估"@zh .
+
+ex:measurementMethod-packetloss-rate
+    rdfs:comment "以封包遺失率作為量測方法"@zh .
+
+ex:statistic-time-compliance
+    rdfs:comment "99%時間符合門檻"@zh .

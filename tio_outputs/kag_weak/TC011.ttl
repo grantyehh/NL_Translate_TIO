@@ -1,0 +1,23 @@
+@prefix ex: <http://example.com/tio/TC011#> .
+@prefix tio: <http://example.com/tio#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 a tio:EnterpriseVpnHubSpokeSlaIntent ;
+    tio:hasHub ex:CityTrafficBureauHub ;
+    tio:hasSpoke ex:SpokeGroup ;
+    tio:hasSlaRequirement ex:packetLossRequirement1 .
+
+ex:CityTrafficBureauHub a tio:VpnHub ;
+    tio:entityName "城市交通局Hub" .
+
+ex:SpokeGroup a tio:VpnSpokeGroup ;
+    tio:entityName "各Spoke" .
+
+ex:packetLossRequirement1 a tio:PacketLossRequirement ;
+    tio:appliesBetween ex:CityTrafficBureauHub , ex:SpokeGroup ;
+    tio:metric tio:PacketLossRate ;
+    tio:comparisonOperator tio:LessThan ;
+    tio:threshold "0.2"^^xsd:decimal ;
+    tio:unit tio:Percent ;
+    tio:timeCoverage "99"^^xsd:decimal ;
+    tio:timeCoverageUnit tio:Percent .

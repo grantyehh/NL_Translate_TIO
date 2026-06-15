@@ -1,0 +1,100 @@
+@prefix ex: <http://example.org/tio-instance/tc020/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://example.org/quantity#> .
+
+ex:TC020_Intent
+    rdf:type icm:Intent ;
+    evsla:forTenant ex:PrecisionMedicalDevices ;
+    evsla:hasTopology ex:TC020_Topology ;
+    ig:hasGuarantee ex:TC020_LatencyGuarantee ,
+                    ex:TC020_PacketLossGuarantee ;
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA intent for Precision Medical Devices." .
+
+ex:PrecisionMedicalDevices
+    rdf:type rdfs:Resource ;
+    rdfs:label "精準醫材"@zh .
+
+ex:TC020_Topology
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:PrecisionMedicalDevices ;
+    evsla:hasHub ex:Taipei_RnD_HQ ;
+    evsla:hasSpoke ex:Zhubei_Lab ,
+                    ex:Tainan_Manufacturing_Plant ;
+    rdfs:comment "Hub-and-spoke topology with Taipei R&D headquarters as hub and Zhubei laboratory and Tainan manufacturing plant as spokes." .
+
+ex:Taipei_RnD_HQ
+    rdf:type evsla:Site ;
+    rdfs:label "台北研發總部"@zh .
+
+ex:Zhubei_Lab
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "竹北實驗室"@zh .
+
+ex:Tainan_Manufacturing_Plant
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "台南製造廠"@zh .
+
+ex:TC020_LatencyGuarantee
+    evsla:serviceTarget ex:TC020_Intent ;
+    evsla:forTenant ex:PrecisionMedicalDevices ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:P95 ;
+    evsla:hasThreshold ex:LatencyThreshold35ms ;
+    evsla:hasScope ex:HubToEachSpokeScope ;
+    evsla:hasMeasurementMethod ex:RoundTripMeasurement ;
+    evsla:hasTimeWindow ex:SLAEvaluationWindow ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.95"^^xsd:decimal ;
+    ig:guaranteePeriod "P1M"^^xsd:duration ;
+    ig:guaranteePeriodUpdateInterval "P1M"^^xsd:duration ;
+    rdfs:comment "Latency between the hub and each spoke must remain below 35 ms for 95% of the time." .
+
+ex:TC020_PacketLossGuarantee
+    evsla:serviceTarget ex:TC020_Intent ;
+    evsla:forTenant ex:PrecisionMedicalDevices ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasStatistic ex:P99 ;
+    evsla:hasThreshold ex:PacketLossThreshold005Percent ;
+    evsla:hasScope ex:HubToEachSpokeScope ;
+    evsla:hasMeasurementMethod ex:PacketLossMeasurement ;
+    evsla:hasTimeWindow ex:SLAEvaluationWindow ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.99"^^xsd:decimal ;
+    ig:guaranteePeriod "P1M"^^xsd:duration ;
+    ig:guaranteePeriodUpdateInterval "P1M"^^xsd:duration ;
+    rdfs:comment "Packet loss between the hub and each spoke must remain below 0.05% for 99% of the time." .
+
+ex:P95
+    rdfs:label "p95" .
+
+ex:P99
+    rdfs:label "p99" .
+
+ex:HubToEachSpokeScope
+    rdfs:label "hub-to-each-spoke" .
+
+ex:RoundTripMeasurement
+    rdfs:label "round-trip latency measurement" .
+
+ex:PacketLossMeasurement
+    rdfs:label "packet loss rate measurement" .
+
+ex:SLAEvaluationWindow
+    rdfs:label "monthly SLA evaluation window" ;
+    ig:guaranteePeriod "P1M"^^xsd:duration .
+
+ex:LatencyThreshold35ms
+    rdf:type rdfs:Resource ;
+    rdf:value "35"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:PacketLossThreshold005Percent
+    rdf:type rdfs:Resource ;
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit "percent" .

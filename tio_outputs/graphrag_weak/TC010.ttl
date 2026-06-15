@@ -1,0 +1,54 @@
+@prefix ex: <http://example.org/tio-instance/tc010/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://example.org/quantity#> .
+
+ex:intentTC010
+    evsla:forTenant ex:tenantSwiftGame ;
+    evsla:hasTopology ex:topologyTC010 ;
+    ig:hasGuarantee ex:latencyGuaranteeTC010 ;
+    rdfs:comment "Ensure latency from Swift Game headquarters to all branch sites stays below 20 ms for 95% of the time."@en .
+
+ex:tenantSwiftGame
+    rdfs:comment "迅捷遊戲"@zh .
+
+ex:topologyTC010
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenantSwiftGame ;
+    evsla:hasHub ex:swiftGameHeadquarters ;
+    evsla:hasSpoke ex:allSpokeSitesTC010 .
+
+ex:swiftGameHeadquarters
+    rdfs:comment "迅捷遊戲總部"@zh .
+
+ex:allSpokeSitesTC010
+    rdf:type evsla:SpokeSite ;
+    rdfs:comment "所有分點"@zh .
+
+ex:latencyGuaranteeTC010
+    evsla:forTenant ex:tenantSwiftGame ;
+    evsla:serviceTarget ex:topologyTC010 ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:p95 ;
+    evsla:hasThreshold ex:latencyThreshold20ms ;
+    evsla:hasScope ex:hubToEachSpokeScope ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.95"^^xsd:decimal .
+
+ex:p95
+    rdfs:comment "95th percentile"@en .
+
+ex:hubToEachSpokeScope
+    rdfs:comment "Latency is evaluated from the hub site to each spoke site independently."@en .
+
+ex:latencyThreshold20ms
+    rdf:value "20"^^xsd:decimal ;
+    quan:unit ex:millisecond .
+
+ex:millisecond
+    rdfs:comment "ms"@en .

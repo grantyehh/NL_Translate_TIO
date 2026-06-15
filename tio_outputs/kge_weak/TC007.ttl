@@ -1,0 +1,44 @@
+@prefix ex: <http://example.org/tio-instance/tc007/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://w3id.org/eiffel/EVSLA#> .
+@prefix icm: <https://tio.models.tmforum.org/tio/v3.6.0/icm#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent a tio:Intent ;
+    tio:hasExpectation ex:deliveryExpectation .
+
+ex:deliveryExpectation a tio:DeliveryExpectation ;
+    tio:target ex:vpnService ;
+    tio:params ex:latencyCondition .
+
+ex:vpnService a tio:ConnectivityService ;
+    tio:serviceType "EnterpriseVPNHubSpoke" ;
+    tio:hasTopology ex:hubSpokeTopology .
+
+ex:hubSpokeTopology a tio:HubSpokeTopology ;
+    tio:hasHub ex:kaohsiungPortOperationsCenter ;
+    tio:hasSpoke ex:allPortBranchSites .
+
+ex:kaohsiungPortOperationsCenter a tio:Site ;
+    tio:name "海港航運高雄港營運中心" .
+
+ex:allPortBranchSites a tio:SiteGroup ;
+    tio:name "所有港站分點" .
+
+ex:latencyCondition a tio:Condition ;
+    tio:metric ex:oneWayDelayMetric ;
+    tio:operator tio:LessThan ;
+    tio:value "80"^^xsd:decimal ;
+    tio:unit "ms" ;
+    tio:appliesTo ex:hubToAllSpokesScope ;
+    tio:qualifier ex:timeCoverageQualifier .
+
+ex:oneWayDelayMetric a evsla:OneWayDelay .
+
+ex:hubToAllSpokesScope a evsla:TrafficScope ;
+    evsla:source ex:kaohsiungPortOperationsCenter ;
+    evsla:destination ex:allPortBranchSites .
+
+ex:timeCoverageQualifier a evsla:PercentileMeasure ;
+    evsla:percentile "95"^^xsd:decimal .

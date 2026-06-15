@@ -1,0 +1,43 @@
+@prefix ex: <http://example.org/tio-instance/tc005/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-tc005 a tio:Intent ;
+    tio:targets ex:enterprise-vpn-service ;
+    tio:hasExpectation ex:expectation-packet-loss .
+
+ex:enterprise-vpn-service a evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubAndSpoke ;
+    evsla:hasHub ex:hub-morningstar-retail ;
+    evsla:hasSpoke ex:spoke-1 ,
+        ex:spoke-2 ,
+        ex:spoke-3 .
+
+ex:hub-morningstar-retail a evsla:HubSite .
+
+ex:spoke-1 a evsla:SpokeSite .
+ex:spoke-2 a evsla:SpokeSite .
+ex:spoke-3 a evsla:SpokeSite .
+
+ex:expectation-packet-loss a tio:Expectation ;
+    tio:onService ex:enterprise-vpn-service ;
+    tio:appliesTo ex:hub-to-all-spokes-scope ;
+    tio:hasConstraint ex:packet-loss-constraint .
+
+ex:hub-to-all-spokes-scope a evsla:TrafficScope ;
+    evsla:scopeType evsla:HubToEachSpoke .
+
+ex:packet-loss-constraint a tio:Constraint ;
+    tio:metric evsla:PacketLossRate ;
+    tio:comparisonOperator tio:LessThan ;
+    tio:threshold ex:packet-loss-threshold ;
+    tio:qualifiedBy ex:time-coverage-qualification .
+
+ex:packet-loss-threshold a tio:Value ;
+    tio:numericValue "0.05"^^rdf:XMLLiteral ;
+    tio:unit evsla:Percent .
+
+ex:time-coverage-qualification a tio:Qualification ;
+    tio:statistic evsla:Percentile ;
+    tio:percentage "99"^^rdf:XMLLiteral .

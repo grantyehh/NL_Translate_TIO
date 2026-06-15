@@ -1,0 +1,62 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0/> .
+@prefix ex: <http://example.org/tio-instance/tc009/> .
+@prefix icm: <https://ontology.tmforum.org/ontology/icm/> .
+@prefix cat: <https://ontology.tmforum.org/ontology/catalyst#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent_TC009
+    a tio:Intent ;
+    tio:hasExpectation ex:expectation_connectivity_TC009 ;
+    tio:hasExpectation ex:expectation_bandwidth_TC009 .
+
+ex:expectation_connectivity_TC009
+    a tio:DeliveryExpectation ;
+    tio:target ex:vpn_service_TC009 ;
+    tio:requirement ex:connectivity_condition_TC009 .
+
+ex:connectivity_condition_TC009
+    a tio:Condition ;
+    tio:appliesTo ex:hub_site_hq, ex:spoke_site_changbin_windfarm ;
+    tio:description "Enterprise VPN hub-and-spoke connectivity between headquarters and Changbin wind farm shall be provided."^^xsd:string .
+
+ex:expectation_bandwidth_TC009
+    a tio:DeliveryExpectation ;
+    tio:target ex:vpn_service_TC009 ;
+    tio:requirement ex:bandwidth_condition_TC009 .
+
+ex:bandwidth_condition_TC009
+    a tio:Condition ;
+    tio:appliesTo ex:traffic_profile_TC009 ;
+    tio:description "Guaranteed bandwidth shall be at least 200 Mbps from headquarters to Changbin wind farm."^^xsd:string ;
+    tio:greaterOrEqual ex:bandwidth_value_200Mbps .
+
+ex:bandwidth_value_200Mbps
+    a tio:Bandwidth ;
+    tio:value "200"^^xsd:decimal ;
+    tio:unit "Mbps"^^xsd:string .
+
+ex:vpn_service_TC009
+    a tio:Service ;
+    tio:serviceType "EnterpriseVPNHubSpoke"^^xsd:string ;
+    tio:hasTopology ex:topology_hub_spoke_TC009 .
+
+ex:topology_hub_spoke_TC009
+    a tio:Topology ;
+    tio:hasHub ex:hub_site_hq ;
+    tio:hasSpoke ex:spoke_site_changbin_windfarm .
+
+ex:hub_site_hq
+    a tio:Site ;
+    tio:role "hub"^^xsd:string ;
+    tio:name "綠能電力總部"^^xsd:string .
+
+ex:spoke_site_changbin_windfarm
+    a tio:Site ;
+    tio:role "spoke"^^xsd:string ;
+    tio:name "彰濱風場"^^xsd:string .
+
+ex:traffic_profile_TC009
+    a tio:TrafficProfile ;
+    tio:source ex:hub_site_hq ;
+    tio:destination ex:spoke_site_changbin_windfarm ;
+    tio:direction "unidirectional"^^xsd:string .

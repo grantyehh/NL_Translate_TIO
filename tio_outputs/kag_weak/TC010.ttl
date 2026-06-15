@@ -1,0 +1,30 @@
+@prefix tio: <https://example.org/tio#> .
+@prefix ex: <https://example.org/testcases/TC010#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 a tio:Intent ;
+    tio:hasServiceTopology ex:topology1 ;
+    tio:hasTrafficProfile ex:traffic1 ;
+    tio:hasSLA ex:sla1 .
+
+ex:topology1 a tio:EnterpriseVpnHubSpokeTopology ;
+    tio:hasHubSite ex:site_hq ;
+    tio:hasSpokeSite ex:site_all_branches .
+
+ex:site_hq a tio:EnterpriseSite ;
+    tio:siteName "迅捷遊戲總部" .
+
+ex:site_all_branches a tio:EnterpriseSiteGroup ;
+    tio:groupScope tio:AllBranchSites .
+
+ex:traffic1 a tio:TrafficProfile ;
+    tio:trafficScope tio:AllTrafficBetweenHubAndSpokes .
+
+ex:sla1 a tio:LatencySLA ;
+    tio:appliesBetween ex:site_hq , ex:site_all_branches ;
+    tio:metric tio:OneWayLatency ;
+    tio:percentile "95"^^xsd:decimal ;
+    tio:maximumValue "20"^^xsd:decimal ;
+    tio:unit "ms" ;
+    tio:timeComplianceRelation tio:LessThan ;
+    tio:timeCoverage "95"^^xsd:decimal .

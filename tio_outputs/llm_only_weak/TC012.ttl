@@ -1,0 +1,34 @@
+@prefix tio: <https://tio.example.org/tio#> .
+@prefix ex: <http://example.org/tio-instance/tc012/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-tc012 a tio:Intent ;
+    tio:hasExpectation ex:delivery-expectation-tc012 .
+
+ex:delivery-expectation-tc012 a tio:DeliveryExpectation ;
+    tio:target ex:vpn-service-tc012 ;
+    tio:hasCondition ex:bandwidth-condition-tc012 .
+
+ex:vpn-service-tc012 a tio:EnterpriseVPNService ;
+    tio:hasTopology tio:HubSpokeTopology ;
+    tio:hasHubSite ex:site-blue-ocean-hq ;
+    tio:hasSpokeSite ex:site-hualien-service-center .
+
+ex:site-blue-ocean-hq a tio:Site ;
+    tio:siteName "藍海保險總部" .
+
+ex:site-hualien-service-center a tio:Site ;
+    tio:siteName "花蓮服務中心" .
+
+ex:bandwidth-condition-tc012 a tio:BandwidthCondition ;
+    tio:appliesTo ex:path-blue-ocean-hq-to-hualien-service-center ;
+    tio:guaranteedBandwidth ex:bandwidth-value-tc012 ;
+    tio:comparisonOperator tio:AtLeast .
+
+ex:path-blue-ocean-hq-to-hualien-service-center a tio:TrafficPath ;
+    tio:sourceSite ex:site-blue-ocean-hq ;
+    tio:destinationSite ex:site-hualien-service-center .
+
+ex:bandwidth-value-tc012 a tio:BandwidthValue ;
+    tio:numericValue "150"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    tio:unit tio:Mbps .

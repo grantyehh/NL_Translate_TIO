@@ -1,0 +1,30 @@
+@prefix tio: <https://tio.example.com/ns#> .
+@prefix ex: <https://tio.example.com/testcases/TC007#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 rdf:type tio:EnterpriseVpnHubSpokeSlaIntent ;
+    tio:hasTopology tio:HubAndSpoke ;
+    tio:hasHub ex:kaohsiungPortOperationsCenter ;
+    tio:hasSpokeGroup ex:allPortStationBranches ;
+    tio:hasTrafficProperty ex:latencyObjective1 .
+
+ex:kaohsiungPortOperationsCenter rdf:type tio:VpnSite ;
+    tio:siteName "海港航運高雄港營運中心" .
+
+ex:allPortStationBranches rdf:type tio:SiteGroup ;
+    tio:groupName "所有港站分點" ;
+    tio:groupScope tio:AllSitesInGroup .
+
+ex:latencyObjective1 rdf:type tio:LatencySlaObjective ;
+    tio:appliesBetween ex:kaohsiungPortOperationsCenter , ex:allPortStationBranches ;
+    tio:hasThreshold ex:latencyThreshold1 ;
+    tio:hasComplianceCondition ex:complianceCondition1 .
+
+ex:latencyThreshold1 rdf:type tio:OneWayLatencyThreshold ;
+    tio:maxLatencyValue "80"^^xsd:decimal ;
+    tio:latencyUnit "ms" .
+
+ex:complianceCondition1 rdf:type tio:PercentileCompliance ;
+    tio:timeCoveragePercent "95"^^xsd:decimal ;
+    tio:comparisonOperator tio:LessThan .

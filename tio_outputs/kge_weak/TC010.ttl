@@ -1,0 +1,48 @@
+@prefix ex: <http://example.org/tio-instance/tc010/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v1/> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla/v1/> .
+
+ex:intent-TC010
+    rdf:type tio:Intent ;
+    tio:hasExpectation ex:expectation-TC010-latency .
+
+ex:expectation-TC010-latency
+    rdf:type evsla:SLAExpectation ;
+    evsla:appliesTo ex:service-TC010 ;
+    evsla:hasMetric ex:metric-TC010-latency ;
+    evsla:hasTarget ex:target-TC010-latency .
+
+ex:service-TC010
+    rdf:type evsla:EnterpriseVPNHubSpokeService ;
+    evsla:hasHubSite ex:site-headquarters ;
+    evsla:hasSpokeSite ex:site-branch-1 ,
+                       ex:site-branch-2 ,
+                       ex:site-branch-3 .
+
+ex:site-headquarters
+    rdf:type evsla:Site .
+
+ex:site-branch-1
+    rdf:type evsla:Site .
+
+ex:site-branch-2
+    rdf:type evsla:Site .
+
+ex:site-branch-3
+    rdf:type evsla:Site .
+
+ex:metric-TC010-latency
+    rdf:type evsla:Metric ;
+    evsla:metricType evsla:OneWayLatency ;
+    evsla:scope evsla:HubToAllSpokes ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:statistic evsla:Percentile95 ;
+    evsla:unit "ms"^^xsd:string .
+
+ex:target-TC010-latency
+    rdf:type evsla:ThresholdTarget ;
+    evsla:comparisonOperator evsla:LessThan ;
+    evsla:value "20"^^xsd:decimal ;
+    evsla:timeCoverage "95"^^xsd:decimal .

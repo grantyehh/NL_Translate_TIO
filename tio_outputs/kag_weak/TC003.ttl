@@ -1,0 +1,27 @@
+@prefix tio: <https://example.com/tio#> .
+@prefix ex: <https://example.com/tio/TC003#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 rdf:type tio:Intent ;
+    tio:targets ex:vpnService1 ;
+    tio:requires ex:sla1 .
+
+ex:vpnService1 rdf:type tio:EnterpriseVpnService ,
+        tio:HubAndSpokeVpn ;
+    tio:hasHubSite ex:site_headquarters ;
+    tio:hasSpokeSite ex:site_kaohsiung_warehouse .
+
+ex:site_headquarters rdf:type tio:Site ;
+    tio:siteName "宏海物流總部" .
+
+ex:site_kaohsiung_warehouse rdf:type tio:Site ;
+    tio:siteName "高雄倉儲中心" .
+
+ex:sla1 rdf:type tio:ServiceLevelAgreement ;
+    tio:appliesTo ex:vpnService1 ;
+    tio:hasBandwidthGuarantee ex:bandwidth1 .
+
+ex:bandwidth1 rdf:type tio:GuaranteedBandwidth ;
+    tio:minimumBandwidth "100"^^xsd:decimal ;
+    tio:bandwidthUnit "Mbps" .

@@ -1,0 +1,66 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0/> .
+@prefix ex: <http://example.org/tio-instance/tc008/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:EnterpriseVPNIntent_TC008
+    a tio:Intent ;
+    tio:hasExpectation ex:ConnectivityDelivery_TC008 ,
+                       ex:PacketLossSLA_TC008 .
+
+ex:ConnectivityDelivery_TC008
+    a tio:DeliveryExpectation ;
+    tio:target ex:EnterpriseVPNService_TC008 .
+
+ex:EnterpriseVPNService_TC008
+    a tio:Service ;
+    tio:hasTopology ex:HubSpokeTopology_TC008 .
+
+ex:HubSpokeTopology_TC008
+    a tio:HubAndSpokeTopology ;
+    tio:hasHub ex:JingyaoSemiconductorHub ;
+    tio:hasSpoke ex:Spoke1 ,
+                 ex:Spoke2 ,
+                 ex:Spoke3 .
+
+ex:JingyaoSemiconductorHub
+    a tio:Site ;
+    tio:name "晶耀半導體Hub" .
+
+ex:Spoke1
+    a tio:Site ;
+    tio:name "Spoke1" .
+
+ex:Spoke2
+    a tio:Site ;
+    tio:name "Spoke2" .
+
+ex:Spoke3
+    a tio:Site ;
+    tio:name "Spoke3" .
+
+ex:PacketLossSLA_TC008
+    a tio:PropertyExpectation ;
+    tio:target ex:HubToSpokeTrafficSet_TC008 ;
+    tio:hasProperty ex:PacketLossProperty_TC008 ;
+    tio:hasCondition ex:PacketLossThreshold_TC008 ,
+                     ex:PacketLossComplianceWindow_TC008 .
+
+ex:HubToSpokeTrafficSet_TC008
+    a tio:TrafficAggregate ;
+    tio:from ex:JingyaoSemiconductorHub ;
+    tio:to ex:Spoke1 ,
+           ex:Spoke2 ,
+           ex:Spoke3 .
+
+ex:PacketLossProperty_TC008
+    a tio:PacketLossRatio .
+
+ex:PacketLossThreshold_TC008
+    a tio:LessThanCondition ;
+    tio:metric ex:PacketLossProperty_TC008 ;
+    tio:threshold "0.0001"^^xsd:decimal .
+
+ex:PacketLossComplianceWindow_TC008
+    a tio:PercentileCondition ;
+    tio:percent "99"^^xsd:decimal ;
+    tio:appliesTo ex:PacketLossProperty_TC008 .

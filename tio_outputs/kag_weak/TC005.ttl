@@ -1,0 +1,26 @@
+@prefix ex: <http://example.com/tio/TC005#> .
+@prefix tio: <http://example.com/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:EnterpriseVpnIntent_TC005 rdf:type tio:EnterpriseVpnHubSpokeSlaIntent ;
+    tio:hasEnterpriseName "晨星零售" ;
+    tio:hasTopology tio:HubAndSpokeTopology ;
+    tio:hasHub ex:Hub ;
+    tio:hasSpoke ex:AllSpokes ;
+    tio:hasSlaObjective ex:PacketLossObjective .
+
+ex:Hub rdf:type tio:VpnHub ;
+    tio:hasSiteName "晨星零售Hub" .
+
+ex:AllSpokes rdf:type tio:VpnSpokeGroup ;
+    tio:hasSiteName "各Spoke" .
+
+ex:PacketLossObjective rdf:type tio:PacketLossSlaObjective ;
+    tio:appliesBetween ex:Hub , ex:AllSpokes ;
+    tio:hasMetric tio:PacketLossRate ;
+    tio:hasComparator tio:LessThan ;
+    tio:hasThreshold "0.05"^^xsd:decimal ;
+    tio:hasUnit tio:Percent ;
+    tio:hasCompliancePercentage "99"^^xsd:decimal ;
+    tio:hasComplianceUnit tio:PercentOfTime .

@@ -1,0 +1,38 @@
+@prefix ex: <http://example.org/tio-instance/tc019/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC019 rdf:type tio:Intent ;
+    tio:hasServiceTopology ex:topology-TC019 ;
+    tio:hasExpectation ex:expectation-latency-TC019 .
+
+ex:topology-TC019 rdf:type tio:EnterpriseVpnHubAndSpokeTopology ;
+    tio:hasHubSite ex:site-headquarters ;
+    tio:hasSpokeSite ex:site-branch-all ;
+    tio:connectsTrafficClass ex:traffic-security-monitoring .
+
+ex:site-headquarters rdf:type tio:HubSite .
+
+ex:site-branch-all rdf:type tio:AllSpokeSites .
+
+ex:traffic-security-monitoring rdf:type tio:TrafficClass .
+
+ex:expectation-latency-TC019 rdf:type tio:ServiceLevelExpectation ;
+    tio:appliesToTrafficClass ex:traffic-security-monitoring ;
+    tio:appliesFromSite ex:site-headquarters ;
+    tio:appliesToSite ex:site-branch-all ;
+    tio:hasMetric ex:metric-one-way-latency ;
+    tio:hasPercentile ex:percentile-95 ;
+    tio:hasThreshold ex:threshold-40ms ;
+    tio:hasComparisonOperator tio:LessThan .
+
+ex:metric-one-way-latency rdf:type tio:LatencyMetric .
+
+ex:percentile-95 rdf:type tio:Percentile ;
+    tio:percentileValue "95"^^xsd:decimal ;
+    tio:percentileUnit tio:Percent .
+
+ex:threshold-40ms rdf:type tio:Threshold ;
+    tio:thresholdValue "40"^^xsd:decimal ;
+    tio:thresholdUnit tio:Millisecond .

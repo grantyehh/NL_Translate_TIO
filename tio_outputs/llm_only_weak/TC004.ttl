@@ -1,0 +1,60 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v1/> .
+@prefix ex: <http://example.org/tio-instance/tc004/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-tc004
+    rdf:type tio:Intent ;
+    tio:hasExpectation ex:expectation-latency-tc004 ;
+    tio:hasTarget ex:vpn-service-tc004 .
+
+ex:vpn-service-tc004
+    rdf:type tio:Service ;
+    tio:hasTopology ex:hub-spoke-topology-tc004 ;
+    tio:hasEndpoint ex:hub-site-taipei-medical-cloud-center ,
+                    ex:all-branch-sites .
+
+ex:hub-spoke-topology-tc004
+    rdf:type tio:HubSpokeTopology .
+
+ex:hub-site-taipei-medical-cloud-center
+    rdf:type tio:Site ;
+    tio:name "康健醫療台北醫療雲中心"^^xsd:string ;
+    tio:role "hub"^^xsd:string .
+
+ex:all-branch-sites
+    rdf:type tio:SiteGroup ;
+    tio:name "所有院區分點"^^xsd:string ;
+    tio:role "spokes"^^xsd:string .
+
+ex:expectation-latency-tc004
+    rdf:type tio:Expectation ;
+    tio:appliesTo ex:hub-to-spokes-connectivity-tc004 ;
+    tio:hasDeliveryType ex:delivery-type-assured ;
+    tio:hasPropertyConstraint ex:latency-constraint-tc004 .
+
+ex:hub-to-spokes-connectivity-tc004
+    rdf:type tio:Connectivity ;
+    tio:source ex:hub-site-taipei-medical-cloud-center ;
+    tio:destination ex:all-branch-sites .
+
+ex:delivery-type-assured
+    rdf:type tio:DeliveryType ;
+    tio:name "assured"^^xsd:string .
+
+ex:latency-constraint-tc004
+    rdf:type tio:PropertyConstraint ;
+    tio:constrainsProperty ex:one-way-latency-metric-tc004 ;
+    tio:hasOperator tio:LessThan ;
+    tio:hasValue "30"^^xsd:decimal ;
+    tio:hasUnit "ms"^^xsd:string ;
+    tio:hasPercentile "95"^^xsd:decimal ;
+    tio:hasObservationWindow ex:time-coverage-tc004 .
+
+ex:one-way-latency-metric-tc004
+    rdf:type tio:Metric ;
+    tio:name "latency"^^xsd:string .
+
+ex:time-coverage-tc004
+    rdf:type tio:ObservationWindow ;
+    tio:coveragePercentage "95"^^xsd:decimal .

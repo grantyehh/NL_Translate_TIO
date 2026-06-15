@@ -1,0 +1,31 @@
+@prefix ex: <http://example.com/intent/TC012#> .
+@prefix tio: <http://example.com/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent1 rdf:type tio:Intent ;
+    tio:targets ex:vpnService1 ;
+    tio:hasRequirement ex:req1 .
+
+ex:vpnService1 rdf:type tio:EnterpriseVpnService ;
+    tio:topology tio:HubAndSpoke ;
+    tio:hasHub ex:siteHQ ;
+    tio:hasSpoke ex:siteHualienServiceCenter .
+
+ex:siteHQ rdf:type tio:Site ;
+    tio:siteName "藍海保險總部" .
+
+ex:siteHualienServiceCenter rdf:type tio:Site ;
+    tio:siteName "花蓮服務中心" .
+
+ex:req1 rdf:type tio:SlaRequirement ;
+    tio:appliesTo ex:path1 ;
+    tio:hasMetric ex:bandwidthMetric1 .
+
+ex:path1 rdf:type tio:TrafficPath ;
+    tio:source ex:siteHQ ;
+    tio:destination ex:siteHualienServiceCenter .
+
+ex:bandwidthMetric1 rdf:type tio:GuaranteedBandwidth ;
+    tio:metricValue "150"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    tio:unit "Mbps" ;
+    tio:comparisonOperator tio:AtLeast .

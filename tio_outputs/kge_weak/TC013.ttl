@@ -1,0 +1,52 @@
+@prefix ex: <http://example.org/tio-instance/tc013/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+
+ex:intent-tc013 a tio:Intent ;
+    tio:targets ex:vpn-service-tc013 ;
+    tio:hasExpectation ex:expectation-tc013 .
+
+ex:vpn-service-tc013 a tio:EnterpriseVPNService ,
+        tio:HubSpokeVPNService ;
+    tio:hasTopology ex:topology-tc013 ;
+    tio:hasHubSite ex:site-headquarters ;
+    tio:hasSpokeSite ex:site-all-branches .
+
+ex:topology-tc013 a tio:HubSpokeTopology .
+
+ex:site-headquarters a tio:Site ;
+    rdfs:label "雲端教育總部"@zh .
+
+ex:site-all-branches a tio:SiteGroup ;
+    rdfs:label "所有校區分點"@zh .
+
+ex:expectation-tc013 a tio:ServiceLevelExpectation ;
+    tio:appliesTo ex:traffic-scope-tc013 ;
+    tio:hasConstraint ex:constraint-tc013 .
+
+ex:traffic-scope-tc013 a tio:TrafficScope ;
+    tio:sourceSite ex:site-headquarters ;
+    tio:destinationSiteGroup ex:site-all-branches .
+
+ex:constraint-tc013 a evsla:SLAConstraint ;
+    evsla:hasMetric ex:latency-metric-tc013 ;
+    evsla:hasComparator evsla:LessThan ;
+    evsla:hasThreshold [
+        a evsla:Threshold ;
+        evsla:thresholdValue "60"^^xsd:decimal ;
+        evsla:thresholdUnit "ms"
+    ] ;
+    evsla:hasStatistic ex:percentile-95 ;
+    evsla:hasComplianceCondition ex:time-compliance-tc013 .
+
+ex:latency-metric-tc013 a evsla:LatencyMetric .
+
+ex:percentile-95 a evsla:PercentileStatistic ;
+    evsla:percentileValue "95"^^xsd:decimal .
+
+ex:time-compliance-tc013 a evsla:TimeComplianceCondition ;
+    evsla:timeCoverage "95"^^xsd:decimal ;
+    evsla:timeCoverageUnit "percent-of-time" .

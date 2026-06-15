@@ -1,0 +1,70 @@
+@prefix ex: <http://example.org/tio-instance/tc008/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v1.0.0#> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla/v1.0.0#> .
+
+ex:intent-TC008
+    a tio:Intent ;
+    rdfs:label "TC008 Enterprise VPN hub-and-spoke packet loss SLA intent" ;
+    tio:hasExpectation ex:expectation-TC008 .
+
+ex:expectation-TC008
+    a evsla:ServiceLevelExpectation ;
+    evsla:appliesTo ex:service-TC008 ;
+    evsla:hasObjective ex:objective-TC008 .
+
+ex:service-TC008
+    a evsla:EnterpriseVPNService ;
+    rdfs:label "晶耀半導體 Enterprise VPN Hub-and-Spoke Service" ;
+    evsla:topology evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:site-hub ;
+    evsla:hasSpoke ex:site-spoke-1 ,
+                    ex:site-spoke-2 ,
+                    ex:site-spoke-3 .
+
+ex:site-hub
+    a evsla:HubSite ;
+    rdfs:label "晶耀半導體 Hub" .
+
+ex:site-spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "Spoke 1" .
+
+ex:site-spoke-2
+    a evsla:SpokeSite ;
+    rdfs:label "Spoke 2" .
+
+ex:site-spoke-3
+    a evsla:SpokeSite ;
+    rdfs:label "Spoke 3" .
+
+ex:objective-TC008
+    a evsla:ServiceLevelObjective ;
+    evsla:metric evsla:PacketLossRatio ;
+    evsla:statistic evsla:Percentile ;
+    evsla:percentile "99"^^xsd:decimal ;
+    evsla:scope evsla:PerHubToEachSpokePath ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:comparisonOperator evsla:LessThan ;
+    evsla:targetValue "0.0001"^^xsd:decimal ;
+    evsla:unit evsla:Ratio ;
+    evsla:appliesToPath ex:path-hub-spoke-1 ,
+                        ex:path-hub-spoke-2 ,
+                        ex:path-hub-spoke-3 .
+
+ex:path-hub-spoke-1
+    a evsla:HubToSpokePath ;
+    evsla:fromSite ex:site-hub ;
+    evsla:toSite ex:site-spoke-1 .
+
+ex:path-hub-spoke-2
+    a evsla:HubToSpokePath ;
+    evsla:fromSite ex:site-hub ;
+    evsla:toSite ex:site-spoke-2 .
+
+ex:path-hub-spoke-3
+    a evsla:HubToSpokePath ;
+    evsla:fromSite ex:site-hub ;
+    evsla:toSite ex:site-spoke-3 .

@@ -1,0 +1,52 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix ex: <http://example.org/tio-instance/tc014/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-tc014
+    a tio:Intent ;
+    tio:hasExpectation ex:expectation-tc014 .
+
+ex:expectation-tc014
+    a tio:Expectation ;
+    tio:target ex:vpn-service-tc014 ;
+    tio:deliveryType tio:DeliveryTypeValueConnectivity ;
+    tio:parameter ex:packet-loss-parameter-tc014 .
+
+ex:vpn-service-tc014
+    a tio:ConnectivityService ;
+    tio:hasTopology ex:hub-spoke-topology-tc014 .
+
+ex:hub-spoke-topology-tc014
+    a tio:HubAndSpokeTopology ;
+    tio:hasHub ex:site-hub-joint-media ;
+    tio:hasSpoke ex:site-spoke-1, ex:site-spoke-2, ex:site-spoke-3 .
+
+ex:site-hub-joint-media
+    a tio:Site ;
+    tio:name "聯合媒體Hub" .
+
+ex:site-spoke-1
+    a tio:Site ;
+    tio:name "Spoke-1" .
+
+ex:site-spoke-2
+    a tio:Site ;
+    tio:name "Spoke-2" .
+
+ex:site-spoke-3
+    a tio:Site ;
+    tio:name "Spoke-3" .
+
+ex:packet-loss-parameter-tc014
+    a tio:Parameter ;
+    tio:parameterName "packetLossRate" ;
+    tio:appliesTo ex:hub-to-spokes-scope-tc014 ;
+    tio:operator tio:LessThan ;
+    tio:value "0.0005"^^xsd:decimal ;
+    tio:unit "ratio" ;
+    tio:percentile "99"^^xsd:decimal .
+
+ex:hub-to-spokes-scope-tc014
+    a tio:ConnectionScope ;
+    tio:source ex:site-hub-joint-media ;
+    tio:destination ex:site-spoke-1, ex:site-spoke-2, ex:site-spoke-3 .

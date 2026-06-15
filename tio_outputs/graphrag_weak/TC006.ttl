@@ -1,0 +1,51 @@
+@prefix ex: <http://example.org/tio-instance/tc006/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-tc006
+    a tio:Intent ;
+    rdfs:label "TC006 Enterprise VPN hub-and-spoke SLA intent"@en ;
+    tio:hasService ex:service-tc006 ;
+    tio:hasExpectation ex:expectation-bandwidth-tc006 .
+
+ex:service-tc006
+    a evsla:EnterpriseVPNService ;
+    rdfs:label "北辰證券總部至台中交易室企業 VPN 服務"@zh-Hant ;
+    evsla:topology evsla:HubAndSpoke ;
+    evsla:hasHubSite ex:site-hq ;
+    evsla:hasSpokeSite ex:site-taichung-trading-room .
+
+ex:site-hq
+    a evsla:Site ;
+    rdfs:label "北辰證券總部"@zh-Hant .
+
+ex:site-taichung-trading-room
+    a evsla:Site ;
+    rdfs:label "台中交易室"@zh-Hant .
+
+ex:expectation-bandwidth-tc006
+    a tio:Expectation ;
+    tio:target ex:service-tc006 ;
+    tio:hasCondition ex:condition-bandwidth-tc006 .
+
+ex:condition-bandwidth-tc006
+    a tio:Condition ;
+    tio:metric evsla:GuaranteedBandwidth ;
+    tio:scope ex:scope-hq-to-taichung ;
+    tio:comparisonOperator tio:GreaterThanOrEqual ;
+    tio:threshold ex:bandwidth-threshold-500m ;
+    tio:measurementMethod evsla:CommittedInformationRate ;
+    tio:statistic tio:Minimum .
+
+ex:scope-hq-to-taichung
+    a tio:Scope ;
+    evsla:sourceSite ex:site-hq ;
+    evsla:destinationSite ex:site-taichung-trading-room .
+
+ex:bandwidth-threshold-500m
+    a tio:QuantitativeValue ;
+    tio:value "500"^^xsd:decimal ;
+    tio:unit "Mbps" .

@@ -1,0 +1,52 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v1.0.0#> .
+@prefix ex: <http://example.org/tio-instance/tc013/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v1.0.0/icm#> .
+@prefix cat: <http://tio.models.tmforum.org/tio/v1.0.0/catalog#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-TC013
+    a tio:Intent ;
+    tio:hasExpectation ex:expectation-latency-TC013 ;
+    tio:targets ex:vpn-service-TC013 .
+
+ex:vpn-service-TC013
+    a icm:VPNService ;
+    tio:hasTopology ex:hubspoke-topology-TC013 ;
+    tio:hasEndpoint ex:site-headquarters-TC013 ,
+                    ex:site-branch-set-TC013 .
+
+ex:hubspoke-topology-TC013
+    a icm:HubSpokeTopology .
+
+ex:site-headquarters-TC013
+    a icm:HubSite ;
+    tio:role "headquarters"^^xsd:string ;
+    tio:identifier "cloud-education-headquarters"^^xsd:string .
+
+ex:site-branch-set-TC013
+    a icm:SpokeSiteGroup ;
+    tio:role "campus-branches"^^xsd:string ;
+    tio:identifier "all-campus-branches"^^xsd:string .
+
+ex:expectation-latency-TC013
+    a tio:Expectation ;
+    tio:hasTarget ex:latency-observable-TC013 ;
+    tio:hasCondition ex:latency-condition-TC013 .
+
+ex:latency-observable-TC013
+    a icm:OneWayLatency ;
+    tio:appliesTo ex:traffic-scope-TC013 .
+
+ex:traffic-scope-TC013
+    a icm:TrafficScope ;
+    tio:source ex:site-headquarters-TC013 ;
+    tio:destination ex:site-branch-set-TC013 .
+
+ex:latency-condition-TC013
+    a tio:Condition ;
+    tio:operator cat:lessThan ;
+    tio:value "60"^^xsd:decimal ;
+    tio:unit "ms"^^xsd:string ;
+    tio:percentile "95"^^xsd:decimal ;
+    tio:measurementWindow "PT1H"^^xsd:duration .

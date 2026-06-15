@@ -1,0 +1,20 @@
+@prefix tio: <https://example.com/tio#> .
+@prefix ex: <https://example.com/tio/TC015#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent1 rdf:type tio:Intent ;
+    tio:hasServiceType tio:EnterpriseVpnHubSpoke ;
+    tio:hasTopology tio:HubAndSpoke ;
+    tio:hasEndpoint ex:site_hq , ex:site_hangar ;
+    tio:hasTrafficPolicy ex:sla1 .
+
+ex:site_hq rdf:type tio:Site ;
+    tio:siteName "亞洲航空維修總部" .
+
+ex:site_hangar rdf:type tio:Site ;
+    tio:siteName "小港機棚" .
+
+ex:sla1 rdf:type tio:ServiceLevelAgreement ;
+    tio:appliesTo ex:site_hq , ex:site_hangar ;
+    tio:guaranteedBandwidthMbps "300"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    tio:bandwidthConstraint tio:AtLeast .

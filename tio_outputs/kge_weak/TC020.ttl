@@ -1,0 +1,84 @@
+@prefix ex: <http://example.org/tio-instance/tc020/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0/> .
+@prefix evsla: <https://w3id.org/evoas/evaluated-sla#> .
+@prefix icm: <https://tio.models.tmforum.org/tio/v3.6.0/icm/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intentTC020 a tio:Intent ;
+  tio:hasExpectation ex:deliveryExpectationTC020 .
+
+ex:deliveryExpectationTC020 a tio:DeliveryExpectation ;
+  tio:target ex:vpnServiceTC020 ;
+  tio:params ex:latencyConditionTC020 ,
+             ex:packetLossConditionTC020 .
+
+ex:vpnServiceTC020 a tio:Service ;
+  tio:serviceType "EnterpriseVPNHubSpoke"^^xsd:string ;
+  tio:hasTopology ex:hubSpokeTopologyTC020 .
+
+ex:hubSpokeTopologyTC020 a tio:Topology ;
+  tio:hasNode ex:hubTaipeiHQ ,
+              ex:spokeHsinchuLab ,
+              ex:spokeTainanPlant ;
+  tio:hasLink ex:hubToHsinchuLink ,
+              ex:hubToTainanLink .
+
+ex:hubTaipeiHQ a tio:Node ;
+  tio:role "Hub"^^xsd:string ;
+  tio:name "精準醫材台北研發總部"^^xsd:string .
+
+ex:spokeHsinchuLab a tio:Node ;
+  tio:role "Spoke"^^xsd:string ;
+  tio:name "竹北實驗室"^^xsd:string .
+
+ex:spokeTainanPlant a tio:Node ;
+  tio:role "Spoke"^^xsd:string ;
+  tio:name "台南製造廠"^^xsd:string .
+
+ex:hubToHsinchuLink a tio:Connection ;
+  tio:source ex:hubTaipeiHQ ;
+  tio:destination ex:spokeHsinchuLab .
+
+ex:hubToTainanLink a tio:Connection ;
+  tio:source ex:hubTaipeiHQ ;
+  tio:destination ex:spokeTainanPlant .
+
+ex:latencyConditionTC020 a evsla:ServiceLevelObjective ;
+  evsla:appliesTo ex:hubToHsinchuLink ,
+                  ex:hubToTainanLink ;
+  evsla:hasMetric ex:latencyMetricTC020 ;
+  evsla:hasThreshold ex:latencyThresholdTC020 ;
+  evsla:hasEvaluationWindow ex:latencyWindowTC020 .
+
+ex:latencyMetricTC020 a evsla:Metric ;
+  evsla:metricName "one-way latency"^^xsd:string ;
+  evsla:unit "ms"^^xsd:string ;
+  evsla:measurementScope evsla:PerConnection ;
+  evsla:measurementMethod evsla:Observed .
+
+ex:latencyThresholdTC020 a evsla:Threshold ;
+  evsla:comparisonOperator evsla:LessThan ;
+  evsla:thresholdValue "35"^^xsd:decimal .
+
+ex:latencyWindowTC020 a evsla:StatisticalWindow ;
+  evsla:percentile "95"^^xsd:decimal .
+
+ex:packetLossConditionTC020 a evsla:ServiceLevelObjective ;
+  evsla:appliesTo ex:hubToHsinchuLink ,
+                  ex:hubToTainanLink ;
+  evsla:hasMetric ex:packetLossMetricTC020 ;
+  evsla:hasThreshold ex:packetLossThresholdTC020 ;
+  evsla:hasEvaluationWindow ex:packetLossWindowTC020 .
+
+ex:packetLossMetricTC020 a evsla:Metric ;
+  evsla:metricName "packet loss ratio"^^xsd:string ;
+  evsla:unit "percent"^^xsd:string ;
+  evsla:measurementScope evsla:PerConnection ;
+  evsla:measurementMethod evsla:Observed .
+
+ex:packetLossThresholdTC020 a evsla:Threshold ;
+  evsla:comparisonOperator evsla:LessThan ;
+  evsla:thresholdValue "0.05"^^xsd:decimal .
+
+ex:packetLossWindowTC020 a evsla:StatisticalWindow ;
+  evsla:percentile "99"^^xsd:decimal .

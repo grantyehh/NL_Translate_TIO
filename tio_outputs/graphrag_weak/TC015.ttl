@@ -1,0 +1,39 @@
+@prefix ex: <http://example.org/tio-instance/tc015/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-tc015
+    rdf:type tio:Intent ;
+    tio:hasService ex:service-tc015 .
+
+ex:service-tc015
+    rdf:type evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubSpoke ;
+    evsla:hasHubSite ex:site-asia-aircraft-maintenance-hq ;
+    evsla:hasSpokeSite ex:site-xiaogang-hangar ;
+    evsla:hasSLA ex:sla-tc015 .
+
+ex:site-asia-aircraft-maintenance-hq
+    rdf:type evsla:ServiceSite .
+
+ex:site-xiaogang-hangar
+    rdf:type evsla:ServiceSite .
+
+ex:sla-tc015
+    rdf:type evsla:SLA ;
+    evsla:hasMetric ex:metric-guaranteed-bandwidth-tc015 .
+
+ex:metric-guaranteed-bandwidth-tc015
+    rdf:type evsla:BandwidthMetric ;
+    evsla:metricName evsla:GuaranteedBandwidth ;
+    evsla:hasStatistic evsla:Minimum ;
+    evsla:hasScope evsla:EndToEnd ;
+    evsla:hasMeasurementMethod evsla:CommittedRate ;
+    evsla:hasUnit evsla:Mbps ;
+    evsla:hasThreshold ex:threshold-guaranteed-bandwidth-tc015 .
+
+ex:threshold-guaranteed-bandwidth-tc015
+    rdf:type evsla:Threshold ;
+    evsla:comparisonOperator evsla:GreaterThanOrEqual ;
+    evsla:value "300"^^<http://www.w3.org/2001/XMLSchema#decimal> .

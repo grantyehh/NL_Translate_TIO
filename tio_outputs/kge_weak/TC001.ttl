@@ -1,0 +1,60 @@
+@prefix ex: <http://example.org/tio-instance/tc001/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla#> .
+@prefix icm: <https://tio.models.tmforum.org/icm#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent-TC001
+    a tio:Intent ;
+    rdfs:comment "Ensure latency from Galaxy Bank headquarters to all branches is below 50 ms for 95% of the time." ;
+    tio:target ex:hubSite, ex:allBranchSites ;
+    tio:expectation ex:deliveryExpectation-TC001 .
+
+ex:deliveryExpectation-TC001
+    a tio:DeliveryExpectation ;
+    tio:target ex:vpnService-TC001 ;
+    tio:requirement ex:latencyRequirement-TC001 .
+
+ex:vpnService-TC001
+    a evsla:EnterpriseVirtualPrivateNetwork ;
+    rdfs:comment "Enterprise VPN hub-and-spoke service for Galaxy Bank." ;
+    evsla:hasTopology evsla:HubAndSpokeTopology ;
+    evsla:hasHubSite ex:hubSite ;
+    evsla:hasSpokeSite ex:allBranchSites .
+
+ex:hubSite
+    a evsla:Site ;
+    rdfs:comment "Galaxy Bank headquarters." .
+
+ex:allBranchSites
+    a evsla:SiteGroup ;
+    rdfs:comment "All branch sites of Galaxy Bank." .
+
+ex:latencyRequirement-TC001
+    a evsla:SLARequirement ;
+    evsla:appliesTo ex:hubToBranchesFlow ;
+    evsla:hasMetric ex:latencyMetric-TC001 ;
+    evsla:hasObjective ex:latencyObjective-TC001 .
+
+ex:hubToBranchesFlow
+    a evsla:TrafficFlow ;
+    evsla:source ex:hubSite ;
+    evsla:destination ex:allBranchSites .
+
+ex:latencyMetric-TC001
+    a evsla:OneWayLatencyMetric ;
+    evsla:hasStatistic evsla:Percentile95 ;
+    evsla:hasThreshold ex:latencyThreshold-TC001 ;
+    evsla:hasUnit evsla:Millisecond ;
+    evsla:hasScope evsla:PerSpokeSite ;
+    evsla:hasMethod evsla:ObservedOverTime .
+
+ex:latencyThreshold-TC001
+    a evsla:Threshold ;
+    evsla:operator evsla:LessThan ;
+    evsla:value "50"^^icm:decimal .
+
+ex:latencyObjective-TC001
+    a evsla:SLAObjective ;
+    evsla:compliancePercentage "95"^^icm:decimal ;
+    evsla:measurementWindow evsla:ServiceTime .

@@ -1,0 +1,76 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix ex: <http://example.org/tio-instance/tc005/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:EnterpriseVPNIntent_TC005
+    rdf:type tio:Intent ;
+    tio:hasExpectation ex:ConnectivityExpectation_TC005 ,
+                       ex:PacketLossSLAExpectation_TC005 .
+
+ex:ConnectivityExpectation_TC005
+    rdf:type tio:DeliveryExpectation ;
+    tio:target ex:MorningStarRetailVPN_TC005 ;
+    tio:deliveryType ex:HubAndSpokeTopology_TC005 .
+
+ex:MorningStarRetailVPN_TC005
+    rdf:type tio:Service ;
+    tio:serviceName "晨星零售 Enterprise VPN"^^xsd:string ;
+    tio:hasTopology ex:HubAndSpokeTopology_TC005 ;
+    tio:hasEndpoint ex:HubSite_TC005 ,
+                    ex:SpokeSite1_TC005 ,
+                    ex:SpokeSite2_TC005 ,
+                    ex:SpokeSite3_TC005 .
+
+ex:HubAndSpokeTopology_TC005
+    rdf:type tio:Topology ;
+    tio:topologyType "hub-and-spoke"^^xsd:string ;
+    tio:hasHub ex:HubSite_TC005 ;
+    tio:hasSpoke ex:SpokeSite1_TC005 ,
+                 ex:SpokeSite2_TC005 ,
+                 ex:SpokeSite3_TC005 .
+
+ex:HubSite_TC005
+    rdf:type tio:ServiceEndpoint ;
+    tio:endpointRole "hub"^^xsd:string ;
+    tio:name "晨星零售Hub"^^xsd:string .
+
+ex:SpokeSite1_TC005
+    rdf:type tio:ServiceEndpoint ;
+    tio:endpointRole "spoke"^^xsd:string ;
+    tio:name "Spoke-1"^^xsd:string .
+
+ex:SpokeSite2_TC005
+    rdf:type tio:ServiceEndpoint ;
+    tio:endpointRole "spoke"^^xsd:string ;
+    tio:name "Spoke-2"^^xsd:string .
+
+ex:SpokeSite3_TC005
+    rdf:type tio:ServiceEndpoint ;
+    tio:endpointRole "spoke"^^xsd:string ;
+    tio:name "Spoke-3"^^xsd:string .
+
+ex:PacketLossSLAExpectation_TC005
+    rdf:type tio:PropertyExpectation ;
+    tio:target ex:HubToSpokeAggregate_TC005 ;
+    tio:propertyType ex:PacketLossRate_TC005 ;
+    tio:comparisonOperator tio:LessThan ;
+    tio:targetValue "0.0005"^^xsd:decimal ;
+    tio:targetUnit "ratio"^^xsd:string ;
+    tio:applicability ex:HubToEachSpokeScope_TC005 ;
+    tio:percentile "99"^^xsd:decimal .
+
+ex:HubToSpokeAggregate_TC005
+    rdf:type tio:ConnectivityService ;
+    tio:from ex:HubSite_TC005 ;
+    tio:to ex:SpokeSite1_TC005 ,
+           ex:SpokeSite2_TC005 ,
+           ex:SpokeSite3_TC005 .
+
+ex:PacketLossRate_TC005
+    rdf:type tio:ServiceProperty ;
+    tio:name "packet loss rate"^^xsd:string .
+
+ex:HubToEachSpokeScope_TC005
+    rdf:type tio:Scope ;
+    tio:scopeType "hub-to-each-spoke"^^xsd:string .

@@ -1,0 +1,22 @@
+@prefix tio: <https://example.org/tio#> .
+@prefix ex: <https://example.org/testcases/TC019#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 rdf:type tio:EnterpriseVpnHubAndSpokeSlaIntent ;
+    tio:hasTopologyType tio:HubAndSpoke ;
+    tio:hasTrafficType tio:SecurityMonitoringTraffic ;
+    tio:hasHub ex:headquarters ;
+    tio:hasSpokeScope tio:AllBranches ;
+    tio:hasSla ex:latencySla1 .
+
+ex:headquarters rdf:type tio:HeadquartersSite .
+
+ex:latencySla1 rdf:type tio:LatencySla ;
+    tio:appliesFrom ex:headquarters ;
+    tio:appliesToScope tio:AllBranches ;
+    tio:hasMetric tio:OneWayLatency ;
+    tio:hasThresholdValue "40"^^xsd:decimal ;
+    tio:hasThresholdUnit tio:Millisecond ;
+    tio:hasPercentile "95"^^xsd:decimal ;
+    tio:hasComparisonOperator tio:LessThan .

@@ -1,0 +1,28 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix ex: <http://example.org/tio-instance/tc016/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent a tio:Intent ;
+    tio:hasExpectation ex:deliveryExpectation .
+
+ex:deliveryExpectation a tio:DeliveryExpectation ;
+    tio:target ex:vpnService ;
+    tio:deliveryType tio:PointToMultiPointConnectivity ;
+    tio:source ex:hubSite ;
+    tio:destination ex:allSpokes ;
+    tio:parameter ex:latencyParameter .
+
+ex:vpnService a tio:Service .
+
+ex:hubSite a tio:Endpoint ;
+    tio:name "智慧農業Hub" .
+
+ex:allSpokes a tio:EndpointGroup ;
+    tio:name "所有Spoke" .
+
+ex:latencyParameter a tio:QoSParameter ;
+    tio:metric tio:Latency ;
+    tio:operator tio:LessThan ;
+    tio:value "100"^^xsd:decimal ;
+    tio:unit "ms" ;
+    tio:percentile "95"^^xsd:decimal .

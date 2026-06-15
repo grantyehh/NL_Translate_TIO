@@ -1,0 +1,54 @@
+@prefix ex: <http://example.org/tio-instance/tc014/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0/> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla/v1.0.0/> .
+@prefix icm: <https://tio.models.tmforum.org/icm/v1.0.0/> .
+@prefix cat: <https://tio.models.tmforum.org/tio/v3.6.0/catalog#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent a tio:Intent ;
+    tio:target ex:enterpriseVpnService ;
+    tio:expectation ex:packetLossExpectation .
+
+ex:enterpriseVpnService a evsla:EnterpriseVirtualPrivateNetworkService ;
+    tio:serviceType cat:EVPNHubAndSpoke ;
+    evsla:hasHubSite ex:hubSite ;
+    evsla:hasSpokeSite ex:spokeSite1 ,
+                       ex:spokeSite2 ,
+                       ex:spokeSite3 .
+
+ex:hubSite a evsla:HubSite .
+
+ex:spokeSite1 a evsla:SpokeSite .
+ex:spokeSite2 a evsla:SpokeSite .
+ex:spokeSite3 a evsla:SpokeSite .
+
+ex:packetLossExpectation a tio:Expectation ;
+    tio:target ex:hubToSpokesConnectivity ;
+    tio:parameter ex:packetLossParameter .
+
+ex:hubToSpokesConnectivity a evsla:HubToSpokesConnectivity ;
+    evsla:fromSite ex:hubSite ;
+    evsla:toSite ex:spokeSite1 ,
+                  ex:spokeSite2 ,
+                  ex:spokeSite3 .
+
+ex:packetLossParameter a tio:Parameter ;
+    tio:metric ex:packetLossMetric ;
+    tio:condition ex:packetLossCondition .
+
+ex:packetLossMetric a tio:Metric ;
+    tio:metricType evsla:PacketLossRatio ;
+    tio:scope evsla:OneWayBetweenHubAndEachSpoke ;
+    tio:measurementMethod evsla:Observed .
+
+ex:packetLossCondition a tio:Condition ;
+    tio:operator tio:LessThan ;
+    tio:value "0.0005"^^xsd:decimal ;
+    tio:unit evsla:Ratio ;
+    tio:statistic ex:percentile99Time .
+
+ex:percentile99Time a tio:Statistic ;
+    tio:statisticType evsla:PercentileTime ;
+    tio:value "99"^^xsd:decimal ;
+    tio:unit evsla:Percent .

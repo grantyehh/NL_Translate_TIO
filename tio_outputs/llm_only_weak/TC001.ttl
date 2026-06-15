@@ -1,0 +1,38 @@
+@prefix ex: <http://example.org/tio-instance/tc001/> .
+@prefix tio: <http://example.org/tio/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 rdf:type tio:Intent ;
+    tio:targets ex:vpnService1 ;
+    tio:hasExpectation ex:expectation1 .
+
+ex:vpnService1 rdf:type tio:EnterpriseVPNService ;
+    tio:hasTopology tio:HubAndSpokeTopology ;
+    tio:hasHub ex:site_hq ;
+    tio:hasSpoke ex:site_branch_set .
+
+ex:site_hq rdf:type tio:HeadquartersSite ;
+    tio:siteName "星河銀行總部"@zh .
+
+ex:site_branch_set rdf:type tio:BranchSiteGroup ;
+    tio:groupScope tio:AllBranches ;
+    tio:memberRole tio:SpokeSite .
+
+ex:expectation1 rdf:type tio:SLAExpectation ;
+    tio:appliesTo ex:trafficScope1 ;
+    tio:hasMetric ex:latencyMetric1 ;
+    tio:hasCondition ex:condition1 .
+
+ex:trafficScope1 rdf:type tio:TrafficScope ;
+    tio:sourceSite ex:site_hq ;
+    tio:destinationGroup ex:site_branch_set ;
+    tio:pathRelation tio:HubToAllSpokes .
+
+ex:latencyMetric1 rdf:type tio:OneWayLatencyMetric ;
+    tio:maximumValue "50"^^xsd:decimal ;
+    tio:unit "ms" .
+
+ex:condition1 rdf:type tio:PercentileCondition ;
+    tio:percentile "95"^^xsd:decimal ;
+    tio:comparisonOperator tio:LessThan .

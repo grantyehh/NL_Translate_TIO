@@ -1,0 +1,44 @@
+@prefix ex: <http://example.org/tio-instance/tc016/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla#> .
+@prefix icm: <https://tio.models.tmforum.org/icm#> .
+@prefix cat: <http://www.w3.org/ns/dcat#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent a tio:Intent ;
+    tio:target ex:enterpriseVPNService ;
+    tio:expectation ex:latencyExpectation .
+
+ex:enterpriseVPNService a evsla:EnterpriseVirtualPrivateNetworkService ;
+    cat:id "TC016-service" ;
+    evsla:hasTopology evsla:HubAndSpokeTopology ;
+    evsla:hasHubSite ex:smartAgricultureHub ;
+    evsla:hasSpokeSite ex:allSpokes .
+
+ex:smartAgricultureHub a evsla:Site ;
+    cat:id "smart-agriculture-hub" .
+
+ex:allSpokes a evsla:SiteGroup ;
+    cat:id "all-spokes" .
+
+ex:latencyExpectation a tio:DeliveryExpectation ;
+    tio:target ex:enterpriseVPNService ;
+    tio:parameter ex:latencyParameter .
+
+ex:latencyParameter a evsla:LatencyMetric ;
+    evsla:appliesTo ex:hubToAllSpokesConnection ;
+    evsla:statistic evsla:Percentile95 ;
+    evsla:comparisonOperator evsla:LessThan ;
+    evsla:threshold ex:latencyThreshold .
+
+ex:hubToAllSpokesConnection a evsla:TrafficScope ;
+    evsla:sourceSite ex:smartAgricultureHub ;
+    evsla:destinationSiteGroup ex:allSpokes .
+
+ex:latencyThreshold a evsla:MetricThreshold ;
+    evsla:value "100"^^xsd:decimal ;
+    evsla:unit "ms" ;
+    evsla:timeCoverage ex:coverage95Percent .
+
+ex:coverage95Percent a evsla:TimeCoverage ;
+    evsla:percentage "95"^^xsd:decimal .

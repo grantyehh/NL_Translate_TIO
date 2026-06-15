@@ -1,0 +1,32 @@
+@prefix ex: <http://example.org/tio-instance/tc009/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC009 a tio:Intent ;
+    tio:hasService ex:service-TC009 .
+
+ex:service-TC009 a tio:EnterpriseVPNService ;
+    tio:serviceTopology tio:HubSpoke ;
+    tio:hasHubSite ex:site-headquarters ;
+    tio:hasSpokeSite ex:site-changbin-windfarm ;
+    tio:hasSLA ex:sla-TC009 .
+
+ex:site-headquarters a tio:Site ;
+    tio:siteName "綠能電力總部" .
+
+ex:site-changbin-windfarm a tio:Site ;
+    tio:siteName "彰濱風場" .
+
+ex:sla-TC009 a evsla:ServiceLevelAgreement ;
+    evsla:hasObjective ex:slo-bandwidth-TC009 .
+
+ex:slo-bandwidth-TC009 a evsla:ServiceLevelObjective ;
+    evsla:metric evsla:Bandwidth ;
+    evsla:statistic evsla:Minimum ;
+    evsla:scope evsla:EndToEnd ;
+    evsla:comparisonOperator evsla:GreaterThanOrEqual ;
+    evsla:targetValue "200"^^xsd:decimal ;
+    evsla:unit "Mbps" ;
+    evsla:measurementMethod evsla:GuaranteedBandwidth .

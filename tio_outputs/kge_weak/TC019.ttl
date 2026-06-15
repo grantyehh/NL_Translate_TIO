@@ -1,0 +1,56 @@
+@prefix ex: <http://example.org/tio-instance/tc019/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla/v1.0.0#> .
+@prefix icm: <https://tio.models.tmforum.org/icm/v1.0.0#> .
+@prefix cat: <https://tio.models.tmforum.org/tio-catalog/v3.6.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC019 a tio:Intent ;
+  tio:hasExpectation ex:expectation-TC019 ;
+  tio:targets ex:vpn-service-TC019 .
+
+ex:vpn-service-TC019 a tio:Service ;
+  tio:hasServiceSpecification cat:EnterpriseVPNHubSpoke ;
+  tio:hasServiceTopology ex:topology-hubspoke-TC019 .
+
+ex:topology-hubspoke-TC019 a evsla:HubSpokeTopology ;
+  evsla:hasHub ex:site-headquarters ;
+  evsla:hasSpoke ex:all-branch-sites .
+
+ex:site-headquarters a evsla:HeadquartersSite .
+
+ex:all-branch-sites a evsla:BranchSiteGroup .
+
+ex:expectation-TC019 a tio:Expectation ;
+  tio:hasTarget ex:vpn-service-TC019 ;
+  tio:hasCondition ex:condition-TC019 .
+
+ex:condition-TC019 a evsla:SLACondition ;
+  evsla:appliesTo ex:traffic-scope-hq-to-branches ;
+  evsla:hasMetric ex:latency-metric-TC019 ;
+  evsla:hasStatistic ex:percentile-95 ;
+  evsla:hasThreshold ex:threshold-lt-40ms ;
+  evsla:hasObservationWindow ex:time-scope-TC019 ;
+  evsla:hasMeasurementMethod ex:measurement-method-TC019 .
+
+ex:traffic-scope-hq-to-branches a evsla:TrafficScope ;
+  evsla:source ex:site-headquarters ;
+  evsla:destination ex:all-branch-sites .
+
+ex:latency-metric-TC019 a evsla:OneWayLatencyMetric .
+
+ex:percentile-95 a evsla:PercentileStatistic ;
+  evsla:percentileValue "95"^^xsd:decimal .
+
+ex:threshold-lt-40ms a evsla:Threshold ;
+  evsla:comparisonOperator evsla:LessThan ;
+  evsla:thresholdValue "40"^^xsd:decimal ;
+  evsla:unit evsla:Millisecond .
+
+ex:time-scope-TC019 a evsla:TimeCoverageScope ;
+  evsla:coveragePercentage "95"^^xsd:decimal .
+
+ex:measurement-method-TC019 a evsla:PassiveMonitoringMethod ;
+  icm:hasFunction ex:security-monitoring .
+
+ex:security-monitoring a icm:Function .

@@ -1,0 +1,78 @@
+@prefix ex: <http://example.org/tio-instance/tc001/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityKindsAndUnits/> .
+
+ex:intent-TC001
+    rdf:type icm:Intent ;
+    rdfs:comment "確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。"@zh ;
+    evsla:forTenant ex:tenant-xinghe-bank ;
+    evsla:hasTopology ex:topology-hub-spoke ;
+    icm:target ex:vpn-service ;
+    ig:hasGuarantee ex:latency-guarantee .
+
+ex:tenant-xinghe-bank
+    rdf:type rdfs:Resource ;
+    rdfs:label "星河銀行"@zh .
+
+ex:vpn-service
+    rdf:type rdfs:Resource ;
+    rdfs:label "星河銀行企業VPN服務"@zh ;
+    evsla:forTenant ex:tenant-xinghe-bank ;
+    evsla:hasTopology ex:topology-hub-spoke .
+
+ex:topology-hub-spoke
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-xinghe-bank ;
+    evsla:hasHub ex:site-headquarters ;
+    evsla:hasSpoke ex:all-spoke-sites .
+
+ex:site-headquarters
+    rdf:type evsla:Site ;
+    rdfs:label "星河銀行總部"@zh .
+
+ex:all-spoke-sites
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "所有分點"@zh .
+
+ex:latency-guarantee
+    rdf:type rdfs:Resource ;
+    evsla:serviceTarget ex:vpn-service ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:statistic-p95 ;
+    evsla:hasThreshold ex:threshold-50ms ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:hasTimeWindow ex:time-window-service-lifecycle ;
+    evsla:hasMeasurementMethod ex:measurement-method-end-to-end ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.95"^^xsd:decimal .
+
+ex:statistic-p95
+    rdf:type rdfs:Resource ;
+    rdfs:label "p95" .
+
+ex:scope-hub-to-each-spoke
+    rdf:type rdfs:Resource ;
+    rdfs:label "headquarters-to-each-spoke" .
+
+ex:time-window-service-lifecycle
+    rdf:type rdfs:Resource ;
+    rdfs:label "service lifecycle evaluation window" .
+
+ex:measurement-method-end-to-end
+    rdf:type rdfs:Resource ;
+    rdfs:label "end-to-end latency measurement between hub and each spoke" .
+
+ex:threshold-50ms
+    rdf:type rdfs:Resource ;
+    rdf:value "50"^^xsd:decimal ;
+    quan:unit ex:unit-ms .
+
+ex:unit-ms
+    rdf:type rdfs:Resource ;
+    rdfs:label "ms" .

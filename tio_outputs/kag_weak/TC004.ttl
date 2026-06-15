@@ -1,0 +1,20 @@
+@prefix tio: <https://example.com/tio#> .
+@prefix ex: <https://example.com/tio/TC004#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent1 rdf:type tio:EnterpriseVpnHubSpokeSlaIntent ;
+    tio:hasHub ex:TaipeiMedicalCloudCenter ;
+    tio:hasSpoke ex:AllBranchSites ;
+    tio:hasTrafficProperty ex:Latency95Constraint .
+
+ex:TaipeiMedicalCloudCenter rdf:type tio:VpnHubSite .
+
+ex:AllBranchSites rdf:type tio:VpnSpokeSiteGroup .
+
+ex:Latency95Constraint rdf:type tio:OneWayLatencySla ;
+    tio:appliesToPercentile "95"^^xsd:integer ;
+    tio:hasComparator tio:LessThan ;
+    tio:hasValue "30"^^xsd:decimal ;
+    tio:hasUnit tio:Millisecond ;
+    tio:appliesBetween ex:TaipeiMedicalCloudCenter , ex:AllBranchSites .

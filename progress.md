@@ -211,6 +211,50 @@ KAG      |  124,479  |  6,223
 - token 因 few-shot 變豐富(多了 condition 區塊)整體上升 ~20–25%。
 - **這是「強配方」基線**,將與架構二(weak 配方)做 CP 對決。
 
+## Experiment Architecture 2 — weak recipe CP contest (2026-06-15)
+
+兩個「配方」的 cost-performance 對決(spec `2026-06-13-weak-prompt-retrieval-substitution-design.md`、
+plan `2026-06-15-weak-prompt-cp.md`):**Arm 1 = LLM-only 強 prompt + 強 few-shot + 無 retrieval**
+vs **Arm 2 = 弱 prompt(無領域知識)+ 無 few-shot + retrieval**,外加**地板**(弱+無retrieval)。
+三種 retrieval 各自獨立評,不混合。用嚴格語意評分器 + token 衡量(`compare_recipe_cp.py`)。
+
+```text
+Condition        | Parse | Composite | Tok/case | CP(comp/ktok) | evsla:hasMetric 詞名 | 官方URI
+LLM-only-strong  | 100%  |  1.0000   |   5,221  |    0.192      |  (強配方)            |  20/20
+LLM-only-weak    | 100%  |  0.0000   |     666  |    0.000      |   0/20               |   0/20  (地板)
+GraphRag-weak    | 100%  |  0.0000   |  21,116  |    0.000      |  18/20               |   0/20
+KGE-weak         | 100%  |  0.0000   |     773  |    0.000      |   8/20               |   0/20
+KAG-weak         | 100%  |  0.0000   |  (未記錄)|    0.000      |   0/20               |   0/20
+```
+(KAG-weak token 因 crash/resume 跨輪未被 ledger 聚合,顯示 0,非真 0。)
+
+**決定性結論:強配方完勝,四條 weak 品質全 0。**
+
+- **retrieval 在弱配方下買不到任何品質**:floor 與三種 retrieval 的語意 composite **全 0**。
+- **GraphRag-weak 是最差的 CP**:花了**每題 21,116 token(強配方的 ~4×)**換到 **0 品質**。
+- 全 11 維度在所有 weak 條件下都是 0。
+
+**為什麼 0(根因,有程式碼證據):四條 weak 全 0/20 用對官方 namespace URI。** 嚴格評分器照精確 IRI
+比對,URI 錯 = 每個 triple 的 IRI 都錯 = 語意 0。而 retrieval 為何給不出正確 URI:
+
+- **GraphRag**:`subgraph_retriever.serialize_subgraph` 把 context 壓成 **CURIE 簡寫**(`evsla:latency`),
+  **完全不輸出 `@prefix` 宣告**(正確 URI 只在 `KNOWN_PREFIXES` 裡用來壓縮、從不給模型)。
+  → 詞名對(18/20 `evsla:hasMetric`)但 URI 全靠猜 → 自創 `example.org/evsla#` → IRI 全錯。
+- **KGE**:同樣壓 CURIE 不給 URI,且 grounding 更吵(詞名只 8/20),連命名空間風格都自創。
+- **KAG**:最嚴重 —— 其 5-way solver 把 chunk **多跳合成成散文** `$content`,把精確 CURIE token 都洗成
+  概念 → 詞名 0/20,全塞進自創 `tio:` 命名空間(但語意理解最深,甚至自己想出 comparisonOperator/percentile)。
+
+**梯度規律**:retrieval 越抽象(KAG 散文合成 > KGE > GraphRag 原始 CURIE),精確詞彙流失越多。
+三條 retrieval 當初都設計成「在強 prompt 旁輔助確認詞彙」,把序列化(@prefix + 組裝)留給 prompt/
+few-shot;抽掉強 prompt 後全部塌回地板。
+
+**可修性梯度(follow-up 方向)**:GraphRag 最好修(context prepend `@prefix` → URI 就齊,詞名本就對,
+很可能從 0 大跳);KGE 中等;KAG 最難(要逆著其合成設計強制注入原樣 CURIE/URI)。
+
+> CP 一句話:**目前在嚴格 TIO 正確性下,prompt-engineering 配方是唯一可行的;retrieval 在弱配方下
+> 既給不出確切 URI 也給不出組裝,品質歸零,GraphRag 還白花 4× token。** 但 GraphRag 的 URI 缺口是
+> 可修的序列化問題,值得當下一步驗證。
+
 ## Current Token Usage Evaluation
 
 目前 `phase1/token_usage/compare_token_usage.txt` 結果(2026-06-13 本輪)：

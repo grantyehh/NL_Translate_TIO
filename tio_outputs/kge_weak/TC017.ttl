@@ -1,0 +1,48 @@
+@prefix ex: <http://example.org/tio-instance/tc017/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla/v1.0.0#> .
+
+ex:intent-TC017
+    a tio:Intent ;
+    tio:hasExpectation ex:delivery-expectation-TC017 .
+
+ex:delivery-expectation-TC017
+    a tio:DeliveryExpectation ;
+    tio:target ex:vpn-service-TC017 ;
+    tio:requirement ex:packet-loss-slo-TC017 .
+
+ex:vpn-service-TC017
+    a tio:Service ;
+    tio:serviceType "EnterpriseVPNHubSpoke"^^xsd:string .
+
+ex:packet-loss-slo-TC017
+    a evsla:SLO ;
+    evsla:metric ex:packet-loss-metric-TC017 ;
+    evsla:scope ex:hub-spoke-scope-TC017 ;
+    evsla:statistic ex:percentile-99-statistic-TC017 ;
+    evsla:objective ex:packet-loss-threshold-TC017 .
+
+ex:packet-loss-metric-TC017
+    a evsla:Metric ;
+    evsla:metricName "packetLossRate"^^xsd:string ;
+    evsla:unit "%"^^xsd:string .
+
+ex:hub-spoke-scope-TC017
+    a evsla:Scope ;
+    evsla:scopeType "HubToEachSpoke"^^xsd:string ;
+    evsla:hubSite "國際會展Hub"^^xsd:string .
+
+ex:percentile-99-statistic-TC017
+    a evsla:Statistic ;
+    evsla:statisticType "percentile"^^xsd:string ;
+    evsla:percentile "99"^^xsd:decimal ;
+    evsla:timeCoverage "99"^^xsd:decimal ;
+    evsla:timeCoverageUnit "%"^^xsd:string .
+
+ex:packet-loss-threshold-TC017
+    a evsla:Objective ;
+    evsla:comparisonOperator "<"^^xsd:string ;
+    evsla:targetValue "0.15"^^xsd:decimal ;
+    evsla:targetUnit "%"^^xsd:string .

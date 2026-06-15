@@ -1,0 +1,26 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v1.0.0#> .
+@prefix ex: <http://example.org/tio-instance/tc018/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC018 a tio:Intent ;
+    tio:hasExpectation ex:expectation-connectivity-TC018 ,
+        ex:expectation-sla-bandwidth-TC018 .
+
+ex:expectation-connectivity-TC018 a tio:DeliveryExpectation ;
+    tio:target ex:hubSpokeVpn-TC018 .
+
+ex:expectation-sla-bandwidth-TC018 a tio:PropertyExpectation ;
+    tio:target ex:hubSpokeVpn-TC018 ;
+    tio:property ex:guaranteedBandwidthProperty-TC018 ;
+    tio:operator tio:atLeast ;
+    tio:value "80"^^xsd:decimal ;
+    tio:unit "Mbps" .
+
+ex:hubSpokeVpn-TC018 a tio:HubSpokeVPN ;
+    tio:hasHub ex:site-east-coast-tourism-hq ;
+    tio:hasSpoke ex:site-green-island-service-station .
+
+ex:site-east-coast-tourism-hq a tio:Site .
+ex:site-green-island-service-station a tio:Site .
+
+ex:guaranteedBandwidthProperty-TC018 a tio:GuaranteedBandwidth .

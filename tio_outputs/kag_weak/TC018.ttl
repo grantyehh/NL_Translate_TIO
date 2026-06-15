@@ -1,0 +1,27 @@
+@prefix ex: <http://example.com/intent/TC018#> .
+@prefix tio: <http://example.com/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent1 rdf:type tio:Intent ;
+    tio:targets ex:vpnService1 ;
+    tio:hasRequirement ex:req1 .
+
+ex:vpnService1 rdf:type tio:EnterpriseVpnService ;
+    tio:topology tio:HubAndSpoke ;
+    tio:hasHubSite ex:eastCoastTourismHQ ;
+    tio:hasSpokeSite ex:greenIslandServiceStation .
+
+ex:eastCoastTourismHQ rdf:type tio:Site ;
+    tio:siteName "東岸觀光總部" .
+
+ex:greenIslandServiceStation rdf:type tio:Site ;
+    tio:siteName "綠島服務站" .
+
+ex:req1 rdf:type tio:ServiceLevelObjective ;
+    tio:appliesTo ex:path1 ;
+    tio:guaranteedBandwidthMbps "80"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    tio:constraintType tio:MinimumGuaranteedBandwidth .
+
+ex:path1 rdf:type tio:TrafficPath ;
+    tio:source ex:eastCoastTourismHQ ;
+    tio:destination ex:greenIslandServiceStation .

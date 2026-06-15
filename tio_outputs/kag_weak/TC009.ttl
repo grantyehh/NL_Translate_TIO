@@ -1,0 +1,19 @@
+@prefix ex: <http://example.com/TC009#> .
+@prefix tio: <http://example.com/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent1 rdf:type tio:EnterpriseVpnIntent ;
+    tio:hasTopology tio:HubAndSpoke ;
+    tio:hasEndpoint ex:hq ;
+    tio:hasEndpoint ex:windFarm ;
+    tio:hasTrafficProfile ex:traffic1 .
+
+ex:hq rdf:type tio:Site ;
+    tio:siteName "綠能電力總部" .
+
+ex:windFarm rdf:type tio:Site ;
+    tio:siteName "彰濱風場" .
+
+ex:traffic1 rdf:type tio:SlaProfile ;
+    tio:guaranteedBandwidthMbps "200"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    tio:bandwidthCondition tio:AtLeast .

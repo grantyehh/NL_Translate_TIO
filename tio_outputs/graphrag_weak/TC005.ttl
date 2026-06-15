@@ -1,0 +1,53 @@
+@prefix ex: <http://example.org/tio-instance/tc005/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+
+ex:intent-TC005
+    evsla:forTenant ex:tenant-MorningStarRetail ;
+    evsla:hasTopology ex:topology-TC005 ;
+    icm:target ex:vpn-service-TC005 ;
+    ig:hasGuarantee ex:guarantee-TC005 ;
+    rdfs:comment "Ensure packet loss between Morning Star Retail hub and each spoke stays below 0.05% for 99% of the time."@en .
+
+ex:tenant-MorningStarRetail
+    rdfs:label "晨星零售"@zh ;
+    rdfs:label "Morning Star Retail"@en .
+
+ex:vpn-service-TC005
+    evsla:forTenant ex:tenant-MorningStarRetail ;
+    evsla:hasTopology ex:topology-TC005 ;
+    rdfs:label "Morning Star Retail Enterprise VPN Service"@en .
+
+ex:topology-TC005
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-MorningStarRetail ;
+    evsla:hasHub ex:hub-MorningStarRetail ;
+    evsla:hasSpoke ex:spoke-group-TC005 ;
+    rdfs:label "Morning Star Retail Hub-and-Spoke Topology"@en .
+
+ex:hub-MorningStarRetail
+    rdfs:label "晨星零售Hub"@zh ;
+    rdfs:label "Morning Star Retail Hub"@en .
+
+ex:spoke-group-TC005
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "All Spokes of Morning Star Retail"@en .
+
+ex:guarantee-TC005
+    evsla:serviceTarget ex:vpn-service-TC005 ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:threshold-packetloss-TC005 ;
+    evsla:hasStatistic ex:statistic-time-compliance-99 ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.99"^^xsd:decimal ;
+    rdfs:comment "Packet loss SLA for hub-to-spoke paths, evaluated independently per spoke."@en .
+
+ex:threshold-packetloss-TC005
+    rdf:value "0.05"^^xsd:decimal ;
+    rdfs:comment "Packet loss threshold expressed as percent."@en .

@@ -1,0 +1,40 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v1.0.0#> .
+@prefix ex: <http://example.org/tio-instance/tc010/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:intent-TC010 a tio:Intent ;
+    tio:hasExpectation ex:expectation-latency-hub-to-all-spokes .
+
+ex:expectation-latency-hub-to-all-spokes a tio:Expectation ;
+    tio:target ex:vpn-service-TC010 ;
+    tio:hasDeliveryType ex:hub-and-spoke-topology ;
+    tio:hasParameter ex:param-source-site ,
+        ex:param-destination-sites ,
+        ex:param-latency-threshold ,
+        ex:param-compliance-percentage .
+
+ex:vpn-service-TC010 a tio:ConnectivityService .
+
+ex:hub-and-spoke-topology a tio:DeliveryType .
+
+ex:param-source-site a tio:Parameter ;
+    tio:name "sourceSite" ;
+    tio:value ex:site-headquarters .
+
+ex:param-destination-sites a tio:Parameter ;
+    tio:name "destinationSites" ;
+    tio:value ex:all-branch-sites .
+
+ex:param-latency-threshold a tio:Parameter ;
+    tio:name "oneWayLatencyMaximum" ;
+    tio:value "20"^^xsd:decimal ;
+    tio:unit "ms" .
+
+ex:param-compliance-percentage a tio:Parameter ;
+    tio:name "percentileCompliance" ;
+    tio:value "95"^^xsd:decimal ;
+    tio:unit "percent" .
+
+ex:site-headquarters a tio:Site .
+
+ex:all-branch-sites a tio:SiteGroup .

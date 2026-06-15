@@ -1,0 +1,69 @@
+@prefix ex: <http://example.org/tio-instance/tc007/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://example.org/quantity#> .
+
+ex:intentTC007
+    evsla:forTenant ex:tenantSeaPortShipping ;
+    evsla:hasTopology ex:topologyTC007 ;
+    ig:hasGuarantee ex:latencyGuaranteeTC007 ;
+    rdfs:comment "Ensure latency from Kaohsiung Port Operations Center to all port branch sites stays below 80 ms for 95% of the time."@en .
+
+ex:tenantSeaPortShipping
+    rdfs:label "海港航運"@zh ;
+    rdfs:label "Sea Port Shipping"@en .
+
+ex:topologyTC007
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenantSeaPortShipping ;
+    evsla:hasHub ex:siteKaohsiungPortOperationsCenter ;
+    evsla:hasSpoke ex:allPortBranchSites ;
+    rdfs:comment "Hub-and-spoke enterprise VPN topology from the Kaohsiung Port Operations Center to all port branch sites."@en .
+
+ex:siteKaohsiungPortOperationsCenter
+    rdfs:label "高雄港營運中心"@zh ;
+    rdfs:label "Kaohsiung Port Operations Center"@en .
+
+ex:allPortBranchSites
+    rdf:type evsla:SpokeSite ;
+    rdfs:label "所有港站分點"@zh ;
+    rdfs:label "All port branch sites"@en .
+
+ex:latencyGuaranteeTC007
+    evsla:forTenant ex:tenantSeaPortShipping ;
+    evsla:serviceTarget ex:intentTC007 ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:statisticP95 ;
+    evsla:hasThreshold ex:latencyThreshold80ms ;
+    evsla:hasScope ex:hubToEachSpokeScope ;
+    evsla:hasMeasurementMethod ex:endToEndRoundTripMethod ;
+    evsla:hasTimeWindow ex:continuousEvaluationWindow ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:confidenceLevel "0.95"^^xsd:decimal .
+
+ex:statisticP95
+    rdfs:label "p95"@en ;
+    rdfs:comment "95th percentile latency, interpreted as latency below threshold for 95% of the time."@en .
+
+ex:latencyThreshold80ms
+    rdf:type quan:Quantity ;
+    rdf:value "80"^^xsd:decimal ;
+    quan:unit ex:millisecond .
+
+ex:millisecond
+    rdfs:label "ms"@en .
+
+ex:hubToEachSpokeScope
+    rdfs:label "hub-to-each-spoke"@en ;
+    rdfs:comment "Latency is evaluated between the hub site and each spoke site independently."@en .
+
+ex:endToEndRoundTripMethod
+    rdfs:label "end-to-end round-trip latency measurement"@en .
+
+ex:continuousEvaluationWindow
+    rdfs:label "continuous SLA evaluation window"@en .

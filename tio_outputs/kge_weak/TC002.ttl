@@ -1,0 +1,40 @@
+@prefix ex: <http://example.org/tio-instance/tc002/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-tc002 rdf:type tio:Intent ;
+    tio:hasExpectation ex:expectation-tc002 .
+
+ex:expectation-tc002 rdf:type evsla:ServiceLevelExpectation ;
+    evsla:targetService ex:enterprise-vpn-service-tc002 ;
+    evsla:hasMetric ex:packet-loss-metric-tc002 ;
+    evsla:hasStatistic ex:percentile-99-time-tc002 ;
+    evsla:hasScope ex:hub-spoke-scope-tc002 ;
+    evsla:hasRequirement ex:packet-loss-threshold-tc002 .
+
+ex:enterprise-vpn-service-tc002 rdf:type evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:far-eastern-manufacturing-hub ;
+    evsla:hasSpoke ex:spoke-1 ;
+    evsla:hasSpoke ex:spoke-2 ;
+    evsla:hasSpoke ex:spoke-3 .
+
+ex:far-eastern-manufacturing-hub rdf:type evsla:HubSite .
+
+ex:spoke-1 rdf:type evsla:SpokeSite .
+
+ex:spoke-2 rdf:type evsla:SpokeSite .
+
+ex:spoke-3 rdf:type evsla:SpokeSite .
+
+ex:packet-loss-metric-tc002 rdf:type evsla:PacketLossRateMetric ;
+    evsla:measurementMethod evsla:PacketLossMeasurement .
+
+ex:percentile-99-time-tc002 rdf:type evsla:TimeCoverageStatistic ;
+    evsla:timeCoverage "0.99"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+
+ex:hub-spoke-scope-tc002 rdf:type evsla:HubToEachSpokeScope .
+
+ex:packet-loss-threshold-tc002 rdf:type evsla:MaximumThreshold ;
+    evsla:thresholdValue "0.001"^^<http://www.w3.org/2001/XMLSchema#decimal> .

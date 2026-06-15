@@ -1,0 +1,47 @@
+@prefix ex: <http://example.org/tio-instance/tc003/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-tc003
+    rdf:type tio:Intent ;
+    tio:hasService ex:service-tc003 .
+
+ex:service-tc003
+    rdf:type evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubSpoke ;
+    evsla:hasSite ex:site-hq , ex:site-kaohsiung-warehouse ;
+    evsla:hasHubSite ex:site-hq ;
+    evsla:hasSpokeSite ex:site-kaohsiung-warehouse ;
+    evsla:hasSLA ex:sla-tc003 .
+
+ex:site-hq
+    rdf:type evsla:Site ;
+    evsla:siteName "宏海物流總部" .
+
+ex:site-kaohsiung-warehouse
+    rdf:type evsla:Site ;
+    evsla:siteName "高雄倉儲中心" .
+
+ex:sla-tc003
+    rdf:type evsla:SLA ;
+    evsla:hasObjective ex:objective-bandwidth-tc003 .
+
+ex:objective-bandwidth-tc003
+    rdf:type evsla:SLO ;
+    evsla:forConnection ex:conn-hq-to-kaohsiung ;
+    evsla:hasMetric ex:metric-bandwidth-tc003 ;
+    evsla:hasComparator evsla:GreaterThanOrEqual ;
+    evsla:hasValue "100"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    evsla:hasUnit evsla:Mbps ;
+    evsla:hasScope evsla:EndToEnd ;
+    evsla:hasMeasurementMethod evsla:Guaranteed .
+
+ex:conn-hq-to-kaohsiung
+    rdf:type evsla:SiteToSiteConnection ;
+    evsla:sourceSite ex:site-hq ;
+    evsla:destinationSite ex:site-kaohsiung-warehouse .
+
+ex:metric-bandwidth-tc003
+    rdf:type evsla:BandwidthMetric ;
+    evsla:hasStatistic evsla:Minimum .

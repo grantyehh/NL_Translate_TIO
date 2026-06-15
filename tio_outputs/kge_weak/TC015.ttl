@@ -1,0 +1,40 @@
+@prefix ex: <http://example.org/tio-instance/tc015/> .
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0#> .
+@prefix evsla: <https://tio.models.tmforum.org/evsla/v1.0.0#> .
+@prefix icm: <https://tio.models.tmforum.org/icm/v1.0.0#> .
+@prefix cat: <https://tio.models.tmforum.org/tio-cat/v3.6.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent a tio:Intent ;
+  tio:target ex:hubSite ,
+             ex:spokeSite ,
+             ex:vpnService ;
+  tio:expectation ex:deliveryExpectation .
+
+ex:vpnService a tio:ConnectivityService ;
+  cat:serviceId "EnterpriseVPNHubSpoke" .
+
+ex:hubSite a tio:Location ;
+  tio:name "亞洲航空維修總部" .
+
+ex:spokeSite a tio:Location ;
+  tio:name "小港機棚" .
+
+ex:deliveryExpectation a tio:DeliveryExpectation ;
+  tio:target ex:vpnService ;
+  tio:parameter ex:bandwidthParameter .
+
+ex:bandwidthParameter a evsla:ServiceLevelObjective ;
+  evsla:metric ex:bandwidthMetric ;
+  evsla:statistic ex:minStatistic ;
+  evsla:scope ex:endToEndScope ;
+  evsla:unit "Mbps" ;
+  evsla:value "300"^^xsd:decimal ;
+  evsla:comparisonOperator evsla:GreaterThanOrEqual .
+
+ex:bandwidthMetric a evsla:GuaranteedBandwidthMetric .
+
+ex:minStatistic a evsla:Minimum .
+
+ex:endToEndScope a evsla:EndToEndScope .

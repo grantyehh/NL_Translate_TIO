@@ -1,0 +1,33 @@
+@prefix ex: <http://example.org/tio-instance/tc018/> .
+@prefix tio: <http://example.org/tio#> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent-tc018 a tio:Intent ;
+    tio:hasService ex:service-tc018 .
+
+ex:service-tc018 a evsla:EnterpriseVPNService ;
+    evsla:hasTopology evsla:HubSpoke ;
+    evsla:hasHubSite ex:site-east-coast-tourism-hq ;
+    evsla:hasSpokeSite ex:site-green-island-service-station ;
+    evsla:hasSLA ex:sla-tc018 .
+
+ex:site-east-coast-tourism-hq a evsla:Site .
+ex:site-green-island-service-station a evsla:Site .
+
+ex:sla-tc018 a evsla:SLA ;
+    evsla:hasObjective ex:objective-bandwidth-tc018 .
+
+ex:objective-bandwidth-tc018 a evsla:SLAObjective ;
+    evsla:appliesTo ex:service-tc018 ;
+    evsla:hasMetric ex:metric-guaranteed-bandwidth-tc018 ;
+    evsla:hasConstraint ex:constraint-bandwidth-min-tc018 .
+
+ex:metric-guaranteed-bandwidth-tc018 a evsla:BandwidthMetric ;
+    evsla:hasStatistic evsla:Minimum ;
+    evsla:hasScope evsla:EndToEnd ;
+    evsla:hasMethod evsla:Guaranteed .
+
+ex:constraint-bandwidth-min-tc018 a evsla:AtLeastConstraint ;
+    evsla:hasValue "80"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    evsla:hasUnit evsla:Mbps .

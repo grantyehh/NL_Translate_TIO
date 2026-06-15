@@ -1,0 +1,44 @@
+@prefix tio: <https://tio.models.tmforum.org/tio/v3.6.0/> .
+@prefix ex: <http://example.org/tio-instance/tc003/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:intent-tc003
+    a tio:Intent ;
+    rdfs:label "TC003 Enterprise VPN hub-and-spoke SLA intent" ;
+    tio:hasExpectation ex:delivery-expectation-tc003 ,
+                       ex:sla-expectation-tc003 .
+
+ex:delivery-expectation-tc003
+    a tio:DeliveryExpectation ;
+    tio:target ex:vpn-service-tc003 .
+
+ex:sla-expectation-tc003
+    a tio:PropertyExpectation ;
+    tio:target ex:vpn-service-tc003 ;
+    tio:hasPropertyConstraint ex:bandwidth-constraint-tc003 .
+
+ex:vpn-service-tc003
+    a tio:Service ;
+    rdfs:label "Enterprise VPN hub-and-spoke service for Honghai Logistics" ;
+    tio:hasTopology ex:topology-tc003 .
+
+ex:topology-tc003
+    a tio:HubAndSpokeTopology ;
+    tio:hasHub ex:site-headquarters-tc003 ;
+    tio:hasSpoke ex:site-kaohsiung-warehouse-tc003 .
+
+ex:site-headquarters-tc003
+    a tio:ServiceSite ;
+    rdfs:label "宏海物流總部" .
+
+ex:site-kaohsiung-warehouse-tc003
+    a tio:ServiceSite ;
+    rdfs:label "高雄倉儲中心" .
+
+ex:bandwidth-constraint-tc003
+    a tio:MinGuaranteedBandwidthConstraint ;
+    tio:appliesTo ex:site-headquarters-tc003 ,
+                  ex:site-kaohsiung-warehouse-tc003 ;
+    tio:unit "Mbps"^^xsd:string ;
+    tio:minValue "100"^^xsd:decimal .

@@ -1,0 +1,79 @@
+@prefix ex: <http://example.org/tio-instance/tc016/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix imo: <http://tio.models.tmforum.org/tio/v3.6.0/IntentManagementOntology/> .
+@prefix ig: <http://tio.models.tmforum.org/tio/v3.6.0/IntentGuaranteeOntology/> .
+@prefix evsla: <http://example.org/evsla#> .
+@prefix quan: <http://example.org/quantity#> .
+
+ex:intent-TC016
+    evsla:forTenant ex:tenant-smart-agriculture ;
+    evsla:hasTopology ex:topology-TC016 ;
+    ig:hasGuarantee ex:guarantee-TC016 ;
+    icm:target ex:vpn-service-TC016 ;
+    rdfs:comment "Ensure latency from the smart agriculture hub to all spokes stays below 100 ms for 95% of the time." .
+
+ex:vpn-service-TC016
+    evsla:forTenant ex:tenant-smart-agriculture ;
+    evsla:hasTopology ex:topology-TC016 .
+
+ex:topology-TC016
+    rdf:type evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant-smart-agriculture ;
+    evsla:hasHub ex:hub-smart-agriculture ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3 .
+
+ex:hub-smart-agriculture
+    rdfs:comment "Smart agriculture hub site." .
+
+ex:spoke-1
+    rdf:type evsla:SpokeSite .
+
+ex:spoke-2
+    rdf:type evsla:SpokeSite .
+
+ex:spoke-3
+    rdf:type evsla:SpokeSite .
+
+ex:guarantee-TC016
+    ig:confidenceLevel "0.95"^^xsd:decimal ;
+    ig:guaranteePeriod "P1D"^^xsd:duration ;
+    ig:guaranteePeriodUpdateInterval "P1D"^^xsd:duration .
+
+ex:latency-sla-TC016
+    evsla:forTenant ex:tenant-smart-agriculture ;
+    evsla:serviceTarget ex:vpn-service-TC016 ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasStatistic ex:statistic-p95 ;
+    evsla:hasThreshold ex:threshold-100ms ;
+    evsla:hasScope ex:scope-hub-to-each-spoke ;
+    evsla:hasMeasurementMethod ex:method-continuous-latency-measurement ;
+    evsla:hasTimeWindow ex:timewindow-rolling-day ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean ;
+    ig:hasGuarantee ex:guarantee-TC016 .
+
+ex:scope-hub-to-each-spoke
+    evsla:hasTopology ex:topology-TC016 ;
+    evsla:hasHub ex:hub-smart-agriculture ;
+    evsla:appliesPerSpoke "true"^^xsd:boolean .
+
+ex:threshold-100ms
+    rdf:value "100"^^xsd:decimal ;
+    quan:unit ex:unit-ms .
+
+ex:statistic-p95
+    rdf:value "p95" .
+
+ex:method-continuous-latency-measurement
+    rdfs:comment "Latency measured continuously between hub and each spoke." .
+
+ex:timewindow-rolling-day
+    rdf:value "P1D"^^xsd:duration .
+
+ex:tenant-smart-agriculture
+    rdfs:comment "Smart agriculture tenant." .
+
+ex:unit-ms
+    rdfs:comment "milliseconds" .

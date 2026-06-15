@@ -1,0 +1,29 @@
+@prefix ex: <http://example.com/TC001#> .
+@prefix tio: <http://example.com/tio#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:intent1 rdf:type tio:EnterpriseVpnHubSpokeSlaIntent ;
+    tio:hasTopology tio:HubSpoke ;
+    tio:hasHub ex:headquarters ;
+    tio:hasSpoke ex:allBranches ;
+    tio:hasTrafficMetric tio:Latency ;
+    tio:hasThreshold ex:latencyThreshold1 ;
+    tio:appliesDuring ex:timeCondition1 .
+
+ex:headquarters rdf:type tio:VpnSite ;
+    tio:siteRole tio:Hub ;
+    tio:siteName "星河銀行總部" .
+
+ex:allBranches rdf:type tio:VpnSiteGroup ;
+    tio:siteRole tio:Spoke ;
+    tio:groupScope tio:AllBranches .
+
+ex:latencyThreshold1 rdf:type tio:SlaThreshold ;
+    tio:metric tio:Latency ;
+    tio:comparisonOperator tio:LessThan ;
+    tio:thresholdValue "50"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    tio:thresholdUnit "ms" ;
+    tio:percentile "95"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+
+ex:timeCondition1 rdf:type tio:TimeCondition ;
+    tio:observationRatio "95"^^<http://www.w3.org/2001/XMLSchema#decimal> .
