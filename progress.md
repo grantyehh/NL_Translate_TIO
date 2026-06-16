@@ -444,10 +444,11 @@ expectation placement;scorer 因有 fallback,重跑前後分數不會倒退。
 
 ## Next Steps
 
-0. **(active, 2026-06-15)** 縮 structure-only 兩條 retrieval(GraphRAG 0.79、KGE 0.75)對天花板(0.97)的
-   差距,集中修兩條共同的弱維度:**tenant(0.00**;補 `evsla:Tenant` typing / `forTenant` relation,
-   structure prompt 寫清楚 tenant 建模)、**time_window(~0.15)** 與 **measurement_method(~0.37)**
-   (查 grounding 命中 vs prompt wiring)、**topology(~0.46**;hub/spoke 基數)。可選:wire
+0. ✅ **已做(2026-06-16,Architecture 5)**:縮 structure-only 兩條 retrieval 對天花板的差距 ——
+   四維度 grounding(tenant/time_window/measurement_method/topology)+ ontology-domain scorer 對齊,
+   GraphRAG 0.79→0.98、KGE 0.75→0.98,token 維持 ~½ 天花板。**剩餘待辦**:OpenAI 配額恢復後三條
+   structure-only 正式重跑(驗證 expectation-placement 生成端效果 + 刷新乾淨 token ledger);可選把
+   scorer 從寬鬆(expectation-first/target-fallback)收成嚴格(expectation-only)。可選:wire
    KAG-structure 湊四方對照。
 1. **(superseded by Architecture 3)** Weak-prompt 替代性實驗:已被 structure-only 設計取代 —— structure-only
    給組裝骨架、抽詞彙,比 all-or-nothing 的 weak prompt 更能量出 retrieval 的邊際價值。

@@ -277,18 +277,20 @@ python evaluate_ttl.py kge_structure       --test-cases test_cases_40.json
 python evaluate_ttl.py llm_only_structure  --test-cases test_cases_40.json
 ```
 
-最新結果(40 題,strict `semantic_eval`,gpt-5.4;完整見 `progress.md` Architecture 3 / 4):
+最新結果(40 題,strict `semantic_eval`,gpt-5.4;完整見 `progress.md` Architecture 5):
 
 ```text
 Line                       | Composite | Tok/case
 LLM-only strong(天花板)    |  0.9722   |  5,349
-GraphRAG-structure         |  0.7867   |  2,369
-KGE-structure(正統)       |  0.7540   |  2,292
+GraphRAG-structure         |  0.9827   |  2,722
+KGE-structure(正統)       |  0.9831   |  2,637
 LLM-only-structure(地板)   |  0.0000   |  1,432
 ```
 
-- GraphRAG / KGE 在「零硬寫詞彙」下從地板 0.00 補到 ~0.75–0.79(retrieval 成正貢獻),且 token 約為強配方的一半。
-- 兩條 retrieval 幾乎打平:重設計後只差「選種子機制」,後面輸出契約共用,在小固定 schema 上殊途同歸。
+- 四維度 grounding(tenant / time_window / measurement_method / topology)把 GraphRAG 0.79→0.98、KGE 0.75→0.98:慣例編進 EVSLA TTL(metric→method、預設 window + 中文 NL 觸發 label),共用 retrieval 層保證四角色 reachability,structure-only 骨架要求 tenant 綁定 + 有型別 hub/spoke。
+- scorer 對齊 ontology domain(SLA 綁定 predicate 的 `rdfs:domain` 是 `evsla:SlaExpectation`):evaluator 改成從 expectation 讀、target 作 fallback,修掉 TC025 的契約鏈誤判。
+- **兩條 retrieval 皆 ≈/超過天花板品質,token 只用約一半**。token 要跟天花板 5,349 比,不是地板 1,432(地板是無 retrieval 對照,品質 0)。
+- ⚠️ 待 OpenAI 配額恢復後三條 structure-only 正式重跑,驗證 expectation-placement 生成端效果並刷新 token ledger。
 
 ## 注意事項
 

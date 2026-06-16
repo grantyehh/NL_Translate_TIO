@@ -1,7 +1,12 @@
 # mechanism.md — GraphRAG / KGE / KAG 三條 pipeline 的運作機制
 
+> ⚠️ **時效性提醒(2026-06-16)**:本檔是 **Architecture 1/2 era** 的機制走查,內含**已過時**內容 ——
+> 舊評分指標(Avg Ontology coverage 0.9889 / 0.9972、Verbosity)與**已移除的 KGE neighborhood expansion**
+> (canonical 重設計後 KGE 改為 text-embedding grounding + TransE **link-prediction**,不再做 neighbor 擴張)。
+> 階段資料流的示範仍有教學價值,但**數據與 KGE 機制以 `progress.md`(Architecture 3–5)為準**。需要時可重寫本檔。
+>
 > 本文件用同一題（TC001）貫穿三條 pipeline，逐步示範資料在每個階段「長什麼樣子」。
-> 評分數據與整體比較見 `progress.md` 與 `phase1/compare_four_way.txt`，本檔不重複。
+> 整體比較見 `progress.md` 與 `phase1/output_quality/compare_four_way.txt`，本檔不重複。
 
 ---
 

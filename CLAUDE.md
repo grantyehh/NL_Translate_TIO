@@ -20,8 +20,8 @@
 | 方法 | 目錄 | 核心思路 |
 |---|---|---|
 | LLM-only | `LLM-only/` | 純 LLM + few-shot,做 baseline |
-| GraphRAG | `GraphRag/` | **typed RDF traversal**(不是 Microsoft GraphRAG CLI),從 TM Forum Intent Ontology TTL 抓 query-specific subgraph |
-| KGE | `KGE/KGE-based-graphrag/` | text grounding + TransE neighborhood expansion + **link prediction** + LLM。pipeline 在 `kge/`(`paths.py` / `retrieve.py` / `tio_triples.py` / `train.py`) |
+| GraphRAG | `GraphRag/` | **ontology-aware domain-graph RAG**:entry-point grounding(lexical-exact + vector)→ 只走有意義連接屬性的有界 traversal(排除 rdf:type/subClassOf/domain/range plumbing)→ role-scoped 封閉詞表 + 自含 `@prefix` context |
+| KGE | `KGE/KGE-based-graphrag/` | **正統 KGE**:text-embedding dense grounding + TransE link-prediction 排序「真實 triple」(永不合成),共用 GraphRAG 輸出契約(`resource_index`/`graph_relations`/`context_builder`)。pipeline 在 `kge/`(`select.py` / `paths.py` / `retrieve.py` / `train.py`) |
 | KAG | `KAG/` | OpenSPG/KAG kg-builder + 5-way solver retrieval(atomic_query / outline / summary / vector / table)+ LLM。後端是 Docker stack(server + Neo4j + MySQL + MinIO) |
 
 此外:
@@ -29,19 +29,20 @@
 
 **共用基礎設施**:`test_cases_20.json`(20 題測資)、`few_shot_samples.json`、`evsla_prompt.py`、`evaluate_ttl.py`、`compare_reports.py`、`docs/standard.md`、`TM Forum Intent Ontology/*.ttl`。
 
-**Phase 1 目前結果**(`new-methods` 分支,讀自 `phase1/compare_four_way.txt`):
+**評分器現況**:品質評分是 `semantic_eval.py`(11 維 graph-binding composite),不是早期的 ICM/ontology/node 指標。強配方(`test_cases_20`)四條已飽和到 composite ~1.0,無鑑別力;**目前的主戰場是 structure-only(`test_cases_40`,抽掉 EVSLA 詞彙、只靠 retrieval 供詞)**。
+
+**目前結果**(structure-only,40 題,strict `semantic_eval`,gpt-5.4;**完整與最新數據以 `progress.md` 為準**):
 
 ```
-Experiment | Parse OK | Avg ICM | Avg ontology | Avg metric | Avg nodes | Verbosity OK | Node ratio
-LLM-only   |  95.00%  | 0.8975  |   0.0000     |   0.0000   |   39.50   |    25.00%    | 0.6436
-GraphRag   | 100.00%  | 1.0000  |   0.9889     |   1.0000   |   62.65   |   100.00%    | 1.0186
-KGE        |  95.00%  | 1.0000  |   0.9972     |   1.0000   |   63.40   |     0.00%    | 0.0000
-KAG        | 100.00%  | 0.9900  |   0.9314     |   1.0000   |   61.80   |   100.00%    | 1.0031
+Line                       | Composite | Tok/case
+LLM-only strong(天花板)    |  0.9722   |  5,349
+GraphRAG-structure         |  0.9827   |  2,722
+KGE-structure(正統)       |  0.9831   |  2,637
+LLM-only-structure(地板)   |  0.0000   |  1,432
 ```
 
-- **Ontology coverage 最佳:KGE(0.9972)** — link prediction 版本領先
-- **ICM / metric coverage 最佳:GraphRag(1.0000),KGE 並列**
-- **Verbosity:KGE 0%** — node 數超出 budget,是改進方向
+- **兩條 retrieval 皆 ≈/超過天花板品質,token 只用約一半** — 四維度 grounding(tenant/time_window/measurement_method/topology)+ ontology-domain scorer 對齊後達成(progress.md Architecture 5)。
+- 待辦:OpenAI 配額恢復後三條 structure-only 正式重跑,刷新乾淨的輸出與 token ledger。
 
 ## 3. 目錄與資料流
 
@@ -52,13 +53,13 @@ NL (test_cases_20.json)
   → evaluate_ttl.py <method>
   → phase1/phase1_<method>.json
   → compare_reports.py
-  → phase1/compare_four_way.txt
+  → phase1/output_quality/compare_four_way.txt
 ```
 
 固定輸出位置(不要寫到別處,評分器跟比較器是 hard-code 路徑):
 - 生成:`tio_outputs/<experiment>/*.ttl`
 - 評分:`phase1/phase1_<experiment>.json`
-- 比較:`phase1/compare_four_way.txt`
+- 比較:`phase1/output_quality/compare_four_way.txt`
 
 ## 4. 關鍵運作規則
 
@@ -82,15 +83,14 @@ KAG 0.8.0 對 OpenAI 官方 API 有 2 個必須的 source patch(`chat_template_k
 `evaluate_ttl.py` 評的是 **TIO Turtle 格式 + expected element 覆蓋率**,不等於完整網路語意正確率。Markdown code fence 會嘗試剝掉再 parse,但理想輸出應是 pure TIO Turtle。
 
 ### 4.6 `run_all_experiments.py` 會覆寫
-預設覆寫固定檔名的 `phase1/phase1_*.json` 與 `phase1/compare_four_way.txt`,**不是歷史紀錄系統** — 要保留歷史結果自己另存。
+預設覆寫固定檔名的 `phase1/phase1_*.json` 與 `phase1/output_quality/compare_four_way.txt`,**不是歷史紀錄系統** — 要保留歷史結果自己另存。
 
 ### 4.7 當前分支
-- **`new-methods`**(2026-05-24):GraphRAG typed traversal + KGE link prediction(後者由 `kge-link-prediction` merge 進來)
-- 其他存活分支:`main`(舊版)、`kge-link-prediction`(已 merge)、`new-CHT`
-- Remote `graphrag-typed-traversal` 是 GraphRAG 改寫的歷史分支,內容已在 `new-methods` 裡
+- **`retrieval-four-dim-grounding`**(2026-06-16):四維度 grounding(ontology 內建 metric→method/window 慣例 + 共用 retrieval 層修 reachability)+ ontology-domain scorer 對齊。GraphRAG/KGE structure-only composite 拉到 0.98。
+- 主線歷史:`main`(canonical KGE + GraphRAG domain-graph redesign)、舊 `new-methods`。
 
-### 4.8 `progress.md` 與實際結果可能不同步
-`progress.md` 的 Phase 1 結果表是 2026-05-19 GraphRAG typed traversal 完成時的快照,**KGE 還是 hybrid 舊版**。現況數據以 `phase1/compare_four_way.txt`(及對應的 `phase1_*.json`)為準。重跑後要手動更新 `progress.md`,沒有自動同步。
+### 4.8 `progress.md` 是現況的權威紀錄
+`progress.md` 是逐輪實驗結果的單一真實來源(Architecture 1→5),重跑後**手動更新**,沒有自動同步。文字比較報告在 `phase1/output_quality/compare_four_way.txt`(品質)與 `phase1/token_usage/compare_token_usage*.txt`(token);這些是 `run_all_experiments.py` / `compare_*` 覆寫式產生,不是歷史系統。
 
 ## 5. 常用指令
 
@@ -123,7 +123,7 @@ cd tio-agent && bun install && OPENAI_API_KEY=sk-... bun run agent
 
 ## 6. 工作慣例
 
-- **新方法 / 改 retrieval 策略前**:先看 `progress.md` 與 `phase1/compare_four_way.txt` 看當前狀態
+- **新方法 / 改 retrieval 策略前**:先看 `progress.md` 與 `phase1/output_quality/compare_four_way.txt` 看當前狀態
 - **跨方法比較前**:確認四條線都是相同 model / few-shot 設定下產生,否則結論不可信
 - **改 ontology(TTL)**:GraphRag 執行期直接讀 TTL,免重建;KGE artifacts 需 retrain(`python -m kge.train`)
 - **重跑實驗後**:同步更新 `progress.md` 的結果表(`compare_four_way.txt` 不會自動 propagate 到文字報告)
@@ -142,7 +142,7 @@ cd tio-agent && bun install && OPENAI_API_KEY=sk-... bun run agent
 
 ## 9. Roadmap / Open work
 
+- [ ] **三條 structure-only 正式重跑**(待 OpenAI 配額恢復):驗證 few-shot/骨架的 expectation-placement 生成端效果,並刷新乾淨的輸出與 token ledger(現行 GraphRAG ledger 為 git 還原+合併)。
+- [ ] **scorer 嚴格化(可選)**:重跑後可把 `semantic_eval` 從 expectation-first/target-fallback 收成 expectation-only,真正強制 ontology domain(現為寬鬆相容)。
 - [ ] **`kag-logical-form-grounding`**(未來可能方向,不一定執行):把 logical form 接到 ontology grounding 的探索路線。尚未開分支
-- [ ] **KGE verbosity 修正**:目前 Avg node 63.40 超出 budget(Verbosity OK 0%),要研究壓縮策略
-- [ ] **四條同條件正式重跑**:`progress.md` 提醒過,目前 KGE 是 link-prediction 新版但其他三條的最終比較需確認都是同一輪
 - [ ] 進入 Phase 2(若有規劃)
