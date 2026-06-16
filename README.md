@@ -3,23 +3,25 @@
 這個專案比較**四條** NL -> TIO Turtle 生成流程：
 
 - `LLM-only/`: 只用 LLM + few-shot。
-- `GraphRag/`: GraphRAG + LLM + few-shot。
-- `KGE/KGE-based-graphrag/`: KGE text grounding + TransE link prediction + LLM + few-shot。
+- `GraphRag/`: **ontology-aware domain-graph RAG**(entry-point grounding〔lexical-exact + vector〕→ 只走有意義連接屬性的有界 traversal〔排除 rdf:type/subClassOf/domain/range plumbing〕→ role-scoped 封閉詞表 → 自含 `@prefix` context)+ LLM + few-shot。
+- `KGE/KGE-based-graphrag/`: **正統 KGE**(text-embedding dense grounding + TransE link-prediction 排序「真實 triple」〔永不合成〕,共用 GraphRAG 輸出契約)+ LLM + few-shot。
 - `KAG/`: OpenSPG/KAG kg-builder + 5-way solver retrieval(atomic_query / outline / summary / vector / table)+ LLM + few-shot。後端走 Docker stack(server + Neo4j + MySQL + MinIO)。詳見 [`KAG/example_project/README.md`](KAG/example_project/README.md)。
+
+> GraphRag 與 KGE 的重設計與 structure-only 替代性實驗見 §4 與 `progress.md`(Experiment Architecture 3 / 4)。
 
 四條線共用：
 
-- `test_cases_20.json`: 測試題目。
-- `few_shot_samples.json`: few-shot TIO Turtle 範例(`turtle` 欄位)。
-- `evsla_prompt.py`: 共用 EVSLA system prompt 組裝。
-- `evaluate_ttl.py`: TIO Turtle 評分器。
+- `test_cases_20.json`: 原 20 題測資。`test_cases_40.json`: 20 題 + 20 題新增 hub-and-spoke 案(TC021–040,structure-only 實驗用)。
+- `few_shot_samples.json`: 強配方 few-shot(含 EVSLA 詞彙)。`few_shot_structure_only.json`: structure-only 用的 sanitized skeleton few-shot(佔位符、無 EVSLA 詞彙)。
+- `evsla_prompt.py`: 共用 EVSLA system prompt 組裝(profile: `strong` / `weak` / `structure_only`)。
+- `evaluate_ttl.py`: TIO Turtle 評分器(含 `semantic_eval` 語意評分;支援 `--test-cases`)。
 - `compare_reports.py`: 評分報告比較器。
 - `docs/standard.md`: TIO 轉譯標準草案。
 
 固定輸出位置:
 
-- 生成結果:根目錄 `tio_outputs/<experiment>/*.ttl`(`<experiment>` ∈ `llm_only / graphrag / kge / kag`)
-- 評分結果:`phase1/phase1_*.json`
+- 生成結果:根目錄 `tio_outputs/<experiment>/*.ttl`。`<experiment>` ∈ 強配方 `llm_only / graphrag / kge / kag`、weak 配方 `*_weak`、structure-only 配方 `graphrag_structure / kge_structure / llm_only_structure`。
+- 評分結果:`phase1/phase1_<experiment>.json`
 - 比較結果:`phase1/output_quality/compare_four_way.txt`(品質)、`phase1/token_usage/compare_token_usage.txt`(token)
 
 ## 0. 前置準備
@@ -42,13 +44,21 @@ export GRAPHRAG_API_KEY=your_key_here
 export OPENAI_API_KEY=your_key_here
 ```
 
-`GraphRag/` 不需要預先建立任何 index:`nl_to_tio.py` 在執行期用 rdflib 直接讀 `TM Forum Intent Ontology/*.ttl`(`ontology_graph.py` + `subgraph_retriever.py`),以 typed traversal 取出子圖 context。無需 `graphrag index`。
+`GraphRag/` 的重設計版會用一個 **offline resource index**(完整 IRI + role 分類 + 文字 embedding)做向量 grounding。執行 structure-only 線或要向量 grounding 前,先建一次(會呼叫 embedding API):
 
-KGE 線同樣只使用自己的 KGE artifacts(由 ontology TTL 訓練而來)。如果 ontology 有變更或 artifacts 不存在,再執行:
+```bash
+cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment
+python GraphRag/build_index.py --output-dir GraphRag/index   # 寫到 GraphRag/index/(已 gitignore)
+python GraphRag/build_index.py --check                       # 只報狀態、不呼叫 API
+```
+
+> rdflib 讀 `TM Forum Intent Ontology/*.ttl` 與 connective traversal 仍是執行期完成;只有「向量 grounding 的 resource embedding」需要這個 index。沒有 index 時 grounding 退化為 lexical-only。
+
+KGE 線使用自己的 KGE artifacts(由 ontology TTL 訓練:TransE entity/relation embedding + entity text embedding)。如果 ontology 有變更或 artifacts 不存在,再執行(需 API key,會寫到 `KGE/KGE-based-graphrag/kge_data/`,已 gitignore):
 
 ```bash
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/KGE/KGE-based-graphrag
-python -m kge.train
+python -m kge.train --embedding-model text-embedding-3-small
 ```
 
 ### 0.2 KAG 線專屬準備(Docker stack + 獨立 venv + 灌料)
@@ -159,11 +169,13 @@ tio_outputs/kag/*.ttl
 
 ## 2. 評分 TIO Turtle
 
-評分器是根目錄的 `evaluate_ttl.py`。它固定讀取：
+評分器是根目錄的 `evaluate_ttl.py`(格式檢查 + `semantic_eval` 11 維 graph-binding 語意評分)。它讀取：
 
-- 測資：`test_cases_20.json`
+- 測資：預設 `test_cases_20.json`,可用 `--test-cases test_cases_40.json` 改用 40 題 gold(structure-only 實驗用)
 - 生成結果：`tio_outputs/<experiment>/*.ttl`
 - 評分輸出：`phase1/phase1_<experiment>.json`
+
+`<experiment>` 可為強配方 `llm_only / graphrag / kge / kag`、`*_weak`、或 structure-only `graphrag_structure / kge_structure / llm_only_structure`。
 
 ### 一鍵重算四條線評分
 
@@ -242,6 +254,41 @@ python run_all_experiments.py --eval-only
 cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment
 python run_all_experiments.py --no-few-shot
 ```
+
+## 4. Structure-only 替代性實驗(retrieval vs prompt-engineering)
+
+研究問題:**system prompt 給「組裝骨架」、抽掉全部 EVSLA 詞彙時,retrieval 能否獨力把詞彙補回來?** 三條 structure-only 線共用 byte-identical 的 `structure_only` system prompt + 同一份 `few_shot_structure_only.json`(skeleton);唯一差別是 user message 裡有沒有 retrieval context:
+
+- `graphrag_structure` = structure prompt + GraphRAG(domain-graph)retrieval
+- `kge_structure` = structure prompt + KGE retrieval
+- `llm_only_structure` = structure prompt + **無** retrieval(對照地板)
+- 上界參考:`llm_only` 強配方(full prompt + 含詞彙 few-shot)
+
+跑法(需 API key;先完成 §0.1 的 `build_index` 與 `kge.train`):
+
+```bash
+cd /Users/grantyeh/Grant/Project/CHT/TIO_Experiment
+cd GraphRag             && python nl_to_tio.py --prompt-profile structure_only --test-cases ../test_cases_40.json    && cd ..
+cd LLM-only             && python nl_to_tio.py --prompt-profile structure_only --test-cases ../test_cases_40.json    && cd ..
+cd KGE/KGE-based-graphrag && python nl_to_tio.py --prompt-profile structure_only --test-cases ../../test_cases_40.json && cd ../..
+
+python evaluate_ttl.py graphrag_structure  --test-cases test_cases_40.json
+python evaluate_ttl.py kge_structure       --test-cases test_cases_40.json
+python evaluate_ttl.py llm_only_structure  --test-cases test_cases_40.json
+```
+
+最新結果(40 題,strict `semantic_eval`,gpt-5.4;完整見 `progress.md` Architecture 3 / 4):
+
+```text
+Line                       | Composite | Tok/case
+LLM-only strong(天花板)    |  0.9722   |  5,349
+GraphRAG-structure         |  0.7867   |  2,369
+KGE-structure(正統)       |  0.7540   |  2,292
+LLM-only-structure(地板)   |  0.0000   |  1,432
+```
+
+- GraphRAG / KGE 在「零硬寫詞彙」下從地板 0.00 補到 ~0.75–0.79(retrieval 成正貢獻),且 token 約為強配方的一半。
+- 兩條 retrieval 幾乎打平:重設計後只差「選種子機制」,後面輸出契約共用,在小固定 schema 上殊途同歸。
 
 ## 注意事項
 
