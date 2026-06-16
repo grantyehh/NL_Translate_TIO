@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
-    rdfs:comment "Provide at least 150 Mbps guaranteed bandwidth from Blue Ocean Insurance headquarters to the Hualien service center."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Provide guaranteed bandwidth of at least 150 Mbps from Blue Ocean Insurance headquarters to Hualien Service Center."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "藍海保險"@zh .
 
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -26,7 +31,7 @@ ex:tgt-bandwidth
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -38,21 +43,21 @@ ex:cond-bandwidth
     quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-bandwidth-value .
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-bandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-bandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-1 ;
-    evsla:hasSpoke ex:spoke-1 .
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-hualien .
 
-ex:hub-1
+ex:hub
     a evsla:HubSite ;
-    rdfs:label "藍海保險總部"@zh .
+    rdfs:label "總部"@zh .
 
-ex:spoke-1
+ex:spoke-hualien
     a evsla:SpokeSite ;
     rdfs:label "花蓮服務中心"@zh .

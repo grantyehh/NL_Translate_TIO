@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
-    rdfs:comment "Xinqiao Financial requires latency from the Xinyi Financial headquarters hub to all trading-room spokes to stay below 15 ms at the p99 level, and guaranteed bandwidth to be at least 500 Mbps."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "鑫橋金融 requires latency from the Xinyi financial headquarters hub to all trading-room spokes to stay below 15 ms at p99, and guaranteed bandwidth to be at least 500 Mbps."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "鑫橋金融"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,8 +30,8 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -45,7 +50,7 @@ ex:tgt-bandwidth
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -58,7 +63,7 @@ ex:cond-latency
 
 ex:obs-latency
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:obs-latency-value .
+    ex:obs-latency-value ( ex:obs-latency ) .
 
 ex:obs-latency-value
     a quan:Quantity .
@@ -69,14 +74,20 @@ ex:cond-bandwidth
 
 ex:obs-bandwidth
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-bandwidth-value .
+    ex:obs-bandwidth-value ( ex:obs-bandwidth ) .
 
 ex:obs-bandwidth-value
     a quan:Quantity .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    ex:hub [ rdfs:label "信義金融總部"@zh ] ;
-    ex:spoke [ rdfs:label "交易室1"@zh ] ;
-    ex:spoke [ rdfs:label "交易室2"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "信義金融總部"@zh .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "交易室"@zh .

@@ -10,9 +10,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
-    rdfs:comment "Ensure packet loss between Jingyao Semiconductor hub and all spokes stays below 0.01% for 99% of the time."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure packet loss between the hub and all spokes of 晶耀半導體 stays below 0.01% for 99% of the time."@en .
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,8 +26,8 @@ ex:tgt-packetLoss
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-packetLoss
     a quan:Quantity ;
@@ -38,8 +39,8 @@ ex:cond-packetLoss
     quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
 ex:obs-packetLoss
-    evsla:packetLoss evsla:packetLoss ;
-    met:observedValue ( ex:obs-packetLoss ) .
+    met:metric evsla:packetLoss ;
+    ex:obs-packetLoss-value ex:obs-packetLoss-value .
 
 ex:obs-packetLoss-value
     a quan:Quantity .
@@ -55,4 +56,8 @@ ex:hub
 
 ex:spoke-1
     a evsla:SpokeSite ;
-    rdfs:label "Spoke"@en .
+    rdfs:label "各Spoke"@zh .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "晶耀半導體"@zh .

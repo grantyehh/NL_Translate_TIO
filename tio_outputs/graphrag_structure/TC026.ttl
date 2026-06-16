@@ -10,78 +10,88 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
-    icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
-    rdfs:comment "Star River Bank requires latency from Taipei headquarters to Hsinchu branch below 30 ms and to Kaohsiung branch below 60 ms, both at p95."@en .
+  a icm:Intent, evsla:EnterpriseVpnService ;
+  icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
+  evsla:forTenant ex:tenant ;
+  rdfs:comment "Galaxy Bank requires latency from Taipei headquarters to Hsinchu branch below 30 ms and to Kaohsiung branch below 60 ms, both at p95."@en .
+
+ex:tenant
+  a evsla:Tenant ;
+  rdfs:label "星河銀行"@zh .
 
 ex:exp-hsinchu
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-hsinchu .
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-hsinchu .
 
 ex:tgt-hsinchu
-    a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-hsinchu ;
-    evsla:hasThreshold ex:thr-hsinchu ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+  a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-hsinchu ;
+  evsla:hasThreshold ex:thr-hsinchu ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-hsinchu
-    a quan:Quantity ;
-    rdf:value "30"^^xsd:decimal ;
-    quan:unit "ms" .
+  a quan:Quantity ;
+  rdf:value "30"^^xsd:decimal ;
+  quan:unit "ms" .
 
 ex:exp-kaohsiung
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-kaohsiung .
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-kaohsiung .
 
 ex:tgt-kaohsiung
-    a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
-    evsla:hasThreshold ex:thr-kaohsiung ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+  a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-kaohsiung ;
+  evsla:hasThreshold ex:thr-kaohsiung ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-kaohsiung
-    a quan:Quantity ;
-    rdf:value "60"^^xsd:decimal ;
-    quan:unit "ms" .
+  a quan:Quantity ;
+  rdf:value "60"^^xsd:decimal ;
+  quan:unit "ms" .
 
 ex:cond-hsinchu
-    a log:Condition ;
-    quan:smaller ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
+  a log:Condition ;
+  quan:smaller ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
 
 ex:obs-hsinchu
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:obs-hsinchu-value .
+  evsla:hasMetric evsla:latency .
 
 ex:obs-hsinchu-value
-    a quan:Quantity .
+  a quan:Quantity ;
+  fun:valueOf ( ex:obs-hsinchu ) .
 
 ex:cond-kaohsiung
-    a log:Condition ;
-    quan:smaller ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
+  a log:Condition ;
+  quan:smaller ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
 
 ex:obs-kaohsiung
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:obs-kaohsiung-value .
+  evsla:hasMetric evsla:latency .
 
 ex:obs-kaohsiung-value
-    a quan:Quantity .
+  a quan:Quantity ;
+  fun:valueOf ( ex:obs-kaohsiung ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    rdf:value ex:taipei-hq, ex:hsinchu-branch, ex:kaohsiung-branch .
+  a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub ex:hub-taipei ;
+  evsla:hasSpoke ex:spoke-hsinchu, ex:spoke-kaohsiung .
 
-ex:taipei-hq
-    rdfs:label "台北總部"@zh .
+ex:hub-taipei
+  a evsla:HubSite ;
+  rdfs:label "台北總部"@zh .
 
-ex:hsinchu-branch
-    rdfs:label "新竹分行"@zh .
+ex:spoke-hsinchu
+  a evsla:SpokeSite ;
+  rdfs:label "新竹分行"@zh .
 
-ex:kaohsiung-branch
-    rdfs:label "高雄分行"@zh .
+ex:spoke-kaohsiung
+  a evsla:SpokeSite ;
+  rdfs:label "高雄分行"@zh .

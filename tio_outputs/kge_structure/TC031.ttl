@@ -10,18 +10,18 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-packetloss, ex:topology, ex:cond-latency, ex:cond-packetloss ;
-    rdfs:comment "Yingsheng Technology requires latency from the Taipei data center hub to all spokes to stay below 30 ms at the p95 level, and packet loss to stay below 0.05 at the p99 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Tenant requests hub-to-all-spokes latency below 30 ms at p95 and packet loss below 0.05% at p99."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "映盛科技"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency ;
-    evsla:hasMetric evsla:latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    icm:target ex:tgt-latency .
 
 ex:tgt-latency
     a icm:Target ;
@@ -30,12 +30,32 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
     rdf:value "30"^^xsd:decimal ;
     quan:unit "ms" .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetloss .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit "%" .
 
 ex:cond-latency
     a log:Condition ;
@@ -46,30 +66,7 @@ ex:obs-latency
 
 ex:obs-latency-value
     a quan:Quantity ;
-    met:metricValue ( ex:obs-latency ) .
-
-ex:exp-packetloss
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetloss ;
-    evsla:hasMetric evsla:packetLoss ;
-    evsla:hasThreshold ex:thr-packetloss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp .
-
-ex:tgt-packetloss
-    a icm:Target ;
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp .
-
-ex:thr-packetloss
-    a quan:Quantity ;
-    rdf:value "0.05"^^xsd:decimal ;
-    quan:unit "%" .
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:cond-packetloss
     a log:Condition ;
@@ -80,15 +77,17 @@ ex:obs-packetloss
 
 ex:obs-packetloss-value
     a quan:Quantity ;
-    met:metricValue ( ex:obs-packetloss ) .
+    fun:valueOf ( ex:obs-packetloss ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hubSite ex:hub-taipei-datacenter ;
-    evsla:spokeSite ex:spoke-1 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei-dc ;
+    evsla:hasSpoke ex:spoke-all-branches .
 
-ex:hub-taipei-datacenter
+ex:hub-taipei-dc
+    a evsla:HubSite ;
     rdfs:label "台北數據中心"@zh .
 
-ex:spoke-1
+ex:spoke-all-branches
+    a evsla:SpokeSite ;
     rdfs:label "所有分點"@zh .

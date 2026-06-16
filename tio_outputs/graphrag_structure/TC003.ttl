@@ -10,49 +10,54 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:HubAndSpokeTopology ;
-    icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
-    rdfs:comment "Provide at least 100 Mbps guaranteed bandwidth from the Honghai Logistics headquarters hub to the Kaohsiung warehouse spoke."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-guaranteedBandwidth, ex:topology, ex:cond-guaranteedBandwidth ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Provide guaranteed bandwidth of at least 100 Mbps from the headquarters to the Kaohsiung warehouse center."@en .
 
-ex:exp-bandwidth
+ex:exp-guaranteedBandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-bandwidth .
+    icm:target ex:tgt-guaranteedBandwidth .
 
-ex:tgt-bandwidth
+ex:tgt-guaranteedBandwidth
     a icm:Target ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    evsla:hasThreshold ex:thr-bandwidth ;
+    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
+    evsla:hasThreshold ex:thr-guaranteedBandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-bandwidth
+ex:thr-guaranteedBandwidth
     a quan:Quantity ;
     rdf:value "100"^^xsd:decimal ;
     quan:unit "Mbps" .
 
-ex:cond-bandwidth
+ex:cond-guaranteedBandwidth
     a log:Condition ;
-    quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+    quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
-ex:obs-bandwidth
+ex:obs-guaranteedBandwidth
     evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-bandwidth-value .
+    rdf:value ex:obs-guaranteedBandwidth-value .
 
-ex:obs-bandwidth-value
+ex:obs-guaranteedBandwidth-value
     a quan:Quantity .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-site ;
-    evsla:hasSpoke ex:spoke-site .
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
 
-ex:hub-site
+ex:hub
     a evsla:HubSite ;
     rdfs:label "宏海物流總部"@zh .
 
-ex:spoke-site
+ex:spoke-1
     a evsla:SpokeSite ;
     rdfs:label "高雄倉儲中心"@zh .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "宏海物流"@zh .

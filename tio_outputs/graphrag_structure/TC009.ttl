@@ -10,12 +10,17 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
-    rdfs:comment "Provide guaranteed bandwidth of at least 200 Mbps from Green Energy Power headquarters to Changbin Wind Farm."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Provide guaranteed bandwidth of at least 200 Mbps from the headquarters to Changbin Wind Farm."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "綠能電力"@zh .
 
 ex:exp-bandwidth
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-bandwidth .
 
 ex:tgt-bandwidth
@@ -25,8 +30,8 @@ ex:tgt-bandwidth
     evsla:hasThreshold ex:thr-bandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -51,7 +56,7 @@ ex:topology
 
 ex:hub
     a evsla:HubSite ;
-    rdfs:label "綠能電力總部"@zh .
+    rdfs:label "總部"@zh .
 
 ex:spoke-1
     a evsla:SpokeSite ;

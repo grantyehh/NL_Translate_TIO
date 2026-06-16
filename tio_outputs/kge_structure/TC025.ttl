@@ -10,48 +10,58 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
-    icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
-    rdfs:comment "Kaohsiung logistics center to Pingtung delivery station and Taitung delivery station, packet loss per spoke stays below 0.2% at the p95 level."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "德豐物流要求高雄物流中心到屏東配送站與台東配送站，每個分點各自的封包遺失率在95%時間內低於0.2%。"@en .
 
-ex:exp-packetLoss
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "德豐物流"@zh .
+
+ex:exp-packetloss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
+    icm:target ex:tgt-packetloss .
 
-ex:tgt-packetLoss
+ex:tgt-packetloss
     a icm:Target ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
-    evsla:hasThreshold ex:thr-packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-packetLoss
+ex:thr-packetloss
     a quan:Quantity ;
     rdf:value "0.2"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:cond-packetLoss
+ex:cond-packetloss
     a log:Condition ;
-    quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
+    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
 
-ex:obs-packetLoss
-    met:observedMetric evsla:packetLoss .
+ex:obs-packetloss
+    evsla:hasMetric evsla:packetLoss .
 
-ex:obs-packetLoss-value
+ex:obs-packetloss-value
     a quan:Quantity ;
-    met:metricValue ( ex:obs-packetLoss ) .
+    fun:valueOf ( ex:obs-packetloss ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hubToAllSpokes [
-        rdfs:label "高雄物流中心"@zh
-    ] ;
-    evsla:specificSpoke [
-        rdfs:label "屏東配送站"@zh
-    ] ,
-    [
-        rdfs:label "台東配送站"@zh
-    ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-kaohsiung ;
+    evsla:hasSpoke ex:spoke-pingtung, ex:spoke-taitung .
+
+ex:hub-kaohsiung
+    a evsla:HubSite ;
+    rdfs:label "高雄物流中心"@zh .
+
+ex:spoke-pingtung
+    a evsla:SpokeSite ;
+    rdfs:label "屏東配送站"@zh .
+
+ex:spoke-taitung
+    a evsla:SpokeSite ;
+    rdfs:label "台東配送站"@zh .

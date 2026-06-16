@@ -10,50 +10,54 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
-    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
-    rdfs:comment "Ensure packet loss between the hub and each spoke stays below 0.01% at the p99 level."@en .
+  a icm:Intent, evsla:EnterpriseVpnService ;
+  icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+  evsla:forTenant ex:tenant ;
+  rdfs:comment "Ensure packet loss between the hub and all spokes of Jingyao Semiconductor stays below 0.01% at the p99 level."@en .
+
+ex:tenant
+  a evsla:Tenant ;
+  rdfs:label "晶耀半導體"@zh .
 
 ex:exp-packetloss
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetloss .
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-packetloss .
 
 ex:tgt-packetloss
-    a icm:Target ;
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+  a icm:Target ;
+  evsla:hasMetric evsla:packetLoss ;
+  icm:valuesOfTargetProperty ex:thr-packetloss ;
+  evsla:hasThreshold ex:thr-packetloss ;
+  evsla:hasStatistic evsla:p99 ;
+  evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-packetloss
-    a quan:Quantity ;
-    rdf:value "0.01"^^xsd:decimal ;
-    quan:unit "%" .
+  a quan:Quantity ;
+  rdf:value "0.01"^^xsd:decimal ;
+  quan:unit "%" .
 
 ex:cond-packetloss
-    a log:Condition ;
-    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
+  a log:Condition ;
+  quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
 
 ex:obs-packetloss
-    evsla:hasMetric evsla:packetLoss .
+  evsla:hasMetric evsla:packetLoss .
 
 ex:obs-packetloss-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-packetloss ) .
+  a quan:Quantity ;
+  fun:valueOf ( ex:obs-packetloss ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hubToAllSpokes ex:hub ;
-    evsla:perSpoke ex:spoke-1, ex:spoke-2 .
+  a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub ex:hub ;
+  evsla:hasSpoke ex:spoke-1 .
 
 ex:hub
-    rdfs:label "晶耀半導體Hub"@zh .
+  a evsla:HubSite ;
+  rdfs:label "Hub"@zh .
 
 ex:spoke-1
-    rdfs:label "Spoke 1"@en .
-
-ex:spoke-2
-    rdfs:label "Spoke 2"@en .
+  a evsla:SpokeSite ;
+  rdfs:label "Spoke"@zh .

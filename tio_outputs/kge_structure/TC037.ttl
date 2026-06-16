@@ -10,59 +10,70 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
-    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
-    rdfs:comment "Shengde Logistics requires packet loss from the Linkou logistics headquarters to five branch warehouses to be at most 0.5% at the maximum level within each one-hour window."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Shengde Logistics requires packet loss from the Linkou logistics headquarters hub to all five spokes to be at most 0.5% at the maximum level within a one-hour window."@en .
 
-ex:exp-packetloss
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "盛德物流"@zh .
+
+ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetloss .
+    icm:target ex:tgt-packetLoss .
 
-ex:tgt-packetloss
+ex:tgt-packetLoss
     a icm:Target ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss ;
+    evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:maximum ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:oneHourWindow .
 
-ex:thr-packetloss
+ex:thr-packetLoss
     a quan:Quantity ;
     rdf:value "0.5"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:cond-packetloss
+ex:cond-packetLoss
     a log:Condition ;
-    quan:atMost ( ex:obs-packetloss-value ex:thr-packetloss ) .
+    quan:atMost ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
-ex:obs-packetloss
+ex:obs-packetLoss
     evsla:hasMetric evsla:packetLoss .
 
-ex:obs-packetloss-value
+ex:obs-packetLoss-value
     a quan:Quantity ;
-    met:observedValue ( ex:obs-packetloss ) .
+    fun:valueOf ( ex:obs-packetLoss ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hubSite ex:hub ;
-    evsla:spokeSite ex:spoke1, ex:spoke2, ex:spoke3, ex:spoke4, ex:spoke5 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5 .
 
 ex:hub
+    a evsla:HubSite ;
     rdfs:label "林口物流總部"@zh .
 
-ex:spoke1
+ex:spoke-1
+    a evsla:SpokeSite ;
     rdfs:label "分倉1"@zh .
 
-ex:spoke2
+ex:spoke-2
+    a evsla:SpokeSite ;
     rdfs:label "分倉2"@zh .
 
-ex:spoke3
+ex:spoke-3
+    a evsla:SpokeSite ;
     rdfs:label "分倉3"@zh .
 
-ex:spoke4
+ex:spoke-4
+    a evsla:SpokeSite ;
     rdfs:label "分倉4"@zh .
 
-ex:spoke5
+ex:spoke-5
+    a evsla:SpokeSite ;
     rdfs:label "分倉5"@zh .

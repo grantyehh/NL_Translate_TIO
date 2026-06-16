@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
-    rdfs:comment "Provide at least 80 Mbps guaranteed bandwidth from East Coast Tourism Headquarters to Green Island Service Station."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Provide guaranteed bandwidth of at least 80 Mbps from 東岸觀光總部 to 綠島服務站."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "東岸觀光"@zh .
 
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -23,10 +28,10 @@ ex:tgt-bandwidth
     evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasScope evsla:specificSpoke ;
     evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -46,13 +51,13 @@ ex:obs-bandwidth-value
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-east-coast-tourism-hq ;
-    evsla:hasSpoke ex:spoke-green-island-service-station .
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
 
-ex:hub-east-coast-tourism-hq
+ex:hub
     a evsla:HubSite ;
     rdfs:label "東岸觀光總部"@zh .
 
-ex:spoke-green-island-service-station
+ex:spoke-1
     a evsla:SpokeSite ;
     rdfs:label "綠島服務站"@zh .

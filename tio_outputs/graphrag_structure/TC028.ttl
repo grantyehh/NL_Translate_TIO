@@ -10,46 +10,49 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-taichung, ex:exp-kaohsiung, ex:topology, ex:cond-taichung, ex:cond-kaohsiung ;
-    rdfs:comment "亞翔科技要求新竹總部到台中研發中心保證頻寬不低於200Mbps，到高雄測試中心保證頻寬不低於100Mbps。"@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "亞翔科技 requires guaranteed bandwidth from 新竹總部 to 台中研發中心 at least 200 Mbps and to 高雄測試中心 at least 100 Mbps."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "亞翔科技"@zh .
+
+ex:topology
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "新竹總部"@zh .
+
+ex:spoke-taichung
+    a evsla:SpokeSite ;
+    rdfs:label "台中研發中心"@zh .
+
+ex:spoke-kaohsiung
+    a evsla:SpokeSite ;
+    rdfs:label "高雄測試中心"@zh .
 
 ex:exp-taichung
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-taichung ;
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    evsla:hasThreshold ex:thr-taichung ;
-    evsla:hasScope evsla:specificSpoke .
+    icm:target ex:tgt-taichung .
 
 ex:tgt-taichung
     a icm:Target ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-taichung ;
     evsla:hasThreshold ex:thr-taichung ;
-    evsla:hasScope evsla:specificSpoke .
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-taichung
     a quan:Quantity ;
     rdf:value "200"^^xsd:decimal ;
-    quan:unit "Mbps" .
-
-ex:exp-kaohsiung
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-kaohsiung ;
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    evsla:hasThreshold ex:thr-kaohsiung ;
-    evsla:hasScope evsla:specificSpoke .
-
-ex:tgt-kaohsiung
-    a icm:Target ;
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
-    evsla:hasThreshold ex:thr-kaohsiung ;
-    evsla:hasScope evsla:specificSpoke .
-
-ex:thr-kaohsiung
-    a quan:Quantity ;
-    rdf:value "100"^^xsd:decimal ;
     quan:unit "Mbps" .
 
 ex:cond-taichung
@@ -57,36 +60,38 @@ ex:cond-taichung
     quan:atLeast ( ex:obs-taichung-value ex:thr-taichung ) .
 
 ex:obs-taichung
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-taichung-value
     a quan:Quantity ;
     fun:valueOf ( ex:obs-taichung ) .
+
+ex:exp-kaohsiung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-kaohsiung .
+
+ex:tgt-kaohsiung
+    a icm:Target ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
+    evsla:hasThreshold ex:thr-kaohsiung ;
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:thr-kaohsiung
+    a quan:Quantity ;
+    rdf:value "100"^^xsd:decimal ;
+    quan:unit "Mbps" .
 
 ex:cond-kaohsiung
     a log:Condition ;
     quan:atLeast ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
 
 ex:obs-kaohsiung
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-kaohsiung-value
     a quan:Quantity ;
     fun:valueOf ( ex:obs-kaohsiung ) .
-
-ex:topology
-    a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hsinchu-hq ;
-    evsla:hasSpoke ex:taichung-rd-center, ex:kaohsiung-test-center .
-
-ex:hsinchu-hq
-    a evsla:HubSite ;
-    rdfs:label "新竹總部"@en .
-
-ex:taichung-rd-center
-    a evsla:SpokeSite ;
-    rdfs:label "台中研發中心"@en .
-
-ex:kaohsiung-test-center
-    a evsla:SpokeSite ;
-    rdfs:label "高雄測試中心"@en .

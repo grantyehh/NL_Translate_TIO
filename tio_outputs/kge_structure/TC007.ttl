@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:HubAndSpokeTopology ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure latency from the Kaohsiung Port operations center hub to all port station spokes stays below 80 ms at the p95 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure latency from Kaohsiung Port Operations Center to all port branch sites stays below 80 ms at the 95th percentile."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "海港航運"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -26,7 +31,7 @@ ex:tgt-latency
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -38,11 +43,11 @@ ex:cond-latency
     quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:hasMetric evsla:latency ;
-    evsla:hasThreshold ex:obs-latency-value .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
@@ -51,7 +56,7 @@ ex:topology
 
 ex:hub
     a evsla:HubSite ;
-    rdfs:label "海港航運高雄港營運中心"@zh .
+    rdfs:label "高雄港營運中心"@zh .
 
 ex:spoke-1
     a evsla:SpokeSite ;

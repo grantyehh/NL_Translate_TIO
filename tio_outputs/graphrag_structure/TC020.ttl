@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-loss, ex:topology, ex:cond-latency, ex:cond-loss ;
-    rdfs:comment "Ensure latency from the Taipei R&D headquarters hub to the Zhubei laboratory and Tainan manufacturing plant stays below 35 ms at p95, and packet loss between the hub and each spoke stays below 0.05% at p99."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure latency from the Taipei R&D headquarters hub to Hsinchu Experimental Lab and Tainan Manufacturing Plant stays below 35 ms at the p95 level, and packet loss between the hub and each spoke stays below 0.05% at the p99 level."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "精準醫材"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,8 +30,8 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -44,8 +49,8 @@ ex:tgt-loss
     evsla:hasThreshold ex:thr-loss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-loss
     a quan:Quantity ;
@@ -57,36 +62,36 @@ ex:cond-latency
     quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:hasMetric evsla:latency ;
-    met:observedValue ( ex:obs-latency ) .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:cond-loss
     a log:Condition ;
     quan:smaller ( ex:obs-loss-value ex:thr-loss ) .
 
 ex:obs-loss
-    evsla:hasMetric evsla:packetLoss ;
-    met:observedValue ( ex:obs-loss ) .
+    evsla:hasMetric evsla:packetLoss .
 
 ex:obs-loss-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-loss ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:site-hub ;
-    evsla:hasSpoke ex:site-spoke-zhubei, ex:site-spoke-tainan .
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-zhubei, ex:spoke-tainan .
 
-ex:site-hub
+ex:hub
     a evsla:HubSite ;
-    rdfs:label "精準醫材台北研發總部"@zh .
+    rdfs:label "台北研發總部"@zh .
 
-ex:site-spoke-zhubei
+ex:spoke-zhubei
     a evsla:SpokeSite ;
     rdfs:label "竹北實驗室"@zh .
 
-ex:site-spoke-tainan
+ex:spoke-tainan
     a evsla:SpokeSite ;
     rdfs:label "台南製造廠"@zh .

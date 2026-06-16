@@ -10,42 +10,37 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency-keelung, ex:exp-loss-miaoli, ex:exp-loss-changbin, ex:topology, ex:cond-latency-keelung, ex:cond-loss-miaoli, ex:cond-loss-changbin ;
-    rdfs:comment "Taipei Energy Dispatch Center to Keelung Power Plant latency below 20 ms at p99, and to Miaoli Power Plant and Changbin Power Plant packet loss below 0.05% for the monthly SLA window."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "昇晟能源 requires latency below 20 ms at p99 from 台北能源調度中心 to 基隆電廠, and packet loss below 0.05% to 苗栗電廠 and 彰濱電廠 over the default five-minute window."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "昇晟能源"@zh .
 
 ex:exp-latency-keelung
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency-keelung ;
-    evsla:hasMetric evsla:latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    icm:target ex:tgt-latency-keelung .
 
 ex:tgt-latency-keelung
     a icm:Target ;
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    evsla:hasThreshold ex:thr-latency ;
+    icm:valuesOfTargetProperty ex:thr-latency-keelung ;
+    evsla:hasThreshold ex:thr-latency-keelung ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-latency
+ex:thr-latency-keelung
     a quan:Quantity ;
     rdf:value "20"^^xsd:decimal ;
     quan:unit "ms" .
 
 ex:exp-loss-miaoli
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-loss-miaoli ;
-    evsla:hasMetric evsla:packetLoss ;
-    evsla:hasThreshold ex:thr-loss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    icm:target ex:tgt-loss-miaoli .
 
 ex:tgt-loss-miaoli
     a icm:Target ;
@@ -54,18 +49,12 @@ ex:tgt-loss-miaoli
     evsla:hasThreshold ex:thr-loss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:exp-loss-changbin
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-loss-changbin ;
-    evsla:hasMetric evsla:packetLoss ;
-    evsla:hasThreshold ex:thr-loss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    icm:target ex:tgt-loss-changbin .
 
 ex:tgt-loss-changbin
     a icm:Target ;
@@ -74,8 +63,8 @@ ex:tgt-loss-changbin
     evsla:hasThreshold ex:thr-loss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-loss
     a quan:Quantity ;
@@ -84,41 +73,54 @@ ex:thr-loss
 
 ex:cond-latency-keelung
     a log:Condition ;
-    quan:smaller ( ex:obs-latency-keelung-value ex:thr-latency ) .
+    quan:smaller ( ex:obs-latency-keelung-value ex:thr-latency-keelung ) .
 
 ex:obs-latency-keelung
-    evsla:hasMetric evsla:latency .
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:obs-latency-keelung-value .
 
 ex:obs-latency-keelung-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-latency-keelung ) .
+    a quan:Quantity .
 
 ex:cond-loss-miaoli
     a log:Condition ;
     quan:smaller ( ex:obs-loss-miaoli-value ex:thr-loss ) .
 
 ex:obs-loss-miaoli
-    evsla:hasMetric evsla:packetLoss .
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:obs-loss-miaoli-value .
 
 ex:obs-loss-miaoli-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-loss-miaoli ) .
+    a quan:Quantity .
 
 ex:cond-loss-changbin
     a log:Condition ;
     quan:smaller ( ex:obs-loss-changbin-value ex:thr-loss ) .
 
 ex:obs-loss-changbin
-    evsla:hasMetric evsla:packetLoss .
+    evsla:hasMetric evsla:packetLoss ;
+    icm:valuesOfTargetProperty ex:obs-loss-changbin-value .
 
 ex:obs-loss-changbin-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-loss-changbin ) .
+    a quan:Quantity .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:specificSpoke ;
-    ex:hub [ rdfs:label "台北能源調度中心"@zh ] ;
-    ex:spoke [ rdfs:label "基隆電廠"@zh ] ;
-    ex:spoke [ rdfs:label "苗栗電廠"@zh ] ;
-    ex:spoke [ rdfs:label "彰濱電廠"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-keelung, ex:spoke-miaoli, ex:spoke-changbin .
+
+ex:hub-taipei
+    a evsla:HubSite ;
+    rdfs:label "台北能源調度中心"@zh .
+
+ex:spoke-keelung
+    a evsla:SpokeSite ;
+    rdfs:label "基隆電廠"@zh .
+
+ex:spoke-miaoli
+    a evsla:SpokeSite ;
+    rdfs:label "苗栗電廠"@zh .
+
+ex:spoke-changbin
+    a evsla:SpokeSite ;
+    rdfs:label "彰濱電廠"@zh .

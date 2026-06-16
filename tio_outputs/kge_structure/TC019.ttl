@@ -10,9 +10,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure latency from the security monitoring headquarters to all branches stays below 40 ms at the p95 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure latency from the security monitoring headquarters to all branches stays below 40 ms at the 95th percentile."@en .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,8 +26,8 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -38,14 +39,25 @@ ex:cond-latency
     quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    met:latency evsla:latency ;
-    ex:observedValue ( ex:obs-latency ) .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    ex:hub [ rdfs:label "安全監控總部"@zh ] ;
-    ex:spoke [ rdfs:label "分點1"@zh ] ;
-    ex:spoke [ rdfs:label "分點2"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "安全監控總部"@zh .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "所有分點"@zh .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "安全監控"@zh .

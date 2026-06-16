@@ -10,113 +10,92 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-banqiao, ex:exp-xizhi, ex:exp-sanchong, ex:topology, ex:cond-banqiao, ex:cond-xizhi, ex:cond-sanchong ;
-    rdfs:comment "Federal Hospital requires latency from Taipei Medical Information Center to Banqiao campus to stay below 10 ms at p99, and latency to Xizhi and Sanchong campuses to stay below 25 ms at p95."@en .
+  a icm:Intent, evsla:EnterpriseVpnService ;
+  icm:intentElements ex:exp-1, ex:exp-2, ex:topology, ex:cond-latency-1, ex:cond-latency-2 ;
+  evsla:forTenant ex:tenant ;
+  rdfs:comment "Federal Hospital requires latency from Taipei Medical Information Center to Banqiao Campus to stay below 10 ms at p99, and to Xizhi Campus and Sanchong Campus to stay below 25 ms at p95."@en .
 
-ex:exp-banqiao
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-banqiao .
+ex:tenant
+  a evsla:Tenant ;
+  rdfs:label "聯邦醫院"@zh .
 
-ex:tgt-banqiao
-    a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-banqiao ;
-    evsla:hasThreshold ex:thr-banqiao ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+ex:exp-1
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-1 .
 
-ex:thr-banqiao
-    a quan:Quantity ;
-    rdf:value "10"^^xsd:decimal ;
-    quan:unit "ms" .
+ex:tgt-1
+  a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency-1 ;
+  evsla:hasThreshold ex:thr-latency-1 ;
+  evsla:hasStatistic evsla:p99 ;
+  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:cond-banqiao
-    a log:Condition ;
-    quan:smaller ( ex:obs-banqiao-value ex:thr-banqiao ) .
+ex:thr-latency-1
+  a quan:Quantity ;
+  rdf:value "10"^^xsd:decimal ;
+  quan:unit "ms" .
 
-ex:obs-banqiao
-    evsla:hasMetric evsla:latency .
+ex:exp-2
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-2 .
 
-ex:obs-banqiao-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-banqiao ) .
+ex:tgt-2
+  a icm:Target ;
+  evsla:hasMetric evsla:latency ;
+  icm:valuesOfTargetProperty ex:thr-latency-2 ;
+  evsla:hasThreshold ex:thr-latency-2 ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:perSpoke ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:exp-xizhi
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-xizhi .
+ex:thr-latency-2
+  a quan:Quantity ;
+  rdf:value "25"^^xsd:decimal ;
+  quan:unit "ms" .
 
-ex:tgt-xizhi
-    a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-xizhi ;
-    evsla:hasThreshold ex:thr-xizhi ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+ex:cond-latency-1
+  a log:Condition ;
+  quan:smaller ( ex:obs-latency-1-value ex:thr-latency-1 ) .
 
-ex:thr-xizhi
-    a quan:Quantity ;
-    rdf:value "25"^^xsd:decimal ;
-    quan:unit "ms" .
+ex:obs-latency-1
+  evsla:hasMetric evsla:latency .
 
-ex:cond-xizhi
-    a log:Condition ;
-    quan:smaller ( ex:obs-xizhi-value ex:thr-xizhi ) .
+ex:obs-latency-1-value
+  a quan:Quantity ;
+  fun:valueOf ( ex:obs-latency-1 ) .
 
-ex:obs-xizhi
-    evsla:hasMetric evsla:latency .
+ex:cond-latency-2
+  a log:Condition ;
+  quan:smaller ( ex:obs-latency-2-value ex:thr-latency-2 ) .
 
-ex:obs-xizhi-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-xizhi ) .
+ex:obs-latency-2
+  evsla:hasMetric evsla:latency .
 
-ex:exp-sanchong
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-sanchong .
-
-ex:tgt-sanchong
-    a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-sanchong ;
-    evsla:hasThreshold ex:thr-sanchong ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
-
-ex:thr-sanchong
-    a quan:Quantity ;
-    rdf:value "25"^^xsd:decimal ;
-    quan:unit "ms" .
-
-ex:cond-sanchong
-    a log:Condition ;
-    quan:smaller ( ex:obs-sanchong-value ex:thr-sanchong ) .
-
-ex:obs-sanchong
-    evsla:hasMetric evsla:latency .
-
-ex:obs-sanchong-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-sanchong ) .
+ex:obs-latency-2-value
+  a quan:Quantity ;
+  fun:valueOf ( ex:obs-latency-2 ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hubToAllSpokes ex:hub ;
-    evsla:specificSpoke ex:spoke-banqiao, ex:spoke-xizhi, ex:spoke-sanchong .
+  a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub ex:hub ;
+  evsla:hasSpoke ex:spoke-banqiao, ex:spoke-xizhi, ex:spoke-sanchong .
 
 ex:hub
-    rdfs:label "台北醫療資訊中心"@zh .
+  a evsla:HubSite ;
+  rdfs:label "台北醫療資訊中心"@zh .
 
 ex:spoke-banqiao
-    rdfs:label "板橋院區"@zh .
+  a evsla:SpokeSite ;
+  rdfs:label "板橋院區"@zh .
 
 ex:spoke-xizhi
-    rdfs:label "汐止院區"@zh .
+  a evsla:SpokeSite ;
+  rdfs:label "汐止院區"@zh .
 
 ex:spoke-sanchong
-    rdfs:label "三重院區"@zh .
+  a evsla:SpokeSite ;
+  rdfs:label "三重院區"@zh .

@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
-    rdfs:comment "Ensure packet loss between the City Transportation Bureau hub and all spokes stays below 0.2% at the p99 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure packet loss between the hub and all spokes stays below 0.2% at the p99 level."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "城市交通局"@zh .
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,8 +30,8 @@ ex:tgt-packetLoss
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-packetLoss
     a quan:Quantity ;
@@ -38,21 +43,21 @@ ex:cond-packetLoss
     quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
 ex:obs-packetLoss
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:obs-packetLoss-value .
+    evsla:hasMetric evsla:packetLoss .
 
 ex:obs-packetLoss-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-packetLoss ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
     evsla:hasHub ex:hub ;
-    evsla:hasSpoke ex:spoke-1 .
+    evsla:hasSpoke ex:spoke1 .
 
 ex:hub
     a evsla:HubSite ;
-    rdfs:label "城市交通局Hub"@zh .
+    rdfs:label "Hub"@zh .
 
-ex:spoke-1
+ex:spoke1
     a evsla:SpokeSite ;
-    rdfs:label "Spoke"@en .
+    rdfs:label "Spoke"@zh .

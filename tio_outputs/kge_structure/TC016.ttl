@@ -10,49 +10,54 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-  a icm:Intent, evsla:SlaExpectation ;
-  icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-  rdfs:comment "Ensure latency from the smart agriculture hub to all spokes stays below 100 ms at the p95 level."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure latency from the Smart Agriculture Hub to all spokes stays below 100 ms at the p95 level."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "智慧農業"@zh .
 
 ex:exp-latency
-  a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-latency .
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency .
 
 ex:tgt-latency
-  a icm:Target ;
-  evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty ex:thr-latency ;
-  evsla:hasThreshold ex:thr-latency ;
-  evsla:hasStatistic evsla:p95 ;
-  evsla:hasScope evsla:hubToAllSpokes ;
-  evsla:hasMeasurementMethod evsla:activeMeasurement ;
-  evsla:hasTimeWindow evsla:monthlySlaWindow .
+    a icm:Target ;
+    evsla:hasMetric evsla:latency ;
+    icm:valuesOfTargetProperty ex:thr-latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
-  a quan:Quantity ;
-  rdf:value "100"^^xsd:decimal ;
-  quan:unit "ms" .
+    a quan:Quantity ;
+    rdf:value "100"^^xsd:decimal ;
+    quan:unit "ms" .
 
 ex:cond-latency
-  a log:Condition ;
-  quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-  evsla:hasMetric evsla:latency ;
-  met:observedValue ( ex:obs-latency ) .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
-  a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
-  a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub ex:hub ;
-  evsla:hasSpoke ex:spoke-1 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
 
 ex:hub
-  a evsla:HubSite ;
-  rdfs:label "智慧農業Hub"@zh .
+    a evsla:HubSite ;
+    rdfs:label "Hub"@zh .
 
 ex:spoke-1
-  a evsla:SpokeSite ;
-  rdfs:label "Spoke"@en .
+    a evsla:SpokeSite ;
+    rdfs:label "所有Spoke"@zh .

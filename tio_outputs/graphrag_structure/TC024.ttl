@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Chiayi Agricultural Information Center to Xinying Farm, Madou Farm, and Yujing Farm: latency for each spoke stays below 70 ms at the p95 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Tenant requests per-spoke latency from the hub to Xinying Farm, Madou Farm, and Yujing Farm to stay below 70 ms at the p95 level."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "豐茂農業"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,7 +30,7 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
@@ -38,16 +43,29 @@ ex:cond-latency
     quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:obs-latency-value .
+    evsla:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:perSpoke ;
-    ex:hub [ rdfs:label "嘉義農業資訊中心"@zh ] ;
-    ex:spoke [ rdfs:label "新營農場"@zh ] ;
-    ex:spoke [ rdfs:label "麻豆農場"@zh ] ;
-    ex:spoke [ rdfs:label "玉井農場"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3 .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "嘉義農業資訊中心"@zh .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "新營農場"@zh .
+
+ex:spoke-2
+    a evsla:SpokeSite ;
+    rdfs:label "麻豆農場"@zh .
+
+ex:spoke-3
+    a evsla:SpokeSite ;
+    rdfs:label "玉井農場"@zh .

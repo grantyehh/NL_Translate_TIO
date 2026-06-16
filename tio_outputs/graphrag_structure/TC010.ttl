@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure latency from the Swift Game headquarters to all branch sites stays below 20 ms at the p95 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure latency from the hub to all spokes stays below 20 ms at the p95 level."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "迅捷遊戲"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,7 +30,7 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
@@ -45,11 +50,14 @@ ex:obs-latency-value
     fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hubToAllSpokes ex:hub, ex:spoke-1 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
 
 ex:hub
-    rdfs:label "迅捷遊戲總部"@zh .
+    a evsla:HubSite ;
+    rdfs:label "總部"@zh .
 
 ex:spoke-1
+    a evsla:SpokeSite ;
     rdfs:label "所有分點"@zh .

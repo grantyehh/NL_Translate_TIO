@@ -10,39 +10,44 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
-    icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
-    rdfs:comment "Ensure packet loss between the United Media hub and each spoke stays below 0.05% at the p99 level."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-pl, ex:topology, ex:cond-pl ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure packet loss between the hub and all spokes stays below 0.05% at the p99 level."@en .
 
-ex:exp-packetLoss
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "聯合媒體"@zh .
+
+ex:exp-pl
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
+    icm:target ex:tgt-pl .
 
-ex:tgt-packetLoss
+ex:tgt-pl
     a icm:Target ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
-    evsla:hasThreshold ex:thr-packetLoss ;
+    icm:valuesOfTargetProperty ex:thr-pl ;
+    evsla:hasThreshold ex:thr-pl ;
     evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-packetLoss
+ex:thr-pl
     a quan:Quantity ;
     rdf:value "0.05"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:cond-packetLoss
+ex:cond-pl
     a log:Condition ;
-    quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
+    quan:smaller ( ex:obs-pl-value ex:thr-pl ) .
 
-ex:obs-packetLoss
-    evsla:hasMetric evsla:packetLoss .
+ex:obs-pl
+    evsla:hasMetric evsla:packetLoss ;
+    ex:obs-pl-value ex:obs-pl-value .
 
-ex:obs-packetLoss-value
-    a quan:Quantity ;
-    met:observedValue ( ex:obs-packetLoss ) .
+ex:obs-pl-value
+    a quan:Quantity .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
@@ -51,8 +56,8 @@ ex:topology
 
 ex:hub
     a evsla:HubSite ;
-    rdfs:label "United Media Hub"@en .
+    rdfs:label "聯合媒體Hub"@zh .
 
 ex:spoke-1
     a evsla:SpokeSite ;
-    rdfs:label "Spoke"@en .
+    rdfs:label "各Spoke"@zh .

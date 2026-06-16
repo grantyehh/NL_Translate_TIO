@@ -10,19 +10,18 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
-    rdfs:comment "Packet loss from Taipei warehouse hub to each of New Taipei, Taoyuan, and Taichung spokes must stay below 0.1% at the p99 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "翔益電商要求台北倉儲中心到新北倉、桃園倉與台中倉，每個分點各自的封包遺失率在99%時間內低於0.1%。"@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "翔益電商"@zh .
 
 ex:exp-packetloss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetloss ;
-    evsla:hasMetric evsla:packetLoss ;
-    evsla:hasThreshold ex:thr-packetloss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    icm:target ex:tgt-packetloss .
 
 ex:tgt-packetloss
     a icm:Target ;
@@ -31,8 +30,8 @@ ex:tgt-packetloss
     evsla:hasThreshold ex:thr-packetloss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-packetloss
     a quan:Quantity ;
@@ -44,16 +43,29 @@ ex:cond-packetloss
     quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
 
 ex:obs-packetloss
-    evsla:hasMetric evsla:packetLoss .
+    met:observedProperty evsla:packetLoss .
 
 ex:obs-packetloss-value
     a quan:Quantity ;
-    fun:valueOf ( ex:obs-packetloss ) .
+    met:hasValue ( ex:obs-packetloss ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:perSpoke ;
-    ex:hub [ rdfs:label "台北倉儲中心"@zh ] ;
-    ex:spoke [ rdfs:label "新北倉"@zh ] ;
-    ex:spoke [ rdfs:label "桃園倉"@zh ] ;
-    ex:spoke [ rdfs:label "台中倉"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-newtaipei, ex:spoke-taoyuan, ex:spoke-taichung .
+
+ex:hub-taipei
+    a evsla:HubSite ;
+    rdfs:label "台北倉儲中心"@zh .
+
+ex:spoke-newtaipei
+    a evsla:SpokeSite ;
+    rdfs:label "新北倉"@zh .
+
+ex:spoke-taoyuan
+    a evsla:SpokeSite ;
+    rdfs:label "桃園倉"@zh .
+
+ex:spoke-taichung
+    a evsla:SpokeSite ;
+    rdfs:label "台中倉"@zh .

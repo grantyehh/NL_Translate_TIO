@@ -10,12 +10,17 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
-    rdfs:comment "Provide at least 300 Mbps guaranteed bandwidth from 亞洲航空維修總部 to 小港機棚 in a hub-and-spoke enterprise VPN SLA."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Provide guaranteed bandwidth of at least 300 Mbps from 亞洲航空維修總部 to 小港機棚."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "亞洲航空維修總部"@zh .
 
 ex:exp-bandwidth
-    a icm:PropertyExpectation ;
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-bandwidth .
 
 ex:tgt-bandwidth
@@ -25,8 +30,8 @@ ex:tgt-bandwidth
     evsla:hasThreshold ex:thr-bandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -38,11 +43,11 @@ ex:cond-bandwidth
     quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-bandwidth-value .
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-bandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-bandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;

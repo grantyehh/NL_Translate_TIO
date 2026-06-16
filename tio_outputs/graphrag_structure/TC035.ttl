@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:HubAndSpokeTopology ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
-    rdfs:comment "Taisheng Aerospace requires latency from Taoyuan aerospace manufacturing headquarters to Taichung parts plant and Kaohsiung assembly plant to stay below 25 ms at the p95 level, and guaranteed bandwidth to be at least 300 Mbps."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA for latency below 25 ms at p95 and guaranteed bandwidth at least 300 Mbps from the Taoyuan aerospace manufacturing headquarters to the Taichung parts plant and Kaohsiung assembly plant."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "泰盛航太"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -21,69 +26,77 @@ ex:exp-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:hasMetric evsla:latency ;
+    evsla:latency evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
     rdf:value "25"^^xsd:decimal ;
     quan:unit "ms" .
 
+ex:cond-latency
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:latency evsla:latency ;
+    icm:valuesOfTargetProperty ex:obs-latency-value .
+
+ex:obs-latency-value
+    a quan:Quantity .
+
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
     icm:target ex:tgt-bandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasScope evsla:hubToAllSpokes .
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:tgt-bandwidth
     a icm:Target ;
-    evsla:hasMetric evsla:guaranteedBandwidth ;
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasScope evsla:hubToAllSpokes .
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
     rdf:value "300"^^xsd:decimal ;
     quan:unit "Mbps" .
 
-ex:cond-latency
-    a log:Condition ;
-    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
-
-ex:obs-latency
-    evsla:latency evsla:latency .
-
-ex:obs-latency-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-latency ) .
-
 ex:cond-bandwidth
     a log:Condition ;
     quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+    icm:valuesOfTargetProperty ex:obs-bandwidth-value .
 
 ex:obs-bandwidth-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-bandwidth ) .
+    a quan:Quantity .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-site ;
+    evsla:hasHub ex:hub ;
     evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
 
-ex:hub-site
+ex:hub
     a evsla:HubSite ;
     rdfs:label "桃園航太製造總部"@zh .
 

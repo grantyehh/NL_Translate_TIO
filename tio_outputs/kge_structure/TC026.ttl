@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
+    evsla:forTenant ex:tenant ;
     rdfs:comment "Galaxy Bank requires latency from Taipei headquarters to Hsinchu branch below 30 ms and to Kaohsiung branch below 60 ms, both at p95."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "星河銀行"@zh .
 
 ex:exp-hsinchu
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,13 +30,24 @@ ex:tgt-hsinchu
     evsla:hasThreshold ex:thr-hsinchu ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-hsinchu
     a quan:Quantity ;
     rdf:value "30"^^xsd:decimal ;
     quan:unit "ms" .
+
+ex:cond-hsinchu
+    a log:Condition ;
+    quan:smaller ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
+
+ex:obs-hsinchu
+    evsla:hasMetric evsla:latency .
+
+ex:obs-hsinchu-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-hsinchu ) .
 
 ex:exp-kaohsiung
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -44,24 +60,13 @@ ex:tgt-kaohsiung
     evsla:hasThreshold ex:thr-kaohsiung ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-kaohsiung
     a quan:Quantity ;
     rdf:value "60"^^xsd:decimal ;
     quan:unit "ms" .
-
-ex:cond-hsinchu
-    a log:Condition ;
-    quan:smaller ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
-
-ex:obs-hsinchu
-    evsla:hasMetric evsla:latency .
-
-ex:obs-hsinchu-value
-    a quan:Quantity ;
-    evsla:hasThreshold ( ex:obs-hsinchu ) .
 
 ex:cond-kaohsiung
     a log:Condition ;
@@ -72,10 +77,21 @@ ex:obs-kaohsiung
 
 ex:obs-kaohsiung-value
     a quan:Quantity ;
-    evsla:hasThreshold ( ex:obs-kaohsiung ) .
+    fun:valueOf ( ex:obs-kaohsiung ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope [ rdfs:label "Taipei headquarters"@en ] ;
-    evsla:hasScope [ rdfs:label "Hsinchu branch"@en ] ;
-    evsla:hasScope [ rdfs:label "Kaohsiung branch"@en ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-hsinchu, ex:spoke-kaohsiung .
+
+ex:hub-taipei
+    a evsla:HubSite ;
+    rdfs:label "台北總部"@zh .
+
+ex:spoke-hsinchu
+    a evsla:SpokeSite ;
+    rdfs:label "新竹分行"@zh .
+
+ex:spoke-kaohsiung
+    a evsla:SpokeSite ;
+    rdfs:label "高雄分行"@zh .

@@ -373,6 +373,59 @@ LLM-only-structure(地板)   |  0.0000   |  1,432
 
 報告:`phase1/phase1_kge_structure.json`(已更新為正統版);`token_usage_kge.json` 含 KGE artifact 訓練的 prep token。
 
+## Experiment Architecture 5 — four-dimension grounding (2026-06-16)
+
+把兩條 retrieval 共同的四個弱維度(tenant / time_window / measurement_method / topology)用
+**ontology 內建慣例 + 共用 retrieval 層修正**一次拉起來。慣例編進 `EnterpriseVpnSlaOntology.ttl`
+(`evsla:defaultMeasurementMethod` per metric、`evsla:isDefaultTimeWindow` 標記、window instance 加
+中文 `rdfs:label` 供 NL→IRI 對應);共用層修三處:(1) `resource_index.CLASS_ROLE` 補
+Tenant/HubSite/SpokeSite/HubAndSpokeTopology;(2) `graph_relations.traverse_connective` 在有 SLA
+expectation 時保證供出四角色,並 emit forTenant / hasHub / hasSpoke 關係讓 class IRI 進 context;
+(3) `context_builder.serialize_context` 新增 Conventions 區塊;(4) `evsla_prompt` structure-only 骨架
+要求 tenant 綁定 + 有型別的 hub/spoke(詞彙仍只從 retrieval 取,維持 structure-only 契約)。
+GraphRAG/KGE 共用,一次修兩條;KGE 因 TTL 變更已 `python -m kge.train` 重訓 artifacts。
+設計/計畫:`docs/superpowers/specs/2026-06-16-retrieval-four-dimension-grounding-design.md`、
+`docs/superpowers/plans/2026-06-16-retrieval-four-dimension-grounding.md`。
+
+四線結果(structure-only,40 題,strict `semantic_eval`,gpt-5.4):
+
+```text
+Line                       | Composite | Tok/case
+LLM-only strong(天花板)    |  0.9722   |  5,349
+GraphRAG-structure         |  0.7867 -> 0.9391  |  2,369 -> 2,722
+KGE-structure(正統)       |  0.7540 -> 0.9831  |  2,292 -> 2,637
+LLM-only-structure(地板)   |  0.0000   |  1,432
+```
+
+四個目標維度(was → now):
+
+```text
+Dimension          | GraphRAG        | KGE
+tenant             | 0.000 -> 0.975  | 0.000 -> 0.975
+time_window        | 0.200 -> 0.950  | 0.125 -> 0.988
+measurement_method | 0.350 -> 0.925  | 0.388 -> 0.975
+topology           | 0.500 -> 1.000  | 0.425 -> 1.000
+```
+
+關鍵發現:
+
+- **GraphRAG 0.7867 → 0.9391(追到天花板 96.6%)、KGE 0.7540 → 0.9831(追到 101%,實際超過
+  structure 天花板的 strong 上界)**。四維度全部 ≥0.92,七個強維度無退步(各 ≥0.90),parse 40/40,
+  **零非官方 namespace IRI**。
+- **token 仍 < 天花板一半**:GraphRAG 2,722、KGE 2,637 vs LLM-only 5,349。較前一輪各 +~350 tok
+  (+15%,來自 Conventions 區塊 + topology 關係 + 骨架三行),略過自訂的 2,500 軟上限,但完全守住
+  「token 遠低於 LLM-only」的目標。
+- **殘差(誠實記錄)**:GraphRAG 有 **2 題(TC025、TC035)掉到 0.129** —— `metric: no reachable
+  target`,即 PropertyExpectation→Target 契約鏈組裝斷掉,屬 **LLM 組裝不穩定**、與四維度無關
+  (KGE 同 prompt 無此 outlier,最低 0.887)。這 2 題把 GraphRAG composite 從 ~0.98 拉到 0.939;
+  gate 仍過。可選 follow-up:加 self-check 或重跑這 2 題(LLM nondeterminism)。
+- 慣例編在 ontology(非 code、非逐題),`latency/packetLoss→twamp`、`guaranteedBandwidth→
+  activeMeasurement`、window 預設 fiveMinuteWindow + NL「每小時/月度」覆寫,屬真實領域語意,
+  非 teaching-to-the-test。已知 metric→method 對 TC039(latency→activeMeasurement)會貼錯 1 題。
+
+報告:`phase1/phase1_{graphrag,kge}_structure.json`、`phase1/token_usage/token_usage_{graphrag,kge}_structure.json`。
+索引重建:`GraphRag/index/`(345→347,因 TTL 新增 2 個 property);KGE artifacts 已重訓。
+
 ## Next Steps
 
 0. **(active, 2026-06-15)** 縮 structure-only 兩條 retrieval(GraphRAG 0.79、KGE 0.75)對天花板(0.97)的

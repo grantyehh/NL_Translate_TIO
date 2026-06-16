@@ -10,19 +10,18 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure latency from the Xinghe Bank headquarters to all branches stays below 50 ms at the p95 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure latency from the headquarters to all branch sites stays below 50 ms at the 95th percentile."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "星河銀行"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency ;
-    evsla:hasMetric evsla:latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    icm:target ex:tgt-latency .
 
 ex:tgt-latency
     a icm:Target ;
@@ -31,8 +30,8 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -51,9 +50,14 @@ ex:obs-latency-value
     fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    ex:hub [ rdfs:label "星河銀行總部"@zh ] ;
-    ex:spoke [ rdfs:label "分點1"@zh ] ;
-    ex:spoke [ rdfs:label "分點2"@zh ] ;
-    ex:spoke [ rdfs:label "分點3"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "總部"@zh .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "所有分點"@zh .

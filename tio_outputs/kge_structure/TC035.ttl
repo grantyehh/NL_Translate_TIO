@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:HubAndSpokeTopology ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
-    rdfs:comment "Taisheng Aerospace requires latency from Taoyuan aerospace manufacturing headquarters to the Taichung parts plant and Kaohsiung assembly plant to stay below 25 ms at the p95 level, and guaranteed bandwidth to be at least 300 Mbps."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA for latency below 25 ms at p95 and guaranteed bandwidth at least 300 Mbps from the Taoyuan aerospace manufacturing headquarters hub to the Taichung parts plant and Kaohsiung assembly plant spokes."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "泰盛航太"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -26,7 +31,7 @@ ex:tgt-latency
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -44,8 +49,8 @@ ex:tgt-bandwidth
     evsla:hasThreshold ex:thr-bandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -76,10 +81,10 @@ ex:obs-bandwidth-value
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-taoyuan ;
+    evsla:hasHub ex:hub-site ;
     evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
 
-ex:hub-taoyuan
+ex:hub-site
     a evsla:HubSite ;
     rdfs:label "桃園航太製造總部"@zh .
 

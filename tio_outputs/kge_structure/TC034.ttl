@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
-    rdfs:comment "Kaohsiung main plant to Tainan, Chiayi, and Pingtung spoke sites shall have packet loss below 0.02% at p99 level, and guaranteed bandwidth at least 200 Mbps."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "華南電機 requires packet loss below 0.02% at p99 and guaranteed bandwidth at least 200Mbps from the Kaohsiung hub to all spokes."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "華南電機"@zh .
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,8 +30,8 @@ ex:tgt-packetLoss
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-packetLoss
     a quan:Quantity ;
@@ -45,7 +50,7 @@ ex:tgt-guaranteedBandwidth
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-guaranteedBandwidth
     a quan:Quantity ;
@@ -57,27 +62,40 @@ ex:cond-packetLoss
     quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
 ex:obs-packetLoss
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:obs-packetLoss-value .
+    evsla:hasMetric evsla:packetLoss .
 
 ex:obs-packetLoss-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-packetLoss ) .
 
 ex:cond-guaranteedBandwidth
     a log:Condition ;
     quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
 ex:obs-guaranteedBandwidth
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-guaranteedBandwidth-value .
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-guaranteedBandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-guaranteedBandwidth ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    ex:hub [ rdfs:label "高雄電機總廠"@zh ] ;
-    ex:spoke [ rdfs:label "台南廠"@zh ] ;
-    ex:spoke [ rdfs:label "嘉義廠"@zh ] ;
-    ex:spoke [ rdfs:label "屏東廠"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-kaohsiung ;
+    evsla:hasSpoke ex:spoke-tainan, ex:spoke-chiayi, ex:spoke-pingtung .
+
+ex:hub-kaohsiung
+    a evsla:HubSite ;
+    rdfs:label "高雄電機總廠"@zh .
+
+ex:spoke-tainan
+    a evsla:SpokeSite ;
+    rdfs:label "台南廠"@zh .
+
+ex:spoke-chiayi
+    a evsla:SpokeSite ;
+    rdfs:label "嘉義廠"@zh .
+
+ex:spoke-pingtung
+    a evsla:SpokeSite ;
+    rdfs:label "屏東廠"@zh .

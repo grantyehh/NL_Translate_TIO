@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
-    icm:intentElements ex:exp-latency, ex:exp-loss, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-loss, ex:cond-bandwidth ;
-    rdfs:comment "Taichung pharmaceutical plant headquarters to all spokes: latency below 50 ms at p95, packet loss below 0.1% at p99, and guaranteed bandwidth at least 100 Mbps."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-latency, ex:exp-packetloss, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-packetloss, ex:cond-bandwidth ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "鴻旭製藥要求台中藥廠總部至所有分點延遲在95%時間內低於50ms、封包遺失率在99%時間內低於0.1%，且保證頻寬不低於100Mbps。"@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "鴻旭製藥"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -26,28 +31,28 @@ ex:tgt-latency
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
     rdf:value "50"^^xsd:decimal ;
     quan:unit "ms" .
 
-ex:exp-loss
+ex:exp-packetloss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-loss .
+    icm:target ex:tgt-packetloss .
 
-ex:tgt-loss
+ex:tgt-packetloss
     a icm:Target ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-loss ;
-    evsla:hasThreshold ex:thr-loss ;
+    icm:valuesOfTargetProperty ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetloss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-loss
+ex:thr-packetloss
     a quan:Quantity ;
     rdf:value "0.1"^^xsd:decimal ;
     quan:unit "%" .
@@ -61,10 +66,9 @@ ex:tgt-bandwidth
     evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -77,20 +81,20 @@ ex:cond-latency
 
 ex:obs-latency
     met:metric evsla:latency ;
-    met:metricValue ex:obs-latency-value .
+    met:metricValue ( ex:obs-latency ) .
 
 ex:obs-latency-value
     a quan:Quantity .
 
-ex:cond-loss
+ex:cond-packetloss
     a log:Condition ;
-    quan:smaller ( ex:obs-loss-value ex:thr-loss ) .
+    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
 
-ex:obs-loss
+ex:obs-packetloss
     met:metric evsla:packetLoss ;
-    met:metricValue ex:obs-loss-value .
+    met:metricValue ( ex:obs-packetloss ) .
 
-ex:obs-loss-value
+ex:obs-packetloss-value
     a quan:Quantity .
 
 ex:cond-bandwidth
@@ -99,21 +103,20 @@ ex:cond-bandwidth
 
 ex:obs-bandwidth
     met:metric evsla:guaranteedBandwidth ;
-    met:metricValue ex:obs-bandwidth-value .
+    met:metricValue ( ex:obs-bandwidth ) .
 
 ex:obs-bandwidth-value
     a quan:Quantity .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hubToAllSpokes ex:hub, ex:spoke-1, ex:spoke-2 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
 
 ex:hub
+    a evsla:HubSite ;
     rdfs:label "台中藥廠總部"@zh .
 
 ex:spoke-1
-    rdfs:label "分點1"@zh .
-
-ex:spoke-2
-    rdfs:label "分點2"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "所有分點"@zh .

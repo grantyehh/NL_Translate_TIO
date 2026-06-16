@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure latency from Kangjian Medical Taipei medical cloud center to all branch sites stays below 30 ms at the p95 level."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Ensure latency from Taipei Medical Cloud Center to all branch sites stays below 30 ms at the 95th percentile."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "康健醫療"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -25,8 +30,8 @@ ex:tgt-latency
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:oneHourWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -45,12 +50,14 @@ ex:obs-latency-value
     fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hubToAllSpokes ex:hub, ex:spoke-1 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-site ;
+    evsla:hasSpoke ex:spoke-site .
 
-ex:hub
-    rdfs:label "康健醫療台北醫療雲中心"@zh .
+ex:hub-site
+    a evsla:HubSite ;
+    rdfs:label "台北醫療雲中心"@zh .
 
-ex:spoke-1
+ex:spoke-site
+    a evsla:SpokeSite ;
     rdfs:label "所有院區分點"@zh .

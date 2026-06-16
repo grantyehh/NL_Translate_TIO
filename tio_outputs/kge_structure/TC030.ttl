@@ -10,80 +10,88 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
-    icm:intentElements ex:exp-packetloss, ex:exp-bandwidth, ex:topology, ex:cond-packetloss, ex:cond-bandwidth ;
-    rdfs:comment "Taipei hub to Tainan spoke packet loss shall stay below 0.01% at p99 level, and Taipei hub to Kaohsiung spoke guaranteed bandwidth shall be at least 1000 Mbps."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "瑞德電信要求台北機房到台南機房封包遺失率在99%時間內低於0.01%，到高雄機房保證頻寬不低於1000Mbps。"@en .
 
-ex:exp-packetloss
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "瑞德電信"@zh .
+
+ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetloss .
+    icm:target ex:tgt-packetLoss .
 
-ex:tgt-packetloss
+ex:tgt-packetLoss
     a icm:Target ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss ;
+    evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-packetloss
+ex:thr-packetLoss
     a quan:Quantity ;
     rdf:value "0.01"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:exp-bandwidth
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-bandwidth .
+ex:cond-packetLoss
+    a log:Condition ;
+    quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
-ex:tgt-bandwidth
+ex:obs-packetLoss
+    evsla:packetLoss evsla:packetLoss .
+
+ex:obs-packetLoss-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-packetLoss ) .
+
+ex:exp-guaranteedBandwidth
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-guaranteedBandwidth .
+
+ex:tgt-guaranteedBandwidth
     a icm:Target ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    evsla:hasThreshold ex:thr-bandwidth ;
+    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
+    evsla:hasThreshold ex:thr-guaranteedBandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:monthlySlaWindow .
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-bandwidth
+ex:thr-guaranteedBandwidth
     a quan:Quantity ;
     rdf:value "1000"^^xsd:decimal ;
     quan:unit "Mbps" .
 
-ex:cond-packetloss
+ex:cond-guaranteedBandwidth
     a log:Condition ;
-    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
+    quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
-ex:obs-packetloss
-    evsla:hasMetric evsla:packetLoss .
+ex:obs-guaranteedBandwidth
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
 
-ex:obs-packetloss-value
+ex:obs-guaranteedBandwidth-value
     a quan:Quantity ;
-    met:observedValue ( ex:obs-packetloss ) .
-
-ex:cond-bandwidth
-    a log:Condition ;
-    quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
-
-ex:obs-bandwidth
-    evsla:hasMetric evsla:guaranteedBandwidth .
-
-ex:obs-bandwidth-value
-    a quan:Quantity ;
-    met:observedValue ( ex:obs-bandwidth ) .
+    fun:valueOf ( ex:obs-guaranteedBandwidth ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hasHub ex:site-taipei ;
-    evsla:hasSpoke ex:site-tainan, ex:site-kaohsiung .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-tainan, ex:spoke-kaohsiung .
 
-ex:site-taipei
+ex:hub-taipei
+    a evsla:HubSite ;
     rdfs:label "台北機房"@zh .
 
-ex:site-tainan
+ex:spoke-tainan
+    a evsla:SpokeSite ;
     rdfs:label "台南機房"@zh .
 
-ex:site-kaohsiung
+ex:spoke-kaohsiung
+    a evsla:SpokeSite ;
     rdfs:label "高雄機房"@zh .

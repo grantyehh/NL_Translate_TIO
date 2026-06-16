@@ -10,9 +10,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-    a icm:Intent, evsla:SlaExpectation ;
+    a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetloss, ex:exp-bandwidth, ex:topology, ex:cond-packetloss, ex:cond-bandwidth ;
-    rdfs:comment "Taipei hub to Tainan spoke packet loss shall stay below 0.01% at p99 level, and Taipei hub to Kaohsiung spoke guaranteed bandwidth shall be at least 1000 Mbps."@en .
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Red Telecom requires packet loss from Taipei hub to Tainan spoke to stay below 0.01% at p99, and guaranteed bandwidth to Kaohsiung spoke to be at least 1000Mbps."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "瑞德電信"@zh .
 
 ex:exp-packetloss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -24,7 +29,9 @@ ex:tgt-packetloss
     icm:valuesOfTargetProperty ex:thr-packetloss ;
     evsla:hasThreshold ex:thr-packetloss ;
     evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke .
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-packetloss
     a quan:Quantity ;
@@ -51,7 +58,10 @@ ex:tgt-bandwidth
     evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasScope evsla:specificSpoke .
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -70,15 +80,18 @@ ex:obs-bandwidth-value
     met:observedValue ( ex:obs-bandwidth ) .
 
 ex:topology
-    a icm:Context ;
-    evsla:hubToAllSpokes ex:site-taipei ;
-    evsla:specificSpoke ex:site-tainan, ex:site-kaohsiung .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-tainan, ex:spoke-kaohsiung .
 
-ex:site-taipei
+ex:hub-taipei
+    a evsla:HubSite ;
     rdfs:label "台北機房"@zh .
 
-ex:site-tainan
+ex:spoke-tainan
+    a evsla:SpokeSite ;
     rdfs:label "台南機房"@zh .
 
-ex:site-kaohsiung
+ex:spoke-kaohsiung
+    a evsla:SpokeSite ;
     rdfs:label "高雄機房"@zh .
