@@ -38,6 +38,10 @@ CLASS_ROLE = {
     URIRef(TIO + "EnterpriseVpnSlaOntology/Scope"): "Scope",
     URIRef(TIO + "EnterpriseVpnSlaOntology/MeasurementMethod"): "MeasurementMethod",
     URIRef(TIO + "EnterpriseVpnSlaOntology/TimeWindow"): "TimeWindow",
+    URIRef(TIO + "EnterpriseVpnSlaOntology/Tenant"): "Tenant",
+    URIRef(TIO + "EnterpriseVpnSlaOntology/HubSite"): "HubSite",
+    URIRef(TIO + "EnterpriseVpnSlaOntology/SpokeSite"): "SpokeSite",
+    URIRef(TIO + "EnterpriseVpnSlaOntology/HubAndSpokeTopology"): "HubAndSpokeTopology",
 }
 OPERATOR_URIS = {
     URIRef(TIO + "QuantityOntology/" + name)

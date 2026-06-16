@@ -61,3 +61,13 @@ def test_resources_json_roundtrip(tmp_path):
     write_resources_json(resources, path)
     data = json.loads(path.read_text(encoding="utf-8"))
     assert any(r["curie"] == "evsla:p95" and r["role_class"] == "Statistic" for r in data)
+
+
+def test_class_role_covers_tenant_and_topology():
+    from resource_index import CLASS_ROLE
+    from rdflib import URIRef
+    ns = TIO + "EnterpriseVpnSlaOntology/"
+    for cls, role in [("Tenant", "Tenant"), ("HubSite", "HubSite"),
+                      ("SpokeSite", "SpokeSite"),
+                      ("HubAndSpokeTopology", "HubAndSpokeTopology")]:
+        assert CLASS_ROLE.get(URIRef(ns + cls)) == role
