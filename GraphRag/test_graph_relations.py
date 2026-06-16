@@ -58,3 +58,13 @@ def test_metric_presence_reaches_sla_roles():
     _relations, reached = traverse_connective(graph, [URIRef(EVSLA + "latency")])
     for role in ("Tenant", "MeasurementMethod", "TimeWindow", "HubSite", "SpokeSite"):
         assert role in reached, f"{role} not reached: {sorted(reached)}"
+
+
+def test_extract_conventions():
+    from graph_relations import extract_conventions
+    c = extract_conventions(load_ontology(TTL_DIR))
+    assert c["method_defaults"]["evsla:latency"] == "evsla:twamp"
+    assert c["method_defaults"]["evsla:guaranteedBandwidth"] == "evsla:activeMeasurement"
+    assert c["window_default"] == "evsla:fiveMinuteWindow"
+    assert c["window_triggers"]["每小時視窗"] == "evsla:oneHourWindow"
+    assert c["window_triggers"]["月度SLA視窗"] == "evsla:monthlySlaWindow"

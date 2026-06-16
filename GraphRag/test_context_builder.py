@@ -21,3 +21,15 @@ def test_guard_drops_lowest_when_over_budget():
     kept, dropped = guard_tokens(items, budget=250)
     assert [t for t, _ in kept] == ["a", "b"]
     assert [t for t, _ in dropped] == ["c"]
+
+def test_serialize_context_renders_conventions():
+    conv = {
+        "method_defaults": {"evsla:latency": "evsla:twamp"},
+        "window_default": "evsla:fiveMinuteWindow",
+        "window_triggers": {"每小時視窗": "evsla:oneHourWindow"},
+    }
+    out = serialize_context([], [], {}, conventions=conv)
+    assert "Conventions" in out
+    assert "evsla:latency -> evsla:twamp" in out
+    assert "evsla:fiveMinuteWindow" in out
+    assert "每小時視窗" in out and "evsla:oneHourWindow" in out

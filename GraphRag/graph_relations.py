@@ -107,6 +107,31 @@ def traverse_connective(
     return relations, reached
 
 
+def extract_conventions(graph: Graph) -> dict:
+    """Read EVSLA convention facts: metric->default method, default time window,
+    and NL-trigger (zh label) -> window IRI."""
+    dmm = URIRef(EVSLA + "defaultMeasurementMethod")
+    is_default = URIRef(EVSLA + "isDefaultTimeWindow")
+    time_window = URIRef(EVSLA + "TimeWindow")
+    method_defaults: dict[str, str] = {}
+    for s, _p, o in graph.triples((None, dmm, None)):
+        method_defaults[_to_curie(s)] = _to_curie(o)
+    window_default = ""
+    for s in graph.subjects(is_default, None):
+        window_default = _to_curie(s)
+        break
+    window_triggers: dict[str, str] = {}
+    for win in graph.subjects(RDF.type, time_window):
+        for lbl in graph.objects(win, RDFS.label):
+            if getattr(lbl, "language", None) == "zh":
+                window_triggers[str(lbl)] = _to_curie(win)
+    return {
+        "method_defaults": method_defaults,
+        "window_default": window_default,
+        "window_triggers": window_triggers,
+    }
+
+
 def closed_vocab_for_reached_roles(
     reached: set[str], resources: list[OntologyResource]
 ) -> dict[str, list[str]]:
