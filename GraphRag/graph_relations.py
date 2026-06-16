@@ -86,6 +86,23 @@ def traverse_connective(
         if prop in OPERATOR_TRIGGER_PROPERTIES:
             reached.add("ComparisonOperator")
 
+    # When an SLA expectation is present (a metric is reached), the SLA-defining
+    # roles are always relevant — supply their vocab regardless of traversal
+    # happenstance (forTenant has no rdfs:domain; hub/spoke depend on topology
+    # being grounded). This is the closed-world contract for EVSLA.
+    if "Metric" in reached:
+        reached.update({
+            "Tenant", "MeasurementMethod", "TimeWindow",
+            "HubSite", "SpokeSite", "HubAndSpokeTopology",
+        })
+        # Emit the forTenant relation so the prompt sees evsla:Tenant as a type.
+        fortenant = URIRef(EVSLA + "forTenant")
+        service = URIRef(EVSLA + "EnterpriseVpnService")
+        for r in graph.objects(fortenant, RDFS.range):
+            triple = (service, fortenant, r)
+            if triple not in relations:
+                relations.append(triple)
+
     relations.sort(key=lambda t: (str(t[0]), str(t[1]), str(t[2])))
     return relations, reached
 

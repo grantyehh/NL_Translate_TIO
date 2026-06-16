@@ -51,3 +51,10 @@ def test_ttl_encodes_conventions():
                 if getattr(o, "language", None) == "zh"]
     assert any("每小時" in s for s in zh_one)
     assert any("月度" in s for s in zh_month)
+
+
+def test_metric_presence_reaches_sla_roles():
+    graph = load_ontology(TTL_DIR)
+    _relations, reached = traverse_connective(graph, [URIRef(EVSLA + "latency")])
+    for role in ("Tenant", "MeasurementMethod", "TimeWindow", "HubSite", "SpokeSite"):
+        assert role in reached, f"{role} not reached: {sorted(reached)}"
