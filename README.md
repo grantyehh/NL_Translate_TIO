@@ -222,7 +222,7 @@ python run_all_experiments.py --eval-only
 這會產生:
 
 ```text
-phase1/compare_four_way.txt
+phase1/output_quality/compare_four_way.txt
 ```
 
 ### 手動比較四條線
