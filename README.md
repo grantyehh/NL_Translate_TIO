@@ -292,7 +292,7 @@ LLM-only-structure(地板)   |  0.0000   |  1,432
 
 ## 注意事項
 
-- `run_all_experiments.py` 會覆寫固定檔名的 `phase1/phase1_*.json` 與 `phase1/compare_four_way.txt`,不是歷史紀錄系統。
+- `run_all_experiments.py` 會覆寫固定檔名的 `phase1/phase1_*.json` 與 `phase1/output_quality/compare_four_way.txt`,不是歷史紀錄系統。
 - `evaluate_ttl.py` 評的是 TIO Turtle 格式與 expected element 覆蓋率,不等於完整網路語意正確率。
 - 如果模型輸出 Markdown code fence,evaluator 會嘗試剝掉再 parse,但理想輸出仍應該是 pure TIO Turtle。
 - **KAG 線跟其他三條 venv 隔離**:KAG 用 `KAG/.venv/` 獨立環境(避免 openspg-kag 50+ deps 跟主環境衝突),`run_all_experiments.py` 跑 KAG 那段時要確保 PATH 上有 `KAG/.venv/bin/python`(或讓主 venv 已 import 過 `kag` package)。試水可以用 `python -c "import kag"` 確認。
