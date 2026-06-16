@@ -2281,27 +2281,25 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.129,
+      "composite": 1.0,
       "dimensions": {
-        "metric": 0.0,
-        "threshold": 0.0,
-        "statistic": 0.0,
-        "scope": 0.0,
-        "measurement_method": 0.0,
-        "time_window": 0.0,
-        "operator": 0.0,
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
-        "contract": 0.0,
-        "precision": 0.0
+        "contract": 1.0,
+        "precision": 1.0
       },
       "precision": {
-        "score": 0.0,
+        "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": [
-        "metric evsla:packetLoss: no reachable target"
-      ]
+      "errors": []
     }
   },
   {

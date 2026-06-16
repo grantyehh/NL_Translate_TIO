@@ -392,7 +392,7 @@ GraphRAG/KGE 共用,一次修兩條;KGE 因 TTL 變更已 `python -m kge.train` 
 ```text
 Line                       | Composite | Tok/case
 LLM-only strong(天花板)    |  0.9722   |  5,349
-GraphRAG-structure         |  0.7867 -> 0.9609  |  2,369 -> 2,722
+GraphRAG-structure         |  0.7867 -> 0.9827  |  2,369 -> 2,722
 KGE-structure(正統)       |  0.7540 -> 0.9831  |  2,292 -> 2,637
 LLM-only-structure(地板)   |  0.0000   |  1,432
 ```
@@ -409,9 +409,22 @@ topology           | 0.500 -> 1.000  | 0.425 -> 1.000
 
 關鍵發現:
 
-- **GraphRAG 0.7867 → 0.9609(追到天花板 98.8%)、KGE 0.7540 → 0.9831(追到 101%,實際超過
-  structure 天花板的 strong 上界)**。四維度全部 ≥0.92,七個強維度無退步(各 ≥0.90),parse 40/40,
-  **零非官方 namespace IRI**。(GraphRAG 0.9391 → 0.9609 是重跑 TC035 後;見殘差。)
+- **GraphRAG 0.7867 → 0.9827、KGE 0.7540 → 0.9831(兩者皆超過 structure 天花板的 strong 上界 0.9722)**。
+  四維度全部 ≥0.975,七個強維度無退步,parse 40/40,**零非官方 namespace IRI**。
+  (演進:四維 grounding 後 GraphRAG 0.9391 → 重跑 TC035 → 0.9609 → scorer 對齊 ontology domain 後 0.9827;見下。)
+
+### Scorer 對齊 ontology domain(TC025 根因修正)
+
+追查 TC025(穩定 0.129)發現:SLA 綁定 predicate(hasMetric/hasThreshold/hasStatistic/hasScope/
+hasMeasurementMethod/hasTimeWindow)在 ontology 的 `rdfs:domain` 是 **`evsla:SlaExpectation`**,
+但舊 scorer(`semantic_eval.extract_bindings`)與 few-shot 把它們掛在 **`icm:Target`** 上 —— ontology /
+few-shot / scorer 三方不一致。TC025 偶爾「回歸 ontology 正解」把 hasMetric 放 expectation,反被舊 scorer
+判 0。**修法(以 ontology domain 為單一權威)**:scorer 改成從 expectation 讀、target 作 backward-compat
+fallback(`_first_obj`);few-shot 與 structure-only 骨架改成把綁定 predicate 掛 expectation、target 只留
+`icm:valuesOfTargetProperty`。重評既有輸出即讓 **TC025 0.129 → 1.0**,GraphRAG composite 0.9609 → 0.9827,
+KGE 不變(原本就 target placement,fallback 同分)。**注意**:few-shot/骨架改動的「生成端」效果尚未重跑驗證
+(OpenAI 配額 429 用罄),待配額恢復後 `--prompt-profile structure_only` 重跑兩條確認模型預設輸出已是
+expectation placement;scorer 因有 fallback,重跑前後分數不會倒退。
 - **token 仍 < 天花板一半**:GraphRAG 2,722、KGE 2,637 vs LLM-only 5,349。較前一輪各 +~350 tok
   (+15%,來自 Conventions 區塊 + topology 關係 + 骨架三行),略過自訂的 2,500 軟上限,但完全守住
   「token 遠低於 LLM-only」的目標。
