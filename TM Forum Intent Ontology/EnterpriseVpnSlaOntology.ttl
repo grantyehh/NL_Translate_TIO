@@ -198,6 +198,19 @@ evsla:hasTimeWindow
   rdfs:range evsla:TimeWindow
 .
 
+evsla:defaultMeasurementMethod
+  rdfs:label "Default Measurement Method"@en ;
+  rdfs:comment "The conventional measurement method used for a metric when the intent does not state one."@en ;
+  rdf:type rdf:Property ;
+  rdfs:range evsla:MeasurementMethod
+.
+
+evsla:isDefaultTimeWindow
+  rdfs:label "Is Default Time Window"@en ;
+  rdfs:comment "Marks the time window assumed when the intent states no evaluation window."@en ;
+  rdf:type rdf:Property
+.
+
 evsla:appliesPerSpoke
   rdfs:label "Applies Per Spoke Property"@en ;
   rdfs:comment "States whether an SLA guarantee is evaluated independently for each spoke."@en ;
@@ -210,21 +223,24 @@ evsla:latency
   rdfs:label "Latency Metric Property"@en ;
   rdfs:comment "Metric property for network latency between hub and spoke sites."@en ;
   rdf:type rdf:Property ;
-  rdfs:subPropertyOf met:metric
+  rdfs:subPropertyOf met:metric ;
+  evsla:defaultMeasurementMethod evsla:twamp
 .
 
 evsla:packetLoss
   rdfs:label "Packet Loss Metric Property"@en ;
   rdfs:comment "Metric property for packet loss rate between hub and spoke sites."@en ;
   rdf:type rdf:Property ;
-  rdfs:subPropertyOf met:metric
+  rdfs:subPropertyOf met:metric ;
+  evsla:defaultMeasurementMethod evsla:twamp
 .
 
 evsla:guaranteedBandwidth
   rdfs:label "Guaranteed Bandwidth Metric Property"@en ;
   rdfs:comment "Metric property for the minimum guaranteed bandwidth provided to a spoke or VPN path."@en ;
   rdf:type rdf:Property ;
-  rdfs:subPropertyOf met:metric
+  rdfs:subPropertyOf met:metric ;
+  evsla:defaultMeasurementMethod evsla:activeMeasurement
 .
 
 evsla:p95
@@ -291,17 +307,20 @@ evsla:twamp
 evsla:fiveMinuteWindow
   rdfs:label "Five Minute Time Window"@en ;
   rdfs:comment "A five-minute monitoring or aggregation window for SLA metric evaluation."@en ;
-  rdf:type evsla:TimeWindow
+  rdf:type evsla:TimeWindow ;
+  evsla:isDefaultTimeWindow true
 .
 
 evsla:oneHourWindow
   rdfs:label "One Hour Time Window"@en ;
+  rdfs:label "每小時視窗"@zh ;
   rdfs:comment "A one-hour monitoring or aggregation window for SLA metric evaluation."@en ;
   rdf:type evsla:TimeWindow
 .
 
 evsla:monthlySlaWindow
   rdfs:label "Monthly SLA Time Window"@en ;
+  rdfs:label "月度SLA視窗"@zh ;
   rdfs:comment "A monthly SLA evaluation window."@en ;
   rdf:type evsla:TimeWindow
 .

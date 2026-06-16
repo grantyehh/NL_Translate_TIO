@@ -34,3 +34,20 @@ def test_closed_vocab_only_for_reached_roles():
     assert "evsla:p95" in vocab["Statistic"]
     assert "evsla:hubToAllSpokes" in vocab["Scope"]
     assert "MeasurementMethod" not in vocab
+
+
+def test_ttl_encodes_conventions():
+    from rdflib.namespace import RDFS
+    g = load_ontology(TTL_DIR)
+    E = lambda n: URIRef(EVSLA + n)
+    dmm = E("defaultMeasurementMethod")
+    assert (E("latency"), dmm, E("twamp")) in g
+    assert (E("packetLoss"), dmm, E("twamp")) in g
+    assert (E("guaranteedBandwidth"), dmm, E("activeMeasurement")) in g
+    assert any(g.objects(E("fiveMinuteWindow"), E("isDefaultTimeWindow")))
+    zh_one = [str(o) for o in g.objects(E("oneHourWindow"), RDFS.label)
+              if getattr(o, "language", None) == "zh"]
+    zh_month = [str(o) for o in g.objects(E("monthlySlaWindow"), RDFS.label)
+                if getattr(o, "language", None) == "zh"]
+    assert any("每小時" in s for s in zh_one)
+    assert any("月度" in s for s in zh_month)
