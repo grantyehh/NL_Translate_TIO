@@ -1,12 +1,9 @@
 # mechanism.md — GraphRAG / KGE / KAG 三條 pipeline 的運作機制
 
-> ⚠️ **時效性提醒(2026-06-16)**:本檔是 **Architecture 1/2 era** 的機制走查,內含**已過時**內容 ——
-> 舊評分指標(Avg Ontology coverage 0.9889 / 0.9972、Verbosity)與**已移除的 KGE neighborhood expansion**
-> (canonical 重設計後 KGE 改為 text-embedding grounding + TransE **link-prediction**,不再做 neighbor 擴張)。
-> 階段資料流的示範仍有教學價值,但**數據與 KGE 機制以 `progress.md`(Architecture 3–5)為準**。需要時可重寫本檔。
->
 > 本文件用同一題（TC001）貫穿三條 pipeline，逐步示範資料在每個階段「長什麼樣子」。
-> 整體比較見 `progress.md` 與 `phase1/output_quality/compare_four_way.txt`，本檔不重複。
+> 評分數據與整體比較見 `progress.md`（Architecture 1→5）與 `phase1/output_quality/compare_four_way.txt`，本檔不重複。
+>
+> **版本（2026-06-16，對齊 Architecture 5）**：GraphRAG 已是 **ontology-aware domain-graph RAG**（不是早期的 typed-BFS，更不是 Microsoft GraphRAG CLI）；KGE 已是 **canonical 版**（text-embedding grounding + TransE link-prediction 排序「真實 triple」，**不再做 neighborhood expansion / 不合成 triple**），且與 GraphRAG **共用輸出契約**。KAG 維持原樣。
 
 ---
 
@@ -14,18 +11,21 @@
 
 ### 0.1 任務
 
-把**自然語言意圖（NL intent）**轉成 **TIO Turtle**（TM Forum Intent Ontology 規格的 Turtle/RDF 文件），下游 orchestrator 才能消費。
+把**自然語言意圖（NL intent）**轉成 **TIO Turtle**（TM Forum Intent Ontology 規格的 Turtle/RDF），下游 orchestrator 才能消費。
 
 ### 0.2 共用元件
 
 | 元件 | 角色 |
 |---|---|
-| `test_cases_20.json` | 20 題測資（NL intent + 預期 ontology 詞彙）|
-| `few_shot_samples.json` | few-shot 範例（**不是測資**，只給 LLM 看 TIO Turtle 結構，`turtle` 欄位）|
-| `evsla_prompt.build_evsla_system_prompt` | 三條共用的 system prompt（含 EVSLA 詞彙與 TIO Turtle 契約）|
+| `test_cases_20.json` / `test_cases_40.json` | 20 題 / 40 題（含 20 題 hub-and-spoke，structure-only 用）測資（NL intent + 預期 ontology 詞彙）|
+| `few_shot_samples.json` / `few_shot_structure_only.json` | 強配方 few-shot（含 EVSLA 詞彙）/ structure-only sanitized skeleton（佔位符、無詞彙）|
+| `evsla_prompt.build_evsla_system_prompt` | 共用 system prompt（profile：`strong` / `weak` / `structure_only`）|
+| `GraphRag/resource_index.py`、`graph_relations.py`、`context_builder.py` | **GraphRAG 與 KGE 共用的輸出契約**：資源索引 + 連接屬性 traversal + context 序列化 |
 | LLM | `gpt-5.4`，三條同款，temperature=0 |
 | `TM Forum Intent Ontology/*.ttl` | TIO v3.6.0 ontology（14+ namespace：evsla / icm / imo / met / quan / fun …）|
-| `evaluate_ttl.py` | 評分器：parse OK / ontology coverage / metric coverage / verbosity |
+| `evaluate_ttl.py` + `semantic_eval.py` | 評分器：parse / expected-element 覆蓋 + **11 維 graph-binding composite**（metric / threshold / statistic / scope / measurement_method / time_window / operator / tenant / topology / contract / precision）|
+
+> ⚠️ 早期版本用「Avg Ontology coverage / Verbosity」當指標,已被 `semantic_eval` 的 11 維 composite 取代。強配方（`test_cases_20`）四條已飽和到 composite ~1.0,失去鑑別力;**現在的主戰場是 structure-only（`test_cases_40`，抽掉 EVSLA 詞彙,只靠 retrieval 供詞）**。
 
 ### 0.3 貫穿全文的範例：TC001
 
@@ -35,444 +35,206 @@
   "tenant": "星河銀行",
   "scope": { "hub": "台北總部", "spokes": ["新竹分行", "台中分行", "高雄分行"] },
   "nl_intent": "確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。",
-  "expected_tio_elements": [
-    "icm:Intent", "icm:PropertyExpectation", "icm:Target",
-    "icm:Context", "icm:valuesOfTargetProperty"
-  ],
-  "ontology_terms": [
-    "evsla:EnterpriseVpnService", "evsla:EnterpriseVpnSlaIntent",
-    "evsla:HubAndSpokeTopology", "evsla:HubSite", "evsla:SlaExpectation",
-    "evsla:SpokeSite", "evsla:Tenant", "evsla:fiveMinuteWindow",
-    "evsla:hubToAllSpokes", "evsla:latency", "evsla:p95", "evsla:twamp"
-  ]
+  "performance_metrics": [{
+    "ontology_term": "evsla:latency", "operator": "LESS_THAN",
+    "threshold": {"value": 50, "unit": "ms"}, "statistic": "evsla:p95",
+    "scope": "evsla:hubToAllSpokes", "measurement_method": "evsla:twamp",
+    "time_window": "evsla:fiveMinuteWindow"
+  }]
 }
 ```
 
 ---
 
-## 為什麼 GraphRAG 重寫過 — 舊版 vs 新版
+## 為什麼 retrieval 一定要保留「結構」— 一個踩過兩次的雷
 
-> 這條 pipeline **不是一開始就用 typed BFS 的**。最早是直接呼叫 Microsoft 官方 `graphrag` CLI，但發現它的 retrieval 方式會把 TIO ontology 的 URI 全部洗成散文，LLM 拿到後 ontology coverage 趨近 0。所以在 2026-05-19 整個重寫成 typed RDF traversal（commit `2378241` / plan `docs/superpowers/plans/2026-05-19-graphrag-typed-traversal.md`）。
->
-> 這段背景對讀後面三條 pipeline 的比較很重要 — 因為這個踩過的雷，也正好解釋了現在 KAG 為什麼 ontology coverage 是最低的。
+> GraphRAG 這條 pipeline **重寫過兩次**，每次都是同一個教訓的延伸。值得先看，因為它同時解釋了 KAG 為什麼 ontology 命中率最低。
 
-### 舊版：Microsoft GraphRAG CLI
+**第一次踩雷（Microsoft GraphRAG CLI，已淘汰）**：最早直接呼叫官方 `graphrag` CLI，它把 TTL 當「未結構化文件」切 chunk → entity extraction → community detection → community summary，經過三道 LLM 重寫後，**`evsla:latency`、`icm:PropertyExpectation` 這些 URI 全被洗成「latency」「property expectation」普通名詞**。主 LLM 看到散文摘要，生不出帶 URI 的 Turtle（TC001 evsla URI 命中 = **0**）。→ 2026-05-19 改寫成直接讀 TTL 的 typed RDF traversal。
 
-```text
-TTL files
-  → length_splitter（800 token / chunk）        ← 把 TTL 當散文切
-  → entity_extraction（LLM 從 chunk 抽 entity）
-  → community_detection（graph clustering）
-  → community_summarization（LLM 對每個社群寫摘要）
-  → query 時用向量比對 community summary
-  → 主 LLM 看到「community 摘要散文」
-```
+**第二次重設計（typed-BFS → domain-graph，現行）**：typed-BFS 雖然保住了 URI，但它**只沿 `rdf:type/subClassOf/domain/range` 這些 TBox plumbing 走**，灌進 prompt 的多半是「schema 骨架」雜訊,token 爆（~13.5k/題）而語意綁定不準。Architecture 3 再改成 **domain-graph traversal**：反過來**只走有意義的連接屬性**（`hasMetric/hasThreshold/...`），**排除** plumbing,並改用 role-scoped 封閉詞表。token 砍到 ~½、品質反而升。
 
-**問題**：TTL 本來就是結構化的 URI / triple，但 Microsoft GraphRAG 把它當「未結構化文件」處理。經過三層 LLM 重寫後，**`evsla:latency`、`icm:PropertyExpectation` 這些 URI 全部變成「latency」「property expectation」這種普通名詞**，主 LLM 看完當然不會生出帶 URI 的 TIO Turtle。
+**通則（這份實驗的核心結論之一）**：
 
-**證據**：重寫前 TC001 的 evsla URI 數 = **0** 個（`docs/superpowers/plans/2026-05-19-graphrag-typed-traversal.md` Task 11 step 4 留下的驗收 baseline:`Expected: count >= 5 (was 0 before this refactor)`）。
-
-舊版 Microsoft GraphRAG 的 artifact(`output/*.parquet`、`lancedb/`、`settings.yaml`、`cache/`)已移除;現行 `nl_to_tio.py` 以 rdflib typed traversal 直接讀 ontology TTL,不需要這些。
-
-### 新版：typed RDF traversal（2026-05-19 重寫）
-
-```text
-TTL files
-  → rdflib 直接載入（保留 URI 結構）
-  → 建 label_index + comment_index
-  → seed extraction（LLM 抽 ontology terms）+ grounding（label / embedding）
-  → typed BFS 2-hop（5 種 RDFS predicate）
-  → 子圖序列化為 # triples + # comments
-  → 主 LLM 看到 CURIE 結構化 triples
-```
-
-**好處**：**完全跳過 chunk / community detection 那一整段**。LLM 看到的是 `evsla:latency rdfs:subPropertyOf met:metric` 這種可以直接抄的 CURIE，不用「腦補」URI。
-
-**結果**：TC001 的 evsla URI 數 = **15+**；Avg Ontology coverage 從 ~0 →  **0.9889**；Verbosity OK 100%。
-
-### 兩版差異對照
-
-| 面向 | 舊版（Microsoft graphrag CLI） | 新版（typed BFS） |
+| 資料是否結構化 | 送進主 LLM 的 context | 結果 |
 |---|---|---|
-| 資料處理 | 把 TTL 當文字切 chunk | 直接讀 TTL 為 rdflib.Graph |
-| 中介層 | 3 道 LLM 重寫（extraction / clustering / summary）| 0 道（純圖演算法）|
-| 主 LLM 看到的 context | community 摘要散文 | CURIE triples + comments |
-| URI 是否保留 | ❌ 洗掉 | ✅ 完整保留 |
-| 離線成本 | 高（每份 TTL 多次 LLM call）| 低（只需載入 + 建索引）|
-| TC001 evsla URI 命中 | 0 | 15+ |
-| Avg Ontology coverage | ~0 | 0.9889 |
+| 結構化（TTL）| 結構化（**連接屬性** + 封閉詞表 + 慣例）| ★ GraphRAG / KGE 現行：structure-only composite ~0.98 |
+| 結構化（TTL）| 結構化但全是 plumbing | typed-BFS 舊版：token 爆、綁定不準 |
+| 結構化（TTL）| **非結構化**（community 摘要）| Microsoft CLI：URI 命中 ~0 |
+| 非結構化（SKILL.md）| 非結構化（自然語言 chunk）| KAG：corpus 本來就沒 URI，命中率被拖累 |
 
-### 這個踩雷學到的通則（關鍵！）
-
-**結構化資料 → 結構化 context 才能保住結構。**
-
-| 資料是否結構化 | 送給主 LLM 的 context 是否結構化 | Ontology coverage |
-|---|---|---|
-| 結構化（TTL） | 結構化（CURIE triples） | **0.9889** ★ GraphRAG 新版 |
-| 結構化（TTL → triples.tsv） | 結構化（URI list + TransE scores） | **0.9972** ★★ KGE |
-| 非結構化（SKILL.md） | 非結構化（自然語言 chunk） | **0.9314** ✗ KAG |
-| 結構化（TTL） | **非結構化**（community 摘要） | **~0** ✗✗ GraphRAG 舊版 |
-
-讀完上面這張表會發現:**KAG 的 ontology coverage 拉不高，本質上跟 GraphRAG 舊版的問題是同一個** — 都是 retrieval 過程把結構洗成散文，LLM 只能憑記憶或猜測填 URI。差別是：
-
-- GraphRAG 舊版的 corpus 本來是結構化的，卻被 Microsoft pipeline 主動洗成散文（可改 → 我們改了）
-- KAG 的 corpus 一開始就是 SKILL.md 自然語言，本來就沒有 URI 可以保留（只能靠 generator prompt 硬約束 LLM 用 EVSLA 詞彙）
-
-這也是為什麼這份實驗的 Phase 1 結論會強調：**retrieval 階段是否保留 source data 的結構，直接決定下游 LLM 能不能生出 schema-compliant 的輸出**。
+**retrieval 階段保留 source data 的結構（而且是「有用的那部分」結構），直接決定下游 LLM 能不能生出 schema-compliant 輸出。**
 
 ---
 
-## 1. GraphRAG（ontology-grounded typed-traversal）
+## 1. GraphRAG（ontology-aware domain-graph RAG）
 
-> 核心：**LLM 抽 seed terms → 對 URI grounding → 在 TIO ontology 圖上做 2-hop typed BFS → 把子圖 triples 餵給 LLM**。
-> 入口：`GraphRag/nl_to_tio.py`；核心邏輯：`ontology_graph.py` + `subgraph_retriever.py`。
+> 核心：**對 NL 做 lexical + vector grounding → 在 ontology 上只走「連接屬性」的有界 traversal → 供出 role-scoped 封閉詞表 + 領域慣例 → 自含 @prefix 的 context 餵 LLM**。**沒有 LLM 抽 seed 那一步**（已移除）。
+> 入口：`GraphRag/nl_to_tio.py`；核心邏輯：`resource_index.py` + `graph_relations.py` + `subgraph_retriever.py` + `context_builder.py`。
 
 ```mermaid
 flowchart TD
-    subgraph Offline["離線準備（程式啟動時做一次）"]
-        TTL[/"TIO TTL files"/] --> LoadG["load_ontology<br/>合併為 rdflib.Graph"]
-        LoadG --> LabelIdx[("label_index<br/>label → URI")]
-        LoadG --> CommentIdx[("comment_index<br/>URI → rdfs:comment")]
+    subgraph Offline["離線準備（build_index.py，一次性）"]
+        TTL[/"TIO TTL files"/] --> RI["build_resource_index<br/>每個 URI: CURIE + labels +<br/>comment + rdf_types + role_class"]
+        RI --> RJSON[("index/resources.json")]
+        RI --> EMB["text-embedding-3-small"]
+        EMB --> NPY[("index/resource_embeddings.npy")]
     end
 
     subgraph Online["線上推論（每題跑一次）"]
         NL[/"NL intent"/]
-        NL --> S1["Step 1：LLM 抽 seed terms<br/>過濾掉租戶名 / 數字 / 單位"]
-        S1 --> Seeds["seed terms<br/>['latency', 'p95', 'hub to all spokes', ...]"]
-        Seeds --> S2["Step 2：seed → URI grounding<br/>label 命中為主, embedding fallback"]
-        S2 --> Grounded["grounded URIs<br/>{evsla:latency, evsla:p95, ...}"]
-        Grounded --> S3["Step 3：typed BFS 2-hop<br/>沿 subClassOf / subPropertyOf /<br/>type / domain / range"]
-        S3 --> Triples["子圖 triples (s, p, o)"]
-        Triples --> S4["Step 4：序列化<br/># triples + # comments block"]
-        S4 --> S5["Step 5：主 LLM 生 TIO Turtle<br/>gpt-5.4, temperature=0"]
-        S5 --> S6["Step 6：normalize output<br/>補空 description"]
-        S6 --> Out[/"TC001.ttl"/]
+        NL --> S1["Step 1：ground_query<br/>lexical-exact + 向量 cosine<br/>(無 LLM seed 抽取)"]
+        S1 --> Grounded["grounded resources<br/>{evsla:latency, p95, ...}"]
+        Grounded --> S2["Step 2：traverse_connective<br/>只走連接屬性 (hasMetric/...)，<br/>排除 type/subClassOf/domain/range"]
+        S2 --> Reached["relations + reached roles<br/>(metric 出現→保證供出<br/>tenant/method/window/topology)"]
+        Reached --> S3["Step 3：closed_vocab + extract_conventions<br/>每角色封閉詞表 + metric→method/window 慣例"]
+        S3 --> S4["Step 4：serialize_context<br/>@prefix + 詞 + 連接關係 +<br/>封閉詞表 + Conventions"]
+        S4 --> S5["Step 5：主 LLM 生 TIO Turtle<br/>gpt-5.4, temp=0"]
+        S5 --> Out[/"TC001.ttl"/]
     end
 
-    LabelIdx -. 查詢 .-> S2
-    CommentIdx -. fallback .-> S2
-    LoadG -. 圖物件 .-> S3
+    NPY -. 向量 grounding .-> S1
+    RJSON -. 資源/角色 .-> S1
     NL -. 原始 NL 一併餵進 .-> S5
 
     style NL fill:#90EE90,stroke:#333
     style Out fill:#FFD700,stroke:#333
 ```
 
-### 1.1 離線準備（程式啟動時做一次）
+### 1.1 離線準備（`build_index.py`，一次性；TTL 變更才重建）
 
-#### Step A：載入 TIO ontology
+`build_resource_index()` 把 `TM Forum Intent Ontology/*.ttl` 讀成 `rdflib.Graph`，對每個 URI 產生一筆 `OntologyResource`：CURIE、`labels`、`alt_labels`、`comment`、`rdf_types`、**`role_class`**（Statistic / Scope / MeasurementMethod / TimeWindow / Tenant / HubSite / SpokeSite / HubAndSpokeTopology / ComparisonOperator / Metric）。再把每個 resource 的文字（label+comment）用 `text-embedding-3-small` 算向量,存 `index/resource_embeddings.npy`。
 
-`load_ontology()` 把 `TM Forum Intent Ontology/*.ttl` 合併成單一 `rdflib.Graph`。順手補進 TTL 漏宣告的 `icm:` / `imo:` prefix，避免 rdflib parse error。
-
-**結果**：記憶體中一張 graph，含 ~10,000+ triples，涵蓋 14 個 TIO namespace。
-
-#### Step B：建三個索引
-
-| 索引 | 內容 | 用途 |
-|---|---|---|
-| `label_index` | normalised label string → URI（從 `rdfs:label` + `skos:altLabel`）| 字串對 URI 的快速命中 |
-| `comment_index` | URI → `rdfs:comment` 文字 | 字串沒命中時用 embedding 對比 |
-| `type_index` | class URI → set of instance URIs | 目前 retrieval 沒用到，留著備用 |
-
-**`label_index` 部分內容範例**：
-```python
-{
-  "twamp": URIRef("http://.../EnterpriseVpnSlaOntology/twamp"),
-  "p95":   URIRef("http://.../EnterpriseVpnSlaOntology/p95"),
-  "latency": URIRef("http://.../EnterpriseVpnSlaOntology/latency"),
-  "hub to all spokes": URIRef("http://.../EnterpriseVpnSlaOntology/hubToAllSpokes"),
-  "sla expectation": URIRef("http://.../EnterpriseVpnSlaOntology/SlaExpectation"),
-  ...
-}
-```
+> 沒有 index 時 grounding 退化成 lexical-only；rdflib 讀 TTL 與 traversal 都是執行期完成，只有「向量 grounding 的 embedding」需要這個離線 index。
 
 ### 1.2 線上推論（每題跑一次）
 
-#### Step 1：LLM 抽 seed terms
+#### Step 1：ground_query — lexical + vector（無 LLM）
 
-`extract_seeds(nl_intent, caller=_seed_llm_caller)` 把 NL intent 餵小 LLM，prompt 要求「只挑 metric / statistic / scope / measurement method / time window 等本體詞，不要租戶名、地名、數字」。
+`ground_query(query, resources, embeddings, query_vector)`：先做 lexical-exact 比對（label / alt_label），再用 query 的 embedding 對 `resource_embeddings.npy` 算 cosine 補召回（synonym / 非字面命中）。**不再用 LLM 抽 seed**（`test_no_seed_selection_caller_present` 守著這件事）。
 
-**TC001 在這一步**：
+**TC001**：`確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。` →
+grounded ＝ `{evsla:latency, evsla:p95, evsla:hubToAllSpokes, ...}`（租戶名 / 數字不會 ground 成 ontology 詞）。
 
-輸入：
+#### Step 2：traverse_connective — 只走連接屬性
+
+`traverse_connective(graph, grounded)` 從 grounded URI 出發，**只沿 EVSLA 的連接屬性**走：
 ```
-確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。
+hasMetric, hasThreshold, hasStatistic, hasScope,
+hasMeasurementMethod, hasTimeWindow, hasHub, hasSpoke, forTenant
 ```
+**刻意排除** `rdf:type / rdfs:subClassOf / rdfs:domain / rdfs:range` 這些 TBox plumbing（這正是 typed-BFS 舊版的雜訊來源）。回傳 `relations`（連接關係）與 `reached`（命中的角色集合）。
 
-LLM 回傳（JSON array）：
-```json
-["latency", "p95", "hub to all spokes", "5 minute window"]
-```
+**四維度 grounding 修正（Architecture 5）**：只要 grounded 裡有 metric（即存在一條 SLA expectation），就**保證**把 `Tenant / MeasurementMethod / TimeWindow / HubSite / SpokeSite / HubAndSpokeTopology` 補進 `reached`,並 emit `forTenant / hasHub / hasSpoke` 關係,讓這些 **class IRI** 進 context（tenant / hub / spoke 是每題自造的節點,需要 class 來 typing,而非實例詞）。
 
-注意 LLM **自動過濾掉** 「星河銀行」「總部」「50ms」「95%」這些 tenant / 數值。
+**TC001**：reached ＝ `{Metric, Statistic, Scope, MeasurementMethod, TimeWindow, Tenant, HubSite, SpokeSite, HubAndSpokeTopology, ComparisonOperator}`。
 
-#### Step 2：seed → URI grounding
+#### Step 3：封閉詞表 + 領域慣例
 
-`ground_seeds()` 兩階段：
-1. 先把 seed lowercase 去找 `label_index`，命中就綁 URI。
-2. 沒命中的 seed 走 fallback：把 seed 與所有 comment 同時送 `text-embedding-3-small`，算 cosine，**threshold 0.6** 以上才綁。
+- `closed_vocab_for_reached_roles(reached, resources)`：對每個命中角色,列出該角色的**封閉候選詞**（如 Statistic: `evsla:p95, evsla:p99`；TimeWindow: `evsla:fiveMinuteWindow, oneHourWindow, monthlySlaWindow`）。LLM 只能從清單挑,杜絕亂造。
+- `extract_conventions(graph)`（Architecture 5）：從 TTL 讀領域慣例 —
+  - **metric → 預設 measurement method**：`evsla:latency/packetLoss → evsla:twamp`、`evsla:guaranteedBandwidth → evsla:activeMeasurement`（`evsla:defaultMeasurementMethod` triple）。
+  - **預設 time window**：`evsla:fiveMinuteWindow`（`evsla:isDefaultTimeWindow` 標記）；NL 出現「每小時視窗」→ `oneHourWindow`、「月度SLA視窗」→ `monthlySlaWindow`（靠 window instance 上的中文 `rdfs:label@zh`）。
 
-**TC001 在這一步**：
+> 為什麼要慣例：NL 通常**不會講** measurement method / time window（TC001 沒提 twamp、5 分鐘）,這些是領域預設,必須由 retrieval 從 ontology 供出,LLM 才補得對。這就是 tenant=0.00→0.98、measurement_method=0.35→0.93 的關鍵。
 
-| seed | 命中方式 | grounded URI |
-|---|---|---|
-| `latency` | label_index 直接命中 | `evsla:latency` |
-| `p95` | label_index 直接命中 | `evsla:p95` |
-| `hub to all spokes` | label_index 直接命中 | `evsla:hubToAllSpokes` |
-| `5 minute window` | label 沒命中 → comment embedding cosine | `evsla:fiveMinuteWindow` |
+#### Step 4：serialize_context — 自含 context
 
-得到 `grounded = {evsla:latency, evsla:p95, evsla:hubToAllSpokes, evsla:fiveMinuteWindow}`。
+`serialize_context()` 輸出一段自含的 context：`### Canonical prefixes`（@prefix 全宣告）+ `### Grounded terms` + `### Connective relations`（如 `evsla:SlaExpectation evsla:hasMetric -> evsla:latency`、`evsla:HubAndSpokeTopology evsla:hasHub -> evsla:HubSite`）+ `### Closed vocabulary per reached role` + `### Conventions`。
 
-#### Step 3：Typed BFS subgraph（2-hop）
+#### Step 5：LLM 生成
 
-`typed_bfs_subgraph(graph, seeds, hops=2)` 從 grounded URI 出發，**只沿著這 5 種 RDF predicate 走**（雙向）：
-```
-rdfs:subClassOf, rdfs:subPropertyOf, rdf:type, rdfs:domain, rdfs:range
-```
-其他 predicate（`dct:created`、`skos:changeNote` 等）通通不走，避免 noise。
+`generate_turtle_code()` 用 `build_evsla_system_prompt(profile)` + few-shot + NL + 上面的 context 呼叫 `gpt-5.4`（temp=0），回 pure TIO Turtle。
 
-**TC001 在這一步** — 從 `evsla:latency` 出發 2 跳會抓到（截錄）：
-```
-evsla:latency      rdfs:subPropertyOf  met:metric
-evsla:latency      rdfs:domain         evsla:SlaExpectation
-evsla:latency      rdfs:range          quan:Quantity
-evsla:SlaExpectation rdfs:subClassOf  icm:PropertyExpectation
-met:metric         rdfs:domain         met:MeasurableEntity
-...
-evsla:p95          rdf:type            evsla:Statistic
-evsla:hubToAllSpokes rdf:type          evsla:Scope
-evsla:fiveMinuteWindow rdf:type        evsla:TimeWindow
-```
-
-最終約 30-60 個 triples（依 seed 多寡）。
-
-#### Step 4：序列化成 prompt context
-
-`serialize_subgraph()` 把 URI 縮成 CURIE，輸出兩個 block：
-
-```
-# triples
-evsla:SlaExpectation rdfs:subClassOf icm:PropertyExpectation
-evsla:latency rdfs:domain evsla:SlaExpectation
-evsla:latency rdfs:subPropertyOf met:metric
-evsla:p95 rdf:type evsla:Statistic
-evsla:hubToAllSpokes rdf:type evsla:Scope
-evsla:fiveMinuteWindow rdf:type evsla:TimeWindow
-...
-
-# comments
-# comment: evsla:latency -> One-way latency measured by an active method such as TWAMP ...
-# comment: evsla:p95 -> 95th percentile statistic computed over a time window ...
-# comment: evsla:hubToAllSpokes -> Scope spanning from the hub site to all spoke sites ...
-...
-```
-
-這串就是要餵進主 LLM 的「TIO context」。
-
-#### Step 5：LLM 生成 TIO Turtle
-
-`generate_turtle_code()` 用 EVSLA system prompt + few-shot block + NL intent + 上面的 typed subgraph context 一起呼叫 `gpt-5.4`，temperature=0，要求回 pure TIO Turtle（EVSLA hub-and-spoke：icm:/evsla:/quan: 詞彙）。
-
-#### Step 6：後處理
-
-`normalize_turtle_output()` 解析 Turtle，若 expectation 的 `rdfs:comment` 是空字串，自動用 label / id / 上層 comment 補上（避免評分器當缺欄位）。
-
-**TC001 最終輸出**（節錄自 `tio_outputs/graphrag/TC001.ttl`，更多範例見 `few_shot_samples.json` 的 `turtle` 欄位）：
-
+**TC001 最終輸出**（節錄,**SLA 綁定 predicate 掛在 expectation 上** — 見 §1.3）：
 ```turtle
 @prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
 @prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix ex:    <http://example.org/tio-instance/tc001/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:topology .
-
+ex:tenant a evsla:Tenant ; rdfs:label "星河銀行"@zh .
 ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-latency .
-
-ex:tgt-latency a icm:Target ;
+  icm:target ex:tgt-latency ;
   evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 50 ; quan:unit "ms" ] ;
-  evsla:hasStatistic evsla:p95 ;
-  evsla:hasScope evsla:hubToAllSpokes ;
-  evsla:hasMeasurementMethod evsla:twamp ;
-  evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:topology a icm:Context, evsla:HubAndSpokeTopology .
+  evsla:hasStatistic evsla:p95 ; evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ; evsla:hasTimeWindow evsla:fiveMinuteWindow ;
+  evsla:hasThreshold [ a quan:Quantity ; rdf:value 50 ; quan:unit "ms" ] .
+ex:tgt-latency a icm:Target ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 50 ; quan:unit "ms" ] .
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "台北總部"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "新竹分行"@zh ] .
 ```
 
-可以看到 Step 3 抓出來的 URI 幾乎全部出現在最終 Turtle 裡（`evsla:latency` / `p95` / `hubToAllSpokes` / `twamp` / `fiveMinuteWindow` / `SlaExpectation`）。
+### 1.3 評分器與 ontology domain 對齊（Architecture 5）
+
+`semantic_eval.py` 從 **expectation 節點**讀 SLA 綁定 predicate（`hasMetric` 等），因為 ontology 宣告它們的 `rdfs:domain` 是 `evsla:SlaExpectation`；讀不到再 fallback 到 `icm:Target`（向後相容舊輸出）。few-shot 與 structure-only 骨架也改成把綁定掛 expectation、target 只留 `icm:valuesOfTargetProperty` —— **ontology / few-shot / scorer 三方對齊**。
 
 ---
 
-## 2. KGE（TransE + text grounding + link prediction）
+## 2. KGE（canonical：text-embedding grounding + TransE link-prediction）
 
-> 核心：**把整個 TIO 圖訓練成向量（兩套：圖嵌入 + 文字嵌入），retrieval 時 text 找 seed → KGE 鄰居擴張 → TransE 預測潛在 triple**。
-> 入口：`KGE/KGE-based-graphrag/nl_to_tio.py`；核心邏輯：`kge/retrieve.py` + `kge/train.py`。
+> 核心：**text embedding 找 seed（吃同義詞）→ TransE 對「真實 triple」排序做擴張（永不合成）→ 套用與 GraphRAG 完全相同的輸出契約**。
+> 入口：`KGE/KGE-based-graphrag/nl_to_tio.py`；核心邏輯：`kge/select.py`（`text_ground` + `transe_expand` + `assemble_context`）+ `kge/train.py`。
 
 ```mermaid
 flowchart TD
-    subgraph Offline["離線準備（python -m kge.train, 要重訓才跑）"]
-        TTL[/"TIO TTL files"/] --> Extract["extract_triples_for_kge<br/>只留 URI-URI 三元組"]
-        Extract --> TSV[("triples.tsv")]
-        TSV --> TransE["train_trans_e<br/>PyKEEN TransE, dim=128, epochs=80"]
-        TransE --> KGEemb[("entity_kge.npy<br/>relation_kge.npy")]
-        Extract --> Desc["build_entity_descriptions<br/>label + comment"]
-        Desc --> Ada["text-embedding-ada-002"]
-        Ada --> TextEmb[("entity_text_emb.npy")]
+    subgraph Offline["離線準備（python -m kge.train，要重訓才跑）"]
+        TTL[/"TIO TTL files"/] --> Extract["抽 URI-URI triples"]
+        Extract --> TransE["PyKEEN TransE, dim=128<br/>entity_kge / relation_kge .npy"]
+        Extract --> Desc["label + comment"]
+        Desc --> Ada["text-embedding-3-small"]
+        Ada --> TextEmb[("entity_text_embeddings.npy")]
     end
 
     subgraph Online["線上推論（每題跑一次）"]
         NL[/"NL intent"/]
-        NL --> Q["Step 1：query embedding<br/>ada-002, L2-normalize"]
-        Q --> S2["Step 2：文字相似度 top-8<br/>text_emb @ q (cosine)"]
-        S2 --> Seeds["seed entities<br/>(tag = text)"]
-        Seeds --> S3["Step 3：KGE 鄰居擴張<br/>每 seed 取 top-14"]
-        S3 --> Expanded["entity list ≤ 45<br/>(text + kge_neighbor)"]
-        Expanded --> S4["Step 4：TransE link prediction<br/>score = -||h+r-t||₂, top-18"]
-        S4 --> Preds["predicted triples"]
-        Preds --> S5["Step 5：format context<br/>entity list + predicted triples"]
-        S5 --> S6["Step 6：主 LLM 生 TIO Turtle<br/>gpt-5.4, temperature=0"]
-        S6 --> Out[/"TC001.ttl"/]
+        NL --> S1["Step 1：text_ground<br/>query embedding × entity_text<br/>cosine top-k seed"]
+        S1 --> Seeds["seed entities"]
+        Seeds --> S2["Step 2：transe_expand<br/>對含 seed 的「真實 triple」<br/>用 -‖h+r−t‖ 排序，取鄰接 entity"]
+        S2 --> Grounded["grounded URIs (seeds + expanded)"]
+        Grounded --> S3["Step 3：assemble_context<br/>★ 共用 GraphRAG 契約 ★<br/>traverse_connective + 封閉詞表 + 慣例"]
+        S3 --> S4["Step 4：主 LLM 生 TIO Turtle<br/>gpt-5.4, temp=0"]
+        S4 --> Out[/"TC001.ttl"/]
     end
 
-    TextEmb -. cosine 比 query .-> S2
-    KGEemb -. KGE space cosine .-> S3
-    KGEemb -. TransE 評分 .-> S4
-    NL -. 原始 NL 一併餵進 .-> S6
+    TextEmb -. cosine .-> S1
+    NL -. 原始 NL 一併餵進 .-> S4
 
     style NL fill:#90EE90,stroke:#333
     style Out fill:#FFD700,stroke:#333
 ```
 
-### 2.1 離線準備（`python -m kge.train`，要重訓才會跑）
+### 2.1 離線準備（`python -m kge.train`，TTL 變更才重訓）
 
-#### Step A：抽 triples
+1. 抽 ontology 的 **URI-URI** triples。
+2. PyKEEN **TransE**（`dim=128`）→ `entity_kge_embeddings.npy`（~392×128）+ `relation_kge_embeddings.npy`（~12×128）。TransE 假設 `vec(h)+vec(r) ≈ vec(t)`。
+3. 每個 entity 的文字（label+comment）→ `text-embedding-3-small` → `entity_text_embeddings.npy`（~392×1536）。
 
-`extract_triples_for_kge()` 載入所有 TTL → 只留 **URI-to-URI** 的 triples（丟掉 literal、BNode、`dc:` 雜訊）。
+至此有**兩套向量**：圖結構（TransE）與語意（text）。
 
-**結果**：`kge_data/triples.tsv`，格式 `h\tr\tt`，約幾千條。
+### 2.2 線上推論（每題跑一次，`build_kge_context`）
 
-例如：
-```
-http://.../evsla/latency	http://.../rdfs#subPropertyOf	http://.../met/metric
-http://.../evsla/SlaExpectation	http://.../rdfs#subClassOf	http://.../icm/PropertyExpectation
-...
-```
+#### Step 1：text_ground — dense 語意 grounding
 
-#### Step B：訓練 TransE
+把 NL 用 `text-embedding-3-small` embed,對 `entity_text_embeddings` 算 cosine,取 top-k entity 當 seed。好處是吃得到「字面不同但語意相近」的詞。
 
-`train_trans_e()` 用 PyKEEN 跑 TransE：`embedding_dim=128`、`epochs=80`、`batch_size=64`、`lr=0.05`。
+#### Step 2：transe_expand — 只排序「真實 triple」
 
-TransE 假設：**`vec(head) + vec(relation) ≈ vec(tail)`**。訓完得到：
+`transe_expand(seeds)`：掃過 `triples.tsv` 裡**真實存在**、且含某個 seed 的 triple,用 TransE 分數 `-‖h+r−t‖` 排序,取 top-k triple 的鄰接 entity 加入。**關鍵:它只從真實 triple 取 entity,永不合成新 triple、不造詞**（這正是「誤用版」KGE 被砍掉的三件事之一:舊版會 dump predicted-triples-as-facts + neighborhood expansion + 百科 term-hint）。
 
-- `entity_kge.npy`：`(N_entity, 128)` 矩陣，L2-normalized
-- `relation_kge.npy`：`(N_relation, 128)` 矩陣
-- `entity_ids.json` / `relation_ids.json`：index → URI 對照
+#### Step 3：assemble_context — 共用 GraphRAG 契約
 
-**範例**：訓練後 `vec(evsla:latency)` 在 KGE space 裡會與 `vec(evsla:packetLoss)`、`vec(evsla:jitter)` 距離很近，因為它們在 TTL 裡共享相同的結構性關係（`subPropertyOf met:metric`、`domain evsla:SlaExpectation`）。
+`assemble_context(seeds + expanded)` 直接呼叫 GraphRAG 的 `traverse_connective` + `closed_vocab_for_reached_roles` + `extract_conventions` + `serialize_context`。**輸出格式與 GraphRAG 一字不差**。
 
-#### Step C：每個 entity 的文字 embedding
+#### Step 4：LLM 生成
 
-每個 entity 的 text description = `rdfs:label` + `rdfs:comment` 串起來，丟 OpenAI `text-embedding-ada-002`，存 `entity_text_emb.npy`。
+跟 GraphRAG 同一支 `build_evsla_system_prompt`,只是 retrieval block 來自 KGE。
 
-至此手上有**兩套向量**：圖結構 (KGE) 與語意 (text)。
-
-### 2.2 線上推論（每題跑一次）
-
-#### Step 1：Query 文字 embedding
-
-NL intent → ada-002 → L2 normalize 後是 query 向量 `q`。
-
-**TC001 在這一步**：
-```
-"確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。"
-→ q ∈ ℝ^1536
-```
-
-#### Step 2：Text-based seed selection
-
-`text_scores = text_emb @ q`（cosine）→ 取 top 8 當 seed，標記為 `[text]` tag。
-
-**TC001 在這一步**（示意 top 8 可能命中）：
-
-| rank | URI | tag |
-|---|---|---|
-| 1 | `evsla:latency` | text |
-| 2 | `evsla:SlaExpectation` | text |
-| 3 | `evsla:p95` | text |
-| 4 | `evsla:hubToAllSpokes` | text |
-| 5 | `evsla:twamp` | text |
-| 6 | `evsla:EnterpriseVpnService` | text |
-| 7 | `evsla:fiveMinuteWindow` | text |
-| 8 | `met:metric` | text |
-
-#### Step 3：KGE neighborhood expansion
-
-對每個 seed，在 **KGE space** 算 `kge_emb @ seed_vec`，取最相似的 14 個鄰居（不重複加入）。標記為 `[kge_neighbor]`。
-
-**TC001 在這一步**（示意，從 `evsla:latency` 的 KGE 鄰居）：
-
-新增：
-```
-[kge_neighbor] evsla:packetLoss      (圖結構上是同類 metric)
-[kge_neighbor] evsla:jitter          (同上)
-[kge_neighbor] evsla:guaranteedBandwidth
-[kge_neighbor] met:Metric            (上位類別)
-[kge_neighbor] icm:PropertyExpectation
-[kge_neighbor] quan:Quantity
-...
-```
-
-> 為什麼要兩階段：文字相似可能找到「名字像但圖上沒連在一起」的詞；KGE 鄰居把「文字不像、但圖結構鄰近」的補進來。
-
-最終最多 **45 個 entity** 進 prompt。
-
-#### Step 4：TransE link prediction
-
-`predict_likely_triples()` 對 grounded URIs 做 link prediction：
-- 候選 relation：TIO namespace 內的 relation + 結構性 predicate（`rdf:type`、`subClassOf` 等）
-- 候選 tail：grounded URIs + 與 grounded URIs 在 `triples.tsv` 中共現的 URIs
-- 計分：`-||vec(h) + vec(r) - vec(t)||₂`（TransE 的 score，越大越好）
-- **過濾掉已知 triple**（要 predict 新的），取 top 18
-
-**TC001 在這一步**（示意 predicted triples）：
-```
-evsla:latency        rdfs:subPropertyOf  met:metric           (score=-0.21)
-evsla:p95            rdf:type             evsla:Statistic      (score=-0.34)
-evsla:SlaExpectation rdfs:subClassOf     icm:PropertyExpectation (score=-0.28)
-evsla:hubToAllSpokes rdf:type             evsla:Scope          (score=-0.41)
-...
-```
-
-#### Step 5：Format context
-
-`format_kge_context_for_prompt()` 輸出：
-
-```
-### KGE-assisted term hints (TransE + text similarity)
-- [text] evsla:latency — One-way latency measured by ...
-- [text] evsla:SlaExpectation — A property expectation ...
-- [kge_neighbor] evsla:packetLoss — Packet loss ratio ...
-- [kge_neighbor] met:Metric — Abstract metric class ...
-...
-
-### KGE grounded URI and link prediction context
-Grounded URIs:
-- [text] evsla:latency <http://...> — ...
-Predicted likely triples:
-- evsla:latency rdfs:subPropertyOf met:metric (TransE score=-0.2143)
-- evsla:p95 rdf:type evsla:Statistic (TransE score=-0.3421)
-...
-```
-
-#### Step 6：LLM 生 TIO Turtle
-
-跟 GraphRAG 同樣的 system prompt 套路，但傳的 retrieval block 是上面這個。**沒有 GraphRAG 的後處理 step**。
-
-**TC001 最終輸出**（節錄 `tio_outputs/kge/TC001.ttl`）：Turtle 結構跟 GraphRAG 類似，**ontology coverage 略勝**（因為 link prediction 多塞了該出現的 URI），但 **node 數較多（~63）容易超出 verbosity budget**。
+> **為什麼 KGE 與 GraphRAG 分數/ token 幾乎打平（0.9831 vs 0.9827、2,637 vs 2,722）**：重設計後兩條**只差「選種子機制」**（KGE = text-emb + TransE 真實擴張;GraphRAG = lexical + 確定性 traversal),其後「種子→輸出」的契約完全共用。在這個小而固定的 schema 上,ground 到任一 SLA value 詞就點亮整個角色菜單,所以殊途同歸。
 
 ---
 
@@ -480,170 +242,45 @@ Predicted likely triples:
 
 > 核心：**把 corpus 灌進 Neo4j，每份 chunk 同時建 outline / summary / table / atomic_query 多種索引，query 時 5 路 retriever 並行，再讓 KAG generator 直接生 TIO Turtle**。
 > 入口：`KAG/nl_to_tio.py`；後端：Docker stack（OpenSPG server + Neo4j + MySQL + MinIO）。
+> ⚠️ KAG **沒有 structure-only 版**（沒抽詞彙的對照),只有強配方結果;且未隨 GraphRAG/KGE 重設計而改。
 
 ```mermaid
 flowchart TD
     subgraph Offline["離線準備（一次性建 KG, 30-60 分鐘）"]
-        Docker["docker compose up<br/>OpenSPG + Neo4j + MySQL + MinIO"]
-        Docker --> Schema["knext schema commit<br/>Document / Chunk / Outline /<br/>Summary / Table / AtomicQuery"]
-        Corpus[/"16 份 tio-*.md<br/>(從 tio-agent SKILL.md 來)"/]
-        Corpus --> Split["length_splitter<br/>1000 字 / chunk"]
-        Split --> Ext["5 extractor 各對每 chunk 跑一次<br/>chunk / outline / summary /<br/>table / atomic_query<br/>(4 個會打 LLM)"]
-        Ext --> Vec["batch_vectorizer<br/>所有產物做 embedding"]
+        Corpus[/"16 份 tio-*.md (從 tio-agent SKILL.md)"/] --> Split["length_splitter 1000 字/chunk"]
+        Split --> Ext["5 extractor 各對每 chunk 跑一次<br/>chunk / outline / summary / table / atomic_query"]
+        Ext --> Vec["batch_vectorizer → embedding"]
         Vec --> Neo4j[("Neo4j KG<br/>chunks + 4 種輔助節點")]
-        Schema -.-> Neo4j
     end
 
     subgraph Online["線上推論（kag_solver_pipeline_tc, static）"]
-        NL[/"NL intent"/]
-        NL --> Plan["Step 1：kag_static_planner<br/>LLM 拆 sub-queries"]
-        Plan --> R5["Step 2：5-way 並行 retrieval"]
-        R5 --> Merger["Step 3：kag_merger<br/>去重 + 排序"]
-        Merger --> Gen["Step 4：TIOTurtleGenerator<br/>KAG 內建 LLM call"]
+        NL[/"NL intent"/] --> Plan["kag_static_planner<br/>LLM 拆 sub-queries"]
+        Plan --> R5["5-way 並行 retrieval"]
+        R5 --> Merger["kag_merger 去重排序"]
+        Merger --> Gen["TIOTurtleGenerator (KAG 內建 LLM)"]
         Gen --> Out[/"TC001.ttl"/]
     end
 
-    Neo4j -. r1 atomic_query .-> R5
-    Neo4j -. r2 outline .-> R5
-    Neo4j -. r3 summary .-> R5
-    Neo4j -. r4 vector .-> R5
-    Neo4j -. r5 table .-> R5
+    Neo4j -. atomic_query / outline / summary / vector / table .-> R5
 
     style NL fill:#90EE90,stroke:#333
     style Out fill:#FFD700,stroke:#333
 ```
 
-### 3.1 離線準備（一次性建 KG，~30-60 分鐘）
+### 3.1 離線：建 KG（`builder/indexer.py`，~30-60 分鐘）
 
-#### Step A：起 Docker stack & 灌 schema
+對 `builder/data/tio-*.md`（16 份 corpus，從 tio-agent SKILL.md 複製來）做：md_reader → length_splitter（1000 字/chunk）→ **5 個 extractor**（`chunk` / `outline` / `summary` / `table` / `atomic_query`，4 個會打 LLM）→ batch_vectorizer → 寫進 Neo4j。
 
-```bash
-docker compose -f KAG/docker-compose-west.yml up -d
-knext project restore --host_addr http://127.0.0.1:8887 --proj_path .
-knext schema commit   # push TIO_EVSLA_QA.schema 到 Neo4j
-```
+**範例**：`tio-enterprise-vpn-sla.md` 裡一段 TWAMP chunk 會在 Neo4j 建出 `(:Chunk)`、`(:Outline)`、`(:Summary)`、多個 `(:AtomicQuery)`（如「What protocol measures hub-spoke latency?」）並互相連邊、打 embedding。成本 ~400-800 次 LLM call、< $10。
 
-Schema 包含節點類型：`Document` / `Chunk` / `Outline` / `Summary` / `Table` / `KnowledgeUnit` / `AtomicQuery`。
+### 3.2 線上：5-way solver（每題跑一次）
 
-#### Step B：Build KG（`builder/indexer.py`）
+1. **Planner**：`kag_static_planner` 把 NL 拆成 sub-queries。
+2. **5-way retrieval**：每個 sub-query 同時跑 `atomic_query` / `outline` / `summary`（thr=0.8）/ `vector`（thr=0.8）/ `table` 五個 retriever（各 top_k=10）→ `kag_merger` 去重排序。
+3. **Generator**：`TIOTurtleGenerator` 把 retrieved chunks 序列化成 task blocks,用 `TIOTurtleGeneratorPrompt`（固定 @prefix、expectation/target 骨架、hub-spoke context）在 KAG 內建 LLMClient 下呼叫 `gpt-5.4`,直接吐 pure Turtle。
+4. **輸出**：`strip()` 後寫到 `tio_outputs/kag/TC001.ttl`。
 
-對 `builder/data/tio-*.md`（16 份 corpus，從 tio-agent SKILL.md 複製來）做：
-
-1. **md_reader** 讀 markdown
-2. **length_splitter** 切 1000 字一個 chunk（window=0）
-3. **5 個 extractor** 對每個 chunk 各做一次（4 個會打 LLM）：
-   - `chunk_extractor` — schema-free entity/triple 抽取
-   - `outline_extractor` — chunk 標題層級
-   - `summary_extractor` — chunk 摘要
-   - `table_extractor` — table context + row/col 摘要
-   - `atomic_query_extractor` — 「這段話能回答哪些原子問題」
-4. **batch_vectorizer** — 所有產物做 embedding
-5. **kg_writer** — 寫進 Neo4j
-
-**範例**：對 `tio-enterprise-vpn-sla.md` 裡這段 chunk：
-
-```markdown
-## TWAMP measurement
-Two-Way Active Measurement Protocol (TWAMP) is used to measure
-latency between hub and spoke sites. Statistics like p95 or p99
-are computed over fiveMinuteWindow.
-```
-
-5 個 extractor 會在 Neo4j 建出：
-
-```
-(:Chunk { text: "TWAMP measurement ... fiveMinuteWindow." })
-(:Outline { path: "tio-enterprise-vpn-sla > TWAMP measurement" })
-(:Summary { text: "TWAMP measures hub-spoke latency with p95/p99 over 5-min windows." })
-(:AtomicQuery { text: "What protocol measures hub-spoke latency?" })
-(:AtomicQuery { text: "What statistics are computed for TWAMP?" })
-(:AtomicQuery { text: "What time window is used for TWAMP measurements?" })
-```
-
-所有節點都會打 embedding 並互相連邊。
-
-> 成本：~400-800 次 LLM call、預算 < $10 USD（gpt-5.4）。
-
-### 3.2 線上推論（每題跑一次，`kag_solver_pipeline_tc`）
-
-#### Step 1：Init & Planner
-
-`_ensure_kag_inited()` 載 `kag_config.yaml`、註冊 custom generator。
-
-`kag_static_planner` 餵 NL intent 給 LLM，產出 retrieval plan（要查什麼、怎麼 rewrite）。
-
-**TC001 在這一步**：
-```
-Plan:
-  sub_query_1: "What ontology terms describe latency SLA in EVSLA?"
-  sub_query_2: "What scope means hub to all spokes?"
-  sub_query_3: "What statistic is p95? What time window is used?"
-  sub_query_4: "How is TWAMP used to measure latency?"
-```
-
-#### Step 2：5-way 並行 retrieval（`kag_hybrid_retrieval_executor`）
-
-對每個 sub_query，**同時跑 5 個 retriever**（各 top_k=10）：
-
-| Retriever | 比對對象 | 用意 |
-|---|---|---|
-| `atomic_query_chunk_retriever` (r1) | 跟「離線抽出的原子問題」對 | 找問法直接吻合的 chunk |
-| `outline_chunk_retriever` (r2) | 跟標題層級對 | 抓主題正確的 chunk |
-| `summary_chunk_retriever` (r3, threshold=0.8) | 跟 chunk 摘要對 | 抓內容相關的 chunk |
-| `vector_chunk_retriever` (r4, threshold=0.8) | 跟原 chunk 對 | 傳統向量 retrieve |
-| `table_retriever` (r5) | 跟 table 對 | 抓表格內容（若有）|
-
-5 路結果丟給 `kag_merger` 去重排序。
-
-**TC001 在這一步**（示意 merge 後拿到的 evidence）：
-```
-[atomic_query hit] "What protocol measures hub-spoke latency?"
-  → chunk: "TWAMP measures latency between hub and spoke sites..."
-
-[outline hit] "tio-enterprise-vpn-sla > Statistics"
-  → chunk: "p95/p99 are percentile statistics over time windows..."
-
-[summary hit] score=0.87
-  → chunk: "Hub-and-spoke topology defines hub and spoke sites..."
-
-[vector hit] score=0.84
-  → chunk: "SLA expectations include latency, packet loss, bandwidth..."
-```
-
-#### Step 3：KAG generator（`TIOTurtleGenerator`）
-
-把 retrieved chunks 序列化成 task blocks（每個 sub-task 的 result / thought + graph 變數），餵 `TIOTurtleGeneratorPrompt`：
-
-```
-You are the final generator inside a KAG solver pipeline for the TIO Experiment.
-You generate TIO Turtle (RDF) for Enterprise VPN hub-and-spoke SLA intents only.
-Output ONLY valid, parseable Turtle. Never output JSON, JSON-LD, Markdown, prose, ...
-...
-- 固定 @prefix：icm: / evsla: / quan: / rdf: / rdfs: / ex:
-- ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ; icm:intentElements ...
-- 每個 SLA metric 一個 icm:PropertyExpectation, evsla:SlaExpectation
-- 每個 target 用 evsla:hasMetric / hasStatistic / hasScope /
-  hasMeasurementMethod / hasTimeWindow + quan:Quantity threshold
-- Hub-and-spoke context：ex:topology a icm:Context, evsla:HubAndSpokeTopology ...
-
-Few-shot Turtle examples for structure only:
-$few_shot_block
-
-Current test case ID: TC001
-Natural language intent: 確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。
-
-KAG solver context:
-  Sub-task 1 result: ...(retrieved chunks)...
-  Sub-task 2 result: ...
-```
-
-LLM 在 KAG `LLMClient` 包裝下呼叫 `gpt-5.4`，回 final TIO Turtle（pure Turtle，無 JSON-LD）。
-
-#### Step 4：輸出
-
-`generate_turtle_code()` 取回 generator 的 Turtle 字串並 `strip()` 後直接寫到 `tio_outputs/kag/TC001.ttl`（KAG generator 直接吐 Turtle，無需 JSON-LD 時代的 `intentReport` contract fallback）。完整範例見 `few_shot_samples.json` 的 `turtle` 欄位。
-
-**TC001 最終輸出**（節錄 `tio_outputs/kag/TC001.ttl`）：Turtle 結構穩定，但 ontology coverage 比 GraphRAG / KGE 略低（0.9314 vs 0.9889 / 0.9972）— 因為 retrieval 拉回來的是「自然語言段落」，LLM 要自己腦補 URI，命中率不如 GraphRAG / KGE 直接給 URI。
+**為什麼 KAG ontology 命中率最低**：retrieval 拉回來的是**自然語言段落**(corpus 本來就是 SKILL.md,沒有 URI),LLM 要自己從散文腦補 URI,命中率不如 GraphRAG/KGE 直接給 CURIE。這跟 Microsoft GraphRAG CLI 是同一個雷,差別只在 KAG 的 corpus 一開始就沒有 URI 可保留。
 
 ---
 
@@ -651,17 +288,17 @@ LLM 在 KAG `LLMClient` 包裝下呼叫 `gpt-5.4`，回 final TIO Turtle（pure 
 
 | 階段 | GraphRAG | KGE | KAG |
 |---|---|---|---|
-| **知識來源** | TIO TTL（直接讀）| TIO TTL → triples.tsv | 16 份 SKILL.md（tio-agent 來的）|
-| **離線索引** | label / comment / type index（記憶體）| TransE 向量 + 文字向量（.npy）| Neo4j：chunks + outline / summary / table / atomic_query |
-| **Seed / Query 處理** | LLM 抽 ontology terms | 文字 embedding cosine top-8 | LLM planner 拆 sub-query |
-| **Retrieval 主邏輯** | Typed BFS（5 種 RDF predicate）2-hop | KGE 鄰居 14×8 + TransE link prediction top-18 | 5-way parallel retriever + kag_merger |
-| **Context 格式** | CURIE triples + comments | tagged entity list + predicted triples | 自然語言 chunks + task results |
+| **知識來源** | TIO TTL（直接讀）| TIO TTL → TransE + 文字向量 | 16 份 SKILL.md（自然語言）|
+| **離線索引** | resource index + 文字 embedding（`index/`）| TransE `.npy` + 文字 `.npy`（`kge_data/`）| Neo4j：chunks + outline/summary/table/atomic_query |
+| **Seed / Query 處理** | lexical-exact + 向量 cosine（**無 LLM**）| 文字 embedding cosine top-k | LLM planner 拆 sub-query |
+| **Retrieval 主邏輯** | 連接屬性有界 traversal（排除 plumbing）+ 角色 reachability 保證 | TransE 對真實 triple 排序擴張（不合成）| 5-way parallel retriever + merger |
+| **Context 格式** | @prefix + 連接關係 + 封閉詞表 + 慣例（**共用契約**）| **同 GraphRAG（共用契約）** | 自然語言 chunks + task results |
 | **Generation** | 外部 OpenAI call | 外部 OpenAI call | KAG solver 內建 generator |
-| **後處理** | 補空 description | 無 | 無（generator 直接吐 Turtle）|
-| **Parse OK** | 100% | 95% | 100% |
-| **ICM / metric** | **1.0 / 1.0** | **1.0 / 1.0** | 0.99 / 1.0 |
-| **Ontology coverage** | 0.9889 | **0.9972** | 0.9314 |
-| **Verbosity OK** | 100% | 0% ⚠️ | 100% |
+| **structure-only composite** | **0.9827** | **0.9831** | （無 structure-only 版）|
+| **structure-only tok/case** | 2,722 | 2,637 | — |
+| **strong 配方（20 題）** | ~1.0（飽和）| ~1.0（飽和）| ~0.997（飽和）|
+
+> 對照基準：LLM-only strong 天花板 composite 0.9722 / 5,349 tok；structure-only floor 0.000 / 1,432 tok。retrieval 用 ~½ token 達到 ≈/超過天花板品質。
 
 ---
 
@@ -670,16 +307,18 @@ LLM 在 KAG `LLMClient` 包裝下呼叫 `gpt-5.4`，回 final TIO Turtle（pure 
 | 階段 | GraphRAG | KGE | KAG |
 |---|---|---|---|
 | **輸入** | "確保星河銀行總部至所有分點之延遲在95%的時間內低於50ms。" | 同左 | 同左 |
-| **第一步產出** | seed terms：`["latency", "p95", "hub to all spokes", "5 minute window"]` | query 向量 `q ∈ ℝ^1536` | retrieval plan（4 個 sub-query）|
-| **中間表示** | grounded URIs `{evsla:latency, evsla:p95, evsla:hubToAllSpokes, evsla:fiveMinuteWindow}` | text top-8 + KGE 鄰居 ≤45 個 entity | 5-way merge 後的 chunks |
-| **送進 LLM 的 context 形式** | `# triples` block + `# comments` block | tagged entity list + predicted triples | task blocks（每個 sub-task result + thought）|
-| **最終輸出** | `evsla:latency` / `p95` / `hubToAllSpokes` / `twamp` / `fiveMinuteWindow` / `SlaExpectation` 都進 Turtle | 同上，且 ontology coverage 略高 | 同上，但部分 URI 靠 LLM 從自然語言段落腦補 |
+| **第一步產出** | grounded URIs（lexical+向量）`{evsla:latency, p95, hubToAllSpokes, ...}` | text top-k seed entities | retrieval plan（sub-queries）|
+| **擴張 / traversal** | 連接屬性 traversal + 角色 reachability 保證 | TransE 排真實 triple → 鄰接 entity | 5-way retriever → merger |
+| **送進 LLM 的 context** | @prefix + 連接關係 + 封閉詞表 + Conventions | **同 GraphRAG（共用）** | task blocks（自然語言 chunk + thought）|
+| **最終輸出** | latency/p95/hubToAllSpokes/twamp/fiveMinuteWindow + tenant/hub/spoke typing 都進 Turtle | 同上（殊途同歸）| 同上,但部分 URI 靠 LLM 從散文腦補 |
 
 ---
 
 ## 6. 一句話歸納
 
-> **三條 pipeline 做的事一樣（NL → TIO Turtle），差別在 retrieval 的「精度 vs 召回 vs 工程複雜度」三角取捨。**
-> - **GraphRAG** 直接吃 ontology 結構，精度高、雜訊少，最平衡。
-> - **KGE** 多吃一層向量空間，召回最廣，但容易冗。
-> - **KAG** 最重型基礎設施，retrieval 多元，但 corpus 是自然語言時 ontology 命中率反而被拖累。
+> **三條 pipeline 做的事一樣（NL → TIO Turtle），差別在 retrieval 怎麼把「結構」交到 LLM 手上。**
+> - **GraphRAG**：直接吃 ontology 結構,只走有意義的連接屬性 + 供慣例,精度高、雜訊少。
+> - **KGE**：用向量空間選種子(吃同義詞)+ TransE 排真實 triple,**其餘與 GraphRAG 共用契約** → 兩條殊途同歸。
+> - **KAG**：最重型基礎設施,retrieval 多元,但 corpus 是自然語言、沒 URI 可保留,ontology 命中率被拖累。
+>
+> 貫穿三條的鐵律:**retrieval 保留多少「有用的結構」,就決定 LLM 能生出多 schema-compliant 的 TIO Turtle。**
