@@ -7,7 +7,11 @@ import numpy as np
 from rdflib import Graph, URIRef
 
 from resource_index import OntologyResource, to_curie
-from graph_relations import traverse_connective, closed_vocab_for_reached_roles
+from graph_relations import (
+    traverse_connective,
+    closed_vocab_for_reached_roles,
+    extract_conventions,
+)
 from context_builder import serialize_context
 
 LEXICAL_WEIGHT = 0.45
@@ -104,4 +108,5 @@ def build_retrieval_context(
         if by_curie[m.curie].role_class is not None
     ]
     vocab = closed_vocab_for_reached_roles(reached, resources)
-    return serialize_context(grounded, relations, vocab)
+    conventions = extract_conventions(graph)
+    return serialize_context(grounded, relations, vocab, conventions=conventions)

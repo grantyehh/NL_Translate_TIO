@@ -34,6 +34,19 @@ def test_context_is_self_contained_and_role_scoped():
     assert "evsla:latency" in ctx
     assert "Statistic:" in ctx and "Scope:" in ctx
     assert "ComparisonOperator:" in ctx
-    # query-scoping: a latency-only query must NOT pull topology wiring
-    assert "hasSpoke" not in ctx
-    assert "HubSite" not in ctx
+    # EVSLA intents are inherently hub-and-spoke: a grounded metric (i.e. an SLA
+    # expectation) now guarantees the topology + tenant class IRIs are exposed
+    # via the relations block so case-specific nodes can be typed.
+    assert "evsla:HubSite" in ctx and "evsla:SpokeSite" in ctx
+    assert "evsla:Tenant" in ctx
+
+
+def test_context_includes_conventions():
+    graph = load_ontology(TTL_DIR)
+    resources = build_resource_index(graph)
+    ctx = build_retrieval_context(
+        "latency", graph=graph, resources=resources, embeddings=None, query_vector=None,
+    )
+    assert "Conventions" in ctx
+    assert "evsla:latency -> evsla:twamp" in ctx
+    assert "evsla:fiveMinuteWindow" in ctx

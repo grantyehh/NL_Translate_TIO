@@ -95,13 +95,21 @@ def traverse_connective(
             "Tenant", "MeasurementMethod", "TimeWindow",
             "HubSite", "SpokeSite", "HubAndSpokeTopology",
         })
-        # Emit the forTenant relation so the prompt sees evsla:Tenant as a type.
-        fortenant = URIRef(EVSLA + "forTenant")
+        # HubSite/SpokeSite/Tenant have no ontology instances (they type
+        # case-specific nodes), so the model needs the *class* IRIs via the
+        # relations block, not the closed vocab. Emit the wiring relations.
+        topo = URIRef(EVSLA + "HubAndSpokeTopology")
         service = URIRef(EVSLA + "EnterpriseVpnService")
-        for r in graph.objects(fortenant, RDFS.range):
-            triple = (service, fortenant, r)
-            if triple not in relations:
-                relations.append(triple)
+        guaranteed = [
+            (service, URIRef(EVSLA + "forTenant")),
+            (topo, URIRef(EVSLA + "hasHub")),
+            (topo, URIRef(EVSLA + "hasSpoke")),
+        ]
+        for subj, prop in guaranteed:
+            for r in graph.objects(prop, RDFS.range):
+                triple = (subj, prop, r)
+                if triple not in relations:
+                    relations.append(triple)
 
     relations.sort(key=lambda t: (str(t[0]), str(t[1]), str(t[2])))
     return relations, reached

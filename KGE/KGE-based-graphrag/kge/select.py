@@ -45,6 +45,7 @@ from resource_index import build_resource_index, to_curie  # noqa: E402
 from graph_relations import (  # noqa: E402
     traverse_connective,
     closed_vocab_for_reached_roles,
+    extract_conventions,
 )
 from context_builder import serialize_context  # noqa: E402
 from kge.paths import ONTOLOGY_DIR  # noqa: E402
@@ -96,7 +97,8 @@ def assemble_context(grounded_uris: list[str]) -> str:
         if u in by_uri and by_uri[u].role_class is not None
     ]
     vocab = closed_vocab_for_reached_roles(reached, resources)
-    return serialize_context(grounded, relations, vocab)
+    conventions = extract_conventions(graph)
+    return serialize_context(grounded, relations, vocab, conventions=conventions)
 
 
 import json  # noqa: E402
