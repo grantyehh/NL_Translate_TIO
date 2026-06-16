@@ -54,6 +54,33 @@ class TestScaffold(unittest.TestCase):
             "time_window", "operator", "tenant", "topology", "contract", "precision"})
 
 
+# Ontology-correct placement: the SLA binding predicates have rdfs:domain
+# evsla:SlaExpectation, so the canonical shape carries them on the expectation
+# node. The icm:Target only holds the threshold/value.
+EXPECTATION_TTL = """
+@prefix icm:   <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/> .
+@prefix quan:  <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://example.org/tio-instance/tc001/> .
+ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+  icm:intentElements ex:exp-latency, ex:topology .
+ex:tenant a evsla:Tenant ; rdfs:label "星河銀行"@zh .
+ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency ;
+  evsla:hasMetric evsla:latency ;
+  evsla:hasThreshold [ a quan:Quantity ; rdf:value 50 ; quan:unit "ms" ] ;
+  evsla:hasStatistic evsla:p95 ; evsla:hasScope evsla:hubToAllSpokes ;
+  evsla:hasMeasurementMethod evsla:twamp ; evsla:hasTimeWindow evsla:fiveMinuteWindow .
+ex:tgt-latency a icm:Target ;
+  icm:valuesOfTargetProperty [ a quan:Quantity ; rdf:value 50 ; quan:unit "ms" ] .
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "總部"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "所有分點"@zh ] .
+"""
+
+
 class TestBindings(unittest.TestCase):
     def test_extract_one_binding(self):
         g = Graph(); g.parse(data=GOOD_TTL, format="turtle")
@@ -61,6 +88,21 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(len(b), 1)
         self.assertEqual(b[0]["metric"], EVSLA.latency)
         self.assertEqual(b[0]["scope"], EVSLA.hubToAllSpokes)
+
+    def test_bindings_read_from_expectation(self):
+        g = Graph(); g.parse(data=EXPECTATION_TTL, format="turtle")
+        b = extract_bindings(g)
+        self.assertEqual(len(b), 1)
+        self.assertEqual(b[0]["metric"], EVSLA.latency)
+        self.assertEqual(b[0]["method"], EVSLA.twamp)
+        self.assertEqual(b[0]["time_window"], EVSLA.fiveMinuteWindow)
+
+    def test_expectation_placement_scores_high(self):
+        g = Graph(); g.parse(data=EXPECTATION_TTL, format="turtle")
+        d = score_semantics(g, GOLD_TC001)["dimensions"]
+        for k in ("metric", "threshold", "statistic", "scope",
+                  "measurement_method", "time_window", "tenant", "topology"):
+            self.assertEqual(d[k], 1.0, f"{k} should score 1.0 on expectation placement")
 
 
 class TestScore(unittest.TestCase):

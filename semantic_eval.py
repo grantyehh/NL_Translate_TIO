@@ -48,16 +48,30 @@ def _obj(g, s, p):
     return None
 
 
-def _threshold_node(g, target):
+def _first_obj(g, nodes, p):
+    """Read property p from the first node that has it. Per the EVSLA ontology,
+    the SLA binding predicates have rdfs:domain evsla:SlaExpectation, so the
+    expectation node is authoritative; the icm:Target is accepted as a fallback
+    for backward compatibility with outputs that hung the bindings off target."""
+    for n in nodes:
+        if n is None:
+            continue
+        o = _obj(g, n, p)
+        if o is not None:
+            return o
+    return None
+
+
+def _threshold_node(g, nodes):
     for p in (EVSLA.hasThreshold, ICM.valuesOfTargetProperty):
-        q = _obj(g, target, p)
+        q = _first_obj(g, nodes, p)
         if q is not None and _obj(g, q, RDF.value) is not None:
             return q
     return None
 
 
-def _threshold(g, target):
-    q = _threshold_node(g, target)
+def _threshold(g, nodes):
+    q = _threshold_node(g, nodes)
     if q is not None:
         return _obj(g, q, RDF.value), _obj(g, q, QUAN.unit)
     return None, None
@@ -95,16 +109,17 @@ def extract_bindings(g):
             if ICM.PropertyExpectation not in types and EVSLA.SlaExpectation not in types:
                 continue
             target = _obj(g, el, ICM.target)
-            if target is None:
-                bindings.append({"expectation": el, "target": None, "metric": None})
-                continue
+            # Ontology authority: the SLA binding predicates have rdfs:domain
+            # evsla:SlaExpectation, so read from the expectation first; the
+            # icm:Target is a backward-compatible fallback.
+            nodes = [el, target]
             bindings.append({
                 "expectation": el, "target": target,
-                "metric": _obj(g, target, EVSLA.hasMetric),
-                "statistic": _obj(g, target, EVSLA.hasStatistic),
-                "scope": _obj(g, target, EVSLA.hasScope),
-                "method": _obj(g, target, EVSLA.hasMeasurementMethod),
-                "time_window": _obj(g, target, EVSLA.hasTimeWindow),
+                "metric": _first_obj(g, nodes, EVSLA.hasMetric),
+                "statistic": _first_obj(g, nodes, EVSLA.hasStatistic),
+                "scope": _first_obj(g, nodes, EVSLA.hasScope),
+                "method": _first_obj(g, nodes, EVSLA.hasMeasurementMethod),
+                "time_window": _first_obj(g, nodes, EVSLA.hasTimeWindow),
             })
     return bindings
 
@@ -138,7 +153,8 @@ def _score_one_metric(g, pm, bindings, errors):
         errors.append(f"metric {pm['ontology_term']}: no reachable target")
         return d
     d["metric"] = 1.0
-    val, unit = _threshold(g, b["target"])
+    nodes = [b["expectation"], b["target"]]
+    val, unit = _threshold(g, nodes)
     tv = val is not None and float(val) == float(pm["threshold"]["value"])
     tu = unit is not None and str(unit) == str(pm["threshold"]["unit"])
     d["threshold"] = 1.0 if (tv and tu) else 0.0
@@ -152,7 +168,7 @@ def _score_one_metric(g, pm, bindings, errors):
         if not ok:
             errors.append(f"{key} {pm['ontology_term']}: expected {pm[key]}, got {b.get(attr)}")
     expected_fn = OPERATOR_FN.get(pm.get("operator"))
-    d["operator"] = _operator_ok(g, expected_fn, _threshold_node(g, b["target"]))
+    d["operator"] = _operator_ok(g, expected_fn, _threshold_node(g, nodes))
     return d
 
 
