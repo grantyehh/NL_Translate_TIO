@@ -2243,7 +2243,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valuesOf"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -3162,7 +3162,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 80,
+    "triple_count": 84,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -3190,7 +3190,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -3227,28 +3229,25 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.129,
+      "composite": 1.0,
       "dimensions": {
-        "metric": 0.0,
-        "threshold": 0.0,
-        "statistic": 0.0,
-        "scope": 0.0,
-        "measurement_method": 0.0,
-        "time_window": 0.0,
-        "operator": 0.0,
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 1.0,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
-        "contract": 0.0,
-        "precision": 0.0
+        "contract": 1.0,
+        "precision": 1.0
       },
       "precision": {
-        "score": 0.0,
+        "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": [
-        "metric evsla:latency: no reachable target",
-        "metric evsla:guaranteedBandwidth: no reachable target"
-      ]
+      "errors": []
     }
   },
   {

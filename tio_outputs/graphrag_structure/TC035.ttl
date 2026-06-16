@@ -31,7 +31,7 @@ ex:exp-latency
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:latency evsla:latency ;
+    evsla:hasMetric evsla:latency ;
     icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
@@ -43,17 +43,6 @@ ex:thr-latency
     a quan:Quantity ;
     rdf:value "25"^^xsd:decimal ;
     quan:unit "ms" .
-
-ex:cond-latency
-    a log:Condition ;
-    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
-
-ex:obs-latency
-    evsla:latency evsla:latency ;
-    icm:valuesOfTargetProperty ex:obs-latency-value .
-
-ex:obs-latency-value
-    a quan:Quantity .
 
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -67,7 +56,7 @@ ex:exp-bandwidth
 
 ex:tgt-bandwidth
     a icm:Target ;
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
     icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
     evsla:hasStatistic evsla:minimum ;
@@ -80,16 +69,27 @@ ex:thr-bandwidth
     rdf:value "300"^^xsd:decimal ;
     quan:unit "Mbps" .
 
+ex:cond-latency
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:hasMetric evsla:latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
+
 ex:cond-bandwidth
     a log:Condition ;
     quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-bandwidth-value .
+    evsla:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-bandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-bandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;

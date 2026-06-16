@@ -53,14 +53,14 @@ ex:obs-packetloss
 
 ex:obs-packetloss-value
     a quan:Quantity ;
-    fun:valueOf ( ex:obs-packetloss ) .
+    fun:valuesOf ( ex:obs-packetloss ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-kaohsiung ;
+    evsla:hasHub ex:hub ;
     evsla:hasSpoke ex:spoke-pingtung, ex:spoke-taitung .
 
-ex:hub-kaohsiung
+ex:hub
     a evsla:HubSite ;
     rdfs:label "高雄物流中心"@zh .
 

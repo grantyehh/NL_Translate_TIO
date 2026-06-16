@@ -392,7 +392,7 @@ GraphRAG/KGE 共用,一次修兩條;KGE 因 TTL 變更已 `python -m kge.train` 
 ```text
 Line                       | Composite | Tok/case
 LLM-only strong(天花板)    |  0.9722   |  5,349
-GraphRAG-structure         |  0.7867 -> 0.9391  |  2,369 -> 2,722
+GraphRAG-structure         |  0.7867 -> 0.9609  |  2,369 -> 2,722
 KGE-structure(正統)       |  0.7540 -> 0.9831  |  2,292 -> 2,637
 LLM-only-structure(地板)   |  0.0000   |  1,432
 ```
@@ -409,16 +409,19 @@ topology           | 0.500 -> 1.000  | 0.425 -> 1.000
 
 關鍵發現:
 
-- **GraphRAG 0.7867 → 0.9391(追到天花板 96.6%)、KGE 0.7540 → 0.9831(追到 101%,實際超過
+- **GraphRAG 0.7867 → 0.9609(追到天花板 98.8%)、KGE 0.7540 → 0.9831(追到 101%,實際超過
   structure 天花板的 strong 上界)**。四維度全部 ≥0.92,七個強維度無退步(各 ≥0.90),parse 40/40,
-  **零非官方 namespace IRI**。
+  **零非官方 namespace IRI**。(GraphRAG 0.9391 → 0.9609 是重跑 TC035 後;見殘差。)
 - **token 仍 < 天花板一半**:GraphRAG 2,722、KGE 2,637 vs LLM-only 5,349。較前一輪各 +~350 tok
   (+15%,來自 Conventions 區塊 + topology 關係 + 骨架三行),略過自訂的 2,500 軟上限,但完全守住
   「token 遠低於 LLM-only」的目標。
-- **殘差(誠實記錄)**:GraphRAG 有 **2 題(TC025、TC035)掉到 0.129** —— `metric: no reachable
-  target`,即 PropertyExpectation→Target 契約鏈組裝斷掉,屬 **LLM 組裝不穩定**、與四維度無關
-  (KGE 同 prompt 無此 outlier,最低 0.887)。這 2 題把 GraphRAG composite 從 ~0.98 拉到 0.939;
-  gate 仍過。可選 follow-up:加 self-check 或重跑這 2 題(LLM nondeterminism)。
+- **殘差(誠實記錄)**:原始輪 GraphRAG 有 2 題(TC025、TC035)掉到 0.129(`metric: no reachable
+  target`,即 PropertyExpectation→Target 契約鏈斷掉)。**重跑後 TC035 → 1.0(純 LLM nondeterminism)**;
+  **TC025 穩定重現 0.129**,屬真實組裝錯誤:模型把 `evsla:hasMetric` 放在 expectation 而非 icm:Target
+  上(且 target 寫成 `evsla:packetLoss evsla:packetLoss`,把 metric 當自己的 predicate),scorer 因此
+  reach 不到 target。與四維度無關(KGE 同 prompt 無此 outlier,最低 0.887)。修法(未做,需全量重跑且
+  有回歸風險):把骨架的「icm:Target carrying the metric predicate」改寫成明確要求
+  `target evsla:hasMetric <metric>`,或加 assembly self-check。
 - 慣例編在 ontology(非 code、非逐題),`latency/packetLoss→twamp`、`guaranteedBandwidth→
   activeMeasurement`、window 預設 fiveMinuteWindow + NL「每小時/月度」覆寫,屬真實領域語意,
   非 teaching-to-the-test。已知 metric→method 對 TC039(latency→activeMeasurement)會貼錯 1 題。
