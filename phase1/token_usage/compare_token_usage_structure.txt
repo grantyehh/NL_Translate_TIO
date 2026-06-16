@@ -1,13 +1,23 @@
 Token Usage Reports
 -------------------
-LLM-only  : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_llm_only_structure.json
+LLM ceiling: /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_llm_only.json
 GraphRag  : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_graphrag_structure.json
 KGE       : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_kge_structure.json
+LLM floor : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_llm_only_structure.json
 
 Token Usage Summary
 -------------------
 Experiment     | Cases | Prep total   | Avg online   | Online total | Avg calls |   Amortized @20 |  Amortized @100 | Amortized @1000
 ------------------------------------------------------------------------------------------------------------------------------
-LLM-only       |    40 |            0 |      1432.15 |        57286 |      1.00 |         1432.15 |         1432.15 |         1432.15
+LLM ceiling    |    40 |            0 |      5349.02 |       213961 |      1.00 |         5349.02 |         5349.02 |         5349.02
 GraphRag       |    40 |            0 |      2721.97 |       108879 |      2.00 |         2721.97 |         2721.97 |         2721.97
 KGE            |    40 |            0 |      2636.70 |       105468 |      1.00 |         2636.70 |         2636.70 |         2636.70
+LLM floor      |    40 |            0 |      1432.15 |        57286 |      1.00 |         1432.15 |         1432.15 |         1432.15
+
+Reference rows (NOT structure-only-with-retrieval):
+  LLM ceiling = strong recipe, full knowledge injected, 40 cases -- semantic 0.972 (the quality target)
+  LLM floor   = structure-only, no vocab / no retrieval, 40 cases -- semantic 0.000 (no-retrieval control)
+GraphRag / KGE = structure-only WITH retrieval, 40 cases -- semantic ~0.983.
+Headline: retrieval reaches >= ceiling quality at ~half the ceiling's tokens.
+Compare retrieval token cost against the CEILING (5,349), not the floor (1,432).
+

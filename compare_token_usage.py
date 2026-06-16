@@ -20,13 +20,25 @@ DEFAULT_REPORTS = [
     ("KAG", TOKEN_USAGE_DIR / "token_usage_kag.json"),
 ]
 
-# Structure-only regime (test_cases_40): the four-dimension-grounding rounds.
-# KAG has no structure-only run, so the comparison is three-way.
+# Structure-only regime (test_cases_40). GraphRag/KGE are structure-only WITH
+# retrieval; the two LLM-only rows are references: the strong-recipe CEILING
+# (full knowledge injected, the quality target) and the structure-only FLOOR
+# (no vocab, no retrieval — the no-retrieval control). KAG has no structure run.
 STRUCTURE_REPORTS = [
-    ("LLM-only", TOKEN_USAGE_DIR / "token_usage_llm_only_structure.json"),
+    ("LLM ceiling", TOKEN_USAGE_DIR / "token_usage_llm_only.json"),
     ("GraphRag", TOKEN_USAGE_DIR / "token_usage_graphrag_structure.json"),
     ("KGE", TOKEN_USAGE_DIR / "token_usage_kge_structure.json"),
+    ("LLM floor", TOKEN_USAGE_DIR / "token_usage_llm_only_structure.json"),
 ]
+
+STRUCTURE_LEGEND = """
+Reference rows (NOT structure-only-with-retrieval):
+  LLM ceiling = strong recipe, full knowledge injected, 40 cases -- semantic 0.972 (the quality target)
+  LLM floor   = structure-only, no vocab / no retrieval, 40 cases -- semantic 0.000 (no-retrieval control)
+GraphRag / KGE = structure-only WITH retrieval, 40 cases -- semantic ~0.983.
+Headline: retrieval reaches >= ceiling quality at ~half the ceiling's tokens.
+Compare retrieval token cost against the CEILING (5,349), not the floor (1,432).
+"""
 
 VARIANTS = {"full": DEFAULT_REPORTS, "structure": STRUCTURE_REPORTS}
 
@@ -131,6 +143,8 @@ def main(argv: list[str] | None = None) -> int:
     tee = Tee(sys.stdout, buffer)
     with redirect_stdout(tee):
         emit_report(reports, amortize_over=args.amortize_over)
+        if args.variant == "structure":
+            print(STRUCTURE_LEGEND)
 
     out_path.write_text(buffer.getvalue(), encoding="utf-8")
     print(f"\nSaved token usage comparison report to: {out_path}")
