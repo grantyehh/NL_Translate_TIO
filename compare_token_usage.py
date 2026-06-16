@@ -20,6 +20,16 @@ DEFAULT_REPORTS = [
     ("KAG", TOKEN_USAGE_DIR / "token_usage_kag.json"),
 ]
 
+# Structure-only regime (test_cases_40): the four-dimension-grounding rounds.
+# KAG has no structure-only run, so the comparison is three-way.
+STRUCTURE_REPORTS = [
+    ("LLM-only", TOKEN_USAGE_DIR / "token_usage_llm_only_structure.json"),
+    ("GraphRag", TOKEN_USAGE_DIR / "token_usage_graphrag_structure.json"),
+    ("KGE", TOKEN_USAGE_DIR / "token_usage_kge_structure.json"),
+]
+
+VARIANTS = {"full": DEFAULT_REPORTS, "structure": STRUCTURE_REPORTS}
+
 
 def print_header(title: str) -> None:
     print()
@@ -96,18 +106,31 @@ def main(argv: list[str] | None = None) -> int:
         help="Workload sizes used for prep-cost amortization (default: 20 100 1000)",
     )
     parser.add_argument(
+        "--variant",
+        choices=sorted(VARIANTS),
+        default="full",
+        help="Which token-usage round to compare: 'full' (strong recipe, 4-way) "
+        "or 'structure' (structure-only test_cases_40, 3-way). Default: full",
+    )
+    parser.add_argument(
         "--out",
-        default=str(TOKEN_USAGE_DIR / "compare_token_usage.txt"),
-        help="Output text report path (default: phase1/token_usage/compare_token_usage.txt)",
+        default=None,
+        help="Output text report path (default: compare_token_usage[_<variant>].txt "
+        "in phase1/token_usage/)",
     )
     args = parser.parse_args(argv)
 
-    out_path = Path(args.out).expanduser().resolve()
+    reports = VARIANTS[args.variant]
+    if args.out is not None:
+        out_path = Path(args.out).expanduser().resolve()
+    else:
+        suffix = "" if args.variant == "full" else f"_{args.variant}"
+        out_path = TOKEN_USAGE_DIR / f"compare_token_usage{suffix}.txt"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     buffer = io.StringIO()
     tee = Tee(sys.stdout, buffer)
     with redirect_stdout(tee):
-        emit_report(DEFAULT_REPORTS, amortize_over=args.amortize_over)
+        emit_report(reports, amortize_over=args.amortize_over)
 
     out_path.write_text(buffer.getvalue(), encoding="utf-8")
     print(f"\nSaved token usage comparison report to: {out_path}")

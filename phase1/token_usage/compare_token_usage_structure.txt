@@ -1,0 +1,13 @@
+Token Usage Reports
+-------------------
+LLM-only  : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_llm_only_structure.json
+GraphRag  : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_graphrag_structure.json
+KGE       : /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/token_usage/token_usage_kge_structure.json
+
+Token Usage Summary
+-------------------
+Experiment     | Cases | Prep total   | Avg online   | Online total | Avg calls |   Amortized @20 |  Amortized @100 | Amortized @1000
+------------------------------------------------------------------------------------------------------------------------------
+LLM-only       |    40 |            0 |      1432.15 |        57286 |      1.00 |         1432.15 |         1432.15 |         1432.15
+GraphRag       |    40 |            0 |      2721.97 |       108879 |      2.00 |         2721.97 |         2721.97 |         2721.97
+KGE            |    40 |            0 |      2636.70 |       105468 |      1.00 |         2636.70 |         2636.70 |         2636.70
