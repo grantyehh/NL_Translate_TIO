@@ -19,5 +19,19 @@ class TestWeak(unittest.TestCase):
         self.assertIn("quan:smaller", s)
 
 
+class TestStructureOnly(unittest.TestCase):
+    def test_requires_tenant_and_typed_topology(self):
+        p = build_evsla_system_prompt("TC021", retrieval_mode="GraphRAG",
+                                      profile="structure_only")
+        low = p.lower()
+        self.assertIn("tenant", low)        # tenant binding required
+        self.assertIn("rdfs:label", p)      # label carried from NL
+        self.assertIn("hub", low)
+        self.assertIn("spoke", low)
+        # structure-only contract preserved: no leaked EVSLA vocabulary IRIs
+        self.assertNotIn("evsla:twamp", p)
+        self.assertNotIn("evsla:fiveMinuteWindow", p)
+
+
 if __name__ == "__main__":
     unittest.main()
