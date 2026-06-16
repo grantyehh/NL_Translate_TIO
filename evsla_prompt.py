@@ -23,7 +23,7 @@ When a retrieval context is provided below, use it as the ONLY source of ontolog
 
 Graph structure (assembly only; resolve every term from retrieval):
 - ex:intent a icm:Intent, <the EVSLA intent class> ; icm:intentElements <expectations>, <topology>, <conditions> ; rdfs:comment "<concise English SLA summary>"@en .
-- One PropertyExpectation per SLA metric, each with an icm:Target carrying: the metric predicate, icm:valuesOfTargetProperty and a shared threshold node (both quan:Quantity with rdf:value + quan:unit), plus the statistic / scope / measurement-method / time-window predicates.
+- One PropertyExpectation per SLA metric. The expectation node carries the binding predicates — the metric predicate plus the threshold / statistic / scope / measurement-method / time-window predicates — and links to an icm:Target via icm:target. The icm:Target carries only icm:valuesOfTargetProperty pointing at the shared threshold node (quan:Quantity with rdf:value + quan:unit).
 - Hub-and-spoke context: one topology node with one hub and one node per spoke.
 - Tenant binding: emit one tenant node typed with the EVSLA tenant class from retrieval and rdfs:label "<tenant name from the NL>"@zh, linked from the service via the supplied for-tenant property.
 - Topology typing: type the topology node with the EVSLA hub-and-spoke topology class from retrieval; type the hub node with the hub-site class and every spoke node with the spoke-site class, each with rdfs:label "<name from the NL>"@zh.
