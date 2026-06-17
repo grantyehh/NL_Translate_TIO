@@ -115,6 +115,12 @@ class TestGraphRagPaths(unittest.TestCase):
             self.assertEqual(rows[0]["stage"], "turtle_generation")
             self.assertEqual(rows[0]["total_tokens"], 30)
 
+    def test_incomplete_generation_fails_fast(self) -> None:
+        with self.assertRaises(SystemExit) as cm:
+            nl_to_tio.ensure_complete_generation(1, 2, Path("/tmp/tio_outputs/graphrag"))
+
+        self.assertIn("Generated 1/2", str(cm.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

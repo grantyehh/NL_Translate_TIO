@@ -10,7 +10,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from dotenv import load_dotenv
 from openai import OpenAI
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -29,9 +28,10 @@ from kge.paths import (  # noqa: E402
     TRIPLES_TSV,
 )
 from kge.tio_triples import entity_text_description, load_merged_ontology_graph  # noqa: F401,E402
+from openai_config import load_project_env  # noqa: E402
 from token_usage import record_usage  # noqa: E402
 
-load_dotenv(_PROJECT_ROOT / ".env")
+load_project_env()
 
 TIO_PREFIXES = {
     "evsla": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
@@ -116,9 +116,16 @@ def _load_triple_rows() -> list[tuple[str, str, str]]:
 def _embed_query(client: OpenAI, text: str, model: str) -> np.ndarray:
     resp = client.embeddings.create(model=model, input=text[:8000])
     case_id = os.getenv("KGE_ACTIVE_CASE_ID")
+    usage_path = Path(
+        os.getenv(
+            "KGE_TOKEN_USAGE_PATH",
+            str(_REPO_ROOT / "phase1" / "token_usage" / "token_usage_kge.json"),
+        )
+    )
+    experiment = os.getenv("KGE_TOKEN_USAGE_EXPERIMENT", "kge")
     record_usage(
-        _REPO_ROOT / "phase1" / "token_usage" / "token_usage_kge.json",
-        experiment="kge",
+        usage_path,
+        experiment=experiment,
         ledger="online",
         case_id=case_id,
         stage="retrieval_embedding",

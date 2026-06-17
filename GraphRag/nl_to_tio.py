@@ -7,6 +7,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from evsla_prompt import build_evsla_system_prompt
+from openai_config import (
+    chat_model,
+    create_client,
+    create_embedding_client,
+    embedding_model,
+    load_project_env,
+)
 from token_usage import record_usage, reset_usage_ledger
 from ontology_graph import load_ontology
 
@@ -21,6 +28,7 @@ ACTIVE_CASE_ID: str | None = None
 
 # Populated in main(); exposed at module level so tests can patch it.
 client = None
+embedding_client = None
 
 
 def _experiment_key() -> str:
@@ -105,8 +113,9 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
 """
 
     try:
+        model = chat_model(CHAT_MODEL)
         response = client.chat.completions.create(
-            model=CHAT_MODEL,
+            model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
@@ -119,7 +128,7 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
             ledger="online",
             case_id=tc_id,
             stage="turtle_generation",
-            model=CHAT_MODEL,
+            model=model,
             api="chat.completions",
             response=response,
         )
@@ -129,20 +138,30 @@ def generate_turtle_code(nl_intent, context, tc_id, few_shot_block: str):
         return None
 
 
+def ensure_complete_generation(written: int, total: int, output_dir: Path) -> None:
+    if written != total:
+        raise SystemExit(
+            f"Generated {written}/{total} TTL files in {output_dir}. "
+            "Aborting evaluation to avoid mixing stale outputs with a failed run."
+        )
+
+
 generate_jsonld_code = generate_turtle_code
 
 
 def _embed_caller(items: list[str]) -> list[list[float]]:
     if not items:
         return []
-    resp = client.embeddings.create(model=EMBED_MODEL, input=items)
+    model = embedding_model(EMBED_MODEL)
+    active_client = embedding_client or client
+    resp = active_client.embeddings.create(model=model, input=items)
     record_usage(
         token_usage_path(),
         experiment=_experiment_key(),
         ledger="online",
         case_id=ACTIVE_CASE_ID,
         stage="embedding",
-        model=EMBED_MODEL,
+        model=model,
         api="embeddings",
         response=resp,
     )
@@ -150,7 +169,7 @@ def _embed_caller(items: list[str]) -> list[list[float]]:
 
 
 def main() -> None:
-    global ACTIVE_CASE_ID, WEAK, PROFILE, client
+    global ACTIVE_CASE_ID, WEAK, PROFILE, client, embedding_client
 
     root = Path(__file__).resolve().parent
 
@@ -197,27 +216,14 @@ def main() -> None:
             args.no_few_shot = True
 
     # Lazy API setup — only runs when main() is called, not on import
-    try:
-        from dotenv import load_dotenv
-        load_dotenv()
-    except ImportError:
-        pass  # dotenv optional; env vars may already be set
+    load_project_env()
 
     try:
-        from openai import OpenAI
-    except ImportError as e:
-        print(f"Error: openai package not installed: {e}", file=sys.stderr)
+        client = create_client()
+        embedding_client = create_embedding_client()
+    except RuntimeError as e:
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
-
-    api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        print(
-            "Error: Missing API key. Please set GRAPHRAG_API_KEY or OPENAI_API_KEY "
-            "in your environment or .env file.",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    client = OpenAI(api_key=api_key)
 
     test_cases_path = (
         args.test_cases.resolve() if args.test_cases.is_absolute() else (root / args.test_cases).resolve()
@@ -291,6 +297,7 @@ def main() -> None:
         ACTIVE_CASE_ID = None
 
     print(f"Wrote {written}/{len(test_cases)} TTL files to {output_dir}")
+    ensure_complete_generation(written, len(test_cases), output_dir)
 
 
 if __name__ == "__main__":

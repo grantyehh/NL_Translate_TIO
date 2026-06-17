@@ -13,11 +13,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from ontology_graph import load_ontology
+from openai_config import create_embedding_client, embedding_model, load_project_env
 from resource_index import OntologyResource, build_resource_index
+from token_usage import record_usage, reset_usage_ledger
 
 TTL_DIR = Path(__file__).resolve().parent.parent / "TM Forum Intent Ontology"
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent / "index"
 EMBED_MODEL = "text-embedding-3-small"
+DEFAULT_USAGE_EXPERIMENT = "graphrag_structure"
 
 
 def write_resources_json(resources: list[OntologyResource], path: Path) -> None:
@@ -35,10 +38,26 @@ def _resource_text(r: OntologyResource) -> str:
     return " ".join(parts) or r.curie
 
 
+def token_usage_path(experiment: str = DEFAULT_USAGE_EXPERIMENT) -> Path:
+    return (
+        Path(__file__).resolve().parent.parent
+        / "phase1"
+        / "token_usage"
+        / f"token_usage_{experiment}.json"
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
+    load_project_env()
+
     parser = argparse.ArgumentParser(description="Build GraphRAG resource index.")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--check", action="store_true", help="Report status; never call API.")
+    parser.add_argument(
+        "--usage-experiment",
+        default=DEFAULT_USAGE_EXPERIMENT,
+        help="Experiment key for prep token ledger (default: graphrag_structure).",
+    )
     args = parser.parse_args(argv)
 
     resources = build_resource_index(load_ontology(TTL_DIR))
@@ -51,20 +70,31 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     write_resources_json(resources, args.output_dir / "resources.json")
-    api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        print("No API key; wrote resources.json only (embeddings skipped).")
+    try:
+        client = create_embedding_client()
+    except RuntimeError as e:
+        print(f"{e}; wrote resources.json only (embeddings skipped).")
         return 0
-    from openai import OpenAI
-
-    client = OpenAI(api_key=api_key)
     texts = [_resource_text(r) for r in resources]
-    resp = client.embeddings.create(model=EMBED_MODEL, input=texts)
+    usage_path = token_usage_path(args.usage_experiment)
+    reset_usage_ledger(usage_path, "prep")
+    model = embedding_model(EMBED_MODEL)
+    resp = client.embeddings.create(model=model, input=texts)
+    record_usage(
+        usage_path,
+        experiment=args.usage_experiment,
+        ledger="prep",
+        case_id=None,
+        stage="resource_index_embeddings",
+        model=model,
+        api="embeddings",
+        response=resp,
+    )
     vecs = np.asarray([d.embedding for d in resp.data], dtype=np.float32)
     np.save(emb_path, vecs)
     (args.output_dir / "manifest.json").write_text(
         json.dumps(
-            {"embedding_model": EMBED_MODEL, "num_resources": len(resources)},
+            {"embedding_model": model, "num_resources": len(resources)},
             indent=2,
         ),
         encoding="utf-8",

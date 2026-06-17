@@ -108,12 +108,16 @@ import numpy as np  # noqa: E402
 
 from kge.retrieve import _load_arrays, _embed_query, kge_ready  # noqa: E402
 from kge.paths import MANIFEST_JSON  # noqa: E402
+from openai_config import create_embedding_client, embedding_model  # noqa: E402
 
 TEXT_TOP_K = 8
 EXPAND_TOP_K = 8
 
 
 def _resolve_embedding_model() -> str:
+    configured = embedding_model("")
+    if configured:
+        return configured
     if MANIFEST_JSON.is_file():
         m = json.loads(MANIFEST_JSON.read_text(encoding="utf-8")).get("text_embedding_model")
         if m:
@@ -126,13 +130,11 @@ def text_ground(query: str, *, top_k: int = TEXT_TOP_K, case_id: str | None = No
     embeddings) -> top-k entity URIs. Catches non-lexical / synonym mentions."""
     if not kge_ready():
         return []
-    api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
-    if not api_key:
+    try:
+        client = create_embedding_client()
+    except RuntimeError:
         return []
     entity_ids, _kge, text_emb = _load_arrays()
-    from openai import OpenAI
-
-    client = OpenAI(api_key=api_key)
     prev = os.getenv("KGE_ACTIVE_CASE_ID")
     if case_id:
         os.environ["KGE_ACTIVE_CASE_ID"] = case_id

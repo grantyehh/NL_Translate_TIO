@@ -17,8 +17,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from dotenv import load_dotenv
-from openai import OpenAI
 from pykeen.pipeline import pipeline
 from pykeen.triples import TriplesFactory
 
@@ -40,13 +38,19 @@ from kge.paths import (  # noqa: E402
     TRIPLES_TSV,
 )
 from kge.tio_triples import build_entity_descriptions, extract_triples_for_kge  # noqa: E402
+from openai_config import create_embedding_client, embedding_model, load_project_env  # noqa: E402
 from token_usage import record_usage, reset_usage_ledger  # noqa: E402
 
-load_dotenv(_PROJECT_ROOT / ".env")
+load_project_env()
 
 
-def token_usage_path() -> Path:
-    return _REPO_ROOT / "phase1" / "token_usage" / "token_usage_kge.json"
+def token_usage_path(experiment: str = "kge", explicit_path: str | None = None) -> Path:
+    if explicit_path:
+        return Path(explicit_path).expanduser().resolve()
+    env_path = os.getenv("KGE_TOKEN_USAGE_PATH")
+    if env_path:
+        return Path(env_path).expanduser().resolve()
+    return _REPO_ROOT / "phase1" / "token_usage" / f"token_usage_{experiment}.json"
 
 
 def _write_triples_tsv(rows: list[tuple[str, str, str]], path: Path) -> None:
@@ -57,7 +61,12 @@ def _write_triples_tsv(rows: list[tuple[str, str, str]], path: Path) -> None:
 
 
 def _embed_texts_openai(
-    client: OpenAI, texts: list[str], model: str, batch_size: int = 64
+    client: OpenAI,
+    texts: list[str],
+    model: str,
+    usage_path: Path,
+    experiment: str,
+    batch_size: int = 64,
 ) -> np.ndarray:
     """Return (N, dim) float32, L2-normalized for cosine similarity."""
     def _clean_text(s: str) -> str:
@@ -72,8 +81,8 @@ def _embed_texts_openai(
         try:
             resp = client.embeddings.create(model=model, input=batch)
             record_usage(
-                token_usage_path(),
-                experiment="kge",
+                usage_path,
+                experiment=experiment,
                 ledger="prep",
                 case_id=None,
                 stage="text_embedding_artifacts",
@@ -89,8 +98,8 @@ def _embed_texts_openai(
             for one in batch:
                 resp = client.embeddings.create(model=model, input=one)
                 record_usage(
-                    token_usage_path(),
-                    experiment="kge",
+                    usage_path,
+                    experiment=experiment,
                     ledger="prep",
                     case_id=None,
                     stage="text_embedding_artifacts",
@@ -162,12 +171,23 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
         "--embedding-model",
-        default="text-embedding-ada-002",
+        default="text-embedding-3-small",
         help="OpenAI embedding model (match GraphRAG settings.yaml if possible).",
+    )
+    parser.add_argument(
+        "--usage-experiment",
+        default=os.getenv("KGE_TOKEN_USAGE_EXPERIMENT", "kge"),
+        help="Experiment key for prep token ledger (default: kge).",
+    )
+    parser.add_argument(
+        "--usage-path",
+        default=os.getenv("KGE_TOKEN_USAGE_PATH"),
+        help="Explicit prep token ledger path (default: phase1/token_usage/token_usage_<experiment>.json).",
     )
     parser.add_argument("--skip-text-embeddings", action="store_true")
     args = parser.parse_args()
-    reset_usage_ledger(token_usage_path(), "prep")
+    usage_path = token_usage_path(args.usage_experiment, args.usage_path)
+    reset_usage_ledger(usage_path, "prep")
 
     triples = extract_triples_for_kge()
     if len(triples) < 3:
@@ -212,18 +232,25 @@ def main() -> None:
     if args.skip_text_embeddings:
         print("Skipped text embeddings (--skip-text-embeddings).")
     else:
-        api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
-        if not api_key:
+        try:
+            client = create_embedding_client()
+        except RuntimeError:
             print(
-                "Warning: GRAPHRAG_API_KEY / OPENAI_API_KEY not set; "
+                "Warning: no OpenAI/Azure authentication configured; "
                 "skipping text embeddings. Hybrid KGE context in nl_to_tio.py stays empty "
                 "until you set the key and re-run this script (without --skip-text-embeddings)."
             )
         else:
-            client = OpenAI(api_key=api_key)
+            model = embedding_model(args.embedding_model)
             desc_map = build_entity_descriptions(entity_ids)
             texts = [desc_map[e][:8000] for e in entity_ids]
-            text_emb = _embed_texts_openai(client, texts, args.embedding_model)
+            text_emb = _embed_texts_openai(
+                client,
+                texts,
+                model,
+                usage_path,
+                args.usage_experiment,
+            )
             np.save(ENTITY_TEXT_EMB_NPY, text_emb)
             print(f"Saved text embeddings: {ENTITY_TEXT_EMB_NPY} ({text_emb.shape})")
 

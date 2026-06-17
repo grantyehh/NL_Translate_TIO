@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from evsla_prompt import build_evsla_system_prompt
 from kge.retrieve import kge_ready
 from kge.select import build_kge_context
+from openai_config import chat_model, create_client, load_project_env
 from token_usage import record_usage, reset_usage_ledger
 
 CHAT_MODEL = "gpt-5.4"
@@ -70,6 +71,25 @@ def token_usage_path(root: Path | None = None) -> Path:
     return root.parent.parent / "phase1" / "token_usage" / f"token_usage_{_experiment_key()}.json"
 
 
+def build_context_for_case(nl_intent: str, tc_id: str, root: Path) -> str:
+    """Build KGE context while routing retrieval token usage to this profile's ledger."""
+    old_experiment = os.environ.get("KGE_TOKEN_USAGE_EXPERIMENT")
+    old_path = os.environ.get("KGE_TOKEN_USAGE_PATH")
+    os.environ["KGE_TOKEN_USAGE_EXPERIMENT"] = _experiment_key()
+    os.environ["KGE_TOKEN_USAGE_PATH"] = str(token_usage_path(root))
+    try:
+        return build_kge_context(nl_intent, case_id=tc_id)
+    finally:
+        if old_experiment is None:
+            os.environ.pop("KGE_TOKEN_USAGE_EXPERIMENT", None)
+        else:
+            os.environ["KGE_TOKEN_USAGE_EXPERIMENT"] = old_experiment
+        if old_path is None:
+            os.environ.pop("KGE_TOKEN_USAGE_PATH", None)
+        else:
+            os.environ["KGE_TOKEN_USAGE_PATH"] = old_path
+
+
 def build_system_prompt(tc_id: str) -> str:
     return build_evsla_system_prompt(tc_id, retrieval_mode="KGE", profile=PROFILE)
 
@@ -107,8 +127,9 @@ def generate_turtle_code(
 """
 
     try:
+        model = chat_model(CHAT_MODEL)
         response = client.chat.completions.create(
-            model=CHAT_MODEL,
+            model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
@@ -121,7 +142,7 @@ def generate_turtle_code(
             ledger="online",
             case_id=tc_id,
             stage="turtle_generation",
-            model=CHAT_MODEL,
+            model=model,
             api="chat.completions",
             response=response,
         )
@@ -129,6 +150,14 @@ def generate_turtle_code(
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         return None
+
+
+def ensure_complete_generation(written: int, total: int, output_dir: Path) -> None:
+    if written != total:
+        raise SystemExit(
+            f"Generated {written}/{total} TTL files in {output_dir}. "
+            "Aborting evaluation to avoid mixing stale outputs with a failed run."
+        )
 
 
 generate_jsonld_code = generate_turtle_code
@@ -180,27 +209,13 @@ def main() -> None:
             args.no_few_shot = True
 
     # Lazy API setup — only runs when main() is called, not on import
-    try:
-        from dotenv import load_dotenv
-        load_dotenv()
-    except ImportError:
-        pass  # dotenv optional; env vars may already be set
+    load_project_env()
 
     try:
-        from openai import OpenAI
-    except ImportError as e:
-        print(f"Error: openai package not installed: {e}", file=sys.stderr)
+        client = create_client()
+    except RuntimeError as e:
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
-
-    api_key = os.getenv("GRAPHRAG_API_KEY") or os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        print(
-            "Error: Missing API key. Please set GRAPHRAG_API_KEY or OPENAI_API_KEY "
-            "in your environment or .env file.",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    client = OpenAI(api_key=api_key)
 
     test_cases_path = (
         args.test_cases.resolve() if args.test_cases.is_absolute() else (root / args.test_cases).resolve()
@@ -235,10 +250,11 @@ def main() -> None:
         )
 
     # 處理 test_cases.json 中的全部案例
+    written = 0
     for tc in test_cases:
         print(f"\n>>> Processing {tc['id']}: {tc['nl_intent']}")
 
-        kge_context = build_kge_context(tc["nl_intent"], case_id=tc["id"])
+        kge_context = build_context_for_case(tc["nl_intent"], tc["id"], root)
 
         turtle_result = generate_turtle_code(
             tc["nl_intent"],
@@ -250,10 +266,13 @@ def main() -> None:
         if turtle_result:
             file_path = output_path_for_case(root, tc["id"])
             file_path.write_text(turtle_result, encoding="utf-8")
+            written += 1
             print(f"Successfully saved Turtle to: {file_path}")
             print("-" * 30)
             print(turtle_result)
             print("-" * 30)
+
+    ensure_complete_generation(written, len(test_cases), output_dir)
 
 if __name__ == "__main__":
     main()

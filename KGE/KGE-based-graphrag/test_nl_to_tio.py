@@ -190,6 +190,86 @@ class TestKgePaths(unittest.TestCase):
         self.assertEqual(paths.RELATION_IDS_JSON.name, "relation_ids.json")
         self.assertEqual(paths.RELATION_KGE_EMB_NPY.name, "relation_kge_embeddings.npy")
 
+    def test_build_context_for_case_points_retrieval_usage_to_active_profile_ledger(self) -> None:
+        root = Path("/tmp/example/CHT/KGE/KGE-based-graphrag")
+        nl_to_tio.PROFILE = "structure_only"
+        captured = {}
+
+        def fake_build_context(query: str, *, case_id: str | None = None) -> str:
+            captured["query"] = query
+            captured["case_id"] = case_id
+            captured["experiment"] = os.environ.get("KGE_TOKEN_USAGE_EXPERIMENT")
+            captured["path"] = os.environ.get("KGE_TOKEN_USAGE_PATH")
+            return "context"
+
+        old_experiment = os.environ.get("KGE_TOKEN_USAGE_EXPERIMENT")
+        old_path = os.environ.get("KGE_TOKEN_USAGE_PATH")
+        try:
+            with patch.object(nl_to_tio, "build_kge_context", side_effect=fake_build_context):
+                result = nl_to_tio.build_context_for_case("intent text", "TC001", root)
+        finally:
+            nl_to_tio.PROFILE = "strong"
+            if old_experiment is None:
+                os.environ.pop("KGE_TOKEN_USAGE_EXPERIMENT", None)
+            else:
+                os.environ["KGE_TOKEN_USAGE_EXPERIMENT"] = old_experiment
+            if old_path is None:
+                os.environ.pop("KGE_TOKEN_USAGE_PATH", None)
+            else:
+                os.environ["KGE_TOKEN_USAGE_PATH"] = old_path
+
+        self.assertEqual(result, "context")
+        self.assertEqual(captured["query"], "intent text")
+        self.assertEqual(captured["case_id"], "TC001")
+        self.assertEqual(captured["experiment"], "kge_structure")
+        self.assertEqual(
+            captured["path"],
+            "/tmp/example/CHT/phase1/token_usage/token_usage_kge_structure.json",
+        )
+
+    def test_embed_query_records_usage_to_env_configured_ledger(self) -> None:
+        from kge import retrieve
+
+        response = Mock()
+        response.data = [Mock(embedding=[0.1, 0.2])]
+        response.usage = Mock(prompt_tokens=5, completion_tokens=0, total_tokens=5)
+        mock_client = Mock()
+        mock_client.embeddings.create.return_value = response
+
+        with TemporaryDirectory() as tmp:
+            usage_path = Path(tmp) / "token_usage_kge_structure.json"
+            old_case = os.environ.get("KGE_ACTIVE_CASE_ID")
+            old_experiment = os.environ.get("KGE_TOKEN_USAGE_EXPERIMENT")
+            old_path = os.environ.get("KGE_TOKEN_USAGE_PATH")
+            os.environ["KGE_ACTIVE_CASE_ID"] = "TC001"
+            os.environ["KGE_TOKEN_USAGE_EXPERIMENT"] = "kge_structure"
+            os.environ["KGE_TOKEN_USAGE_PATH"] = str(usage_path)
+            try:
+                retrieve._embed_query(mock_client, "intent text", "text-embedding-3-small")
+            finally:
+                for key, old in (
+                    ("KGE_ACTIVE_CASE_ID", old_case),
+                    ("KGE_TOKEN_USAGE_EXPERIMENT", old_experiment),
+                    ("KGE_TOKEN_USAGE_PATH", old_path),
+                ):
+                    if old is None:
+                        os.environ.pop(key, None)
+                    else:
+                        os.environ[key] = old
+
+            rows = json.loads(usage_path.read_text(encoding="utf-8"))
+            self.assertEqual(rows[0]["experiment"], "kge_structure")
+            self.assertEqual(rows[0]["ledger"], "online")
+            self.assertEqual(rows[0]["case_id"], "TC001")
+            self.assertEqual(rows[0]["stage"], "retrieval_embedding")
+            self.assertEqual(rows[0]["total_tokens"], 5)
+
+    def test_incomplete_generation_fails_fast(self) -> None:
+        with self.assertRaises(SystemExit) as cm:
+            nl_to_tio.ensure_complete_generation(1, 2, Path("/tmp/tio_outputs/kge"))
+
+        self.assertIn("Generated 1/2", str(cm.exception))
+
 
 if __name__ == "__main__":
     unittest.main()
