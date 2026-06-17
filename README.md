@@ -7,7 +7,7 @@
 - `KGE/KGE-based-graphrag/`: **正統 KGE**(text-embedding dense grounding + TransE link-prediction 排序「真實 triple」〔永不合成〕,共用 GraphRAG 輸出契約)+ LLM + few-shot。
 - `KAG/`: OpenSPG/KAG kg-builder + 5-way solver retrieval(atomic_query / outline / summary / vector / table)+ LLM + few-shot。後端走 Docker stack(server + Neo4j + MySQL + MinIO)。詳見 [`KAG/example_project/README.md`](KAG/example_project/README.md)。
 
-> GraphRag 與 KGE 的重設計與 structure-only 替代性實驗見 §4 與 `progress.md`(Experiment Architecture 3 / 4)。
+> GraphRag 與 KGE 的 retrieval 架構詳解見 [`retrieval_arch.md`](retrieval_arch.md);structure-only 替代性實驗的操作見 §4,逐輪結果見 `progress.md`(Experiment Architecture 3→6)。
 
 四條線共用：
 
@@ -49,7 +49,7 @@ export OPENAI_API_KEY=your_key_here
 ```bash
 export OPENAI_PROVIDER=azure
 export AZURE_OPENAI_ENDPOINT=https://cht-tio.services.ai.azure.com/openai/v1
-export AZURE_OPENAI_DEPLOYMENT=gpt-5.4-nano
+export AZURE_OPENAI_DEPLOYMENT=gpt-5.4
 export AZURE_OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-3-small
 az login
 ```
@@ -300,20 +300,20 @@ python evaluate_ttl.py kge_structure       --test-cases test_cases_40.json
 python evaluate_ttl.py llm_only_structure  --test-cases test_cases_40.json
 ```
 
-最新結果(40 題,strict `semantic_eval`,gpt-5.4;完整見 `progress.md` Architecture 5):
+最新結果(Architecture 6,2026-06-17 正式重跑;40 題,Azure `gpt-5.4`,strict `semantic_eval`;完整見 `progress.md`、架構詳解見 [`retrieval_arch.md`](retrieval_arch.md)):
 
 ```text
-Line                       | Composite | Tok/case
-LLM-only strong(天花板)    |  0.9722   |  5,349
-GraphRAG-structure         |  0.9827   |  2,722
-KGE-structure(正統)       |  0.9831   |  2,637
-LLM-only-structure(地板)   |  0.0000   |  1,432
+Line                       | Parse | Composite | Avg online tok | Prep tok
+LLM-only strong(天花板)    | 100%  |  0.9738   |     5,354      |      0
+GraphRAG-structure         | 100%  |  0.9746   |     2,718      | 14,365
+KGE-structure(正統)       | 100%  |  0.9778   |     2,722      | 15,555
+LLM-only-structure(地板)   |  95%  |  0.0000   |     1,532      |      0
 ```
 
-- 四維度 grounding(tenant / time_window / measurement_method / topology)把 GraphRAG 0.79→0.98、KGE 0.75→0.98:慣例編進 EVSLA TTL(metric→method、預設 window + 中文 NL 觸發 label),共用 retrieval 層保證四角色 reachability,structure-only 骨架要求 tenant 綁定 + 有型別 hub/spoke。
+- **兩條 retrieval 皆達到/略超天花板品質(KGE 0.9778 ≳ GraphRAG 0.9746 ≳ ceiling 0.9738),online token 只用約天花板的 51%**。token 要跟天花板 5,354 比,不是地板 1,532(地板是無 retrieval 對照,品質 0)。
+- 達成靠四維度 grounding(tenant / time_window / measurement_method / topology):慣例編進 EVSLA TTL(metric→method、預設 window + 中文 NL 觸發 label),共用 retrieval 層保證四角色 reachability,structure-only 骨架要求 tenant 綁定 + 有型別 hub/spoke。
 - scorer 對齊 ontology domain(SLA 綁定 predicate 的 `rdfs:domain` 是 `evsla:SlaExpectation`):evaluator 改成從 expectation 讀、target 作 fallback,修掉 TC025 的契約鏈誤判。
-- **兩條 retrieval 皆 ≈/超過天花板品質,token 只用約一半**。token 要跟天花板 5,349 比,不是地板 1,432(地板是無 retrieval 對照,品質 0)。
-- ⚠️ 待 OpenAI 配額恢復後三條 structure-only 正式重跑,驗證 expectation-placement 生成端效果並刷新 token ledger。
+- prep token 攤到 @100 後 GraphRAG/KGE 仍約 2.86k/2.88k per case,明顯低於 ceiling。KGE 初跑 TC021/TC029 因局部 Turtle syntax parse fail,單題重跑修復後合併 ledger;後續可加 Turtle parse-retry/repair guard。
 
 ## 注意事項
 
