@@ -31,7 +31,7 @@
 
 **評分器現況**:品質評分是 `semantic_eval.py`(11 維 graph-binding composite),不是早期的 ICM/ontology/node 指標。強配方(`test_cases_20`)四條已飽和到 composite ~1.0,無鑑別力;**目前的主戰場是 structure-only(`test_cases_40`,抽掉 EVSLA 詞彙、只靠 retrieval 供詞)**。
 
-**目前結果**(structure-only,40 題,strict `semantic_eval`,gpt-5.4;**完整與最新數據以 `progress.md` 為準**):
+**目前結果**(structure-only,40 題,strict `semantic_eval`,gpt-5.4;**完整與最新數據以 `markdown/progress.md` 為準**):
 
 ```
 Line                       | Composite | Tok/case
@@ -89,8 +89,8 @@ KAG 0.8.0 對 OpenAI 官方 API 有 2 個必須的 source patch(`chat_template_k
 - **`retrieval-four-dim-grounding`**(2026-06-16):四維度 grounding(ontology 內建 metric→method/window 慣例 + 共用 retrieval 層修 reachability)+ ontology-domain scorer 對齊。GraphRAG/KGE structure-only composite 拉到 0.98。
 - 主線歷史:`main`(canonical KGE + GraphRAG domain-graph redesign)、舊 `new-methods`。
 
-### 4.8 `progress.md` 是現況的權威紀錄
-`progress.md` 是逐輪實驗結果的單一真實來源(Architecture 1→5),重跑後**手動更新**,沒有自動同步。文字比較報告在 `phase1/output_quality/compare_four_way.txt`(品質)與 `phase1/token_usage/compare_token_usage*.txt`(token);這些是 `run_all_experiments.py` / `compare_*` 覆寫式產生,不是歷史系統。
+### 4.8 `markdown/progress.md` 是現況的權威紀錄
+`markdown/progress.md` 是逐輪實驗結果的單一真實來源(Architecture 1→5),重跑後**手動更新**,沒有自動同步。文字比較報告在 `phase1/output_quality/compare_four_way.txt`(品質)與 `phase1/token_usage/compare_token_usage*.txt`(token);這些是 `run_all_experiments.py` / `compare_*` 覆寫式產生,不是歷史系統。
 
 ## 5. 常用指令
 
@@ -123,10 +123,10 @@ cd tio-agent && bun install && OPENAI_API_KEY=sk-... bun run agent
 
 ## 6. 工作慣例
 
-- **新方法 / 改 retrieval 策略前**:先看 `progress.md` 與 `phase1/output_quality/compare_four_way.txt` 看當前狀態
+- **新方法 / 改 retrieval 策略前**:先看 `markdown/progress.md` 與 `phase1/output_quality/compare_four_way.txt` 看當前狀態
 - **跨方法比較前**:確認四條線都是相同 model / few-shot 設定下產生,否則結論不可信
 - **改 ontology(TTL)**:GraphRag 執行期直接讀 TTL,免重建;KGE artifacts 需 retrain(`python -m kge.train`)
-- **重跑實驗後**:同步更新 `progress.md` 的結果表(`compare_four_way.txt` 不會自動 propagate 到文字報告)
+- **重跑實驗後**:同步更新 `markdown/progress.md` 的結果表(`compare_four_way.txt` 不會自動 propagate 到文字報告)
 - **commit message**:依現有 git log style,Conventional Commits 但不強制 scope
 
 ## 7. 跟其他 repo 的關係

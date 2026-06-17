@@ -1,6 +1,6 @@
 # Retrieval 架構:GraphRAG 與 KGE(structure-only 實驗線)
 
-> 本文描述目前 **structure-only 實驗線**(`test_cases_40.json`,抽掉 EVSLA 詞彙)所使用的兩條 retrieval pipeline 的實際架構,對齊原始碼。完整逐輪實驗結果見 [`progress.md`](progress.md) Architecture 3→6;操作步驟見 [`README.md`](README.md) §4。
+> 本文描述目前 **structure-only 實驗線**(`test_cases_40.json`,抽掉 EVSLA 詞彙)所使用的兩條 retrieval pipeline 的實際架構,對齊原始碼。完整逐輪實驗結果見 [`progress.md`](progress.md) Architecture 3→6;操作步驟見 [`README.md`](../README.md) §4。
 
 ---
 
@@ -224,4 +224,4 @@ precision          |    1.00     |  1.00    | 1.00
 | 生成 | `GraphRag/nl_to_tio.py` | `KGE/KGE-based-graphrag/nl_to_tio.py` |
 | 共用 prompt | `evsla_prompt.build_evsla_system_prompt(..., profile="structure_only")` | (同一支) |
 
-跑法見 [`README.md`](README.md) §4。
+跑法見 [`README.md`](../README.md) §4。

@@ -7,7 +7,7 @@
 - `KGE/KGE-based-graphrag/`: **正統 KGE**(text-embedding dense grounding + TransE link-prediction 排序「真實 triple」〔永不合成〕,共用 GraphRAG 輸出契約)+ LLM + few-shot。
 - `KAG/`: OpenSPG/KAG kg-builder + 5-way solver retrieval(atomic_query / outline / summary / vector / table)+ LLM + few-shot。後端走 Docker stack(server + Neo4j + MySQL + MinIO)。詳見 [`KAG/example_project/README.md`](KAG/example_project/README.md)。
 
-> GraphRag 與 KGE 的 retrieval 架構詳解見 [`retrieval_arch.md`](retrieval_arch.md);structure-only 替代性實驗的操作見 §4,逐輪結果見 `progress.md`(Experiment Architecture 3→6)。
+> GraphRag 與 KGE 的 retrieval 架構詳解見 [`retrieval_arch.md`](markdown/retrieval_arch.md);評估器說明見 [`evaluator.md`](markdown/evaluator.md);structure-only 替代性實驗的操作見 §4,逐輪結果見 [`progress.md`](markdown/progress.md)(Experiment Architecture 3→6)。所有筆記/紀錄 md 集中在 [`markdown/`](markdown/)。
 
 四條線共用：
 
@@ -300,7 +300,7 @@ python evaluate_ttl.py kge_structure       --test-cases test_cases_40.json
 python evaluate_ttl.py llm_only_structure  --test-cases test_cases_40.json
 ```
 
-最新結果(Architecture 6,2026-06-17 正式重跑;40 題,Azure `gpt-5.4`,strict `semantic_eval`;完整見 `progress.md`、架構詳解見 [`retrieval_arch.md`](retrieval_arch.md)):
+最新結果(Architecture 6,2026-06-17 正式重跑;40 題,Azure `gpt-5.4`,strict `semantic_eval`;完整見 [`progress.md`](markdown/progress.md)、架構詳解見 [`retrieval_arch.md`](markdown/retrieval_arch.md)):
 
 ```text
 Line                       | Parse | Composite | Avg online tok | Prep tok
