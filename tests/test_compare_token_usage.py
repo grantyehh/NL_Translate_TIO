@@ -86,6 +86,39 @@ class TestCompareTokenUsage(unittest.TestCase):
             self.assertIn("KAG", report)
             self.assertIn("MISSING", report)
 
+    def test_structure_report_does_not_print_stale_quality_claims(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "token_usage_graphrag_structure.json"
+            path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "experiment": "graphrag_structure",
+                            "ledger": "online",
+                            "case_id": "TC001",
+                            "stage": "turtle_generation",
+                            "input_tokens": 10,
+                            "output_tokens": 5,
+                            "total_tokens": 15,
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            buffer = io.StringIO()
+            with redirect_stdout(buffer):
+                compare_token_usage.emit_report(
+                    [("GraphRag", path)],
+                    amortize_over=[20],
+                )
+                compare_token_usage.emit_structure_legend()
+
+            report = buffer.getvalue()
+            self.assertIn("Reference rows", report)
+            self.assertNotIn("semantic ~0.983", report)
+            self.assertNotIn("retrieval reaches >= ceiling quality", report)
+
 
 if __name__ == "__main__":
     unittest.main()

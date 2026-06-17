@@ -33,11 +33,11 @@ STRUCTURE_REPORTS = [
 
 STRUCTURE_LEGEND = """
 Reference rows (NOT structure-only-with-retrieval):
-  LLM ceiling = strong recipe, full knowledge injected, 40 cases -- semantic 0.972 (the quality target)
-  LLM floor   = structure-only, no vocab / no retrieval, 40 cases -- semantic 0.000 (no-retrieval control)
-GraphRag / KGE = structure-only WITH retrieval, 40 cases -- semantic ~0.983.
-Headline: retrieval reaches >= ceiling quality at ~half the ceiling's tokens.
-Compare retrieval token cost against the CEILING (5,349), not the floor (1,432).
+  LLM ceiling = strong recipe, full knowledge injected, 40 cases.
+  LLM floor   = structure-only, no vocab / no retrieval, 40 cases.
+GraphRag / KGE = structure-only WITH retrieval, 40 cases.
+Quality metrics are generated separately in phase1/output_quality/compare_structure_four_way.txt.
+Compare retrieval token cost against the ceiling row, not the floor row.
 """
 
 VARIANTS = {"full": DEFAULT_REPORTS, "structure": STRUCTURE_REPORTS}
@@ -92,6 +92,10 @@ def emit_report(
         )
 
 
+def emit_structure_legend() -> None:
+    print(STRUCTURE_LEGEND)
+
+
 class Tee(io.TextIOBase):
     def __init__(self, *streams):
         self.streams = streams
@@ -144,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
     with redirect_stdout(tee):
         emit_report(reports, amortize_over=args.amortize_over)
         if args.variant == "structure":
-            print(STRUCTURE_LEGEND)
+            emit_structure_legend()
 
     out_path.write_text(buffer.getvalue(), encoding="utf-8")
     print(f"\nSaved token usage comparison report to: {out_path}")
