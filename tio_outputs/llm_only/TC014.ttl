@@ -45,5 +45,4 @@ ex:obs-packet-loss-value a quan:Quantity ;
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "聯合媒體Hub"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 1"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 2"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 1"@zh ] .

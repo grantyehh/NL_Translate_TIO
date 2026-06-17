@@ -11,43 +11,39 @@
 
 ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
+    icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "翔益電商要求台北倉儲中心到新北倉、桃園倉與台中倉，每個分點各自的封包遺失率在99%時間內低於0.1%。"@en .
+    rdfs:comment "Packet loss from Taipei warehouse hub to each spoke must stay below 0.1% at p99 level."@en .
 
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "翔益電商"@zh .
-
-ex:exp-packetloss
+ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetloss .
-
-ex:tgt-packetloss
-    a icm:Target ;
+    icm:target ex:tgt-packetLoss ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:perSpoke ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-packetloss
+ex:tgt-packetLoss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss .
+
+ex:thr-packetLoss
     a quan:Quantity ;
     rdf:value "0.1"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:cond-packetloss
+ex:cond-packetLoss
     a log:Condition ;
-    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
+    quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
-ex:obs-packetloss
-    met:observedProperty evsla:packetLoss .
+ex:obs-packetLoss
+    met:metric evsla:packetLoss .
 
-ex:obs-packetloss-value
+ex:obs-packetLoss-value
     a quan:Quantity ;
-    met:hasValue ( ex:obs-packetloss ) .
+    fun:valueOf ( ex:obs-packetLoss ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
@@ -69,3 +65,7 @@ ex:spoke-taoyuan
 ex:spoke-taichung
     a evsla:SpokeSite ;
     rdfs:label "台中倉"@zh .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "翔益電商"@zh .

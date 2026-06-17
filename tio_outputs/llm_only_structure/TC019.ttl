@@ -1,9 +1,9 @@
 @prefix ex: <http://example.org/tio-instance/tc019/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix quan: <http://example.org/quan#> .
-@prefix log: <http://example.org/log#> .
 
 ex:intent
     a icm:Intent ;
@@ -16,13 +16,7 @@ ex:exp-latency
 
 ex:tgt-latency
     a icm:Target ;
-    ex:metricPredicate ex:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    ex:thresholdPredicate ex:thr-latency ;
-    ex:statisticPredicate ex:percentile95 ;
-    ex:scopePredicate ex:hubToAllSpokes ;
-    ex:methodPredicate ex:securityMonitoring ;
-    ex:windowPredicate ex:time95Percent .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -30,12 +24,10 @@ ex:thr-latency
     quan:unit "ms" .
 
 ex:cond-latency
-    a log:Condition ;
-    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+    a log:Condition .
 
 ex:obs-latency
-    ex:observedMetricPredicate ex:latency ;
-    ex:observedValuePredicate ( ex:obs-latency ) .
+    ex:observedMetric ex:latencyMetric .
 
 ex:obs-latency-value
     a quan:Quantity .
@@ -43,16 +35,10 @@ ex:obs-latency-value
 ex:topology
     a icm:Context ;
     ex:hubPredicate ex:hub ;
-    ex:spokePredicate ex:spoke-1, ex:spoke-2, ex:spoke-3 .
+    ex:spokePredicate ex:spoke-1 .
 
 ex:hub
     rdfs:label "安全監控總部"@zh .
 
 ex:spoke-1
-    rdfs:label "分點1"@zh .
-
-ex:spoke-2
-    rdfs:label "分點2"@zh .
-
-ex:spoke-3
-    rdfs:label "分點3"@zh .
+    rdfs:label "所有分點"@zh .

@@ -1,27 +1,29 @@
 @prefix ex: <http://example.org/tio-instance/tc007/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix log: <http://example.org/log#> .
-@prefix quan: <http://example.org/quan#> .
+@prefix evsla: <http://example.org/evsla#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Ensure latency from 海港航運高雄港營運中心 to all port station branches stays below 80 ms for 95% of the time."@en .
+    rdfs:comment "Ensure latency from the Kaohsiung Port operations center hub to all port branch spokes stays below 80 ms for 95% of the time."@en .
 
 ex:exp-latency
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency .
+    icm:target ex:tgt-latency ;
+    evsla:latencyMetric evsla:OneWayDelay ;
+    evsla:latencyThreshold ex:thr-latency ;
+    evsla:latencyStatistic evsla:Percentile95 ;
+    evsla:latencyScope evsla:HubToAllSpokes ;
+    evsla:latencyMeasurementMethod evsla:ActiveMeasurement ;
+    evsla:latencyTimeWindow evsla:DefaultTimeWindow .
 
 ex:tgt-latency
     a icm:Target ;
-    ex:metricPredicate ex:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    ex:thresholdPredicate ex:thr-latency ;
-    ex:statisticPredicate ex:p95 ;
-    ex:scopePredicate ex:hub-to-all-spokes ;
-    ex:windowPredicate ex:time-95-percent .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -30,22 +32,31 @@ ex:thr-latency
 
 ex:cond-latency
     a log:Condition ;
-    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+    log:strictlySmaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    ex:observed-metric-predicate ex:latency .
+    evsla:observedLatencyMetric evsla:OneWayDelay .
 
 ex:obs-latency-value
     a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-latency ) .
+    evsla:observedValueOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    ex:hubPredicate ex:hub ;
-    ex:spokePredicate ex:spoke-1 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1 .
 
 ex:hub
-    rdfs:label "海港航運高雄港營運中心"@zh .
+    a evsla:HubSite ;
+    rdfs:label "高雄港營運中心"@zh .
 
 ex:spoke-1
+    a evsla:SpokeSite ;
     rdfs:label "所有港站分點"@zh .
+
+ex:service
+    evsla:forTenant ex:tenant .
+
+ex:tenant
+    a evsla:EnterpriseTenant ;
+    rdfs:label "海港航運"@zh .

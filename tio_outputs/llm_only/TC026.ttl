@@ -8,8 +8,8 @@
 @prefix ex:    <http://example.org/tio-instance/tc026/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
-  icm:intentElements ex:exp-latency-hsinchu, ex:cond-latency-hsinchu, ex:exp-latency-kaohsiung, ex:cond-latency-kaohsiung, ex:topology ;
-  rdfs:comment "Assure p95 latency SLA from 台北總部 to 新竹分行 below 30 ms and to 高雄分行 below 60 ms for 星河銀行 enterprise VPN."@en .
+  icm:intentElements ex:exp-latency-xinzhu, ex:cond-latency-xinzhu, ex:exp-latency-kaohsiung, ex:cond-latency-kaohsiung, ex:topology ;
+  rdfs:comment "Assure per-spoke latency SLA for 星河銀行 enterprise VPN from hub to named spokes at p95."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "星河銀行"@zh .
@@ -17,35 +17,35 @@ ex:tenant a evsla:Tenant ;
 ex:service a evsla:EnterpriseVpnService ;
   evsla:forTenant ex:tenant .
 
-ex:exp-latency-hsinchu a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-latency-hsinchu ;
-  rdfs:comment "Latency to 新竹分行 must stay below 30 ms at p95."@en .
+ex:exp-latency-xinzhu a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency-xinzhu ;
+  rdfs:comment "Latency from the hub to 新竹分行 must stay below 30 ms at p95."@en .
 
-ex:tgt-latency-hsinchu a icm:Target ;
+ex:tgt-latency-xinzhu a icm:Target ;
   evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty ex:thr-latency-hsinchu ;
-  evsla:hasThreshold ex:thr-latency-hsinchu ;
+  icm:valuesOfTargetProperty ex:thr-latency-xinzhu ;
+  evsla:hasThreshold ex:thr-latency-xinzhu ;
   evsla:hasStatistic evsla:p95 ;
   evsla:hasScope evsla:specificSpoke ;
   evsla:hasMeasurementMethod evsla:twamp ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-latency-hsinchu a quan:Quantity ;
+ex:thr-latency-xinzhu a quan:Quantity ;
   rdf:value 30 ;
   quan:unit "ms" .
 
-ex:cond-latency-hsinchu a log:Condition ;
-  quan:smaller ( ex:obs-latency-hsinchu-value ex:thr-latency-hsinchu ) .
+ex:cond-latency-xinzhu a log:Condition ;
+  quan:smaller ( ex:obs-latency-xinzhu-value ex:thr-latency-xinzhu ) .
 
-ex:obs-latency-hsinchu a met:Observation ;
+ex:obs-latency-xinzhu a met:Observation ;
   met:observedMetric evsla:latency .
 
-ex:obs-latency-hsinchu-value a quan:Quantity ;
-  met:observedValue ( ex:obs-latency-hsinchu ) .
+ex:obs-latency-xinzhu-value a quan:Quantity ;
+  met:observedValue ( ex:obs-latency-xinzhu ) .
 
 ex:exp-latency-kaohsiung a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-latency-kaohsiung ;
-  rdfs:comment "Latency to 高雄分行 must stay below 60 ms at p95."@en .
+  rdfs:comment "Latency from the hub to 高雄分行 must stay below 60 ms at p95."@en .
 
 ex:tgt-latency-kaohsiung a icm:Target ;
   evsla:hasMetric evsla:latency ;

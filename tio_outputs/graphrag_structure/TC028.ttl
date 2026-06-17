@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-taichung, ex:exp-kaohsiung, ex:topology, ex:cond-taichung, ex:cond-kaohsiung ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "亞翔科技 requires guaranteed bandwidth from 新竹總部 to 台中研發中心 at least 200 Mbps and to 高雄測試中心 at least 100 Mbps."@en .
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA intent for guaranteed bandwidth from Hsinchu headquarters to Taichung R&D Center and Kaohsiung Test Center."@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,10 +21,10 @@ ex:tenant
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub ;
+    evsla:hasHub ex:hub-hsinchu ;
     evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
 
-ex:hub
+ex:hub-hsinchu
     a evsla:HubSite ;
     rdfs:label "新竹總部"@zh .
 
@@ -38,17 +38,17 @@ ex:spoke-kaohsiung
 
 ex:exp-taichung
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-taichung .
-
-ex:tgt-taichung
-    a icm:Target ;
+    icm:target ex:tgt-taichung ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-taichung ;
     evsla:hasThreshold ex:thr-taichung ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-taichung
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-taichung .
 
 ex:thr-taichung
     a quan:Quantity ;
@@ -60,7 +60,7 @@ ex:cond-taichung
     quan:atLeast ( ex:obs-taichung-value ex:thr-taichung ) .
 
 ex:obs-taichung
-    evsla:hasMetric evsla:guaranteedBandwidth .
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
 
 ex:obs-taichung-value
     a quan:Quantity ;
@@ -68,17 +68,17 @@ ex:obs-taichung-value
 
 ex:exp-kaohsiung
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-kaohsiung .
-
-ex:tgt-kaohsiung
-    a icm:Target ;
+    icm:target ex:tgt-kaohsiung ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
     evsla:hasThreshold ex:thr-kaohsiung ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-kaohsiung
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-kaohsiung .
 
 ex:thr-kaohsiung
     a quan:Quantity ;
@@ -90,7 +90,7 @@ ex:cond-kaohsiung
     quan:atLeast ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
 
 ex:obs-kaohsiung
-    evsla:hasMetric evsla:guaranteedBandwidth .
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
 
 ex:obs-kaohsiung-value
     a quan:Quantity ;

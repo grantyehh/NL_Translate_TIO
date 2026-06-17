@@ -1,14 +1,14 @@
 @prefix ex: <http://example.org/tio-instance/tc024/> .
 @prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityAndUnits/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 ex:intent
     a icm:Intent ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Chiayi Agricultural Information Center to Xinying Farm, Madou Farm, and Yujing Farm hub-and-spoke SLA requires latency for each spoke to stay below 70 ms at the 95% level."@en .
+    rdfs:comment "Enterprise VPN hub-to-spokes SLA requiring latency below 70 ms at the 95th percentile for each spoke."@en .
 
 ex:exp-latency
     a icm:PropertyExpectation ;
@@ -16,13 +16,7 @@ ex:exp-latency
 
 ex:tgt-latency
     a icm:Target ;
-    ex:metricPredicate ex:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    ex:thresholdPredicate ex:thr-latency ;
-    ex:statisticPredicate ex:p95 ;
-    ex:scopePredicate ex:per-spoke ;
-    ex:methodPredicate ex:measurement-method ;
-    ex:windowPredicate ex:time-window .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -30,18 +24,12 @@ ex:thr-latency
     quan:unit "ms" .
 
 ex:cond-latency
-    a log:Condition ;
-    ex:operatorTerm ( ex:obs-latency-value ex:thr-latency ) .
-
-ex:obs-latency
-    ex:observed-metric-predicate ex:latency ;
-    ex:obs-latency-value a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-latency ) .
+    a log:Condition .
 
 ex:topology
     a icm:Context ;
-    ex:hubPredicate ex:hub ;
-    ex:spokePredicate ex:spoke-1, ex:spoke-2, ex:spoke-3 .
+    ex:hubSite ex:hub ;
+    ex:spokeSite ex:spoke-1, ex:spoke-2, ex:spoke-3 .
 
 ex:hub
     rdfs:label "嘉義農業資訊中心"@zh .
@@ -54,3 +42,6 @@ ex:spoke-2
 
 ex:spoke-3
     rdfs:label "玉井農場"@zh .
+
+ex:tenant
+    rdfs:label "豐茂農業"@zh .

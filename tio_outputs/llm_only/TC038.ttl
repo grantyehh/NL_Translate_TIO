@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-guaranteed-bandwidth, ex:cond-guaranteed-bandwidth, ex:topology ;
-  rdfs:comment "Assure minimum guaranteed bandwidth SLA from the hub to all five flagship stores for 遠傳智慧零售 enterprise VPN."@en .
+  rdfs:comment "Assure minimum guaranteed bandwidth of at least 80 Mbps from the hub to all five flagship stores for 遠傳智慧零售 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "遠傳智慧零售"@zh .
@@ -19,7 +19,7 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-guaranteed-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-guaranteed-bandwidth ;
-  rdfs:comment "Guaranteed bandwidth minimum must be at least 80 Mbps from the hub to all spokes."@en .
+  rdfs:comment "Guaranteed bandwidth minimum must be at least 80 Mbps across all spokes."@en .
 
 ex:tgt-guaranteed-bandwidth a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
@@ -45,8 +45,8 @@ ex:obs-guaranteed-bandwidth-value a quan:Quantity ;
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "台北零售雲總部"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第一旗艦門市"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第二旗艦門市"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第三旗艦門市"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第四旗艦門市"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第五旗艦門市"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "台中旗艦門市"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "新竹旗艦門市"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "桃園旗艦門市"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "台南旗艦門市"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "高雄旗艦門市"@zh ] .

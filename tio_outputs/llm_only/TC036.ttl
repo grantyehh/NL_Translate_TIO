@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:cond-latency, ex:topology ;
-  rdfs:comment "Assure hub-to-all-spokes latency SLA for 全台連鎖超市 enterprise VPN."@en .
+  rdfs:comment "Assure average latency below 60 ms from the Taipei headquarters distribution center to all six store spokes for 全台連鎖超市 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "全台連鎖超市"@zh .
@@ -19,7 +19,7 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-latency ;
-  rdfs:comment "Average latency must stay below 60 ms from the Taipei headquarters distribution center to all six store spokes."@en .
+  rdfs:comment "Latency must stay below 60 ms on average across all spokes."@en .
 
 ex:tgt-latency a icm:Target ;
   evsla:hasMetric evsla:latency ;
@@ -28,7 +28,7 @@ ex:tgt-latency a icm:Target ;
   evsla:hasStatistic evsla:average ;
   evsla:hasScope evsla:hubToAllSpokes ;
   evsla:hasMeasurementMethod evsla:twamp ;
-  evsla:hasTimeWindow evsla:fiveMinuteWindow .
+  evsla:hasTimeWindow evsla:oneHourWindow .
 
 ex:thr-latency a quan:Quantity ;
   rdf:value 60 ;

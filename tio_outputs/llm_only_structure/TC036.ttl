@@ -1,65 +1,82 @@
 @prefix ex: <http://example.org/tio-instance/tc036/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix log: <http://example.org/log#> .
-@prefix quan: <http://example.org/quan#> .
+@prefix evsla: <http://example.org/evsla#> .
 
 ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    rdfs:comment "Taipei headquarters distribution center to six store spokes shall maintain average latency below 60 ms in each one-hour window."@en .
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+    icm:intentElements ex:exp-delay, ex:topology, ex:cond-delay ;
+    rdfs:comment "全台連鎖超市要求台北總部配送中心至六個門市分點的企業VPN服務，在每小時視窗下平均延遲低於60毫秒。"@en .
 
-ex:exp-latency
+ex:service
+    evsla:forTenant ex:tenant .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "全台連鎖超市"@zh .
+
+ex:exp-delay
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency .
+    icm:target ex:tgt-delay ;
+    evsla:metric evsla:Delay ;
+    evsla:threshold ex:thr-delay ;
+    evsla:statistic evsla:Average ;
+    evsla:scope evsla:HubToAllSpokes ;
+    evsla:measurementMethod evsla:DefaultMeasurementMethod ;
+    evsla:timeWindow evsla:OneHourWindow .
 
-ex:tgt-latency
+ex:tgt-delay
     a icm:Target ;
-    ex:metricPredicate ex:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    ex:thresholdPredicate ex:thr-latency ;
-    ex:statisticPredicate ex:average ;
-    ex:windowPredicate ex:one-hour-window .
+    icm:valuesOfTargetProperty ex:thr-delay .
 
-ex:thr-latency
+ex:thr-delay
     a quan:Quantity ;
     rdf:value 60 ;
     quan:unit "ms" .
 
-ex:cond-latency
+ex:cond-delay
     a log:Condition ;
-    ex:strictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+    log:strictlySmaller ( ex:obs-delay-value ex:thr-delay ) .
 
-ex:obs-latency
-    ex:observedMetricPredicate ex:latency .
+ex:obs-delay
+    evsla:observedMetric evsla:Delay ;
+    evsla:observedValue ( ex:obs-delay ) .
 
-ex:obs-latency-value
-    a quan:Quantity ;
-    ex:observedValuePredicate ( ex:obs-latency ) .
+ex:obs-delay-value
+    a quan:Quantity .
 
 ex:topology
-    a icm:Context ;
-    ex:hubPredicate ex:hub ;
-    ex:spokePredicate ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5, ex:spoke-6 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke1, ex:spoke2, ex:spoke3, ex:spoke4, ex:spoke5, ex:spoke6 .
 
 ex:hub
+    a evsla:HubSite ;
     rdfs:label "台北總部配送中心"@zh .
 
-ex:spoke-1
+ex:spoke1
+    a evsla:SpokeSite ;
     rdfs:label "門市分點1"@zh .
 
-ex:spoke-2
+ex:spoke2
+    a evsla:SpokeSite ;
     rdfs:label "門市分點2"@zh .
 
-ex:spoke-3
+ex:spoke3
+    a evsla:SpokeSite ;
     rdfs:label "門市分點3"@zh .
 
-ex:spoke-4
+ex:spoke4
+    a evsla:SpokeSite ;
     rdfs:label "門市分點4"@zh .
 
-ex:spoke-5
+ex:spoke5
+    a evsla:SpokeSite ;
     rdfs:label "門市分點5"@zh .
 
-ex:spoke-6
+ex:spoke6
+    a evsla:SpokeSite ;
     rdfs:label "門市分點6"@zh .

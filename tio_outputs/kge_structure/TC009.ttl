@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-guaranteedBandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-guaranteedBandwidth .
-
-ex:tgt-guaranteedBandwidth
-    a icm:Target ;
+    icm:target ex:tgt-guaranteedBandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
     evsla:hasThreshold ex:thr-guaranteedBandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-guaranteedBandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth .
 
 ex:thr-guaranteedBandwidth
     a quan:Quantity ;
@@ -43,11 +43,11 @@ ex:cond-guaranteedBandwidth
     quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
 ex:obs-guaranteedBandwidth
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-guaranteedBandwidth-value .
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
 
 ex:obs-guaranteedBandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-guaranteedBandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;

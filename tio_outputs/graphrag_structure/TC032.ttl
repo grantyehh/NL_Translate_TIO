@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "鑫橋金融 requires latency from the Xinyi financial headquarters hub to all trading-room spokes to stay below 15 ms at p99, and guaranteed bandwidth to be at least 500 Mbps."@en .
+    rdfs:comment "鑫橋金融 requires hub-to-all-spokes latency below 15 ms at p99 and guaranteed bandwidth at least 500 Mbps."@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency .
-
-ex:tgt-latency
-    a icm:Target ;
+    icm:target ex:tgt-latency ;
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-latency
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -40,17 +40,16 @@ ex:thr-latency
 
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-bandwidth .
-
-ex:tgt-bandwidth
-    a icm:Target ;
+    icm:target ex:tgt-bandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -62,22 +61,22 @@ ex:cond-latency
     quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:hasMetric evsla:latency ;
-    ex:obs-latency-value ( ex:obs-latency ) .
+    met:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    met:hasValue ( ex:obs-latency ) .
 
 ex:cond-bandwidth
     a log:Condition ;
     quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    ex:obs-bandwidth-value ( ex:obs-bandwidth ) .
+    met:hasMetric evsla:guaranteedBandwidth .
 
 ex:obs-bandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    met:hasValue ( ex:obs-bandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;

@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-packet-loss, ex:cond-packet-loss, ex:topology ;
-  rdfs:comment "Assure packet loss SLA from the hub to each named spoke for 德豐物流 enterprise VPN."@en .
+  rdfs:comment "Assure packet loss below 0.2% at p95 from the hub to each named spoke for 德豐物流 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "德豐物流"@zh .

@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:cond-latency, ex:exp-packet-loss, ex:cond-packet-loss, ex:topology ;
-  rdfs:comment "Assure latency and packet loss SLA from the Taipei data center hub to all spokes for 映盛科技 enterprise VPN."@en .
+  rdfs:comment "Assure hub-to-all-spokes latency and packet loss SLA for 映盛科技 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "映盛科技"@zh .

@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:cond-latency, ex:topology ;
-  rdfs:comment "Assure per-spoke latency SLA from hub to the named spokes for 宏遠科技 enterprise VPN."@en .
+  rdfs:comment "Assure per-spoke latency SLA for 宏遠科技 enterprise VPN from the Taipei hub to the named spokes."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "宏遠科技"@zh .

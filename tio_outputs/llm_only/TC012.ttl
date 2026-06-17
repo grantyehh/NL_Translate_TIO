@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-guaranteed-bandwidth, ex:cond-guaranteed-bandwidth, ex:topology ;
-  rdfs:comment "Assure minimum guaranteed bandwidth from hub to a specific spoke for 藍海保險 enterprise VPN."@en .
+  rdfs:comment "Assure minimum guaranteed bandwidth from the hub to a specific spoke for 藍海保險 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "藍海保險"@zh .

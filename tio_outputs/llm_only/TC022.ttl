@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-packet-loss, ex:cond-packet-loss, ex:topology ;
-  rdfs:comment "Assure per-spoke packet loss SLA at p99 below 0.1% from the hub to all named spokes for 翔益電商 enterprise VPN."@en .
+  rdfs:comment "Assure per-spoke packet loss SLA for 翔益電商 enterprise VPN from the hub to each named spoke."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "翔益電商"@zh .
@@ -19,7 +19,7 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-packet-loss a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-packet-loss ;
-  rdfs:comment "Packet loss must stay below 0.1% at p99 for each spoke individually."@en .
+  rdfs:comment "Packet loss must stay below 0.1% at p99 for each named spoke."@en .
 
 ex:tgt-packet-loss a icm:Target ;
   evsla:hasMetric evsla:packetLoss ;

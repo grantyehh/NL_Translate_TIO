@@ -1,74 +1,44 @@
 @prefix ex: <http://example.org/tio-instance/tc023/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix log: <http://example.org/log#> .
-@prefix quan: <http://example.org/quan#> .
 
 ex:intent
     a icm:Intent ;
-    icm:intentElements ex:exp-miaoli, ex:exp-changhua, ex:topology, ex:cond-miaoli, ex:cond-changhua ;
-    rdfs:comment "Taifu Construction requires bandwidth from the Taichung headquarters hub to the Miaoli site and the Changhua site, with each spoke guaranteed at least 50 Mbps."@en .
+    icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
+    rdfs:comment "Taifu Construction requires bandwidth from Taichung headquarters to each spoke site to be at least 50 Mbps."@en .
 
-ex:exp-miaoli
+ex:exp-bandwidth
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-miaoli .
+    icm:target ex:tgt-bandwidth .
 
-ex:tgt-miaoli
+ex:tgt-bandwidth
     a icm:Target ;
-    ex:metricPredicate ex:bandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    ex:thresholdPredicate ex:thr-bandwidth ;
-    ex:scopePredicate ex:miaoli-spoke .
-
-ex:exp-changhua
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-changhua .
-
-ex:tgt-changhua
-    a icm:Target ;
-    ex:metricPredicate ex:bandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    ex:thresholdPredicate ex:thr-bandwidth ;
-    ex:scopePredicate ex:changhua-spoke .
+    icm:valuesOfTargetProperty ex:thr-bandwidth .
 
 ex:thr-bandwidth
     a quan:Quantity ;
     rdf:value 50 ;
     quan:unit "Mbps" .
 
-ex:cond-miaoli
-    a log:Condition ;
-    ex:atLeastOperator ( ex:obs-miaoli-value ex:thr-bandwidth ) .
-
-ex:obs-miaoli
-    ex:observed-metric-predicate ex:bandwidth .
-
-ex:obs-miaoli-value
-    a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-miaoli ) .
-
-ex:cond-changhua
-    a log:Condition ;
-    ex:atLeastOperator ( ex:obs-changhua-value ex:thr-bandwidth ) .
-
-ex:obs-changhua
-    ex:observed-metric-predicate ex:bandwidth .
-
-ex:obs-changhua-value
-    a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-changhua ) .
+ex:cond-bandwidth
+    a log:Condition .
 
 ex:topology
     a icm:Context ;
-    ex:hubPredicate ex:hub-taichung ;
-    ex:spokePredicate ex:spoke-miaoli, ex:spoke-changhua .
+    ex:hubPredicate ex:hub-site ;
+    ex:spokePredicate ex:spoke-site-1, ex:spoke-site-2 .
 
-ex:hub-taichung
+ex:hub-site
     rdfs:label "台中總部"@zh .
 
-ex:spoke-miaoli
+ex:spoke-site-1
     rdfs:label "苗栗工地"@zh .
 
-ex:spoke-changhua
+ex:spoke-site-2
     rdfs:label "彰化工地"@zh .
+
+ex:tenant
+    rdfs:label "泰富建設"@zh .

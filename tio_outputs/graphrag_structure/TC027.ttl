@@ -11,105 +11,20 @@
 
 ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-latency-keelung, ex:exp-loss-miaoli, ex:exp-loss-changbin, ex:topology, ex:cond-latency-keelung, ex:cond-loss-miaoli, ex:cond-loss-changbin ;
+    icm:intentElements ex:exp-latency, ex:exp-packetloss, ex:topology, ex:cond-latency, ex:cond-packetloss ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "昇晟能源 requires latency below 20 ms at p99 from 台北能源調度中心 to 基隆電廠, and packet loss below 0.05% to 苗栗電廠 and 彰濱電廠 over the default five-minute window."@en .
+    rdfs:comment "昇晟能源 requires latency below 20 ms (p99) from 台北能源調度中心 to 基隆電廠, and packet loss below 0.05% to 苗栗電廠 and 彰濱電廠."@en .
 
 ex:tenant
     a evsla:Tenant ;
     rdfs:label "昇晟能源"@zh .
 
-ex:exp-latency-keelung
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency-keelung .
-
-ex:tgt-latency-keelung
-    a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency-keelung ;
-    evsla:hasThreshold ex:thr-latency-keelung ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:thr-latency-keelung
-    a quan:Quantity ;
-    rdf:value "20"^^xsd:decimal ;
-    quan:unit "ms" .
-
-ex:exp-loss-miaoli
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-loss-miaoli .
-
-ex:tgt-loss-miaoli
-    a icm:Target ;
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-loss ;
-    evsla:hasThreshold ex:thr-loss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:exp-loss-changbin
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-loss-changbin .
-
-ex:tgt-loss-changbin
-    a icm:Target ;
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-loss ;
-    evsla:hasThreshold ex:thr-loss ;
-    evsla:hasStatistic evsla:p99 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:thr-loss
-    a quan:Quantity ;
-    rdf:value "0.05"^^xsd:decimal ;
-    quan:unit "%" .
-
-ex:cond-latency-keelung
-    a log:Condition ;
-    quan:smaller ( ex:obs-latency-keelung-value ex:thr-latency-keelung ) .
-
-ex:obs-latency-keelung
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:obs-latency-keelung-value .
-
-ex:obs-latency-keelung-value
-    a quan:Quantity .
-
-ex:cond-loss-miaoli
-    a log:Condition ;
-    quan:smaller ( ex:obs-loss-miaoli-value ex:thr-loss ) .
-
-ex:obs-loss-miaoli
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:obs-loss-miaoli-value .
-
-ex:obs-loss-miaoli-value
-    a quan:Quantity .
-
-ex:cond-loss-changbin
-    a log:Condition ;
-    quan:smaller ( ex:obs-loss-changbin-value ex:thr-loss ) .
-
-ex:obs-loss-changbin
-    evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:obs-loss-changbin-value .
-
-ex:obs-loss-changbin-value
-    a quan:Quantity .
-
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-taipei ;
+    evsla:hasHub ex:hub ;
     evsla:hasSpoke ex:spoke-keelung, ex:spoke-miaoli, ex:spoke-changbin .
 
-ex:hub-taipei
+ex:hub
     a evsla:HubSite ;
     rdfs:label "台北能源調度中心"@zh .
 
@@ -124,3 +39,63 @@ ex:spoke-miaoli
 ex:spoke-changbin
     a evsla:SpokeSite ;
     rdfs:label "彰濱電廠"@zh .
+
+ex:exp-latency
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-latency
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value "20"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:exp-packetloss
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetloss ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:thr-packetloss ;
+    evsla:hasStatistic evsla:p99 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-packetloss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetloss .
+
+ex:thr-packetloss
+    a quan:Quantity ;
+    rdf:value "0.05"^^xsd:decimal ;
+    quan:unit "%" .
+
+ex:cond-latency
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:hasMetric evsla:latency .
+
+ex:obs-latency-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
+
+ex:cond-packetloss
+    a log:Condition ;
+    quan:smaller ( ex:obs-packetloss-value ex:thr-packetloss ) .
+
+ex:obs-packetloss
+    evsla:hasMetric evsla:packetLoss .
+
+ex:obs-packetloss-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-packetloss ) .

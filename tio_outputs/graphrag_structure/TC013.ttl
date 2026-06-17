@@ -13,21 +13,25 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Ensure latency from the Cloud Education headquarters to all campus branch sites stays below 60 ms at the p95 level."@en .
+    rdfs:comment "Ensure latency from the hub to all spoke sites stays below 60 ms at the p95 level."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "雲端教育"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency .
-
-ex:tgt-latency
-    a icm:Target ;
+    icm:target ex:tgt-latency ;
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-latency
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -39,7 +43,7 @@ ex:cond-latency
     quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:hasMetric evsla:latency .
+    met:metric evsla:latency .
 
 ex:obs-latency-value
     a quan:Quantity ;
@@ -48,16 +52,12 @@ ex:obs-latency-value
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
     evsla:hasHub ex:hub ;
-    evsla:hasSpoke ex:spoke-1 .
+    evsla:hasSpoke ex:spoke-all .
 
 ex:hub
     a evsla:HubSite ;
-    rdfs:label "雲端教育總部"@zh .
+    rdfs:label "總部"@zh .
 
-ex:spoke-1
+ex:spoke-all
     a evsla:SpokeSite ;
     rdfs:label "所有校區分點"@zh .
-
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "雲端教育"@zh .

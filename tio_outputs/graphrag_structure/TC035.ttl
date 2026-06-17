@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Enterprise VPN hub-and-spoke SLA for latency below 25 ms at p95 and guaranteed bandwidth at least 300 Mbps from the Taoyuan aerospace manufacturing headquarters to the Taichung parts plant and Kaohsiung assembly plant."@en .
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA for 泰盛航太: latency p95 below 25 ms from 桃園航太製造總部 to all spokes, and guaranteed bandwidth at least 300 Mbps."@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -31,13 +31,7 @@ ex:exp-latency
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -49,20 +43,13 @@ ex:exp-bandwidth
     icm:target ex:tgt-bandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
 ex:tgt-bandwidth
     a icm:Target ;
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasStatistic evsla:minimum ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+    icm:valuesOfTargetProperty ex:thr-bandwidth .
 
 ex:thr-bandwidth
     a quan:Quantity ;

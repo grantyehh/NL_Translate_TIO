@@ -13,11 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetloss, ex:topology, ex:cond-packetloss ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "德豐物流要求高雄物流中心到屏東配送站與台東配送站，每個分點各自的封包遺失率在95%時間內低於0.2%。"@en .
-
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "德豐物流"@zh .
+    rdfs:comment "Packet loss from Kaohsiung logistics center to each spoke site must stay below 0.2% at the p95 level."@en .
 
 ex:exp-packetloss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -31,13 +27,7 @@ ex:exp-packetloss
 
 ex:tgt-packetloss
     a icm:Target ;
-    evsla:packetLoss evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetloss ;
-    evsla:hasThreshold ex:thr-packetloss ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+    icm:valuesOfTargetProperty ex:thr-packetloss .
 
 ex:thr-packetloss
     a quan:Quantity ;
@@ -53,14 +43,14 @@ ex:obs-packetloss
 
 ex:obs-packetloss-value
     a quan:Quantity ;
-    fun:valuesOf ( ex:obs-packetloss ) .
+    fun:valueOf ( ex:obs-packetloss ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub ;
+    evsla:hasHub ex:hub-kaohsiung ;
     evsla:hasSpoke ex:spoke-pingtung, ex:spoke-taitung .
 
-ex:hub
+ex:hub-kaohsiung
     a evsla:HubSite ;
     rdfs:label "高雄物流中心"@zh .
 
@@ -71,3 +61,7 @@ ex:spoke-pingtung
 ex:spoke-taitung
     a evsla:SpokeSite ;
     rdfs:label "台東配送站"@zh .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "德豐物流"@zh .

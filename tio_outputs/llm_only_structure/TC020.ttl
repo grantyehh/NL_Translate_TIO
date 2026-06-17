@@ -1,28 +1,36 @@
 @prefix ex: <http://example.org/tio-instance/tc020/> .
 @prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
+@prefix evsla: <https://intentontology.com/evsla#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix quan: <http://www.w3.org/2000/10/swap/quantities#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:EnterpriseVPNSLAIntent ;
     icm:intentElements ex:exp-latency, ex:exp-loss, ex:topology, ex:cond-latency, ex:cond-loss ;
-    rdfs:comment "Ensure latency from the Taipei R&D headquarters hub to the Zhubei laboratory and Tainan manufacturing plant spokes stays below 35 ms for 95% of the time, and packet loss between the hub and each spoke stays below 0.05% for 99% of the time."@en .
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA for latency below 35 ms at 95% of time and packet loss below 0.05% at 99% of time between the Taipei R&D headquarters hub and the Hsinchu lab and Tainan manufacturing plant spokes."@en .
+
+ex:service
+    evsla:forTenant ex:tenant .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "精準醫材"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency .
+    icm:target ex:tgt-latency ;
+    evsla:metric evsla:Latency ;
+    evsla:threshold ex:thr-latency ;
+    evsla:statistic evsla:Percentile95 ;
+    evsla:scope evsla:HubToAllSpokes ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:timeWindow evsla:TimeWindow95Percent .
 
 ex:tgt-latency
     a icm:Target ;
-    ex:metricPredicate ex:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    ex:thresholdPredicate ex:thr-latency ;
-    ex:statisticPredicate ex:p95 ;
-    ex:scopePredicate ex:hub-to-all-spokes ;
-    ex:methodPredicate ex:measurement-method ;
-    ex:windowPredicate ex:time-window-95 .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -31,17 +39,17 @@ ex:thr-latency
 
 ex:exp-loss
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-loss .
+    icm:target ex:tgt-loss ;
+    evsla:metric evsla:PacketLossRate ;
+    evsla:threshold ex:thr-loss ;
+    evsla:statistic evsla:Percentile99 ;
+    evsla:scope evsla:HubToAllSpokes ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:timeWindow evsla:TimeWindow99Percent .
 
 ex:tgt-loss
     a icm:Target ;
-    ex:metricPredicate ex:packet-loss-rate ;
-    icm:valuesOfTargetProperty ex:thr-loss ;
-    ex:thresholdPredicate ex:thr-loss ;
-    ex:statisticPredicate ex:p99 ;
-    ex:scopePredicate ex:hub-to-all-spokes ;
-    ex:methodPredicate ex:measurement-method ;
-    ex:windowPredicate ex:time-window-99 .
+    icm:valuesOfTargetProperty ex:thr-loss .
 
 ex:thr-loss
     a quan:Quantity ;
@@ -50,34 +58,41 @@ ex:thr-loss
 
 ex:cond-latency
     a log:Condition ;
-    ex:strictly-smallerThan ( ex:obs-latency-value ex:thr-latency ) .
+    log:lessThan ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    ex:observed-metric-predicate ex:latency ;
-    ex:observed-value-predicate ( ex:obs-latency ) .
+    evsla:observedMetric evsla:Latency ;
+    evsla:observedValue ex:obs-latency-value .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    evsla:valueOfObservation ( ex:obs-latency ) .
 
 ex:cond-loss
     a log:Condition ;
-    ex:strictly-smallerThan ( ex:obs-loss-value ex:thr-loss ) .
+    log:lessThan ( ex:obs-loss-value ex:thr-loss ) .
 
 ex:obs-loss
-    ex:observed-metric-predicate ex:packet-loss-rate ;
-    ex:observed-value-predicate ( ex:obs-loss ) .
+    evsla:observedMetric evsla:PacketLossRate ;
+    evsla:observedValue ex:obs-loss-value .
 
 ex:obs-loss-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    evsla:valueOfObservation ( ex:obs-loss ) .
 
 ex:topology
-    a icm:Context ;
-    ex:hubPredicate [
-        rdfs:label "精準醫材台北研發總部"@zh
-    ] ;
-    ex:spokePredicate [
-        rdfs:label "竹北實驗室"@zh
-    ] ;
-    ex:spokePredicate [
-        rdfs:label "台南製造廠"@zh
-    ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2 .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "台北研發總部"@zh .
+
+ex:spoke-1
+    a evsla:SpokeSite ;
+    rdfs:label "竹北實驗室"@zh .
+
+ex:spoke-2
+    a evsla:SpokeSite ;
+    rdfs:label "台南製造廠"@zh .

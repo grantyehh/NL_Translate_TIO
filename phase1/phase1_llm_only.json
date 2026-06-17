@@ -94,7 +94,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 45,
+    "triple_count": 48,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -355,7 +355,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 45,
+    "triple_count": 48,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -616,7 +616,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 45,
+    "triple_count": 48,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -1138,7 +1138,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 48,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -1310,7 +1310,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 45,
+    "triple_count": 48,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -1399,7 +1399,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 45,
+    "triple_count": 48,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2097,7 +2097,7 @@
         "hallucination_count": 0
       },
       "errors": [
-        "scope evsla:latency: expected evsla:perSpoke, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/specificSpoke"
+        "scope evsla:latency: expected evsla:perSpoke, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/hubToAllSpokes"
       ]
     }
   },
@@ -3151,14 +3151,14 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
         "statistic": 1.0,
         "scope": 1.0,
         "measurement_method": 1.0,
-        "time_window": 0.0,
+        "time_window": 1.0,
         "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
@@ -3169,9 +3169,7 @@
         "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": [
-        "time_window evsla:latency: expected evsla:oneHourWindow, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/fiveMinuteWindow"
-      ]
+      "errors": []
     }
   },
   {

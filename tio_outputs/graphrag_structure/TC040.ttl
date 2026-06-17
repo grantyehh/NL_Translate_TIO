@@ -10,100 +10,100 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-  a icm:Intent, evsla:EnterpriseVpnService ;
-  icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
-  evsla:forTenant ex:tenant ;
-  rdfs:comment "Monthly SLA window for Lian Guang Telecom from Taipei core site to five PoP spokes: packet loss maximum at most 0.3%, and guaranteed bandwidth average at least 500 Mbps."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Monthly SLA for Taipei core hub to five PoP spokes: packet loss maximum at most 0.3% and guaranteed bandwidth average at least 500 Mbps."@en .
 
 ex:tenant
-  a evsla:Tenant ;
-  rdfs:label "聯光電信"@zh .
+    a evsla:Tenant ;
+    rdfs:label "聯光電信"@zh .
 
 ex:exp-packetLoss
-  a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-packetLoss .
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetLoss ;
+    evsla:hasMetric evsla:packetLoss ;
+    evsla:hasThreshold ex:thr-packetLoss ;
+    evsla:hasStatistic evsla:maximum ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:tgt-packetLoss
-  a icm:Target ;
-  evsla:hasMetric evsla:packetLoss ;
-  icm:valuesOfTargetProperty ex:thr-packetLoss ;
-  evsla:hasThreshold ex:thr-packetLoss ;
-  evsla:hasStatistic evsla:maximum ;
-  evsla:hasScope evsla:hubToAllSpokes ;
-  evsla:hasMeasurementMethod evsla:twamp ;
-  evsla:hasTimeWindow evsla:monthlySlaWindow .
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss .
 
 ex:thr-packetLoss
-  a quan:Quantity ;
-  rdf:value "0.3"^^xsd:decimal ;
-  quan:unit "%" .
-
-ex:cond-packetLoss
-  a log:Condition ;
-  quan:atMost ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
-
-ex:obs-packetLoss
-  evsla:hasMetric evsla:packetLoss .
-
-ex:obs-packetLoss-value
-  a quan:Quantity ;
-  met:observedValue ( ex:obs-packetLoss ) .
+    a quan:Quantity ;
+    rdf:value "0.3"^^xsd:decimal ;
+    quan:unit "%" .
 
 ex:exp-guaranteedBandwidth
-  a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-guaranteedBandwidth .
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-guaranteedBandwidth ;
+    evsla:hasMetric evsla:guaranteedBandwidth ;
+    evsla:hasThreshold ex:thr-guaranteedBandwidth ;
+    evsla:hasStatistic evsla:average ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:monthlySlaWindow .
 
 ex:tgt-guaranteedBandwidth
-  a icm:Target ;
-  evsla:hasMetric evsla:guaranteedBandwidth ;
-  icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
-  evsla:hasThreshold ex:thr-guaranteedBandwidth ;
-  evsla:hasStatistic evsla:average ;
-  evsla:hasScope evsla:hubToAllSpokes ;
-  evsla:hasMeasurementMethod evsla:activeMeasurement ;
-  evsla:hasTimeWindow evsla:monthlySlaWindow .
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth .
 
 ex:thr-guaranteedBandwidth
-  a quan:Quantity ;
-  rdf:value "500"^^xsd:decimal ;
-  quan:unit "Mbps" .
+    a quan:Quantity ;
+    rdf:value "500"^^xsd:decimal ;
+    quan:unit "Mbps" .
+
+ex:cond-packetLoss
+    a log:Condition ;
+    quan:atMost ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
+
+ex:obs-packetLoss
+    evsla:packetLoss evsla:packetLoss .
+
+ex:obs-packetLoss-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-packetLoss ) .
 
 ex:cond-guaranteedBandwidth
-  a log:Condition ;
-  quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
+    a log:Condition ;
+    quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
 ex:obs-guaranteedBandwidth
-  evsla:hasMetric evsla:guaranteedBandwidth .
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
 
 ex:obs-guaranteedBandwidth-value
-  a quan:Quantity ;
-  met:observedValue ( ex:obs-guaranteedBandwidth ) .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-guaranteedBandwidth ) .
 
 ex:topology
-  a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub ex:hub-taipei ;
-  evsla:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5 .
+    a evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke1, ex:spoke2, ex:spoke3, ex:spoke4, ex:spoke5 .
 
-ex:hub-taipei
-  a evsla:HubSite ;
-  rdfs:label "台北核心機房"@zh .
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "台北核心機房"@zh .
 
-ex:spoke-1
-  a evsla:SpokeSite ;
-  rdfs:label "PoP節點1"@zh .
+ex:spoke1
+    a evsla:SpokeSite ;
+    rdfs:label "PoP節點1"@zh .
 
-ex:spoke-2
-  a evsla:SpokeSite ;
-  rdfs:label "PoP節點2"@zh .
+ex:spoke2
+    a evsla:SpokeSite ;
+    rdfs:label "PoP節點2"@zh .
 
-ex:spoke-3
-  a evsla:SpokeSite ;
-  rdfs:label "PoP節點3"@zh .
+ex:spoke3
+    a evsla:SpokeSite ;
+    rdfs:label "PoP節點3"@zh .
 
-ex:spoke-4
-  a evsla:SpokeSite ;
-  rdfs:label "PoP節點4"@zh .
+ex:spoke4
+    a evsla:SpokeSite ;
+    rdfs:label "PoP節點4"@zh .
 
-ex:spoke-5
-  a evsla:SpokeSite ;
-  rdfs:label "PoP節點5"@zh .
+ex:spoke5
+    a evsla:SpokeSite ;
+    rdfs:label "PoP節點5"@zh .

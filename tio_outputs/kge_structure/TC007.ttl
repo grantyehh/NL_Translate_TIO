@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Ensure latency from Kaohsiung Port Operations Center to all port branch sites stays below 80 ms at the 95th percentile."@en .
+    rdfs:comment "Ensure latency from Kaohsiung Port Operations Center to all port branch sites stays below 80 ms at the p95 level."@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency .
-
-ex:tgt-latency
-    a icm:Target ;
+    icm:target ex:tgt-latency ;
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-latency
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;

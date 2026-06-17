@@ -1,0 +1,23 @@
+Structure Four-Line Accuracy Summary
+------------------------------------
+Reports:
+- LLM ceiling: /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/phase1_llm_only.json
+- LLM baseline: /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/phase1_llm_only_structure.json
+- GraphRAG: /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/phase1_graphrag_structure.json
+- KGE: /Users/grantyeh/Grant/Project/CHT/TIO_Experiment/phase1/phase1_kge_structure.json
+
+Experiment     | Cases | Parse OK | Coverage | Composite | Triples | Unk pred | Unk type
+--------------------------------------------------------------------------------------------
+LLM ceiling    |    40 |  100.00% |   1.0000 |    0.9738 |   58.17 |       40 |        0
+LLM baseline   |    40 |   95.00% |   0.5500 |    0.0000 |   32.08 |      329 |      131
+GraphRAG       |    40 |  100.00% |   0.9900 |    0.9746 |   53.50 |       45 |        0
+KGE            |    40 |  100.00% |   0.9950 |    0.9778 |   54.20 |       38 |        0
+
+Semantic Dimensions
+-------------------
+Experiment     |             metric |          threshold |          statistic |              scope | measurement_method |        time_window |           operator |             tenant |           topology |           contract |          precision
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LLM ceiling    |               1.00 |               0.96 |               0.99 |               0.88 |               0.97 |               0.90 |               1.00 |               1.00 |               1.00 |               1.00 |               1.00
+LLM baseline   |               0.00 |               0.00 |               0.00 |               0.00 |               0.00 |               0.00 |               0.00 |               0.00 |               0.00 |               0.00 |               0.00
+GraphRAG       |               1.00 |               0.96 |               0.92 |               0.91 |               0.97 |               1.00 |               0.96 |               1.00 |               1.00 |               1.00 |               1.00
+KGE            |               1.00 |               0.96 |               0.92 |               0.96 |               0.97 |               1.00 |               0.96 |               0.97 |               1.00 |               1.00 |               1.00

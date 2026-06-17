@@ -5,49 +5,10 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc001/hubPredicate",
-      "http://example.org/tio-instance/tc001/methodPredicate",
-      "http://example.org/tio-instance/tc001/metricPredicate",
-      "http://example.org/tio-instance/tc001/observed-metric-predicate",
-      "http://example.org/tio-instance/tc001/observed-value-predicate",
-      "http://example.org/tio-instance/tc001/scopePredicate",
-      "http://example.org/tio-instance/tc001/spokePredicate",
-      "http://example.org/tio-instance/tc001/statisticPredicate",
-      "http://example.org/tio-instance/tc001/strictlySmallerThan",
-      "http://example.org/tio-instance/tc001/thresholdPredicate",
-      "http://example.org/tio-instance/tc001/windowPredicate"
-    ],
-    "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
-    ],
+    "triple_count": 0,
+    "prefix_checks": {},
+    "unknown_predicates": [],
+    "unknown_types": [],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
@@ -81,7 +42,7 @@
       }
     ],
     "expected_coverage_ratio": 0.0,
-    "intent_uri_contains_case_id": true,
+    "intent_uri_contains_case_id": false,
     "semantic": {
       "composite": 0.0,
       "dimensions": {
@@ -112,29 +73,26 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 34,
+    "triple_count": 39,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
+        "matches_official": true
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
+      "http://example.org/tio-instance/tc002/forTenant",
       "http://example.org/tio-instance/tc002/hubPredicate",
       "http://example.org/tio-instance/tc002/methodPredicate",
       "http://example.org/tio-instance/tc002/metricPredicate",
@@ -143,51 +101,50 @@
       "http://example.org/tio-instance/tc002/scopePredicate",
       "http://example.org/tio-instance/tc002/spokePredicate",
       "http://example.org/tio-instance/tc002/statisticPredicate",
-      "http://example.org/tio-instance/tc002/strictlySmallerThan",
+      "http://example.org/tio-instance/tc002/strictlySmaller",
       "http://example.org/tio-instance/tc002/thresholdPredicate",
-      "http://example.org/tio-instance/tc002/windowPredicate"
+      "http://example.org/tio-instance/tc002/windowPredicate",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://example.org/tio-instance/tc002/HubSite",
+      "http://example.org/tio-instance/tc002/SpokeSite",
+      "http://example.org/tio-instance/tc002/Tenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -219,76 +176,79 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 34,
+    "triple_count": 39,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://qudt.org/schema/qudt/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc003/atLeastOperator",
-      "http://example.org/tio-instance/tc003/hubPredicate",
-      "http://example.org/tio-instance/tc003/methodPredicate",
-      "http://example.org/tio-instance/tc003/metricPredicate",
-      "http://example.org/tio-instance/tc003/observedMetricPredicate",
-      "http://example.org/tio-instance/tc003/observedValuePredicate",
-      "http://example.org/tio-instance/tc003/scopePredicate",
-      "http://example.org/tio-instance/tc003/spokePredicate",
-      "http://example.org/tio-instance/tc003/statisticPredicate",
-      "http://example.org/tio-instance/tc003/thresholdPredicate",
-      "http://example.org/tio-instance/tc003/windowPredicate"
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#measurementMethod",
+      "http://example.org/evsla#observedMetric",
+      "http://example.org/evsla#observedValue",
+      "http://example.org/evsla#scope",
+      "http://example.org/evsla#serviceMetric",
+      "http://example.org/evsla#statistic",
+      "http://example.org/evsla#threshold",
+      "http://example.org/evsla#timeWindow",
+      "http://qudt.org/schema/qudt/unit",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/atLeast"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://example.org/evsla#EnterpriseVpnSlaIntent",
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#HubSite",
+      "http://example.org/evsla#SpokeSite",
+      "http://example.org/evsla#Tenant",
+      "http://qudt.org/schema/qudt/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -320,82 +280,85 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 41,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc004/hubPredicate",
-      "http://example.org/tio-instance/tc004/methodPredicate",
-      "http://example.org/tio-instance/tc004/metricPredicate",
-      "http://example.org/tio-instance/tc004/observedMetricPredicate",
-      "http://example.org/tio-instance/tc004/observedValuePredicate",
-      "http://example.org/tio-instance/tc004/scopePredicate",
-      "http://example.org/tio-instance/tc004/spokePredicate",
-      "http://example.org/tio-instance/tc004/statisticPredicate",
-      "http://example.org/tio-instance/tc004/strictlySmallerThan",
-      "http://example.org/tio-instance/tc004/thresholdPredicate",
-      "http://example.org/tio-instance/tc004/windowPredicate"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasHub",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasSpoke",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedValueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/serviceMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/threshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/timeWindow",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/StrictlySmaller",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/SpokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -427,7 +390,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 34,
     "prefix_checks": {
       "icm": {
         "declared": "http://example.org/icm#",
@@ -453,12 +416,12 @@
       "http://example.org/tio-instance/tc005/hubPredicate",
       "http://example.org/tio-instance/tc005/methodPredicate",
       "http://example.org/tio-instance/tc005/metricPredicate",
-      "http://example.org/tio-instance/tc005/observed-metric-predicate",
-      "http://example.org/tio-instance/tc005/observed-value-predicate",
+      "http://example.org/tio-instance/tc005/observedMetricPredicate",
+      "http://example.org/tio-instance/tc005/observedValuePredicate",
       "http://example.org/tio-instance/tc005/scopePredicate",
       "http://example.org/tio-instance/tc005/spokePredicate",
       "http://example.org/tio-instance/tc005/statisticPredicate",
-      "http://example.org/tio-instance/tc005/strictly-smallerThan",
+      "http://example.org/tio-instance/tc005/strictlySmallerThan",
       "http://example.org/tio-instance/tc005/thresholdPredicate",
       "http://example.org/tio-instance/tc005/windowPredicate"
     ],
@@ -531,33 +494,106 @@
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC006.ttl",
     "case_id": "TC006",
-    "parse_ok": false,
-    "parse_error": "at line 38 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'redicate ex:GuaranteedBandwidth ;\\n    ex:obs-bandwidth-value'^b' a quan:Quantity ;\\n    ex:observed-value-predicate ( ex:obs-'...\"",
+    "parse_ok": true,
+    "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 0,
+    "triple_count": 41,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://qudt.org/schema/qudt/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
-    "intent_uri_contains_case_id": false,
-    "semantic": null
+    "unknown_predicates": [
+      "http://qudt.org/schema/qudt/unit",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasHub",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasSpoke",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedValue",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/serviceMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/threshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/timeWindow",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/atLeast"
+    ],
+    "unknown_types": [
+      "http://qudt.org/schema/qudt/Quantity",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/SpokeSite"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "property used on at least one triple",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC007.ttl",
@@ -565,81 +601,85 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 33,
+    "triple_count": 41,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc007/hubPredicate",
-      "http://example.org/tio-instance/tc007/metricPredicate",
-      "http://example.org/tio-instance/tc007/observed-metric-predicate",
-      "http://example.org/tio-instance/tc007/observed-value-predicate",
-      "http://example.org/tio-instance/tc007/scopePredicate",
-      "http://example.org/tio-instance/tc007/spokePredicate",
-      "http://example.org/tio-instance/tc007/statisticPredicate",
-      "http://example.org/tio-instance/tc007/strictlySmallerThan",
-      "http://example.org/tio-instance/tc007/thresholdPredicate",
-      "http://example.org/tio-instance/tc007/windowPredicate"
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#latencyMeasurementMethod",
+      "http://example.org/evsla#latencyMetric",
+      "http://example.org/evsla#latencyScope",
+      "http://example.org/evsla#latencyStatistic",
+      "http://example.org/evsla#latencyThreshold",
+      "http://example.org/evsla#latencyTimeWindow",
+      "http://example.org/evsla#observedLatencyMetric",
+      "http://example.org/evsla#observedValueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/strictlySmaller",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://example.org/evsla#EnterpriseTenant",
+      "http://example.org/evsla#EnterpriseVpnSlaIntent",
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#HubSite",
+      "http://example.org/evsla#SpokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -668,10 +708,10 @@
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC008.ttl",
     "case_id": "TC008",
-    "parse_ok": false,
-    "parse_error": "at line 38 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'-metric-predicate ex:packet-loss-rate ;\\n    ex:obs-plr-value'^b' a quan:Quantity ;\\n    ex:observed-value-predicate ( ex:obs-'...\"",
+    "parse_ok": true,
+    "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 0,
+    "triple_count": 39,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -684,17 +724,89 @@
         "matches_official": true
       },
       "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": true
+        "matches_official": false
       }
     },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
-    "intent_uri_contains_case_id": false,
-    "semantic": null
+    "unknown_predicates": [
+      "http://example.org/tio-instance/tc008/for-tenant",
+      "http://example.org/tio-instance/tc008/hubPredicate",
+      "http://example.org/tio-instance/tc008/methodPredicate",
+      "http://example.org/tio-instance/tc008/metricPredicate",
+      "http://example.org/tio-instance/tc008/observed-metric-predicate",
+      "http://example.org/tio-instance/tc008/observed-value-predicate",
+      "http://example.org/tio-instance/tc008/scopePredicate",
+      "http://example.org/tio-instance/tc008/spokePredicate",
+      "http://example.org/tio-instance/tc008/statisticPredicate",
+      "http://example.org/tio-instance/tc008/strictly-smaller",
+      "http://example.org/tio-instance/tc008/thresholdPredicate",
+      "http://example.org/tio-instance/tc008/windowPredicate",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
+    ],
+    "unknown_types": [
+      "http://example.org/tio-instance/tc008/HubSite",
+      "http://example.org/tio-instance/tc008/SpokeSite",
+      "http://example.org/tio-instance/tc008/Tenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "property used on at least one triple",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC009.ttl",
@@ -764,49 +876,10 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc010/hubPredicate",
-      "http://example.org/tio-instance/tc010/methodPredicate",
-      "http://example.org/tio-instance/tc010/metricPredicate",
-      "http://example.org/tio-instance/tc010/observed-metric-predicate",
-      "http://example.org/tio-instance/tc010/observed-value-predicate",
-      "http://example.org/tio-instance/tc010/scopePredicate",
-      "http://example.org/tio-instance/tc010/spokePredicate",
-      "http://example.org/tio-instance/tc010/statisticPredicate",
-      "http://example.org/tio-instance/tc010/strictlySmallerThan",
-      "http://example.org/tio-instance/tc010/thresholdPredicate",
-      "http://example.org/tio-instance/tc010/windowPredicate"
-    ],
-    "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
-    ],
+    "triple_count": 0,
+    "prefix_checks": {},
+    "unknown_predicates": [],
+    "unknown_types": [],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
@@ -840,7 +913,7 @@
       }
     ],
     "expected_coverage_ratio": 0.0,
-    "intent_uri_contains_case_id": true,
+    "intent_uri_contains_case_id": false,
     "semantic": {
       "composite": 0.0,
       "dimensions": {
@@ -868,33 +941,86 @@
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC011.ttl",
     "case_id": "TC011",
-    "parse_ok": false,
-    "parse_error": "at line 38 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'rvedMetricPredicate ex:PacketLossRate ;\\n    ex:obs-plr-value'^b' a quan:Quantity ;\\n    ex:observedValuePredicate ( ex:obs-pl'...\"",
+    "parse_ok": true,
+    "parse_error": null,
     "markdown_fence_stripped": false,
     "triple_count": 0,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
+        "matches_official": true
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [],
     "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
     "intent_uri_contains_case_id": false,
-    "semantic": null
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC012.ttl",
@@ -903,7 +1029,23 @@
     "parse_error": null,
     "markdown_fence_stripped": false,
     "triple_count": 0,
-    "prefix_checks": {},
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://qudt.org/schema/qudt/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
     "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -964,7 +1106,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 37,
+    "triple_count": 42,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -976,27 +1118,38 @@
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
-      "quan": {
-        "declared": "http://qudt.org/schema/qudt/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": true
       }
     },
     "unknown_predicates": [
-      "http://example.org/tio-instance/tc013/hubPredicate",
-      "http://example.org/tio-instance/tc013/metricPredicate",
-      "http://example.org/tio-instance/tc013/observedMetricPredicate",
-      "http://example.org/tio-instance/tc013/observedValuePredicate",
-      "http://example.org/tio-instance/tc013/scopePredicate",
-      "http://example.org/tio-instance/tc013/spokePredicate",
-      "http://example.org/tio-instance/tc013/statisticPredicate",
-      "http://example.org/tio-instance/tc013/strictlySmallerThan",
-      "http://example.org/tio-instance/tc013/thresholdPredicate",
-      "http://example.org/tio-instance/tc013/windowPredicate",
-      "http://qudt.org/schema/qudt/unit"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/latency",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedLatency",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedValueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/serviceTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/spokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/threshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/timeWindow",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/strictlyLessThan"
     ],
     "unknown_types": [
-      "http://qudt.org/schema/qudt/Quantity"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/SpokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/Tenant"
     ],
     "expected_tio_elements": [
       {
@@ -1062,49 +1215,26 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 0,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
+        "matches_official": true
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://qudt.org/schema/qudt/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
-    "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc014/hubPredicate",
-      "http://example.org/tio-instance/tc014/methodPredicate",
-      "http://example.org/tio-instance/tc014/metricPredicate",
-      "http://example.org/tio-instance/tc014/observed-metric-predicate",
-      "http://example.org/tio-instance/tc014/observed-value-predicate",
-      "http://example.org/tio-instance/tc014/scopePredicate",
-      "http://example.org/tio-instance/tc014/spokePredicate",
-      "http://example.org/tio-instance/tc014/statisticPredicate",
-      "http://example.org/tio-instance/tc014/strictly-smaller-than",
-      "http://example.org/tio-instance/tc014/thresholdPredicate",
-      "http://example.org/tio-instance/tc014/windowPredicate"
-    ],
-    "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
-    ],
+    "unknown_predicates": [],
+    "unknown_types": [],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
@@ -1138,7 +1268,7 @@
       }
     ],
     "expected_coverage_ratio": 0.0,
-    "intent_uri_contains_case_id": true,
+    "intent_uri_contains_case_id": false,
     "semantic": {
       "composite": 0.0,
       "dimensions": {
@@ -1169,7 +1299,237 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 32,
+    "triple_count": 0,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": false,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:guaranteedBandwidth: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC016.ttl",
+    "case_id": "TC016",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 0,
+    "prefix_checks": {},
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": false,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC017.ttl",
+    "case_id": "TC017",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 0,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://qudt.org/schema/qudt/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": false,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:packetLoss: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC018.ttl",
+    "case_id": "TC018",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 34,
     "prefix_checks": {
       "icm": {
         "declared": "http://example.org/icm#",
@@ -1192,17 +1552,17 @@
       "http://example.org/icm#target",
       "http://example.org/icm#valuesOfTargetProperty",
       "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc015/atLeastOperator",
-      "http://example.org/tio-instance/tc015/hubPredicate",
-      "http://example.org/tio-instance/tc015/methodPredicate",
-      "http://example.org/tio-instance/tc015/metricPredicate",
-      "http://example.org/tio-instance/tc015/obs-bandwidth-value",
-      "http://example.org/tio-instance/tc015/observedMetricPredicate",
-      "http://example.org/tio-instance/tc015/scopePredicate",
-      "http://example.org/tio-instance/tc015/spokePredicate",
-      "http://example.org/tio-instance/tc015/statisticPredicate",
-      "http://example.org/tio-instance/tc015/thresholdPredicate",
-      "http://example.org/tio-instance/tc015/windowPredicate"
+      "http://example.org/tio-instance/tc018/atLeastOperator",
+      "http://example.org/tio-instance/tc018/hubPredicate",
+      "http://example.org/tio-instance/tc018/methodPredicate",
+      "http://example.org/tio-instance/tc018/metricPredicate",
+      "http://example.org/tio-instance/tc018/observedMetricPredicate",
+      "http://example.org/tio-instance/tc018/observedValuePredicate",
+      "http://example.org/tio-instance/tc018/scopePredicate",
+      "http://example.org/tio-instance/tc018/spokePredicate",
+      "http://example.org/tio-instance/tc018/statisticPredicate",
+      "http://example.org/tio-instance/tc018/thresholdPredicate",
+      "http://example.org/tio-instance/tc018/windowPredicate"
     ],
     "unknown_types": [
       "http://example.org/icm#Context",
@@ -1265,331 +1625,71 @@
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC016.ttl",
-    "case_id": "TC016",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 37,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc016/hubPredicate",
-      "http://example.org/tio-instance/tc016/metricPredicate",
-      "http://example.org/tio-instance/tc016/observedMetricPredicate",
-      "http://example.org/tio-instance/tc016/observedValuePredicate",
-      "http://example.org/tio-instance/tc016/scopePredicate",
-      "http://example.org/tio-instance/tc016/spokePredicate",
-      "http://example.org/tio-instance/tc016/statisticPredicate",
-      "http://example.org/tio-instance/tc016/strictlySmallerThan",
-      "http://example.org/tio-instance/tc016/thresholdPredicate",
-      "http://example.org/tio-instance/tc016/windowPredicate"
-    ],
-    "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
-    ],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 0.0,
-    "intent_uri_contains_case_id": true,
-    "semantic": {
-      "composite": 0.0,
-      "dimensions": {
-        "metric": 0.0,
-        "threshold": 0.0,
-        "statistic": 0.0,
-        "scope": 0.0,
-        "measurement_method": 0.0,
-        "time_window": 0.0,
-        "operator": 0.0,
-        "tenant": 0.0,
-        "topology": 0.0,
-        "contract": 0.0,
-        "precision": 0.0
-      },
-      "precision": {
-        "score": 0.0,
-        "hallucination_count": 0
-      },
-      "errors": [
-        "metric evsla:latency: no reachable target"
-      ]
-    }
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC017.ttl",
-    "case_id": "TC017",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 38,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc017/hubPredicate",
-      "http://example.org/tio-instance/tc017/methodPredicate",
-      "http://example.org/tio-instance/tc017/metricPredicate",
-      "http://example.org/tio-instance/tc017/observed-metric-predicate",
-      "http://example.org/tio-instance/tc017/observed-value-predicate",
-      "http://example.org/tio-instance/tc017/scopePredicate",
-      "http://example.org/tio-instance/tc017/spokePredicate",
-      "http://example.org/tio-instance/tc017/statisticPredicate",
-      "http://example.org/tio-instance/tc017/strictly-smallerThan",
-      "http://example.org/tio-instance/tc017/thresholdPredicate",
-      "http://example.org/tio-instance/tc017/windowPredicate"
-    ],
-    "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
-    ],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 0.0,
-    "intent_uri_contains_case_id": true,
-    "semantic": {
-      "composite": 0.0,
-      "dimensions": {
-        "metric": 0.0,
-        "threshold": 0.0,
-        "statistic": 0.0,
-        "scope": 0.0,
-        "measurement_method": 0.0,
-        "time_window": 0.0,
-        "operator": 0.0,
-        "tenant": 0.0,
-        "topology": 0.0,
-        "contract": 0.0,
-        "precision": 0.0
-      },
-      "precision": {
-        "score": 0.0,
-        "hallucination_count": 0
-      },
-      "errors": [
-        "metric evsla:packetLoss: no reachable target"
-      ]
-    }
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC018.ttl",
-    "case_id": "TC018",
-    "parse_ok": false,
-    "parse_error": "at line 34 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'redicate ex:GuaranteedBandwidth ;\\n    ex:obs-bandwidth-value'^b' a quan:Quantity ;\\n    ex:observedValuePredicate ( ex:obs-ba'...\"",
-    "markdown_fence_stripped": false,
-    "triple_count": 0,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
-    "intent_uri_contains_case_id": false,
-    "semantic": null
-  },
-  {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC019.ttl",
     "case_id": "TC019",
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 20,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
+        "matches_official": true
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://qudt.org/schema/qudt/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
       "http://example.org/tio-instance/tc019/hubPredicate",
-      "http://example.org/tio-instance/tc019/methodPredicate",
-      "http://example.org/tio-instance/tc019/metricPredicate",
-      "http://example.org/tio-instance/tc019/observedMetricPredicate",
-      "http://example.org/tio-instance/tc019/observedValuePredicate",
-      "http://example.org/tio-instance/tc019/scopePredicate",
+      "http://example.org/tio-instance/tc019/observedMetric",
       "http://example.org/tio-instance/tc019/spokePredicate",
-      "http://example.org/tio-instance/tc019/statisticPredicate",
-      "http://example.org/tio-instance/tc019/strictlySmallerThan",
-      "http://example.org/tio-instance/tc019/thresholdPredicate",
-      "http://example.org/tio-instance/tc019/windowPredicate"
+      "http://qudt.org/schema/qudt/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://qudt.org/schema/qudt/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -1621,7 +1721,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 62,
+    "triple_count": 72,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -1629,32 +1729,43 @@
         "matches_official": true
       },
       "log": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "declared": "http://www.w3.org/2000/10/swap/log#",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": true
+        "matches_official": false
+      },
+      "evsla": {
+        "declared": "https://intentontology.com/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
       },
       "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
+        "declared": "http://www.w3.org/2000/10/swap/quantities#",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/tio-instance/tc020/hubPredicate",
-      "http://example.org/tio-instance/tc020/methodPredicate",
-      "http://example.org/tio-instance/tc020/metricPredicate",
-      "http://example.org/tio-instance/tc020/observed-metric-predicate",
-      "http://example.org/tio-instance/tc020/observed-value-predicate",
-      "http://example.org/tio-instance/tc020/scopePredicate",
-      "http://example.org/tio-instance/tc020/spokePredicate",
-      "http://example.org/tio-instance/tc020/statisticPredicate",
-      "http://example.org/tio-instance/tc020/strictly-smallerThan",
-      "http://example.org/tio-instance/tc020/thresholdPredicate",
-      "http://example.org/tio-instance/tc020/windowPredicate",
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
+      "http://www.w3.org/2000/10/swap/log#lessThan",
+      "http://www.w3.org/2000/10/swap/quantities#unit",
+      "https://intentontology.com/evsla#forTenant",
+      "https://intentontology.com/evsla#hasHub",
+      "https://intentontology.com/evsla#hasSpoke",
+      "https://intentontology.com/evsla#measurementMethod",
+      "https://intentontology.com/evsla#metric",
+      "https://intentontology.com/evsla#observedMetric",
+      "https://intentontology.com/evsla#observedValue",
+      "https://intentontology.com/evsla#scope",
+      "https://intentontology.com/evsla#statistic",
+      "https://intentontology.com/evsla#threshold",
+      "https://intentontology.com/evsla#timeWindow",
+      "https://intentontology.com/evsla#valueOfObservation"
     ],
     "unknown_types": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
+      "https://intentontology.com/evsla#EnterpriseVPNSLAIntent",
+      "https://intentontology.com/evsla#HubAndSpokeTopology",
+      "https://intentontology.com/evsla#HubSite",
+      "https://intentontology.com/evsla#SpokeSite",
+      "https://intentontology.com/evsla#Tenant"
     ],
     "expected_tio_elements": [
       {
@@ -1721,82 +1832,85 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 61,
+    "triple_count": 44,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://qudt.org/schema/qudt/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc021/hubPredicate",
-      "http://example.org/tio-instance/tc021/methodPredicate",
-      "http://example.org/tio-instance/tc021/metricPredicate",
-      "http://example.org/tio-instance/tc021/observed-metric-predicate",
-      "http://example.org/tio-instance/tc021/observed-value-predicate",
-      "http://example.org/tio-instance/tc021/scopePredicate",
-      "http://example.org/tio-instance/tc021/spokePredicate",
-      "http://example.org/tio-instance/tc021/statisticPredicate",
-      "http://example.org/tio-instance/tc021/strictlySmallerThan",
-      "http://example.org/tio-instance/tc021/thresholdPredicate",
-      "http://example.org/tio-instance/tc021/windowPredicate"
+      "http://example.org/evsla#StrictlySmaller",
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#measurementMethod",
+      "http://example.org/evsla#metric",
+      "http://example.org/evsla#observedMetric",
+      "http://example.org/evsla#observedValueOf",
+      "http://example.org/evsla#scope",
+      "http://example.org/evsla#statistic",
+      "http://example.org/evsla#threshold",
+      "http://example.org/evsla#timeWindow",
+      "http://qudt.org/schema/qudt/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://example.org/evsla#EnterpriseTenant",
+      "http://example.org/evsla#EnterpriseVpnSlaIntent",
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#HubSite",
+      "http://example.org/evsla#SpokeSite",
+      "http://qudt.org/schema/qudt/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -1828,7 +1942,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 38,
+    "triple_count": 45,
     "prefix_checks": {
       "icm": {
         "declared": "http://example.org/icm#",
@@ -1851,6 +1965,7 @@
       "http://example.org/icm#target",
       "http://example.org/icm#valuesOfTargetProperty",
       "http://example.org/quan#unit",
+      "http://example.org/tio-instance/tc022/forTenant",
       "http://example.org/tio-instance/tc022/hubPredicate",
       "http://example.org/tio-instance/tc022/methodPredicate",
       "http://example.org/tio-instance/tc022/metricPredicate",
@@ -1859,7 +1974,7 @@
       "http://example.org/tio-instance/tc022/scopePredicate",
       "http://example.org/tio-instance/tc022/spokePredicate",
       "http://example.org/tio-instance/tc022/statisticPredicate",
-      "http://example.org/tio-instance/tc022/strictlySmallerThan",
+      "http://example.org/tio-instance/tc022/strictlySmaller",
       "http://example.org/tio-instance/tc022/thresholdPredicate",
       "http://example.org/tio-instance/tc022/windowPredicate"
     ],
@@ -1869,7 +1984,10 @@
       "http://example.org/icm#PropertyExpectation",
       "http://example.org/icm#Target",
       "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://example.org/quan#Quantity",
+      "http://example.org/tio-instance/tc022/HubSite",
+      "http://example.org/tio-instance/tc022/SpokeSite",
+      "http://example.org/tio-instance/tc022/Tenant"
     ],
     "expected_tio_elements": [
       {
@@ -1935,73 +2053,59 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 53,
+    "triple_count": 21,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
+        "matches_official": true
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc023/atLeastOperator",
       "http://example.org/tio-instance/tc023/hubPredicate",
-      "http://example.org/tio-instance/tc023/metricPredicate",
-      "http://example.org/tio-instance/tc023/observed-metric-predicate",
-      "http://example.org/tio-instance/tc023/observed-value-predicate",
-      "http://example.org/tio-instance/tc023/scopePredicate",
       "http://example.org/tio-instance/tc023/spokePredicate",
-      "http://example.org/tio-instance/tc023/thresholdPredicate"
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -2030,41 +2134,10 @@
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC024.ttl",
     "case_id": "TC024",
-    "parse_ok": false,
-    "parse_error": "at line 38 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'erved-metric-predicate ex:latency ;\\n    ex:obs-latency-value'^b' a quan:Quantity ;\\n    ex:observed-value-predicate ( ex:obs-'...\"",
-    "markdown_fence_stripped": false,
-    "triple_count": 0,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": true
-      },
-      "log": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": true
-      },
-      "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityAndUnits/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
-    "intent_uri_contains_case_id": false,
-    "semantic": null
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC025.ttl",
-    "case_id": "TC025",
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 36,
+    "triple_count": 23,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2083,21 +2156,115 @@
       }
     },
     "unknown_predicates": [
+      "http://example.org/tio-instance/tc024/hubSite",
+      "http://example.org/tio-instance/tc024/spokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
+    ],
+    "unknown_types": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
+    ],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "property used on at least one triple",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC025.ttl",
+    "case_id": "TC025",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 42,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://qudt.org/schema/qudt/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [
+      "http://example.org/tio-instance/tc025/forTenant",
       "http://example.org/tio-instance/tc025/hubPredicate",
       "http://example.org/tio-instance/tc025/methodPredicate",
       "http://example.org/tio-instance/tc025/metricPredicate",
-      "http://example.org/tio-instance/tc025/observed-metric-predicate",
-      "http://example.org/tio-instance/tc025/observed-value-predicate",
+      "http://example.org/tio-instance/tc025/observedMetricPredicate",
+      "http://example.org/tio-instance/tc025/observedValuePredicate",
       "http://example.org/tio-instance/tc025/scopePredicate",
       "http://example.org/tio-instance/tc025/spokePredicate",
       "http://example.org/tio-instance/tc025/statisticPredicate",
       "http://example.org/tio-instance/tc025/strictlySmaller",
       "http://example.org/tio-instance/tc025/thresholdPredicate",
       "http://example.org/tio-instance/tc025/windowPredicate",
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
+      "http://qudt.org/schema/qudt/unit"
     ],
     "unknown_types": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
+      "http://example.org/tio-instance/tc025/HubSite",
+      "http://example.org/tio-instance/tc025/SpokeSite",
+      "http://example.org/tio-instance/tc025/Tenant",
+      "http://qudt.org/schema/qudt/Quantity"
     ],
     "expected_tio_elements": [
       {
@@ -2163,7 +2330,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 62,
+    "triple_count": 64,
     "prefix_checks": {
       "icm": {
         "declared": "http://example.org/icm#",
@@ -2186,11 +2353,12 @@
       "http://example.org/icm#target",
       "http://example.org/icm#valuesOfTargetProperty",
       "http://example.org/quan#unit",
+      "http://example.org/tio-instance/tc026/forTenant",
       "http://example.org/tio-instance/tc026/hubPredicate",
       "http://example.org/tio-instance/tc026/methodPredicate",
       "http://example.org/tio-instance/tc026/metricPredicate",
-      "http://example.org/tio-instance/tc026/observed-metric-predicate",
-      "http://example.org/tio-instance/tc026/observed-value-predicate",
+      "http://example.org/tio-instance/tc026/observedMetricPredicate",
+      "http://example.org/tio-instance/tc026/observedValuePredicate",
       "http://example.org/tio-instance/tc026/scopePredicate",
       "http://example.org/tio-instance/tc026/spokePredicate",
       "http://example.org/tio-instance/tc026/statisticPredicate",
@@ -2271,7 +2439,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 64,
+    "triple_count": 74,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2279,9 +2447,14 @@
         "matches_official": true
       },
       "log": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "declared": "http://www.w3.org/2000/10/swap/log#",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": true
+        "matches_official": false
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
       },
       "quan": {
         "declared": "http://qudt.org/schema/qudt/",
@@ -2290,21 +2463,28 @@
       }
     },
     "unknown_predicates": [
-      "http://example.org/tio-instance/tc027/hubPredicate",
-      "http://example.org/tio-instance/tc027/methodPredicate",
-      "http://example.org/tio-instance/tc027/metricPredicate",
-      "http://example.org/tio-instance/tc027/observed-metric-predicate",
-      "http://example.org/tio-instance/tc027/observed-value-predicate",
-      "http://example.org/tio-instance/tc027/operatorTerm",
-      "http://example.org/tio-instance/tc027/scopePredicate",
-      "http://example.org/tio-instance/tc027/spokePredicate",
-      "http://example.org/tio-instance/tc027/statisticPredicate",
-      "http://example.org/tio-instance/tc027/thresholdPredicate",
-      "http://example.org/tio-instance/tc027/windowPredicate",
-      "http://qudt.org/schema/qudt/unit"
+      "http://qudt.org/schema/qudt/unit",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/StrictlySmallerThan",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/hasHub",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/hasSpoke",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/observedMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/observedValue",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/serviceMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/threshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/timeWindow"
     ],
     "unknown_types": [
-      "http://qudt.org/schema/qudt/Quantity"
+      "http://qudt.org/schema/qudt/Quantity",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/EnterpriseVpnSlaService",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/EnterpriseVpnTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/SpokeSite"
     ],
     "expected_tio_elements": [
       {
@@ -2368,10 +2548,46 @@
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC028.ttl",
     "case_id": "TC028",
-    "parse_ok": true,
-    "parse_error": null,
+    "parse_ok": false,
+    "parse_error": "at line 58 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'dwidth evsla:Bandwidth ;\\n    ex:obs-bandwidth-taichung-value'^b' a quan:Quantity ;\\n    evsla:observedValue ( ex:obs-bandwidt'...\"",
     "markdown_fence_stripped": false,
-    "triple_count": 56,
+    "triple_count": 0,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://www.w3.org/2000/10/swap/log#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": false
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
+      "quan": {
+        "declared": "http://qudt.org/schema/qudt/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": false
+      }
+    },
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [],
+    "expected_coverage_ratio": null,
+    "intent_uri_contains_case_id": false,
+    "semantic": null
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC029.ttl",
+    "case_id": "TC029",
+    "parse_ok": false,
+    "parse_error": "at line 76 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'erved-metric-predicate ex:latency ;\\n    ex:obs-banqiao-value'^b' a quan:Quantity ;\\n    ex:observed-value-predicate ( ex:obs-'...\"",
+    "markdown_fence_stripped": false,
+    "triple_count": 0,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2384,53 +2600,62 @@
         "matches_official": true
       },
       "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityAndUnits/",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
-    "unknown_predicates": [
-      "http://example.org/tio-instance/tc028/atLeastOperator",
-      "http://example.org/tio-instance/tc028/hubPredicate",
-      "http://example.org/tio-instance/tc028/metricPredicate",
-      "http://example.org/tio-instance/tc028/observed-metric-predicate",
-      "http://example.org/tio-instance/tc028/observed-value-predicate",
-      "http://example.org/tio-instance/tc028/scopePredicate",
-      "http://example.org/tio-instance/tc028/spokePredicate",
-      "http://example.org/tio-instance/tc028/thresholdPredicate",
-      "http://tio.models.tmforum.org/tio/v3.6.0/QuantityAndUnits/unit"
-    ],
-    "unknown_types": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/QuantityAndUnits/Quantity"
-    ],
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [],
+    "expected_coverage_ratio": null,
+    "intent_uri_contains_case_id": false,
+    "semantic": null
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC030.ttl",
+    "case_id": "TC030",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 0,
+    "prefix_checks": {},
+    "unknown_predicates": [],
+    "unknown_types": [],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": true,
-        "reason": "instance of class",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": true,
-        "reason": "instance of class",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": true,
-        "reason": "instance of class",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": true,
-        "reason": "property used on at least one triple",
+        "ok": false,
+        "reason": "property never used as predicate",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true,
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": false,
     "semantic": {
       "composite": 0.0,
       "dimensions": {
@@ -2451,18 +2676,18 @@
         "hallucination_count": 0
       },
       "errors": [
-        "metric evsla:guaranteedBandwidth: no reachable target",
+        "metric evsla:packetLoss: no reachable target",
         "metric evsla:guaranteedBandwidth: no reachable target"
       ]
     }
   },
   {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC029.ttl",
-    "case_id": "TC029",
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC031.ttl",
+    "case_id": "TC031",
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 64,
+    "triple_count": 25,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2480,20 +2705,7 @@
         "matches_official": false
       }
     },
-    "unknown_predicates": [
-      "http://example.org/tio-instance/tc029/hubPredicate",
-      "http://example.org/tio-instance/tc029/methodPredicate",
-      "http://example.org/tio-instance/tc029/metricPredicate",
-      "http://example.org/tio-instance/tc029/observed-metric-predicate",
-      "http://example.org/tio-instance/tc029/observed-value-predicate",
-      "http://example.org/tio-instance/tc029/operator-smaller",
-      "http://example.org/tio-instance/tc029/scopePredicate",
-      "http://example.org/tio-instance/tc029/spokePredicate",
-      "http://example.org/tio-instance/tc029/statisticPredicate",
-      "http://example.org/tio-instance/tc029/thresholdPredicate",
-      "http://example.org/tio-instance/tc029/windowPredicate",
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [
       "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
     ],
@@ -2552,149 +2764,9 @@
       },
       "errors": [
         "metric evsla:latency: no reachable target",
-        "metric evsla:latency: no reachable target"
+        "metric evsla:packetLoss: no reachable target"
       ]
     }
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC030.ttl",
-    "case_id": "TC030",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 64,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc030/greaterThanOrEqualTo",
-      "http://example.org/tio-instance/tc030/hubPredicate",
-      "http://example.org/tio-instance/tc030/methodPredicate",
-      "http://example.org/tio-instance/tc030/metricPredicate",
-      "http://example.org/tio-instance/tc030/observedMetricPredicate",
-      "http://example.org/tio-instance/tc030/observedValuePredicate",
-      "http://example.org/tio-instance/tc030/scopePredicate",
-      "http://example.org/tio-instance/tc030/spokePredicate",
-      "http://example.org/tio-instance/tc030/statisticPredicate",
-      "http://example.org/tio-instance/tc030/strictlySmallerThan",
-      "http://example.org/tio-instance/tc030/thresholdPredicate",
-      "http://example.org/tio-instance/tc030/windowPredicate"
-    ],
-    "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
-    ],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 0.0,
-    "intent_uri_contains_case_id": true,
-    "semantic": {
-      "composite": 0.0,
-      "dimensions": {
-        "metric": 0.0,
-        "threshold": 0.0,
-        "statistic": 0.0,
-        "scope": 0.0,
-        "measurement_method": 0.0,
-        "time_window": 0.0,
-        "operator": 0.0,
-        "tenant": 0.0,
-        "topology": 0.0,
-        "contract": 0.0,
-        "precision": 0.0
-      },
-      "precision": {
-        "score": 0.0,
-        "hallucination_count": 0
-      },
-      "errors": [
-        "metric evsla:packetLoss: no reachable target",
-        "metric evsla:guaranteedBandwidth: no reachable target"
-      ]
-    }
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC031.ttl",
-    "case_id": "TC031",
-    "parse_ok": false,
-    "parse_error": "at line 38 of <>:\nBad syntax (objectList expected) at ^ in:\n\"...b'erved-metric-predicate ex:latency ;\\n    ex:obs-latency-value'^b' a quan:Quantity ;\\n    ex:observed-value-predicate ( ex:obs-'...\"",
-    "markdown_fence_stripped": false,
-    "triple_count": 0,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [],
-    "unknown_types": [],
-    "expected_tio_elements": [],
-    "expected_coverage_ratio": null,
-    "intent_uri_contains_case_id": false,
-    "semantic": null
   },
   {
     "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC032.ttl",
@@ -2702,7 +2774,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 60,
+    "triple_count": 67,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2710,33 +2782,43 @@
         "matches_official": true
       },
       "log": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "declared": "http://www.w3.org/2000/10/swap/log#",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": true
+        "matches_official": false
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
       },
       "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
+        "declared": "http://www.w3.org/2005/01/wf/flow#",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/tio-instance/tc032/atLeast",
-      "http://example.org/tio-instance/tc032/hubPredicate",
-      "http://example.org/tio-instance/tc032/methodPredicate",
-      "http://example.org/tio-instance/tc032/metricPredicate",
-      "http://example.org/tio-instance/tc032/observed-metric-predicate",
-      "http://example.org/tio-instance/tc032/observed-value-predicate",
-      "http://example.org/tio-instance/tc032/scopePredicate",
-      "http://example.org/tio-instance/tc032/spokePredicate",
-      "http://example.org/tio-instance/tc032/statisticPredicate",
-      "http://example.org/tio-instance/tc032/strictlySmaller",
-      "http://example.org/tio-instance/tc032/thresholdPredicate",
-      "http://example.org/tio-instance/tc032/windowPredicate",
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasHub",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasSpoke",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedValue",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/serviceMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/threshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/timeWindow",
+      "http://www.w3.org/2000/10/swap/log#lessThan",
+      "http://www.w3.org/2000/10/swap/log#notLessThan",
+      "http://www.w3.org/2005/01/wf/flow#unit"
     ],
     "unknown_types": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/SpokeSite"
     ],
     "expected_tio_elements": [
       {
@@ -2803,83 +2885,86 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 90,
+    "triple_count": 93,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc033/atLeast",
-      "http://example.org/tio-instance/tc033/hubPredicate",
-      "http://example.org/tio-instance/tc033/methodPredicate",
-      "http://example.org/tio-instance/tc033/metricPredicate",
-      "http://example.org/tio-instance/tc033/observedMetricPredicate",
-      "http://example.org/tio-instance/tc033/observedValuePredicate",
-      "http://example.org/tio-instance/tc033/scopePredicate",
-      "http://example.org/tio-instance/tc033/spokePredicate",
-      "http://example.org/tio-instance/tc033/statisticPredicate",
-      "http://example.org/tio-instance/tc033/strictlySmallerThan",
-      "http://example.org/tio-instance/tc033/thresholdPredicate",
-      "http://example.org/tio-instance/tc033/windowPredicate"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasHub",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasSpoke",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedValueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/serviceMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/threshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/timeWindow",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/AtLeast",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/StrictlySmaller",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/SpokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -2913,7 +2998,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 64,
+    "triple_count": 73,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2925,29 +3010,42 @@
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": true
       },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
+      },
       "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
+        "declared": "http://qudt.org/schema/qudt/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/tio-instance/tc034/atLeast",
-      "http://example.org/tio-instance/tc034/hubPredicate",
-      "http://example.org/tio-instance/tc034/methodPredicate",
-      "http://example.org/tio-instance/tc034/metricPredicate",
-      "http://example.org/tio-instance/tc034/observedMetricPredicate",
-      "http://example.org/tio-instance/tc034/observedValuePredicate",
-      "http://example.org/tio-instance/tc034/scopePredicate",
-      "http://example.org/tio-instance/tc034/spokePredicate",
-      "http://example.org/tio-instance/tc034/statisticPredicate",
-      "http://example.org/tio-instance/tc034/strictlySmaller",
-      "http://example.org/tio-instance/tc034/thresholdPredicate",
-      "http://example.org/tio-instance/tc034/windowPredicate",
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
+      "http://qudt.org/schema/qudt/unit",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/committedBandwidthMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasHub",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hasSpoke",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedCommittedBandwidth",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedPacketLossRate",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedValueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/packetLossRateMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/threshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/timeWindow",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/AtLeast",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/StrictlySmaller"
     ],
     "unknown_types": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
+      "http://qudt.org/schema/qudt/Quantity",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/SpokeSite"
     ],
     "expected_tio_elements": [
       {
@@ -3014,7 +3112,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 62,
+    "triple_count": 63,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -3037,12 +3135,12 @@
       "http://example.org/tio-instance/tc035/hubPredicate",
       "http://example.org/tio-instance/tc035/methodPredicate",
       "http://example.org/tio-instance/tc035/metricPredicate",
-      "http://example.org/tio-instance/tc035/observed-metric-predicate",
-      "http://example.org/tio-instance/tc035/observed-value-predicate",
+      "http://example.org/tio-instance/tc035/observedMetricPredicate",
+      "http://example.org/tio-instance/tc035/observedValuePredicate",
       "http://example.org/tio-instance/tc035/scopePredicate",
       "http://example.org/tio-instance/tc035/spokePredicate",
       "http://example.org/tio-instance/tc035/statisticPredicate",
-      "http://example.org/tio-instance/tc035/strictlySmallerThan",
+      "http://example.org/tio-instance/tc035/strictlySmaller",
       "http://example.org/tio-instance/tc035/thresholdPredicate",
       "http://example.org/tio-instance/tc035/windowPredicate",
       "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
@@ -3115,80 +3213,85 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 42,
+    "triple_count": 56,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
+        "matches_official": true
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://example.org/evsla#",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc036/hubPredicate",
-      "http://example.org/tio-instance/tc036/metricPredicate",
-      "http://example.org/tio-instance/tc036/observedMetricPredicate",
-      "http://example.org/tio-instance/tc036/observedValuePredicate",
-      "http://example.org/tio-instance/tc036/spokePredicate",
-      "http://example.org/tio-instance/tc036/statisticPredicate",
-      "http://example.org/tio-instance/tc036/strictlySmallerThan",
-      "http://example.org/tio-instance/tc036/thresholdPredicate",
-      "http://example.org/tio-instance/tc036/windowPredicate"
+      "http://example.org/evsla#forTenant",
+      "http://example.org/evsla#hasHub",
+      "http://example.org/evsla#hasSpoke",
+      "http://example.org/evsla#measurementMethod",
+      "http://example.org/evsla#metric",
+      "http://example.org/evsla#observedMetric",
+      "http://example.org/evsla#observedValue",
+      "http://example.org/evsla#scope",
+      "http://example.org/evsla#statistic",
+      "http://example.org/evsla#threshold",
+      "http://example.org/evsla#timeWindow",
+      "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/strictlySmaller",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/unit"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://example.org/evsla#EnterpriseVpnSlaIntent",
+      "http://example.org/evsla#HubAndSpokeTopology",
+      "http://example.org/evsla#HubSite",
+      "http://example.org/evsla#SpokeSite",
+      "http://example.org/evsla#Tenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/Quantity/Quantity"
     ],
     "expected_tio_elements": [
       {
         "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
       },
       {
         "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
       },
       {
         "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
       },
       {
         "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
+        "ok": true,
+        "reason": "instance of class",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
         "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
+        "ok": true,
+        "reason": "property used on at least one triple",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 0.0,
+    "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.0,
@@ -3220,31 +3323,33 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 41,
+    "triple_count": 44,
     "prefix_checks": {
       "icm": {
-        "declared": "http://example.org/icm#",
+        "declared": "http://example.org/icm/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
         "matches_official": false
       },
       "log": {
-        "declared": "http://example.org/log#",
+        "declared": "http://example.org/log/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "matches_official": false
       },
       "quan": {
-        "declared": "http://example.org/quan#",
+        "declared": "http://example.org/quan/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
         "matches_official": false
       }
     },
     "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
+      "http://example.org/icm/intentElements",
+      "http://example.org/icm/target",
+      "http://example.org/icm/valuesOfTargetProperty",
+      "http://example.org/quan/unit",
       "http://example.org/tio-instance/tc037/atMostOperator",
+      "http://example.org/tio-instance/tc037/forTenant",
       "http://example.org/tio-instance/tc037/hubPredicate",
+      "http://example.org/tio-instance/tc037/methodPredicate",
       "http://example.org/tio-instance/tc037/metricPredicate",
       "http://example.org/tio-instance/tc037/observedMetricPredicate",
       "http://example.org/tio-instance/tc037/observedValuePredicate",
@@ -3255,12 +3360,12 @@
       "http://example.org/tio-instance/tc037/windowPredicate"
     ],
     "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
+      "http://example.org/icm/Context",
+      "http://example.org/icm/Intent",
+      "http://example.org/icm/PropertyExpectation",
+      "http://example.org/icm/Target",
+      "http://example.org/log/Condition",
+      "http://example.org/quan/Quantity"
     ],
     "expected_tio_elements": [
       {
@@ -3326,7 +3431,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 42,
+    "triple_count": 53,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -3334,9 +3439,9 @@
         "matches_official": true
       },
       "log": {
-        "declared": "http://www.w3.org/2000/10/swap/log#",
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
+        "matches_official": true
       },
       "quan": {
         "declared": "http://qudt.org/schema/qudt/",
@@ -3346,6 +3451,8 @@
     },
     "unknown_predicates": [
       "http://example.org/tio-instance/tc038/atLeastOperator",
+      "http://example.org/tio-instance/tc038/forTenant",
+      "http://example.org/tio-instance/tc038/hasTopology",
       "http://example.org/tio-instance/tc038/hubPredicate",
       "http://example.org/tio-instance/tc038/methodPredicate",
       "http://example.org/tio-instance/tc038/metricPredicate",
@@ -3359,6 +3466,10 @@
       "http://qudt.org/schema/qudt/unit"
     ],
     "unknown_types": [
+      "http://example.org/tio-instance/tc038/HubAndSpokeTopology",
+      "http://example.org/tio-instance/tc038/HubSite",
+      "http://example.org/tio-instance/tc038/SpokeSite",
+      "http://example.org/tio-instance/tc038/Tenant",
       "http://qudt.org/schema/qudt/Quantity"
     ],
     "expected_tio_elements": [
@@ -3419,113 +3530,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 43,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://example.org/icm#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": false
-      },
-      "log": {
-        "declared": "http://example.org/log#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": false
-      },
-      "quan": {
-        "declared": "http://example.org/quan#",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": false
-      }
-    },
-    "unknown_predicates": [
-      "http://example.org/icm#intentElements",
-      "http://example.org/icm#target",
-      "http://example.org/icm#valuesOfTargetProperty",
-      "http://example.org/quan#unit",
-      "http://example.org/tio-instance/tc039/hubPredicate",
-      "http://example.org/tio-instance/tc039/metricPredicate",
-      "http://example.org/tio-instance/tc039/observedMetricPredicate",
-      "http://example.org/tio-instance/tc039/observedValuePredicate",
-      "http://example.org/tio-instance/tc039/scopePredicate",
-      "http://example.org/tio-instance/tc039/spokePredicate",
-      "http://example.org/tio-instance/tc039/statisticPredicate",
-      "http://example.org/tio-instance/tc039/strictlySmallerThan",
-      "http://example.org/tio-instance/tc039/thresholdPredicate",
-      "http://example.org/tio-instance/tc039/windowPredicate"
-    ],
-    "unknown_types": [
-      "http://example.org/icm#Context",
-      "http://example.org/icm#Intent",
-      "http://example.org/icm#PropertyExpectation",
-      "http://example.org/icm#Target",
-      "http://example.org/log#Condition",
-      "http://example.org/quan#Quantity"
-    ],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": false,
-        "reason": "no rdf:type with this class IRI",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": false,
-        "reason": "property never used as predicate",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 0.0,
-    "intent_uri_contains_case_id": true,
-    "semantic": {
-      "composite": 0.0,
-      "dimensions": {
-        "metric": 0.0,
-        "threshold": 0.0,
-        "statistic": 0.0,
-        "scope": 0.0,
-        "measurement_method": 0.0,
-        "time_window": 0.0,
-        "operator": 0.0,
-        "tenant": 0.0,
-        "topology": 0.0,
-        "contract": 0.0,
-        "precision": 0.0
-      },
-      "precision": {
-        "score": 0.0,
-        "hallucination_count": 0
-      },
-      "errors": [
-        "metric evsla:latency: no reachable target"
-      ]
-    }
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC040.ttl",
-    "case_id": "TC040",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 64,
+    "triple_count": 54,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -3533,9 +3538,14 @@
         "matches_official": true
       },
       "log": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "declared": "http://www.w3.org/2000/10/swap/log#",
         "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": true
+        "matches_official": false
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": false
       },
       "quan": {
         "declared": "http://qudt.org/schema/qudt/",
@@ -3544,20 +3554,27 @@
       }
     },
     "unknown_predicates": [
-      "http://example.org/tio-instance/tc040/atLeast",
-      "http://example.org/tio-instance/tc040/hubPredicate",
-      "http://example.org/tio-instance/tc040/metricPredicate",
-      "http://example.org/tio-instance/tc040/observedMetricPredicate",
-      "http://example.org/tio-instance/tc040/observedValuePredicate",
-      "http://example.org/tio-instance/tc040/spokePredicate",
-      "http://example.org/tio-instance/tc040/statisticPredicate",
-      "http://example.org/tio-instance/tc040/strictlySmallerOrEqual",
-      "http://example.org/tio-instance/tc040/thresholdPredicate",
-      "http://example.org/tio-instance/tc040/windowPredicate",
-      "http://qudt.org/schema/qudt/unit"
+      "http://qudt.org/schema/qudt/unit",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/forTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/hubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/latencyMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/latencyThreshold",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/measurementMethod",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedLatencyMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/observedValue",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/scope",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/spokeSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/statistic",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/timeWindow",
+      "http://www.w3.org/2000/10/swap/log#lessThan"
     ],
     "unknown_types": [
-      "http://qudt.org/schema/qudt/Quantity"
+      "http://qudt.org/schema/qudt/Quantity",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseTenant",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/EnterpriseVpnSlaIntent",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubAndSpokeTopology",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/HubSite",
+      "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/SpokeSite"
     ],
     "expected_tio_elements": [
       {
@@ -3593,6 +3610,74 @@
     ],
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.0,
+      "dimensions": {
+        "metric": 0.0,
+        "threshold": 0.0,
+        "statistic": 0.0,
+        "scope": 0.0,
+        "measurement_method": 0.0,
+        "time_window": 0.0,
+        "operator": 0.0,
+        "tenant": 0.0,
+        "topology": 0.0,
+        "contract": 0.0,
+        "precision": 0.0
+      },
+      "precision": {
+        "score": 0.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "metric evsla:latency: no reachable target"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/llm_only_structure/TC040.ttl",
+    "case_id": "TC040",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 0,
+    "prefix_checks": {},
+    "unknown_predicates": [],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": false,
+        "reason": "property never used as predicate",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 0.0,
+    "intent_uri_contains_case_id": false,
     "semantic": {
       "composite": 0.0,
       "dimensions": {

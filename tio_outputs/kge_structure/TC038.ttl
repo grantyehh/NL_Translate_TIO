@@ -13,21 +13,25 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Ensure monthly minimum guaranteed bandwidth is at least 80 Mbps from the Taipei retail cloud headquarters to five flagship stores."@en .
+    rdfs:comment "Monthly SLA window guaranteeing minimum bandwidth of at least 80 Mbps from the Taipei retail cloud hub to five flagship stores."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "遠傳智慧零售"@zh .
 
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-bandwidth .
-
-ex:tgt-bandwidth
-    a icm:Target ;
+    icm:target ex:tgt-bandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:monthlySlaWindow .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -39,41 +43,37 @@ ex:cond-bandwidth
     quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    evsla:hasMetric evsla:guaranteedBandwidth .
+    met:observedMetric evsla:guaranteedBandwidth .
 
 ex:obs-bandwidth-value
     a quan:Quantity ;
-    fun:valueOf ( ex:obs-bandwidth ) .
+    met:metricValue ( ex:obs-bandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
     evsla:hasHub ex:hub ;
-    evsla:hasSpoke ex:spoke1, ex:spoke2, ex:spoke3, ex:spoke4, ex:spoke5 .
-
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "遠傳智慧零售"@zh .
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5 .
 
 ex:hub
     a evsla:HubSite ;
     rdfs:label "台北零售雲總部"@zh .
 
-ex:spoke1
+ex:spoke-1
     a evsla:SpokeSite ;
-    rdfs:label "旗艦門市一"@zh .
+    rdfs:label "旗艦門市1"@zh .
 
-ex:spoke2
+ex:spoke-2
     a evsla:SpokeSite ;
-    rdfs:label "旗艦門市二"@zh .
+    rdfs:label "旗艦門市2"@zh .
 
-ex:spoke3
+ex:spoke-3
     a evsla:SpokeSite ;
-    rdfs:label "旗艦門市三"@zh .
+    rdfs:label "旗艦門市3"@zh .
 
-ex:spoke4
+ex:spoke-4
     a evsla:SpokeSite ;
-    rdfs:label "旗艦門市四"@zh .
+    rdfs:label "旗艦門市4"@zh .
 
-ex:spoke5
+ex:spoke-5
     a evsla:SpokeSite ;
-    rdfs:label "旗艦門市五"@zh .
+    rdfs:label "旗艦門市5"@zh .

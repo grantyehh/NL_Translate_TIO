@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:cond-latency, ex:topology ;
-  rdfs:comment "Assure per-spoke latency SLA for 豐茂農業 enterprise VPN from the Chiayi agricultural information center hub to each named spoke."@en .
+  rdfs:comment "Assure per-spoke hub-to-spokes latency SLA for 豐茂農業 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "豐茂農業"@zh .
@@ -19,14 +19,14 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-latency ;
-  rdfs:comment "Latency for each named spoke must stay below 70 ms at p95."@en .
+  rdfs:comment "Latency must stay below 70 ms at p95 for each spoke from the hub."@en .
 
 ex:tgt-latency a icm:Target ;
   evsla:hasMetric evsla:latency ;
   icm:valuesOfTargetProperty ex:thr-latency ;
   evsla:hasThreshold ex:thr-latency ;
   evsla:hasStatistic evsla:p95 ;
-  evsla:hasScope evsla:specificSpoke ;
+  evsla:hasScope evsla:hubToAllSpokes ;
   evsla:hasMeasurementMethod evsla:twamp ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 

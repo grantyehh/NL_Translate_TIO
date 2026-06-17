@@ -1,78 +1,101 @@
 @prefix ex: <http://example.org/tio-instance/tc027/> .
 @prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSla/> .
 @prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
 
 ex:intent
-  a icm:Intent ;
-  icm:intentElements ex:exp-latency, ex:exp-loss, ex:topology, ex:cond-latency, ex:cond-loss ;
-  rdfs:comment "Taipei Energy Dispatch Center to Keelung Power Plant latency below 20 ms at p99, and to Miaoli Power Plant and Changbin Power Plant packet loss below 0.05% for 99% of the time."@en .
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+    icm:intentElements ex:exp-latency, ex:exp-loss, ex:topology, ex:cond-latency, ex:cond-loss ;
+    rdfs:comment "昇晟能源 requires latency below 20 ms at p99 from 台北能源調度中心 to 基隆電廠, and packet loss below 0.05% for 苗栗電廠 and 彰濱電廠 over 99% time."@en .
 
-ex:exp-latency
-  a icm:PropertyExpectation ;
-  icm:target ex:tgt-latency .
+ex:service
+    a evsla:EnterpriseVpnSlaService ;
+    evsla:forTenant ex:tenant .
 
-ex:tgt-latency
-  a icm:Target ;
-  ex:metricPredicate ex:latency ;
-  icm:valuesOfTargetProperty ex:thr-latency ;
-  ex:thresholdPredicate ex:thr-latency ;
-  ex:statisticPredicate ex:p99 ;
-  ex:scopePredicate ex:hub-to-keelung ;
-  ex:methodPredicate ex:measurement-method-latency ;
-  ex:windowPredicate ex:window-p99 .
-
-ex:thr-latency
-  a quan:Quantity ;
-  rdf:value 20 ;
-  quan:unit "ms" .
-
-ex:cond-latency
-  a log:Condition ;
-  ex:operatorTerm ( ex:obs-latency-value ex:thr-latency ) .
-
-ex:obs-latency
-  ex:observed-metric-predicate ex:latency .
-
-ex:obs-latency-value
-  a quan:Quantity ;
-  ex:observed-value-predicate ( ex:obs-latency ) .
-
-ex:exp-loss
-  a icm:PropertyExpectation ;
-  icm:target ex:tgt-loss .
-
-ex:tgt-loss
-  a icm:Target ;
-  ex:metricPredicate ex:packet-loss ;
-  icm:valuesOfTargetProperty ex:thr-loss ;
-  ex:thresholdPredicate ex:thr-loss ;
-  ex:statisticPredicate ex:time-99-percent ;
-  ex:scopePredicate ex:hub-to-miaoli-and-changbin ;
-  ex:methodPredicate ex:measurement-method-loss ;
-  ex:windowPredicate ex:window-99-percent-time .
-
-ex:thr-loss
-  a quan:Quantity ;
-  rdf:value 0.05 ;
-  quan:unit "%" .
-
-ex:cond-loss
-  a log:Condition ;
-  ex:operatorTerm ( ex:obs-loss-value ex:thr-loss ) .
-
-ex:obs-loss
-  ex:observed-metric-predicate ex:packet-loss .
-
-ex:obs-loss-value
-  a quan:Quantity ;
-  ex:observed-value-predicate ( ex:obs-loss ) .
+ex:tenant
+    a evsla:EnterpriseVpnTenant ;
+    rdfs:label "昇晟能源"@zh .
 
 ex:topology
-  a icm:Context ;
-  ex:hubPredicate [ rdfs:label "台北能源調度中心"@zh ] ;
-  ex:spokePredicate [ rdfs:label "基隆電廠"@zh ] ;
-  ex:spokePredicate [ rdfs:label "苗栗電廠"@zh ] ;
-  ex:spokePredicate [ rdfs:label "彰濱電廠"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-keelung, ex:spoke-miaoli, ex:spoke-changbin .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "台北能源調度中心"@zh .
+
+ex:spoke-keelung
+    a evsla:SpokeSite ;
+    rdfs:label "基隆電廠"@zh .
+
+ex:spoke-miaoli
+    a evsla:SpokeSite ;
+    rdfs:label "苗栗電廠"@zh .
+
+ex:spoke-changbin
+    a evsla:SpokeSite ;
+    rdfs:label "彰濱電廠"@zh .
+
+ex:exp-latency
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-latency ;
+    evsla:serviceMetric evsla:OneWayLatency ;
+    evsla:threshold ex:thr-latency ;
+    evsla:statistic evsla:P99 ;
+    evsla:scope evsla:HubToSpoke ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:timeWindow evsla:DefaultTimeWindow .
+
+ex:tgt-latency
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
+
+ex:thr-latency
+    a quan:Quantity ;
+    rdf:value 20 ;
+    quan:unit "ms" .
+
+ex:exp-loss
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-loss ;
+    evsla:serviceMetric evsla:PacketLossRate ;
+    evsla:threshold ex:thr-loss ;
+    evsla:statistic evsla:Percentile99 ;
+    evsla:scope evsla:HubToSpoke ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:timeWindow evsla:Percent99Time .
+
+ex:tgt-loss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-loss .
+
+ex:thr-loss
+    a quan:Quantity ;
+    rdf:value 0.05 ;
+    quan:unit "%" .
+
+ex:cond-latency
+    a log:Condition ;
+    evsla:StrictlySmallerThan ( ex:obs-latency-value ex:thr-latency ) .
+
+ex:obs-latency
+    evsla:observedMetric evsla:OneWayLatency ;
+    evsla:observedValue ( ex:obs-latency ) .
+
+ex:obs-latency-value
+    a quan:Quantity .
+
+ex:cond-loss
+    a log:Condition ;
+    evsla:StrictlySmallerThan ( ex:obs-loss-value ex:thr-loss ) .
+
+ex:obs-loss
+    evsla:observedMetric evsla:PacketLossRate ;
+    evsla:observedValue ( ex:obs-loss ) .
+
+ex:obs-loss-value
+    a quan:Quantity .

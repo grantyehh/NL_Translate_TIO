@@ -11,9 +11,9 @@
 
 ex:intent
   a icm:Intent, evsla:EnterpriseVpnService ;
-  icm:intentElements ex:exp-1, ex:exp-2, ex:topology, ex:cond-latency-1, ex:cond-latency-2 ;
+  icm:intentElements ex:exp-1, ex:exp-2, ex:topology, ex:cond-1, ex:cond-2 ;
   evsla:forTenant ex:tenant ;
-  rdfs:comment "Federal Hospital requires latency from Taipei Medical Information Center to Banqiao Campus to stay below 10 ms at p99, and to Xizhi Campus and Sanchong Campus to stay below 25 ms at p95."@en .
+  rdfs:comment "Federal Hospital requires latency from Taipei Medical Information Center to Banqiao Campus to stay below 10 ms at p99, and latency to Xizhi Campus and Sanchong Campus to stay below 25 ms at p95."@en .
 
 ex:tenant
   a evsla:Tenant ;
@@ -21,63 +21,63 @@ ex:tenant
 
 ex:exp-1
   a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-1 .
-
-ex:tgt-1
-  a icm:Target ;
+  icm:target ex:tgt-1 ;
   evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty ex:thr-latency-1 ;
-  evsla:hasThreshold ex:thr-latency-1 ;
+  evsla:hasThreshold ex:thr-1 ;
   evsla:hasStatistic evsla:p99 ;
   evsla:hasScope evsla:specificSpoke ;
   evsla:hasMeasurementMethod evsla:twamp ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-latency-1
+ex:tgt-1
+  a icm:Target ;
+  icm:valuesOfTargetProperty ex:thr-1 .
+
+ex:thr-1
   a quan:Quantity ;
   rdf:value "10"^^xsd:decimal ;
   quan:unit "ms" .
 
 ex:exp-2
   a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-2 .
-
-ex:tgt-2
-  a icm:Target ;
+  icm:target ex:tgt-2 ;
   evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty ex:thr-latency-2 ;
-  evsla:hasThreshold ex:thr-latency-2 ;
+  evsla:hasThreshold ex:thr-2 ;
   evsla:hasStatistic evsla:p95 ;
   evsla:hasScope evsla:perSpoke ;
   evsla:hasMeasurementMethod evsla:twamp ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-latency-2
+ex:tgt-2
+  a icm:Target ;
+  icm:valuesOfTargetProperty ex:thr-2 .
+
+ex:thr-2
   a quan:Quantity ;
   rdf:value "25"^^xsd:decimal ;
   quan:unit "ms" .
 
-ex:cond-latency-1
+ex:cond-1
   a log:Condition ;
-  quan:smaller ( ex:obs-latency-1-value ex:thr-latency-1 ) .
+  quan:smaller ( ex:obs-1-value ex:thr-1 ) .
 
-ex:obs-latency-1
-  evsla:hasMetric evsla:latency .
+ex:obs-1
+  evsla:latency evsla:latency .
 
-ex:obs-latency-1-value
+ex:obs-1-value
   a quan:Quantity ;
-  fun:valueOf ( ex:obs-latency-1 ) .
+  fun:valueOf ( ex:obs-1 ) .
 
-ex:cond-latency-2
+ex:cond-2
   a log:Condition ;
-  quan:smaller ( ex:obs-latency-2-value ex:thr-latency-2 ) .
+  quan:smaller ( ex:obs-2-value ex:thr-2 ) .
 
-ex:obs-latency-2
-  evsla:hasMetric evsla:latency .
+ex:obs-2
+  evsla:latency evsla:latency .
 
-ex:obs-latency-2-value
+ex:obs-2-value
   a quan:Quantity ;
-  fun:valueOf ( ex:obs-latency-2 ) .
+  fun:valueOf ( ex:obs-2 ) .
 
 ex:topology
   a icm:Context, evsla:HubAndSpokeTopology ;

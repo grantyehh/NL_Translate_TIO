@@ -9,55 +9,44 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ex:intent
-    a icm:Intent, evsla:EnterpriseVpnService ;
+ex:intent a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Ensure packet loss between the hub and all spokes stays below 0.2% at the p99 level."@en .
+    rdfs:comment "Ensure packet loss between 城市交通局Hub and all spokes stays below 0.2% at the p99 level."@en .
 
-ex:exp-packetLoss
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
+ex:tenant a evsla:Tenant ;
+    rdfs:label "城市交通局"@zh .
 
-ex:tgt-packetLoss
-    a icm:Target ;
+ex:exp-packetLoss a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-packetLoss ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-packetLoss
-    a quan:Quantity ;
+ex:tgt-packetLoss a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss .
+
+ex:thr-packetLoss a quan:Quantity ;
     rdf:value "0.2"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:cond-packetLoss
-    a log:Condition ;
+ex:cond-packetLoss a log:Condition ;
     quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
-ex:obs-packetLoss
-    evsla:packetLoss evsla:packetLoss .
+ex:obs-packetLoss met:metric evsla:packetLoss .
 
-ex:obs-packetLoss-value
-    a quan:Quantity ;
+ex:obs-packetLoss-value a quan:Quantity ;
     met:observedValue ( ex:obs-packetLoss ) .
 
-ex:topology
-    a icm:Context, evsla:HubAndSpokeTopology ;
+ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
     evsla:hasHub ex:hub ;
     evsla:hasSpoke ex:spoke-1 .
 
-ex:hub
-    a evsla:HubSite ;
+ex:hub a evsla:HubSite ;
     rdfs:label "城市交通局Hub"@zh .
 
-ex:spoke-1
-    a evsla:SpokeSite ;
+ex:spoke-1 a evsla:SpokeSite ;
     rdfs:label "各Spoke"@zh .
-
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "城市交通局"@zh .

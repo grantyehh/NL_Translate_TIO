@@ -11,82 +11,57 @@
 
 ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-latency-taoyuan, ex:exp-latency-tainan, ex:topology, ex:cond-latency-taoyuan, ex:cond-latency-tainan ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Hongyuan Technology requires latency from Taipei headquarters to Taoyuan plant and Tainan plant to stay below 40 ms at the 95th percentile for each spoke."@en .
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA intent for 宏遠科技 requiring latency from 台北總部 to 桃園廠 and 台南廠 to stay below 40 ms at p95 per spoke."@en .
 
 ex:tenant
     a evsla:Tenant ;
     rdfs:label "宏遠科技"@zh .
 
-ex:exp-latency-taoyuan
+ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency-taoyuan .
-
-ex:tgt-latency-taoyuan
-    a icm:Target ;
+    icm:target ex:tgt-latency ;
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasScope evsla:perSpoke ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:exp-latency-tainan
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency-tainan .
-
-ex:tgt-latency-tainan
+ex:tgt-latency
     a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
     rdf:value "40"^^xsd:decimal ;
     quan:unit "ms" .
 
-ex:cond-latency-taoyuan
+ex:cond-latency
     a log:Condition ;
-    quan:smaller ( ex:obs-latency-taoyuan-value ex:thr-latency ) .
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
-ex:obs-latency-taoyuan
-    met:latency evsla:latency ;
-    ex:obs-latency-taoyuan-value ( ex:obs-latency-taoyuan ) .
+ex:obs-latency
+    evsla:hasMetric evsla:latency .
 
-ex:obs-latency-taoyuan-value
-    a quan:Quantity .
-
-ex:cond-latency-tainan
-    a log:Condition ;
-    quan:smaller ( ex:obs-latency-tainan-value ex:thr-latency ) .
-
-ex:obs-latency-tainan
-    met:latency evsla:latency ;
-    ex:obs-latency-tainan-value ( ex:obs-latency-tainan ) .
-
-ex:obs-latency-tainan-value
-    a quan:Quantity .
+ex:obs-latency-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-taipei ;
-    evsla:hasSpoke ex:spoke-taoyuan, ex:spoke-tainan .
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2 .
 
-ex:hub-taipei
+ex:hub
     a evsla:HubSite ;
     rdfs:label "台北總部"@zh .
 
-ex:spoke-taoyuan
+ex:spoke-1
     a evsla:SpokeSite ;
     rdfs:label "桃園廠"@zh .
 
-ex:spoke-tainan
+ex:spoke-2
     a evsla:SpokeSite ;
     rdfs:label "台南廠"@zh .

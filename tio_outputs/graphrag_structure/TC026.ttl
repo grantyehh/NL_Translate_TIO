@@ -10,88 +10,88 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-  a icm:Intent, evsla:EnterpriseVpnService ;
-  icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
-  evsla:forTenant ex:tenant ;
-  rdfs:comment "Galaxy Bank requires latency from Taipei headquarters to Hsinchu branch below 30 ms and to Kaohsiung branch below 60 ms, both at p95."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-hsinchu, ex:exp-kaohsiung, ex:topology, ex:cond-hsinchu, ex:cond-kaohsiung ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA intent for 星河銀行: latency from 台北總部 to 新竹分行 below 30 ms and to 高雄分行 below 60 ms, both at p95 over the default five-minute window using TWAMP."@en .
 
 ex:tenant
-  a evsla:Tenant ;
-  rdfs:label "星河銀行"@zh .
-
-ex:exp-hsinchu
-  a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-hsinchu .
-
-ex:tgt-hsinchu
-  a icm:Target ;
-  evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty ex:thr-hsinchu ;
-  evsla:hasThreshold ex:thr-hsinchu ;
-  evsla:hasStatistic evsla:p95 ;
-  evsla:hasScope evsla:specificSpoke ;
-  evsla:hasMeasurementMethod evsla:twamp ;
-  evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:thr-hsinchu
-  a quan:Quantity ;
-  rdf:value "30"^^xsd:decimal ;
-  quan:unit "ms" .
-
-ex:exp-kaohsiung
-  a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-kaohsiung .
-
-ex:tgt-kaohsiung
-  a icm:Target ;
-  evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty ex:thr-kaohsiung ;
-  evsla:hasThreshold ex:thr-kaohsiung ;
-  evsla:hasStatistic evsla:p95 ;
-  evsla:hasScope evsla:specificSpoke ;
-  evsla:hasMeasurementMethod evsla:twamp ;
-  evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:thr-kaohsiung
-  a quan:Quantity ;
-  rdf:value "60"^^xsd:decimal ;
-  quan:unit "ms" .
-
-ex:cond-hsinchu
-  a log:Condition ;
-  quan:smaller ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
-
-ex:obs-hsinchu
-  evsla:hasMetric evsla:latency .
-
-ex:obs-hsinchu-value
-  a quan:Quantity ;
-  fun:valueOf ( ex:obs-hsinchu ) .
-
-ex:cond-kaohsiung
-  a log:Condition ;
-  quan:smaller ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
-
-ex:obs-kaohsiung
-  evsla:hasMetric evsla:latency .
-
-ex:obs-kaohsiung-value
-  a quan:Quantity ;
-  fun:valueOf ( ex:obs-kaohsiung ) .
+    a evsla:Tenant ;
+    rdfs:label "星河銀行"@zh .
 
 ex:topology
-  a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub ex:hub-taipei ;
-  evsla:hasSpoke ex:spoke-hsinchu, ex:spoke-kaohsiung .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-hsinchu, ex:spoke-kaohsiung .
 
 ex:hub-taipei
-  a evsla:HubSite ;
-  rdfs:label "台北總部"@zh .
+    a evsla:HubSite ;
+    rdfs:label "台北總部"@zh .
 
 ex:spoke-hsinchu
-  a evsla:SpokeSite ;
-  rdfs:label "新竹分行"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "新竹分行"@zh .
 
 ex:spoke-kaohsiung
-  a evsla:SpokeSite ;
-  rdfs:label "高雄分行"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "高雄分行"@zh .
+
+ex:exp-hsinchu
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-hsinchu ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasThreshold ex:thr-hsinchu ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-hsinchu
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-hsinchu .
+
+ex:thr-hsinchu
+    a quan:Quantity ;
+    rdf:value "30"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:cond-hsinchu
+    a log:Condition ;
+    quan:smaller ( ex:obs-hsinchu-value ex:thr-hsinchu ) .
+
+ex:obs-hsinchu
+    evsla:latency evsla:latency .
+
+ex:obs-hsinchu-value
+    a quan:Quantity ;
+    fun:smallerThan ( ex:obs-hsinchu ) .
+
+ex:exp-kaohsiung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-kaohsiung ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasThreshold ex:thr-kaohsiung ;
+    evsla:hasStatistic evsla:p95 ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-kaohsiung
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-kaohsiung .
+
+ex:thr-kaohsiung
+    a quan:Quantity ;
+    rdf:value "60"^^xsd:decimal ;
+    quan:unit "ms" .
+
+ex:cond-kaohsiung
+    a log:Condition ;
+    quan:smaller ( ex:obs-kaohsiung-value ex:thr-kaohsiung ) .
+
+ex:obs-kaohsiung
+    evsla:latency evsla:latency .
+
+ex:obs-kaohsiung-value
+    a quan:Quantity ;
+    fun:smallerThan ( ex:obs-kaohsiung ) .

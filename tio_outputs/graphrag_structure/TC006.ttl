@@ -15,23 +15,18 @@ ex:intent
     evsla:forTenant ex:tenant ;
     rdfs:comment "Provide guaranteed bandwidth of at least 500 Mbps from Beichen Securities headquarters to the Taichung trading room."@en .
 
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "北辰證券"@zh .
-
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-bandwidth .
-
-ex:tgt-bandwidth
-    a icm:Target ;
+    icm:target ex:tgt-bandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth .
 
 ex:thr-bandwidth
     a quan:Quantity ;
@@ -61,3 +56,7 @@ ex:hub
 ex:spoke-taichung
     a evsla:SpokeSite ;
     rdfs:label "台中交易室"@zh .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "北辰證券"@zh .

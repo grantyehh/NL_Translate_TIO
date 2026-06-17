@@ -11,73 +11,73 @@
 
 ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
+    icm:intentElements ex:exp-pl, ex:exp-bw, ex:topology, ex:cond-pl, ex:cond-bw ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Monthly SLA window for Taipei core site to five PoP spokes: packet loss maximum at most 0.3%, and guaranteed bandwidth average at least 500 Mbps."@en .
+    rdfs:comment "Monthly SLA for Taipei hub to five PoP spokes: packet loss maximum at most 0.3% and guaranteed bandwidth average at least 500Mbps."@en .
 
 ex:tenant
     a evsla:Tenant ;
     rdfs:label "聯光電信"@zh .
 
-ex:exp-packetLoss
+ex:exp-pl
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
-
-ex:tgt-packetLoss
-    a icm:Target ;
+    icm:target ex:tgt-pl ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
-    evsla:hasThreshold ex:thr-packetLoss ;
+    evsla:hasThreshold ex:thr-pl ;
     evsla:hasStatistic evsla:maximum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:monthlySlaWindow .
 
-ex:thr-packetLoss
+ex:tgt-pl
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-pl .
+
+ex:thr-pl
     a quan:Quantity ;
     rdf:value "0.3"^^xsd:decimal ;
     quan:unit "%" .
 
-ex:cond-packetLoss
-    a log:Condition ;
-    quan:atMost ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
-
-ex:obs-packetLoss
-    evsla:hasMetric evsla:packetLoss .
-
-ex:obs-packetLoss-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-packetLoss ) .
-
-ex:exp-guaranteedBandwidth
+ex:exp-bw
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-guaranteedBandwidth .
-
-ex:tgt-guaranteedBandwidth
-    a icm:Target ;
+    icm:target ex:tgt-bw ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
-    evsla:hasThreshold ex:thr-guaranteedBandwidth ;
+    evsla:hasThreshold ex:thr-bw ;
     evsla:hasStatistic evsla:average ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:monthlySlaWindow .
 
-ex:thr-guaranteedBandwidth
+ex:tgt-bw
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-bw .
+
+ex:thr-bw
     a quan:Quantity ;
     rdf:value "500"^^xsd:decimal ;
     quan:unit "Mbps" .
 
-ex:cond-guaranteedBandwidth
+ex:cond-pl
     a log:Condition ;
-    quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
+    quan:atMost ( ex:obs-pl-value ex:thr-pl ) .
 
-ex:obs-guaranteedBandwidth
-    evsla:hasMetric evsla:guaranteedBandwidth .
+ex:obs-pl
+    evsla:packetLoss evsla:packetLoss .
 
-ex:obs-guaranteedBandwidth-value
+ex:obs-pl-value
     a quan:Quantity ;
-    fun:valueOf ( ex:obs-guaranteedBandwidth ) .
+    rdf:value ( ex:obs-pl ) .
+
+ex:cond-bw
+    a log:Condition ;
+    quan:atLeast ( ex:obs-bw-value ex:thr-bw ) .
+
+ex:obs-bw
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+
+ex:obs-bw-value
+    a quan:Quantity ;
+    rdf:value ( ex:obs-bw ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;

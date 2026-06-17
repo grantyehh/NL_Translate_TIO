@@ -13,7 +13,11 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Ensure latency from the Taipei medical cloud center hub to all branch spokes stays below 30 ms at the p95 level."@en .
+    rdfs:comment "Ensure latency from the Taipei medical cloud hub to all branch sites stays below 30 ms at the p95 level."@en .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "康健醫療"@zh .
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
@@ -27,13 +31,7 @@ ex:exp-latency
 
 ex:tgt-latency
     a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:hubToAllSpokes ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -45,25 +43,21 @@ ex:cond-latency
     quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:obs-latency-value .
+    met:hasMetric evsla:latency .
 
 ex:obs-latency-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-latency ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub ;
-    evsla:hasSpoke ex:spoke-all-branches .
+    evsla:hasHub ex:hub-site ;
+    evsla:hasSpoke ex:spoke-site .
 
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "康健醫療"@zh .
-
-ex:hub
+ex:hub-site
     a evsla:HubSite ;
     rdfs:label "台北醫療雲中心"@zh .
 
-ex:spoke-all-branches
+ex:spoke-site
     a evsla:SpokeSite ;
     rdfs:label "所有院區分點"@zh .

@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:cond-latency, ex:topology ;
-  rdfs:comment "Assure average latency below 80 ms from the hub to six spoke factory sites for 中台工業集團 enterprise VPN."@en .
+  rdfs:comment "Assure average latency below 80 ms from the hub to all six spoke sites for 中台工業集團 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "中台工業集團"@zh .
@@ -19,7 +19,7 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-latency ;
-  rdfs:comment "Average latency must stay below 80 ms from the hub to all six spokes."@en .
+  rdfs:comment "Average latency must stay below 80 ms across all spokes."@en .
 
 ex:tgt-latency a icm:Target ;
   evsla:hasMetric evsla:latency ;
@@ -45,9 +45,9 @@ ex:obs-latency-value a quan:Quantity ;
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "台中工業總部"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "桃園廠區"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "新竹廠區"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "台南廠區"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "高雄廠區"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "彰化廠區"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "嘉義廠區"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "廠區分點一"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "廠區分點二"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "廠區分點三"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "廠區分點四"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "廠區分點五"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "廠區分點六"@zh ] .

@@ -11,43 +11,32 @@
 
 ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
+    icm:intentElements ex:exp-guaranteedBandwidth, ex:topology, ex:cond-guaranteedBandwidth ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Provide at least 500 Mbps guaranteed bandwidth from Beichen Securities headquarters to the Taichung trading room."@en .
+    rdfs:comment "Provide guaranteed bandwidth of at least 500 Mbps from Beichen Securities headquarters to the Taichung trading room."@en .
 
 ex:tenant
     a evsla:Tenant ;
     rdfs:label "北辰證券"@zh .
 
-ex:exp-bandwidth
+ex:exp-guaranteedBandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-bandwidth .
-
-ex:tgt-bandwidth
-    a icm:Target ;
+    icm:target ex:tgt-guaranteedBandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    evsla:hasThreshold ex:thr-bandwidth ;
+    evsla:hasThreshold ex:thr-guaranteedBandwidth ;
     evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:specificSpoke ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-bandwidth
+ex:tgt-guaranteedBandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth .
+
+ex:thr-guaranteedBandwidth
     a quan:Quantity ;
     rdf:value "500"^^xsd:decimal ;
     quan:unit "Mbps" .
-
-ex:cond-bandwidth
-    a log:Condition ;
-    quan:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
-
-ex:obs-bandwidth
-    evsla:hasMetric evsla:guaranteedBandwidth .
-
-ex:obs-bandwidth-value
-    a quan:Quantity ;
-    fun:valueOf ( ex:obs-bandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
@@ -61,3 +50,14 @@ ex:hub
 ex:spoke-taichung
     a evsla:SpokeSite ;
     rdfs:label "台中交易室"@zh .
+
+ex:cond-guaranteedBandwidth
+    a log:Condition ;
+    quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
+
+ex:obs-guaranteedBandwidth
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
+
+ex:obs-guaranteedBandwidth-value
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-guaranteedBandwidth ) .

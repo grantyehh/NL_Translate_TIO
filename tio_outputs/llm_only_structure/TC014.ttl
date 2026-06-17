@@ -1,60 +1,6 @@
 @prefix ex: <http://example.org/tio-instance/tc014/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix log: <http://example.org/log#> .
-@prefix quan: <http://example.org/quan#> .
-
-ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-plr, ex:topology, ex:cond-plr ;
-    rdfs:comment "Ensure packet loss rate between the United Media hub and each spoke stays below 0.05% for 99% of the time."@en .
-
-ex:exp-plr
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-plr .
-
-ex:tgt-plr
-    a icm:Target ;
-    ex:metricPredicate ex:packet-loss-rate ;
-    icm:valuesOfTargetProperty ex:thr-plr ;
-    ex:thresholdPredicate ex:thr-plr ;
-    ex:statisticPredicate ex:p99 ;
-    ex:scopePredicate ex:hub-to-all-spokes ;
-    ex:methodPredicate ex:measurement-method ;
-    ex:windowPredicate ex:time-window .
-
-ex:thr-plr
-    a quan:Quantity ;
-    rdf:value "0.05" ;
-    quan:unit "%" .
-
-ex:cond-plr
-    a log:Condition ;
-    ex:strictly-smaller-than ( ex:obs-plr-value ex:thr-plr ) .
-
-ex:obs-plr
-    ex:observed-metric-predicate ex:packet-loss-rate .
-
-ex:obs-plr-value
-    a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-plr ) .
-
-ex:topology
-    a icm:Context ;
-    ex:hubPredicate ex:hub ;
-    ex:spokePredicate ex:spoke-1,
-                      ex:spoke-2,
-                      ex:spoke-3 .
-
-ex:hub
-    rdfs:label "United Media Hub"@en .
-
-ex:spoke-1
-    rdfs:label "Spoke 1"@en .
-
-ex:spoke-2
-    rdfs:label "Spoke 2"@en .
-
-ex:spoke-3
-    rdfs:label "Spoke 3"@en .

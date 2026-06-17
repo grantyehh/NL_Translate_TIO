@@ -1,28 +1,28 @@
 @prefix ex: <http://example.org/tio-instance/tc002/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix log: <http://example.org/log#> .
-@prefix quan: <http://example.org/quan#> .
 
 ex:intent
     a icm:Intent ;
     icm:intentElements ex:exp-plr, ex:topology, ex:cond-plr ;
-    rdfs:comment "Ensure packet loss rate between the Far Eastern Manufacturing Hub and each spoke stays below 0.1% for 99% of the time."@en .
+    rdfs:comment "Ensure packet loss rate between the Far Eastern Manufacturing hub and all spokes stays below 0.1% at the 99% level."@en .
 
 ex:exp-plr
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-plr .
+    icm:target ex:tgt-plr ;
+    ex:metricPredicate ex:packetLossRate ;
+    ex:thresholdPredicate ex:thr-plr ;
+    ex:statisticPredicate ex:p99 ;
+    ex:scopePredicate ex:hubToAllSpokes ;
+    ex:methodPredicate ex:defaultMethod ;
+    ex:windowPredicate ex:defaultWindow .
 
 ex:tgt-plr
     a icm:Target ;
-    ex:metricPredicate ex:packetLossRate ;
-    icm:valuesOfTargetProperty ex:thr-plr ;
-    ex:thresholdPredicate ex:thr-plr ;
-    ex:statisticPredicate ex:percentile99 ;
-    ex:scopePredicate ex:hubToAllSpokes ;
-    ex:methodPredicate ex:measurementMethod ;
-    ex:windowPredicate ex:timeWindow .
+    icm:valuesOfTargetProperty ex:thr-plr .
 
 ex:thr-plr
     a quan:Quantity ;
@@ -31,7 +31,7 @@ ex:thr-plr
 
 ex:cond-plr
     a log:Condition ;
-    ex:strictlySmallerThan ( ex:obs-plr-value ex:thr-plr ) .
+    ex:strictlySmaller ( ex:obs-plr-value ex:thr-plr ) .
 
 ex:obs-plr
     ex:observedMetricPredicate ex:packetLossRate .
@@ -42,11 +42,18 @@ ex:obs-plr-value
 
 ex:topology
     a icm:Context ;
+    ex:forTenant ex:tenant ;
     ex:hubPredicate ex:hub ;
     ex:spokePredicate ex:spoke-1 .
 
+ex:tenant
+    a ex:Tenant ;
+    rdfs:label "遠東製造"@zh .
+
 ex:hub
-    rdfs:label "Far Eastern Manufacturing Hub"@en .
+    a ex:HubSite ;
+    rdfs:label "遠東製造Hub"@zh .
 
 ex:spoke-1
-    rdfs:label "Spoke"@en .
+    a ex:SpokeSite ;
+    rdfs:label "各Spoke"@zh .

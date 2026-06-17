@@ -1,46 +1,59 @@
 @prefix ex: <http://example.org/tio-instance/tc008/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/> .
+@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 ex:intent
     a icm:Intent ;
-    icm:intentElements ex:exp-plr, ex:topology, ex:cond-plr ;
-    rdfs:comment "Ensure packet loss rate between the Jingyao Semiconductor hub and each spoke stays below 0.01% for 99% of the time."@en .
+    icm:intentElements ex:exp-packet-loss, ex:topology, ex:cond-packet-loss ;
+    rdfs:comment "Ensure packet loss rate between the hub and all spokes for 晶耀半導體 stays below 0.01% at the 99% level."@en .
 
-ex:exp-plr
+ex:exp-packet-loss
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-plr .
-
-ex:tgt-plr
-    a icm:Target ;
+    icm:target ex:tgt-packet-loss ;
     ex:metricPredicate ex:packet-loss-rate ;
-    icm:valuesOfTargetProperty ex:thr-plr ;
-    ex:thresholdPredicate ex:thr-plr ;
-    ex:statisticPredicate ex:percentile-99 ;
+    ex:thresholdPredicate ex:thr-packet-loss ;
+    ex:statisticPredicate ex:p99 ;
     ex:scopePredicate ex:hub-to-all-spokes ;
-    ex:methodPredicate ex:measurement-method ;
-    ex:windowPredicate ex:time-window .
+    ex:methodPredicate ex:default-measurement-method ;
+    ex:windowPredicate ex:default-time-window .
 
-ex:thr-plr
+ex:tgt-packet-loss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packet-loss .
+
+ex:thr-packet-loss
     a quan:Quantity ;
     rdf:value 0.01 ;
     quan:unit "%" .
 
-ex:cond-plr
+ex:cond-packet-loss
     a log:Condition ;
-    ex:strictly-smallerThan ( ex:obs-plr-value ex:thr-plr ) .
+    ex:strictly-smaller ( ex:obs-packet-loss-value ex:thr-packet-loss ) .
 
-ex:obs-plr
-    ex:observed-metric-predicate ex:packet-loss-rate ;
-    ex:obs-plr-value a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-plr ) .
+ex:obs-packet-loss
+    ex:observed-metric-predicate ex:packet-loss-rate .
+
+ex:obs-packet-loss-value
+    a quan:Quantity ;
+    ex:observed-value-predicate ( ex:obs-packet-loss ) .
 
 ex:topology
     a icm:Context ;
-    ex:hubPredicate [ rdfs:label "晶耀半導體Hub"@zh ] ;
-    ex:spokePredicate [ rdfs:label "Spoke-1"@en ] ;
-    ex:spokePredicate [ rdfs:label "Spoke-2"@en ] ;
-    ex:spokePredicate [ rdfs:label "Spoke-3"@en ] .
+    ex:for-tenant ex:tenant ;
+    ex:hubPredicate ex:hub ;
+    ex:spokePredicate ex:spoke-1 .
+
+ex:tenant
+    a ex:Tenant ;
+    rdfs:label "晶耀半導體"@zh .
+
+ex:hub
+    a ex:HubSite ;
+    rdfs:label "Hub"@zh .
+
+ex:spoke-1
+    a ex:SpokeSite ;
+    rdfs:label "Spoke"@zh .

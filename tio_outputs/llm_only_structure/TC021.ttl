@@ -1,82 +1,64 @@
 @prefix ex: <http://example.org/tio-instance/tc021/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix log: <http://example.org/log#> .
-@prefix quan: <http://example.org/quan#> .
+@prefix evsla: <http://example.org/evsla#> .
 
 ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-latency-taoyuan, ex:exp-latency-tainan, ex:topology, ex:cond-latency-taoyuan, ex:cond-latency-tainan ;
-    rdfs:comment "Taipei headquarters to Taoyuan plant and Tainan plant, each spoke latency must stay below 40 ms for 95% of the time."@en .
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    rdfs:comment "宏遠科技要求台北總部到桃園廠與台南廠各分點延遲在95%時間內低於40ms。"@en .
 
-ex:exp-latency-taoyuan
+ex:exp-latency
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency-taoyuan .
+    icm:target ex:tgt-latency ;
+    evsla:metric evsla:OneWayDelay ;
+    evsla:threshold ex:thr-latency ;
+    evsla:statistic evsla:Percentile95 ;
+    evsla:scope evsla:PerSpoke ;
+    evsla:measurementMethod evsla:DefaultActiveMeasurement ;
+    evsla:timeWindow evsla:DefaultTimeWindow .
 
-ex:tgt-latency-taoyuan
+ex:tgt-latency
     a icm:Target ;
-    ex:metricPredicate ex:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    ex:thresholdPredicate ex:thr-latency ;
-    ex:statisticPredicate ex:p95 ;
-    ex:scopePredicate ex:per-spoke-taoyuan ;
-    ex:methodPredicate ex:measured-latency ;
-    ex:windowPredicate ex:time-95-percent .
-
-ex:exp-latency-tainan
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-latency-tainan .
-
-ex:tgt-latency-tainan
-    a icm:Target ;
-    ex:metricPredicate ex:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    ex:thresholdPredicate ex:thr-latency ;
-    ex:statisticPredicate ex:p95 ;
-    ex:scopePredicate ex:per-spoke-tainan ;
-    ex:methodPredicate ex:measured-latency ;
-    ex:windowPredicate ex:time-95-percent .
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
     rdf:value 40 ;
-    quan:unit "ms" .
+    quan:unit evsla:Millisecond .
 
-ex:cond-latency-taoyuan
+ex:cond-latency
     a log:Condition ;
-    ex:strictlySmallerThan ( ex:obs-latency-taoyuan-value ex:thr-latency ) .
+    evsla:StrictlySmaller ( ex:obs-latency-value ex:thr-latency ) .
 
-ex:obs-latency-taoyuan
-    ex:observed-metric-predicate ex:latency ;
-    ex:spokePredicate ex:taoyuan-plant .
+ex:obs-latency
+    evsla:observedMetric evsla:OneWayDelay .
 
-ex:obs-latency-taoyuan-value
+ex:obs-latency-value
     a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-latency-taoyuan ) .
-
-ex:cond-latency-tainan
-    a log:Condition ;
-    ex:strictlySmallerThan ( ex:obs-latency-tainan-value ex:thr-latency ) .
-
-ex:obs-latency-tainan
-    ex:observed-metric-predicate ex:latency ;
-    ex:spokePredicate ex:tainan-plant .
-
-ex:obs-latency-tainan-value
-    a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-latency-tainan ) .
+    evsla:observedValueOf ( ex:obs-latency ) .
 
 ex:topology
-    a icm:Context ;
-    ex:hubPredicate ex:taipei-headquarters ;
-    ex:spokePredicate ex:taoyuan-plant, ex:tainan-plant .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:forTenant ex:tenant ;
+    evsla:hasHub ex:hub-taipei ;
+    evsla:hasSpoke ex:spoke-taoyuan, ex:spoke-tainan .
 
-ex:taipei-headquarters
+ex:tenant
+    a evsla:EnterpriseTenant ;
+    rdfs:label "宏遠科技"@zh .
+
+ex:hub-taipei
+    a evsla:HubSite ;
     rdfs:label "台北總部"@zh .
 
-ex:taoyuan-plant
+ex:spoke-taoyuan
+    a evsla:SpokeSite ;
     rdfs:label "桃園廠"@zh .
 
-ex:tainan-plant
+ex:spoke-tainan
+    a evsla:SpokeSite ;
     rdfs:label "台南廠"@zh .

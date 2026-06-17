@@ -11,51 +11,13 @@
 
 ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-taichung, ex:exp-kaohsiung, ex:topology, ex:cond-bandwidth-taichung, ex:cond-bandwidth-kaohsiung ;
+    icm:intentElements ex:exp-hsinchu-taichung, ex:exp-hsinchu-kaohsiung, ex:topology, ex:cond-hsinchu-taichung, ex:cond-kaohsiung ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "亞翔科技 requires guaranteed bandwidth from 新竹總部 to 台中研發中心 at least 200 Mbps and to 高雄測試中心 at least 100 Mbps."@en .
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA intent for guaranteed bandwidth from Hsinchu headquarters to Taichung R&D Center at least 200 Mbps and to Kaohsiung Test Center at least 100 Mbps."@en .
 
 ex:tenant
     a evsla:Tenant ;
     rdfs:label "亞翔科技"@zh .
-
-ex:exp-taichung
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-taichung .
-
-ex:tgt-taichung
-    a icm:Target ;
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-taichung ;
-    evsla:hasThreshold ex:thr-taichung ;
-    evsla:hasStatistic evsla:minimum ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:thr-taichung
-    a quan:Quantity ;
-    rdf:value "200"^^xsd:decimal ;
-    quan:unit "Mbps" .
-
-ex:exp-kaohsiung
-    a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-kaohsiung .
-
-ex:tgt-kaohsiung
-    a icm:Target ;
-    evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-kaohsiung ;
-    evsla:hasThreshold ex:thr-kaohsiung ;
-    evsla:hasStatistic evsla:minimum ;
-    evsla:hasScope evsla:specificSpoke ;
-    evsla:hasMeasurementMethod evsla:activeMeasurement ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
-
-ex:thr-kaohsiung
-    a quan:Quantity ;
-    rdf:value "100"^^xsd:decimal ;
-    quan:unit "Mbps" .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
@@ -74,24 +36,62 @@ ex:spoke-kaohsiung
     a evsla:SpokeSite ;
     rdfs:label "高雄測試中心"@zh .
 
-ex:cond-bandwidth-taichung
-    a log:Condition ;
-    quan:atLeast ( ex:obs-bandwidth-taichung-value ex:thr-taichung ) .
-
-ex:obs-bandwidth-taichung
+ex:exp-hsinchu-taichung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-hsinchu-taichung ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-bandwidth-taichung-value .
+    evsla:hasThreshold ex:thr-hsinchu-taichung ;
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:obs-bandwidth-taichung-value
+ex:tgt-hsinchu-taichung
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-hsinchu-taichung .
+
+ex:thr-hsinchu-taichung
+    a quan:Quantity ;
+    rdf:value "200"^^xsd:decimal ;
+    quan:unit "Mbps" .
+
+ex:cond-hsinchu-taichung
+    a log:Condition ;
+    quan:atLeast ( ex:obs-hsinchu-taichung-value ex:thr-hsinchu-taichung ) .
+
+ex:obs-hsinchu-taichung
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+    ex:obs-hsinchu-taichung-value ( ex:obs-hsinchu-taichung ) .
+
+ex:obs-hsinchu-taichung-value
     a quan:Quantity .
 
-ex:cond-bandwidth-kaohsiung
-    a log:Condition ;
-    quan:atLeast ( ex:obs-bandwidth-kaohsiung-value ex:thr-kaohsiung ) .
-
-ex:obs-bandwidth-kaohsiung
+ex:exp-hsinchu-kaohsiung
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-hsinchu-kaohsiung ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:obs-bandwidth-kaohsiung-value .
+    evsla:hasThreshold ex:thr-hsinchu-kaohsiung ;
+    evsla:hasStatistic evsla:minimum ;
+    evsla:hasScope evsla:specificSpoke ;
+    evsla:hasMeasurementMethod evsla:activeMeasurement ;
+    evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:obs-bandwidth-kaohsiung-value
+ex:tgt-hsinchu-kaohsiung
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-hsinchu-kaohsiung .
+
+ex:thr-hsinchu-kaohsiung
+    a quan:Quantity ;
+    rdf:value "100"^^xsd:decimal ;
+    quan:unit "Mbps" .
+
+ex:cond-kaohsiung
+    a log:Condition ;
+    quan:atLeast ( ex:obs-kaohsiung-value ex:thr-hsinchu-kaohsiung ) .
+
+ex:obs-kaohsiung
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
+    ex:obs-kaohsiung-value ( ex:obs-kaohsiung ) .
+
+ex:obs-kaohsiung-value
     a quan:Quantity .

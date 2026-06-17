@@ -19,7 +19,7 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-latency ;
-  rdfs:comment "Latency must stay below 20 ms at p99 to the named spoke."@en .
+  rdfs:comment "Latency must stay below 20 ms at p99 to the specified spoke."@en .
 
 ex:tgt-latency a icm:Target ;
   evsla:hasMetric evsla:latency ;
@@ -45,7 +45,7 @@ ex:obs-latency-value a quan:Quantity ;
 
 ex:exp-packet-loss a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-packet-loss ;
-  rdfs:comment "Packet loss must stay below 0.05% at p99 to the named spokes."@en .
+  rdfs:comment "Packet loss must stay below 0.05% at p99 to the specified spokes."@en .
 
 ex:tgt-packet-loss a icm:Target ;
   evsla:hasMetric evsla:packetLoss ;

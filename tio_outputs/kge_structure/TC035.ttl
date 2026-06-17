@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:exp-bandwidth, ex:topology, ex:cond-latency, ex:cond-bandwidth ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Enterprise VPN hub-and-spoke SLA for latency below 25 ms at p95 and guaranteed bandwidth at least 300 Mbps from the Taoyuan aerospace manufacturing headquarters hub to the Taichung parts plant and Kaohsiung assembly plant spokes."@en .
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA for tenant 泰盛航太: latency from 桃園航太製造總部 to all spokes stays below 25 ms at p95, and guaranteed bandwidth is at least 300 Mbps."@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency .
-
-ex:tgt-latency
-    a icm:Target ;
+    icm:target ex:tgt-latency ;
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:p95 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-latency
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -40,22 +40,38 @@ ex:thr-latency
 
 ex:exp-bandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-bandwidth .
-
-ex:tgt-bandwidth
-    a icm:Target ;
+    icm:target ex:tgt-bandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
     evsla:hasThreshold ex:thr-bandwidth ;
-    evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-bandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-bandwidth .
 
 ex:thr-bandwidth
     a quan:Quantity ;
     rdf:value "300"^^xsd:decimal ;
     quan:unit "Mbps" .
+
+ex:topology
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "桃園航太製造總部"@zh .
+
+ex:spoke-taichung
+    a evsla:SpokeSite ;
+    rdfs:label "台中零件廠"@zh .
+
+ex:spoke-kaohsiung
+    a evsla:SpokeSite ;
+    rdfs:label "高雄組裝廠"@zh .
 
 ex:cond-latency
     a log:Condition ;
@@ -78,20 +94,3 @@ ex:obs-bandwidth
 ex:obs-bandwidth-value
     a quan:Quantity ;
     fun:valueOf ( ex:obs-bandwidth ) .
-
-ex:topology
-    a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-site ;
-    evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
-
-ex:hub-site
-    a evsla:HubSite ;
-    rdfs:label "桃園航太製造總部"@zh .
-
-ex:spoke-taichung
-    a evsla:SpokeSite ;
-    rdfs:label "台中零件廠"@zh .
-
-ex:spoke-kaohsiung
-    a evsla:SpokeSite ;
-    rdfs:label "高雄組裝廠"@zh .

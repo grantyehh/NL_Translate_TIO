@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:cond-latency, ex:exp-guaranteed-bandwidth, ex:cond-guaranteed-bandwidth, ex:topology ;
-  rdfs:comment "Assure p99 latency below 15 ms and guaranteed bandwidth at least 500 Mbps from the hub to all trading rooms for 鑫橋金融 enterprise VPN."@en .
+  rdfs:comment "Assure hub-to-all-spokes latency and guaranteed bandwidth SLA for 鑫橋金融 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "鑫橋金融"@zh .

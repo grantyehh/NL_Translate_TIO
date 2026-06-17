@@ -9,47 +9,59 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ex:intent a icm:Intent, evsla:EnterpriseVpnService ;
-    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-    evsla:forTenant ex:tenant ;
-    rdfs:comment "Hongyuan Technology requires latency from the Taipei headquarters to the Taoyuan plant and Tainan plant to stay below 40 ms for each spoke at the p95 level."@en .
+ex:intent
+  a icm:Intent, evsla:EnterpriseVpnService ;
+  icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+  evsla:forTenant ex:tenant ;
+  rdfs:comment "宏遠科技要求台北總部到桃園廠與台南廠各分點延遲在95%時間內低於40ms。"@en .
 
-ex:tenant a evsla:Tenant ;
-    rdfs:label "宏遠科技"@zh .
+ex:tenant
+  a evsla:Tenant ;
+  rdfs:label "宏遠科技"@zh .
 
-ex:exp-latency a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency .
+ex:exp-latency
+  a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-latency ;
+  evsla:hasMetric evsla:latency ;
+  evsla:hasThreshold ex:thr-latency ;
+  evsla:hasStatistic evsla:p95 ;
+  evsla:hasScope evsla:perSpoke ;
+  evsla:hasMeasurementMethod evsla:twamp ;
+  evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:tgt-latency a icm:Target ;
-    evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
-    evsla:hasThreshold ex:thr-latency ;
-    evsla:hasStatistic evsla:p95 ;
-    evsla:hasScope evsla:perSpoke ;
-    evsla:hasMeasurementMethod evsla:twamp ;
-    evsla:hasTimeWindow evsla:fiveMinuteWindow .
+ex:tgt-latency
+  a icm:Target ;
+  icm:valuesOfTargetProperty ex:thr-latency .
 
-ex:thr-latency a quan:Quantity ;
-    rdf:value "40"^^xsd:decimal ;
-    quan:unit "ms" .
+ex:thr-latency
+  a quan:Quantity ;
+  rdf:value "40"^^xsd:decimal ;
+  quan:unit "ms" .
 
-ex:cond-latency a log:Condition ;
-    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+ex:cond-latency
+  a log:Condition ;
+  quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
-ex:obs-latency met:observedMetric evsla:latency .
+ex:obs-latency
+  met:hasMetric evsla:latency .
 
-ex:obs-latency-value a quan:Quantity ;
-    met:observedValue ( ex:obs-latency ) .
+ex:obs-latency-value
+  a quan:Quantity ;
+  fun:valueOf ( ex:obs-latency ) .
 
-ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-    evsla:hasHub ex:hub-taipei ;
-    evsla:hasSpoke ex:spoke-taoyuan, ex:spoke-tainan .
+ex:topology
+  a icm:Context, evsla:HubAndSpokeTopology ;
+  evsla:hasHub ex:hub-taipei ;
+  evsla:hasSpoke ex:spoke-taoyuan, ex:spoke-tainan .
 
-ex:hub-taipei a evsla:HubSite ;
-    rdfs:label "台北總部"@zh .
+ex:hub-taipei
+  a evsla:HubSite ;
+  rdfs:label "台北總部"@zh .
 
-ex:spoke-taoyuan a evsla:SpokeSite ;
-    rdfs:label "桃園廠"@zh .
+ex:spoke-taoyuan
+  a evsla:SpokeSite ;
+  rdfs:label "桃園廠"@zh .
 
-ex:spoke-tainan a evsla:SpokeSite ;
-    rdfs:label "台南廠"@zh .
+ex:spoke-tainan
+  a evsla:SpokeSite ;
+  rdfs:label "台南廠"@zh .

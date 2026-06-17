@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Tenant requires hub-to-all-spokes average latency to stay below 60 ms in a one-hour window."@en .
+    rdfs:comment "全台連鎖超市要求台北總部配送中心至六個門市分點，以每小時視窗平均延遲低於60ms。"@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-latency
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-latency .
-
-ex:tgt-latency
-    a icm:Target ;
+    icm:target ex:tgt-latency ;
     evsla:hasMetric evsla:latency ;
-    icm:valuesOfTargetProperty ex:thr-latency ;
     evsla:hasThreshold ex:thr-latency ;
     evsla:hasStatistic evsla:average ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:oneHourWindow .
+
+ex:tgt-latency
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
     a quan:Quantity ;
@@ -47,7 +47,7 @@ ex:obs-latency
 
 ex:obs-latency-value
     a quan:Quantity ;
-    fun:valueOf ( ex:obs-latency ) .
+    rdf:value ( ex:obs-latency ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;

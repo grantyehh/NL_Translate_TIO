@@ -1,71 +1,94 @@
 @prefix ex: <http://example.org/tio-instance/tc028/> .
 @prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
-@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/QuantityAndUnits/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
     icm:intentElements ex:exp-taichung, ex:exp-kaohsiung, ex:topology, ex:cond-bandwidth-taichung, ex:cond-bandwidth-kaohsiung ;
-    rdfs:comment "Hub-and-spoke VPN SLA intent requiring bandwidth of at least 200 Mbps from Hsinchu headquarters to Taichung R&D Center and at least 100 Mbps from Hsinchu headquarters to Kaohsiung Test Center."@en .
+    rdfs:comment "Enterprise VPN hub-and-spoke SLA intent for guaranteed bandwidth from Hsinchu headquarters to Taichung R&D Center and Kaohsiung Test Center."@en .
 
 ex:exp-taichung
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-taichung .
+    icm:target ex:tgt-taichung ;
+    evsla:bandwidth evsla:Bandwidth ;
+    evsla:threshold ex:thr-taichung ;
+    evsla:statistic evsla:Minimum ;
+    evsla:scope evsla:HubToSpoke ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:timeWindow evsla:DefaultTimeWindow .
 
 ex:tgt-taichung
     a icm:Target ;
-    ex:metricPredicate ex:bandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth-taichung ;
-    ex:thresholdPredicate ex:thr-bandwidth-taichung ;
-    ex:scopePredicate ex:hsinchu-to-taichung .
+    icm:valuesOfTargetProperty ex:thr-taichung .
 
-ex:thr-bandwidth-taichung
+ex:thr-taichung
     a quan:Quantity ;
     rdf:value 200 ;
     quan:unit "Mbps" .
 
 ex:exp-kaohsiung
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-kaohsiung .
+    icm:target ex:tgt-kaohsiung ;
+    evsla:bandwidth evsla:Bandwidth ;
+    evsla:threshold ex:thr-kaohsiung ;
+    evsla:statistic evsla:Minimum ;
+    evsla:scope evsla:HubToSpoke ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:timeWindow evsla:DefaultTimeWindow .
 
 ex:tgt-kaohsiung
     a icm:Target ;
-    ex:metricPredicate ex:bandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth-kaohsiung ;
-    ex:thresholdPredicate ex:thr-bandwidth-kaohsiung ;
-    ex:scopePredicate ex:hsinchu-to-kaohsiung .
+    icm:valuesOfTargetProperty ex:thr-kaohsiung .
 
-ex:thr-bandwidth-kaohsiung
+ex:thr-kaohsiung
     a quan:Quantity ;
     rdf:value 100 ;
     quan:unit "Mbps" .
 
 ex:cond-bandwidth-taichung
     a log:Condition ;
-    ex:atLeastOperator ( ex:obs-bandwidth-taichung-value ex:thr-bandwidth-taichung ) .
+    evsla:atLeast ( ex:obs-bandwidth-taichung-value ex:thr-taichung ) .
 
 ex:obs-bandwidth-taichung
-    ex:observed-metric-predicate ex:bandwidth ;
-    ex:observed-value-predicate ( ex:obs-bandwidth-taichung ) .
-
-ex:obs-bandwidth-taichung-value
-    a quan:Quantity .
+    evsla:observedBandwidth evsla:Bandwidth ;
+    ex:obs-bandwidth-taichung-value a quan:Quantity ;
+    evsla:observedValue ( ex:obs-bandwidth-taichung ) .
 
 ex:cond-bandwidth-kaohsiung
     a log:Condition ;
-    ex:atLeastOperator ( ex:obs-bandwidth-kaohsiung-value ex:thr-bandwidth-kaohsiung ) .
+    evsla:atLeast ( ex:obs-bandwidth-kaohsiung-value ex:thr-kaohsiung ) .
 
 ex:obs-bandwidth-kaohsiung
-    ex:observed-metric-predicate ex:bandwidth ;
-    ex:observed-value-predicate ( ex:obs-bandwidth-kaohsiung ) .
+    evsla:observedBandwidth evsla:Bandwidth ;
+    ex:obs-bandwidth-kaohsiung-value a quan:Quantity ;
+    evsla:observedValue ( ex:obs-bandwidth-kaohsiung ) .
 
-ex:obs-bandwidth-kaohsiung-value
-    a quan:Quantity .
+ex:service
+    a evsla:EnterpriseVpnService ;
+    evsla:forTenant ex:tenant ;
+    evsla:hasTopology ex:topology .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "亞翔科技"@zh .
 
 ex:topology
-    a icm:Context ;
-    ex:hubPredicate [ rdfs:label "新竹總部"@zh ] ;
-    ex:spokePredicate [ rdfs:label "台中研發中心"@zh ] ;
-    ex:spokePredicate [ rdfs:label "高雄測試中心"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub-hsinchu ;
+    evsla:hasSpoke ex:spoke-taichung, ex:spoke-kaohsiung .
+
+ex:hub-hsinchu
+    a evsla:HubSite ;
+    rdfs:label "新竹總部"@zh .
+
+ex:spoke-taichung
+    a evsla:SpokeSite ;
+    rdfs:label "台中研發中心"@zh .
+
+ex:spoke-kaohsiung
+    a evsla:SpokeSite ;
+    rdfs:label "高雄測試中心"@zh .

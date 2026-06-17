@@ -10,74 +10,74 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:intent
-  a icm:Intent, evsla:EnterpriseVpnService ;
-  icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
-  evsla:forTenant ex:tenant ;
-  rdfs:comment "Latency from the Taipei headquarters distribution center to all six store branches must stay below 60 ms at the hourly average level."@en .
+    a icm:Intent, evsla:EnterpriseVpnService ;
+    icm:intentElements ex:exp-latency, ex:topology, ex:cond-latency ;
+    evsla:forTenant ex:tenant ;
+    rdfs:comment "The tenant requires average hub-to-all-spokes latency from the Taipei headquarters distribution center to six branch stores to stay below 60 ms in a one-hour window."@en .
 
 ex:tenant
-  a evsla:Tenant ;
-  rdfs:label "全台連鎖超市"@zh .
+    a evsla:Tenant ;
+    rdfs:label "全台連鎖超市"@zh .
 
 ex:exp-latency
-  a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-latency .
+    a icm:PropertyExpectation, evsla:SlaExpectation ;
+    icm:target ex:tgt-latency ;
+    evsla:hasMetric evsla:latency ;
+    evsla:hasThreshold ex:thr-latency ;
+    evsla:hasStatistic evsla:average ;
+    evsla:hasScope evsla:hubToAllSpokes ;
+    evsla:hasMeasurementMethod evsla:twamp ;
+    evsla:hasTimeWindow evsla:oneHourWindow .
 
 ex:tgt-latency
-  a icm:Target ;
-  evsla:hasMetric evsla:latency ;
-  icm:valuesOfTargetProperty ex:thr-latency ;
-  evsla:hasThreshold ex:thr-latency ;
-  evsla:hasStatistic evsla:average ;
-  evsla:hasScope evsla:hubToAllSpokes ;
-  evsla:hasMeasurementMethod evsla:twamp ;
-  evsla:hasTimeWindow evsla:oneHourWindow .
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-latency .
 
 ex:thr-latency
-  a quan:Quantity ;
-  rdf:value "60"^^xsd:decimal ;
-  quan:unit "ms" .
+    a quan:Quantity ;
+    rdf:value "60"^^xsd:decimal ;
+    quan:unit "ms" .
 
 ex:cond-latency
-  a log:Condition ;
-  quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
+    a log:Condition ;
+    quan:smaller ( ex:obs-latency-value ex:thr-latency ) .
 
 ex:obs-latency
-  evsla:hasMetric evsla:latency .
+    evsla:latency evsla:latency .
 
 ex:obs-latency-value
-  a quan:Quantity ;
-  fun:valueOf ( ex:obs-latency ) .
+    a quan:Quantity ;
+    rdf:value ( ex:obs-latency ) .
 
 ex:topology
-  a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub ex:hub ;
-  evsla:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5, ex:spoke-6 .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-1, ex:spoke-2, ex:spoke-3, ex:spoke-4, ex:spoke-5, ex:spoke-6 .
 
 ex:hub
-  a evsla:HubSite ;
-  rdfs:label "台北總部配送中心"@zh .
+    a evsla:HubSite ;
+    rdfs:label "台北總部配送中心"@zh .
 
 ex:spoke-1
-  a evsla:SpokeSite ;
-  rdfs:label "門市分點1"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "門市分點1"@zh .
 
 ex:spoke-2
-  a evsla:SpokeSite ;
-  rdfs:label "門市分點2"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "門市分點2"@zh .
 
 ex:spoke-3
-  a evsla:SpokeSite ;
-  rdfs:label "門市分點3"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "門市分點3"@zh .
 
 ex:spoke-4
-  a evsla:SpokeSite ;
-  rdfs:label "門市分點4"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "門市分點4"@zh .
 
 ex:spoke-5
-  a evsla:SpokeSite ;
-  rdfs:label "門市分點5"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "門市分點5"@zh .
 
 ex:spoke-6
-  a evsla:SpokeSite ;
-  rdfs:label "門市分點6"@zh .
+    a evsla:SpokeSite ;
+    rdfs:label "門市分點6"@zh .

@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Shengde Logistics requires packet loss from the Linkou logistics headquarters hub to all five spokes to be at most 0.5% at the maximum level within a one-hour window."@en .
+    rdfs:comment "Shengde Logistics requires packet loss from the Linkou logistics headquarters to five spoke warehouses to stay at most 0.5% at the maximum level within each one-hour window."@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
-
-ex:tgt-packetLoss
-    a icm:Target ;
+    icm:target ex:tgt-packetLoss ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:maximum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:oneHourWindow .
+
+ex:tgt-packetLoss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss .
 
 ex:thr-packetLoss
     a quan:Quantity ;
@@ -43,7 +43,7 @@ ex:cond-packetLoss
     quan:atMost ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
 ex:obs-packetLoss
-    evsla:hasMetric evsla:packetLoss .
+    evsla:packetLoss evsla:packetLoss .
 
 ex:obs-packetLoss-value
     a quan:Quantity ;

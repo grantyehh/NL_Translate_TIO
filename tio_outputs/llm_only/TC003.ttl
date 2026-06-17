@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-guaranteed-bandwidth, ex:cond-guaranteed-bandwidth, ex:topology ;
-  rdfs:comment "Assure minimum guaranteed bandwidth from the hub to a specific spoke for 宏海物流 enterprise VPN."@en .
+  rdfs:comment "Assure minimum guaranteed bandwidth from hub to a specific spoke for 宏海物流 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "宏海物流"@zh .
@@ -19,7 +19,7 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-guaranteed-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-guaranteed-bandwidth ;
-  rdfs:comment "Guaranteed bandwidth must be at least 100 Mbps from the hub to the named spoke."@en .
+  rdfs:comment "Guaranteed bandwidth must be at least 100 Mbps to the named spoke."@en .
 
 ex:tgt-guaranteed-bandwidth a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
@@ -44,5 +44,5 @@ ex:obs-guaranteed-bandwidth-value a quan:Quantity ;
   met:observedValue ( ex:obs-guaranteed-bandwidth ) .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
-  evsla:hasHub [ a evsla:HubSite ; rdfs:label "總部"@zh ] ;
+  evsla:hasHub [ a evsla:HubSite ; rdfs:label "宏海物流總部"@zh ] ;
   evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "高雄倉儲中心"@zh ] .

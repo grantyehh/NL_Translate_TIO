@@ -19,7 +19,7 @@ ex:service a evsla:EnterpriseVpnService ;
 
 ex:exp-guaranteed-bandwidth a icm:PropertyExpectation, evsla:SlaExpectation ;
   icm:target ex:tgt-guaranteed-bandwidth ;
-  rdfs:comment "Guaranteed bandwidth must be at least 200 Mbps from the hub to the named spoke."@en .
+  rdfs:comment "Guaranteed bandwidth must be at least 200 Mbps to the named spoke."@en .
 
 ex:tgt-guaranteed-bandwidth a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;

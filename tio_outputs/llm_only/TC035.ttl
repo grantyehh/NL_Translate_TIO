@@ -9,7 +9,7 @@
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
   icm:intentElements ex:exp-latency, ex:cond-latency, ex:exp-guaranteed-bandwidth, ex:cond-guaranteed-bandwidth, ex:topology ;
-  rdfs:comment "Assure latency below 25 ms at p95 and guaranteed bandwidth of at least 300 Mbps from hub to all spokes for 泰盛航太 enterprise VPN."@en .
+  rdfs:comment "Assure latency below 25 ms at p95 and guaranteed bandwidth at least 300 Mbps from hub to all spokes for 泰盛航太 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
   rdfs:label "泰盛航太"@zh .

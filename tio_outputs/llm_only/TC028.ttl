@@ -8,7 +8,7 @@
 @prefix ex:    <http://example.org/tio-instance/tc028/> .
 
 ex:intent a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
-  icm:intentElements ex:exp-bandwidth-taichung, ex:cond-bandwidth-taichung, ex:exp-bandwidth-kaohsiung, ex:cond-bandwidth-kaohsiung, ex:topology ;
+  icm:intentElements ex:exp-guaranteed-bandwidth-taichung, ex:cond-guaranteed-bandwidth-taichung, ex:exp-guaranteed-bandwidth-kaohsiung, ex:cond-guaranteed-bandwidth-kaohsiung, ex:topology ;
   rdfs:comment "Assure minimum guaranteed bandwidth from the hub to two specific spokes for 亞翔科技 enterprise VPN."@en .
 
 ex:tenant a evsla:Tenant ;
@@ -17,57 +17,57 @@ ex:tenant a evsla:Tenant ;
 ex:service a evsla:EnterpriseVpnService ;
   evsla:forTenant ex:tenant .
 
-ex:exp-bandwidth-taichung a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-bandwidth-taichung ;
+ex:exp-guaranteed-bandwidth-taichung a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-guaranteed-bandwidth-taichung ;
   rdfs:comment "Guaranteed bandwidth must be at least 200 Mbps from the hub to 台中研發中心."@en .
 
-ex:tgt-bandwidth-taichung a icm:Target ;
+ex:tgt-guaranteed-bandwidth-taichung a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
-  icm:valuesOfTargetProperty ex:thr-bandwidth-taichung ;
-  evsla:hasThreshold ex:thr-bandwidth-taichung ;
+  icm:valuesOfTargetProperty ex:thr-guaranteed-bandwidth-taichung ;
+  evsla:hasThreshold ex:thr-guaranteed-bandwidth-taichung ;
   evsla:hasStatistic evsla:minimum ;
   evsla:hasScope evsla:specificSpoke ;
   evsla:hasMeasurementMethod evsla:activeMeasurement ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-bandwidth-taichung a quan:Quantity ;
+ex:thr-guaranteed-bandwidth-taichung a quan:Quantity ;
   rdf:value 200 ;
   quan:unit "Mbps" .
 
-ex:cond-bandwidth-taichung a log:Condition ;
-  quan:atLeast ( ex:obs-bandwidth-taichung-value ex:thr-bandwidth-taichung ) .
+ex:cond-guaranteed-bandwidth-taichung a log:Condition ;
+  quan:atLeast ( ex:obs-guaranteed-bandwidth-taichung-value ex:thr-guaranteed-bandwidth-taichung ) .
 
-ex:obs-bandwidth-taichung a met:Observation ;
+ex:obs-guaranteed-bandwidth-taichung a met:Observation ;
   met:observedMetric evsla:guaranteedBandwidth .
 
-ex:obs-bandwidth-taichung-value a quan:Quantity ;
-  met:observedValue ( ex:obs-bandwidth-taichung ) .
+ex:obs-guaranteed-bandwidth-taichung-value a quan:Quantity ;
+  met:observedValue ( ex:obs-guaranteed-bandwidth-taichung ) .
 
-ex:exp-bandwidth-kaohsiung a icm:PropertyExpectation, evsla:SlaExpectation ;
-  icm:target ex:tgt-bandwidth-kaohsiung ;
+ex:exp-guaranteed-bandwidth-kaohsiung a icm:PropertyExpectation, evsla:SlaExpectation ;
+  icm:target ex:tgt-guaranteed-bandwidth-kaohsiung ;
   rdfs:comment "Guaranteed bandwidth must be at least 100 Mbps from the hub to 高雄測試中心."@en .
 
-ex:tgt-bandwidth-kaohsiung a icm:Target ;
+ex:tgt-guaranteed-bandwidth-kaohsiung a icm:Target ;
   evsla:hasMetric evsla:guaranteedBandwidth ;
-  icm:valuesOfTargetProperty ex:thr-bandwidth-kaohsiung ;
-  evsla:hasThreshold ex:thr-bandwidth-kaohsiung ;
+  icm:valuesOfTargetProperty ex:thr-guaranteed-bandwidth-kaohsiung ;
+  evsla:hasThreshold ex:thr-guaranteed-bandwidth-kaohsiung ;
   evsla:hasStatistic evsla:minimum ;
   evsla:hasScope evsla:specificSpoke ;
   evsla:hasMeasurementMethod evsla:activeMeasurement ;
   evsla:hasTimeWindow evsla:fiveMinuteWindow .
 
-ex:thr-bandwidth-kaohsiung a quan:Quantity ;
+ex:thr-guaranteed-bandwidth-kaohsiung a quan:Quantity ;
   rdf:value 100 ;
   quan:unit "Mbps" .
 
-ex:cond-bandwidth-kaohsiung a log:Condition ;
-  quan:atLeast ( ex:obs-bandwidth-kaohsiung-value ex:thr-bandwidth-kaohsiung ) .
+ex:cond-guaranteed-bandwidth-kaohsiung a log:Condition ;
+  quan:atLeast ( ex:obs-guaranteed-bandwidth-kaohsiung-value ex:thr-guaranteed-bandwidth-kaohsiung ) .
 
-ex:obs-bandwidth-kaohsiung a met:Observation ;
+ex:obs-guaranteed-bandwidth-kaohsiung a met:Observation ;
   met:observedMetric evsla:guaranteedBandwidth .
 
-ex:obs-bandwidth-kaohsiung-value a quan:Quantity ;
-  met:observedValue ( ex:obs-bandwidth-kaohsiung ) .
+ex:obs-guaranteed-bandwidth-kaohsiung-value a quan:Quantity ;
+  met:observedValue ( ex:obs-guaranteed-bandwidth-kaohsiung ) .
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "新竹總部"@zh ] ;

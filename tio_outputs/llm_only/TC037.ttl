@@ -45,8 +45,8 @@ ex:obs-packet-loss-value a quan:Quantity ;
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "林口物流總部"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第一分倉"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第二分倉"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第三分倉"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第四分倉"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "第五分倉"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "分倉一"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "分倉二"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "分倉三"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "分倉四"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "分倉五"@zh ] .

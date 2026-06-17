@@ -45,4 +45,5 @@ ex:obs-latency-value a quan:Quantity ;
 
 ex:topology a icm:Context, evsla:HubAndSpokeTopology ;
   evsla:hasHub [ a evsla:HubSite ; rdfs:label "智慧農業Hub"@zh ] ;
-  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "所有Spoke"@zh ] .
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 1"@zh ] ;
+  evsla:hasSpoke [ a evsla:SpokeSite ; rdfs:label "Spoke 2"@zh ] .

@@ -1,44 +1,60 @@
 @prefix ex: <http://example.org/tio-instance/tc006/> .
+@prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/> .
+@prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix log: <http://example.org/log#> .
-@prefix quan: <http://example.org/quan#> .
 
 ex:intent
-    a icm:Intent ;
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
     icm:intentElements ex:exp-bandwidth, ex:topology, ex:cond-bandwidth ;
     rdfs:comment "Guaranteed bandwidth from Beichen Securities headquarters to Taichung trading room shall be at least 500 Mbps."@en .
 
 ex:exp-bandwidth
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-bandwidth .
+    icm:target ex:tgt-bandwidth ;
+    evsla:serviceMetric evsla:GuaranteedBandwidth ;
+    evsla:threshold ex:thr-bandwidth ;
+    evsla:statistic evsla:Minimum ;
+    evsla:scope evsla:HubToSpoke ;
+    evsla:measurementMethod evsla:ActiveMeasurement ;
+    evsla:timeWindow evsla:DefaultTimeWindow .
 
 ex:tgt-bandwidth
     a icm:Target ;
-    ex:metricPredicate ex:GuaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    ex:thresholdPredicate ex:thr-bandwidth ;
-    ex:statisticPredicate ex:Minimum ;
-    ex:scopePredicate ex:HubToSpoke ;
-    ex:methodPredicate ex:Guaranteed ;
-    ex:windowPredicate ex:ServicePeriod .
+    icm:valuesOfTargetProperty ex:thr-bandwidth .
 
 ex:thr-bandwidth
     a quan:Quantity ;
     rdf:value 500 ;
-    quan:unit "Mbps" .
+    quan:unit evsla:Mbps .
 
 ex:cond-bandwidth
     a log:Condition ;
-    ex:AtLeastOperator ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
+    log:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
 
 ex:obs-bandwidth
-    ex:observed-metric-predicate ex:GuaranteedBandwidth ;
-    ex:obs-bandwidth-value a quan:Quantity ;
-    ex:observed-value-predicate ( ex:obs-bandwidth ) .
+    evsla:observedMetric evsla:GuaranteedBandwidth ;
+    evsla:observedValue ( ex:obs-bandwidth ) .
+
+ex:obs-bandwidth-value
+    a quan:Quantity .
 
 ex:topology
-    a icm:Context ;
-    ex:hubPredicate [ rdfs:label "北辰證券總部"@zh ] ;
-    ex:spokePredicate [ rdfs:label "台中交易室"@zh ] .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke ;
+    evsla:forTenant ex:tenant .
+
+ex:hub
+    a evsla:HubSite ;
+    rdfs:label "北辰證券總部"@zh .
+
+ex:spoke
+    a evsla:SpokeSite ;
+    rdfs:label "台中交易室"@zh .
+
+ex:tenant
+    a evsla:EnterpriseTenant ;
+    rdfs:label "北辰證券"@zh .

@@ -34,7 +34,8 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/hasMetric"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -127,9 +128,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -310,7 +309,8 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/hasMetric"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -680,7 +680,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -745,7 +745,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 40,
+    "triple_count": 42,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -773,7 +773,9 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -831,7 +833,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 43,
+    "triple_count": 42,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -953,9 +955,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1019,7 +1019,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 42,
+    "triple_count": 40,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -1047,9 +1047,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1230,7 +1228,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/observedValue"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1324,7 +1322,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://example.org/tio-instance/tc015/obs-bandwidth-value"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1356,12 +1354,12 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9355,
+      "composite": 0.8387,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
         "statistic": 1.0,
-        "scope": 1.0,
+        "scope": 0.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
         "operator": 1.0,
@@ -1374,7 +1372,9 @@
         "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": []
+      "errors": [
+        "scope evsla:guaranteedBandwidth: expected evsla:specificSpoke, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/hubToAllSpokes"
+      ]
     }
   },
   {
@@ -1412,7 +1412,8 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/hasMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/hasValue"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1506,7 +1507,8 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/hasMetric",
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/hasValue"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -1571,7 +1573,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 42,
+    "triple_count": 41,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -1632,11 +1634,11 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 1.0,
+      "composite": 0.9032,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
-        "statistic": 1.0,
+        "statistic": 0.0,
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
@@ -1650,7 +1652,9 @@
         "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": []
+      "errors": [
+        "statistic evsla:guaranteedBandwidth: expected evsla:minimum, got None"
+      ]
     }
   },
   {
@@ -1687,9 +1691,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -1782,6 +1784,102 @@
       }
     },
     "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/minimum"
+    ],
+    "unknown_types": [],
+    "expected_tio_elements": [
+      {
+        "curie": "icm:Intent",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
+      },
+      {
+        "curie": "icm:PropertyExpectation",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
+      },
+      {
+        "curie": "icm:Target",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
+      },
+      {
+        "curie": "icm:Context",
+        "ok": true,
+        "reason": "instance of class",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
+      },
+      {
+        "curie": "icm:valuesOfTargetProperty",
+        "ok": true,
+        "reason": "property used on at least one triple",
+        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
+      }
+    ],
+    "expected_coverage_ratio": 1.0,
+    "intent_uri_contains_case_id": true,
+    "semantic": {
+      "composite": 0.9516,
+      "dimensions": {
+        "metric": 1.0,
+        "threshold": 1.0,
+        "statistic": 1.0,
+        "scope": 0.5,
+        "measurement_method": 1.0,
+        "time_window": 1.0,
+        "operator": 1.0,
+        "tenant": 1.0,
+        "topology": 1.0,
+        "contract": 1.0,
+        "precision": 1.0
+      },
+      "precision": {
+        "score": 1.0,
+        "hallucination_count": 0
+      },
+      "errors": [
+        "scope evsla:packetLoss: expected evsla:hubToAllSpokes, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/perSpoke"
+      ]
+    }
+  },
+  {
+    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kge_structure/TC021.ttl",
+    "case_id": "TC021",
+    "parse_ok": true,
+    "parse_error": null,
+    "markdown_fence_stripped": false,
+    "triple_count": 45,
+    "prefix_checks": {
+      "icm": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
+        "matches_official": true
+      },
+      "fun": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/",
+        "matches_official": true
+      },
+      "log": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
+        "matches_official": true
+      },
+      "evsla": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
+        "matches_official": true
+      },
+      "quan": {
+        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
+        "matches_official": true
+      }
+    },
+    "unknown_predicates": [
       "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
     ],
     "unknown_types": [],
@@ -1839,104 +1937,6 @@
         "hallucination_count": 0
       },
       "errors": []
-    }
-  },
-  {
-    "file": "/Users/grantyeh/Grant/Project/CHT/TIO_Experiment/tio_outputs/kge_structure/TC021.ttl",
-    "case_id": "TC021",
-    "parse_ok": true,
-    "parse_error": null,
-    "markdown_fence_stripped": false,
-    "triple_count": 69,
-    "prefix_checks": {
-      "icm": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
-        "matches_official": true
-      },
-      "fun": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/",
-        "matches_official": true
-      },
-      "log": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/",
-        "matches_official": true
-      },
-      "evsla": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/",
-        "matches_official": true
-      },
-      "quan": {
-        "declared": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "expected": "http://tio.models.tmforum.org/tio/v3.6.0/QuantityOntology/",
-        "matches_official": true
-      }
-    },
-    "unknown_predicates": [
-      "http://example.org/tio-instance/tc021/obs-latency-tainan-value",
-      "http://example.org/tio-instance/tc021/obs-latency-taoyuan-value",
-      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/latency"
-    ],
-    "unknown_types": [],
-    "expected_tio_elements": [
-      {
-        "curie": "icm:Intent",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Intent"
-      },
-      {
-        "curie": "icm:PropertyExpectation",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/PropertyExpectation"
-      },
-      {
-        "curie": "icm:Target",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Target"
-      },
-      {
-        "curie": "icm:Context",
-        "ok": true,
-        "reason": "instance of class",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
-      },
-      {
-        "curie": "icm:valuesOfTargetProperty",
-        "ok": true,
-        "reason": "property used on at least one triple",
-        "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
-      }
-    ],
-    "expected_coverage_ratio": 1.0,
-    "intent_uri_contains_case_id": true,
-    "semantic": {
-      "composite": 0.9032,
-      "dimensions": {
-        "metric": 1.0,
-        "threshold": 1.0,
-        "statistic": 1.0,
-        "scope": 0.0,
-        "measurement_method": 1.0,
-        "time_window": 1.0,
-        "operator": 1.0,
-        "tenant": 1.0,
-        "topology": 1.0,
-        "contract": 1.0,
-        "precision": 1.0
-      },
-      "precision": {
-        "score": 1.0,
-        "hallucination_count": 0
-      },
-      "errors": [
-        "scope evsla:latency: expected evsla:perSpoke, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/specificSpoke"
-      ]
     }
   },
   {
@@ -2068,7 +2068,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://example.org/tio-instance/tc023/obs-bandwidth-value"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2155,7 +2155,10 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf",
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/hasMetric"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -2248,7 +2251,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/minimum"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2313,7 +2316,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 72,
+    "triple_count": 71,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2366,8 +2369,8 @@
       },
       {
         "curie": "icm:Context",
-        "ok": true,
-        "reason": "instance of class",
+        "ok": false,
+        "reason": "no rdf:type with this class IRI",
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/Context"
       },
       {
@@ -2377,7 +2380,7 @@
         "iri": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/valuesOfTargetProperty"
       }
     ],
-    "expected_coverage_ratio": 1.0,
+    "expected_coverage_ratio": 0.8,
     "intent_uri_contains_case_id": true,
     "semantic": {
       "composite": 0.9355,
@@ -2409,7 +2412,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 75,
+    "triple_count": 102,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2476,14 +2479,14 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 0.9194,
+      "composite": 1.0,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
         "statistic": 1.0,
-        "scope": 0.5,
+        "scope": 1.0,
         "measurement_method": 1.0,
-        "time_window": 0.5,
+        "time_window": 1.0,
         "operator": 1.0,
         "tenant": 1.0,
         "topology": 1.0,
@@ -2494,10 +2497,7 @@
         "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": [
-        "scope evsla:packetLoss: expected evsla:specificSpoke, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/perSpoke",
-        "time_window evsla:packetLoss: expected evsla:fiveMinuteWindow, got http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaOntology/monthlySlaWindow"
-      ]
+      "errors": []
     }
   },
   {
@@ -2506,7 +2506,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 68,
+    "triple_count": 72,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2534,7 +2534,10 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [],
+    "unknown_predicates": [
+      "http://example.org/tio-instance/tc028/obs-hsinchu-taichung-value",
+      "http://example.org/tio-instance/tc028/obs-kaohsiung-value"
+    ],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -2719,9 +2722,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -2879,7 +2880,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 69,
+    "triple_count": 68,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -2908,8 +2909,7 @@
       }
     },
     "unknown_predicates": [
-      "http://example.org/tio-instance/tc032/obs-bandwidth-value",
-      "http://example.org/tio-instance/tc032/obs-latency-value"
+      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -2947,11 +2947,11 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 1.0,
+      "composite": 0.9516,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
-        "statistic": 1.0,
+        "statistic": 0.5,
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
@@ -2965,7 +2965,9 @@
         "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": []
+      "errors": [
+        "statistic evsla:guaranteedBandwidth: expected evsla:minimum, got None"
+      ]
     }
   },
   {
@@ -3002,9 +3004,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/metricValue"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -3070,7 +3070,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 75,
+    "triple_count": 74,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -3137,11 +3137,11 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 1.0,
+      "composite": 0.9516,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
-        "statistic": 1.0,
+        "statistic": 0.5,
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
@@ -3155,7 +3155,9 @@
         "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": []
+      "errors": [
+        "statistic evsla:guaranteedBandwidth: expected evsla:minimum, got None"
+      ]
     }
   },
   {
@@ -3164,7 +3166,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 72,
+    "triple_count": 71,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -3231,11 +3233,11 @@
     "expected_coverage_ratio": 1.0,
     "intent_uri_contains_case_id": true,
     "semantic": {
-      "composite": 1.0,
+      "composite": 0.9516,
       "dimensions": {
         "metric": 1.0,
         "threshold": 1.0,
-        "statistic": 1.0,
+        "statistic": 0.5,
         "scope": 1.0,
         "measurement_method": 1.0,
         "time_window": 1.0,
@@ -3249,7 +3251,9 @@
         "score": 1.0,
         "hallucination_count": 0
       },
-      "errors": []
+      "errors": [
+        "statistic evsla:guaranteedBandwidth: expected evsla:minimum, got None"
+      ]
     }
   },
   {
@@ -3286,9 +3290,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {
@@ -3475,7 +3477,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://tio.models.tmforum.org/tio/v3.6.0/MetricsAndObservations/metricValue"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -3534,7 +3536,7 @@
     "parse_ok": true,
     "parse_error": null,
     "markdown_fence_stripped": false,
-    "triple_count": 57,
+    "triple_count": 55,
     "prefix_checks": {
       "icm": {
         "declared": "http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/",
@@ -3563,7 +3565,7 @@
       }
     },
     "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
+      "http://example.org/tio-instance/tc039/obs-latency-value"
     ],
     "unknown_types": [],
     "expected_tio_elements": [
@@ -3658,9 +3660,7 @@
         "matches_official": true
       }
     },
-    "unknown_predicates": [
-      "http://tio.models.tmforum.org/tio/v3.6.0/FunctionOntology/valueOf"
-    ],
+    "unknown_predicates": [],
     "unknown_types": [],
     "expected_tio_elements": [
       {

@@ -1,88 +1,100 @@
 @prefix ex: <http://example.org/tio-instance/tc034/> .
 @prefix icm: <http://tio.models.tmforum.org/tio/v3.6.0/IntentCommonModel/> .
+@prefix evsla: <http://tio.models.tmforum.org/tio/v3.6.0/EnterpriseVpnSlaIntent/> .
 @prefix log: <http://tio.models.tmforum.org/tio/v3.6.0/LogicalOperators/> .
-@prefix quan: <http://tio.models.tmforum.org/tio/v3.6.0/Quantity/> .
+@prefix quan: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 ex:intent
-    a icm:Intent ;
-    icm:intentElements ex:exp-loss, ex:exp-bandwidth, ex:topology, ex:cond-loss, ex:cond-bandwidth ;
-    rdfs:comment "Kaohsiung main plant to Tainan, Chiayi, and Pingtung spoke VPN SLA: packet loss rate below 0.02% for 99% of the time, and guaranteed bandwidth at least 200 Mbps."@en .
+    a icm:Intent, evsla:EnterpriseVpnSlaIntent ;
+    icm:intentElements ex:exp-plr, ex:exp-cir, ex:topology, ex:cond-plr, ex:cond-cir ;
+    rdfs:comment "華南電機要求高雄電機總廠至台南廠、嘉義廠與屏東廠的封包遺失率在99%時間內低於0.02%，且保證頻寬不低於200Mbps。"@en .
 
-ex:exp-loss
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-loss .
+ex:service
+    evsla:forTenant ex:tenant .
 
-ex:tgt-loss
-    a icm:Target ;
-    ex:metricPredicate ex:packetLossRate ;
-    icm:valuesOfTargetProperty ex:thr-loss ;
-    ex:thresholdPredicate ex:thr-loss ;
-    ex:statisticPredicate ex:timeCoverage99 ;
-    ex:scopePredicate ex:hubToAllSpokes ;
-    ex:methodPredicate ex:measured ;
-    ex:windowPredicate ex:serviceTime .
-
-ex:thr-loss
-    a quan:Quantity ;
-    rdf:value 0.02 ;
-    quan:unit "%" .
-
-ex:cond-loss
-    a log:Condition ;
-    ex:strictlySmaller ( ex:obs-loss-value ex:thr-loss ) .
-
-ex:obs-loss
-    ex:observedMetricPredicate ex:packetLossRate .
-
-ex:obs-loss-value
-    a quan:Quantity ;
-    ex:observedValuePredicate ( ex:obs-loss ) .
-
-ex:exp-bandwidth
-    a icm:PropertyExpectation ;
-    icm:target ex:tgt-bandwidth .
-
-ex:tgt-bandwidth
-    a icm:Target ;
-    ex:metricPredicate ex:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-bandwidth ;
-    ex:thresholdPredicate ex:thr-bandwidth ;
-    ex:statisticPredicate ex:minimum ;
-    ex:scopePredicate ex:hubToAllSpokes ;
-    ex:methodPredicate ex:guaranteed ;
-    ex:windowPredicate ex:serviceTime .
-
-ex:thr-bandwidth
-    a quan:Quantity ;
-    rdf:value 200 ;
-    quan:unit "Mbps" .
-
-ex:cond-bandwidth
-    a log:Condition ;
-    ex:atLeast ( ex:obs-bandwidth-value ex:thr-bandwidth ) .
-
-ex:obs-bandwidth
-    ex:observedMetricPredicate ex:guaranteedBandwidth .
-
-ex:obs-bandwidth-value
-    a quan:Quantity ;
-    ex:observedValuePredicate ( ex:obs-bandwidth ) .
+ex:tenant
+    a evsla:EnterpriseVpnTenant ;
+    rdfs:label "華南電機"@zh .
 
 ex:topology
-    a icm:Context ;
-    ex:hubPredicate ex:hub ;
-    ex:spokePredicate ex:spoke-tainan, ex:spoke-chiayi, ex:spoke-pingtung .
+    a icm:Context, evsla:HubAndSpokeTopology ;
+    evsla:hasHub ex:hub ;
+    evsla:hasSpoke ex:spoke-tn, ex:spoke-cy, ex:spoke-pt .
 
 ex:hub
+    a evsla:HubSite ;
     rdfs:label "高雄電機總廠"@zh .
 
-ex:spoke-tainan
+ex:spoke-tn
+    a evsla:SpokeSite ;
     rdfs:label "台南廠"@zh .
 
-ex:spoke-chiayi
+ex:spoke-cy
+    a evsla:SpokeSite ;
     rdfs:label "嘉義廠"@zh .
 
-ex:spoke-pingtung
+ex:spoke-pt
+    a evsla:SpokeSite ;
     rdfs:label "屏東廠"@zh .
+
+ex:exp-plr
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-plr ;
+    evsla:packetLossRateMetric evsla:PacketLossRate ;
+    evsla:threshold ex:thr-plr ;
+    evsla:statistic evsla:Percentile99 ;
+    evsla:scope evsla:HubToAllSpokes ;
+    evsla:measurementMethod evsla:DefaultMeasurementMethod ;
+    evsla:timeWindow evsla:DefaultTimeWindow .
+
+ex:tgt-plr
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-plr .
+
+ex:thr-plr
+    a quan:Quantity ;
+    rdf:value 0.02 ;
+    quan:unit evsla:Percent .
+
+ex:cond-plr
+    a log:Condition ;
+    log:StrictlySmaller ( ex:obs-plr-value ex:thr-plr ) .
+
+ex:obs-plr
+    evsla:observedPacketLossRate evsla:PacketLossRate .
+
+ex:obs-plr-value
+    a quan:Quantity ;
+    evsla:observedValueOf ( ex:obs-plr ) .
+
+ex:exp-cir
+    a icm:PropertyExpectation ;
+    icm:target ex:tgt-cir ;
+    evsla:committedBandwidthMetric evsla:CommittedBandwidth ;
+    evsla:threshold ex:thr-cir ;
+    evsla:statistic evsla:Minimum ;
+    evsla:scope evsla:HubToAllSpokes ;
+    evsla:measurementMethod evsla:DefaultMeasurementMethod ;
+    evsla:timeWindow evsla:DefaultTimeWindow .
+
+ex:tgt-cir
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-cir .
+
+ex:thr-cir
+    a quan:Quantity ;
+    rdf:value 200 ;
+    quan:unit evsla:Mbps .
+
+ex:cond-cir
+    a log:Condition ;
+    log:AtLeast ( ex:obs-cir-value ex:thr-cir ) .
+
+ex:obs-cir
+    evsla:observedCommittedBandwidth evsla:CommittedBandwidth .
+
+ex:obs-cir-value
+    a quan:Quantity ;
+    evsla:observedValueOf ( ex:obs-cir ) .

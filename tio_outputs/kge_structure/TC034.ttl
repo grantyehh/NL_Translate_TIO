@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "華南電機 requires packet loss below 0.02% at p99 and guaranteed bandwidth at least 200Mbps from the Kaohsiung hub to all spokes."@en .
+    rdfs:comment "華南電機要求高雄電機總廠至台南廠、嘉義廠與屏東廠的hub-and-spoke企業VPN中，封包遺失率在99%時間內低於0.02%，且保證頻寬不低於200Mbps。"@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
-
-ex:tgt-packetLoss
-    a icm:Target ;
+    icm:target ex:tgt-packetLoss ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-packetLoss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss .
 
 ex:thr-packetLoss
     a quan:Quantity ;
@@ -40,17 +40,16 @@ ex:thr-packetLoss
 
 ex:exp-guaranteedBandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-guaranteedBandwidth .
-
-ex:tgt-guaranteedBandwidth
-    a icm:Target ;
+    icm:target ex:tgt-guaranteedBandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
     evsla:hasThreshold ex:thr-guaranteedBandwidth ;
-    evsla:hasStatistic evsla:minimum ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-guaranteedBandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth .
 
 ex:thr-guaranteedBandwidth
     a quan:Quantity ;
@@ -62,7 +61,7 @@ ex:cond-packetLoss
     quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
 ex:obs-packetLoss
-    evsla:hasMetric evsla:packetLoss .
+    evsla:packetLoss evsla:packetLoss .
 
 ex:obs-packetLoss-value
     a quan:Quantity ;
@@ -73,7 +72,7 @@ ex:cond-guaranteedBandwidth
     quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
 ex:obs-guaranteedBandwidth
-    evsla:hasMetric evsla:guaranteedBandwidth .
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
 
 ex:obs-guaranteedBandwidth-value
     a quan:Quantity ;

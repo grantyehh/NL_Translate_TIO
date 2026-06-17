@@ -13,7 +13,7 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:exp-guaranteedBandwidth, ex:topology, ex:cond-packetLoss, ex:cond-guaranteedBandwidth ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "South China Electric requires packet loss from the Kaohsiung main plant hub to all spokes to stay below 0.02% at p99, and guaranteed bandwidth to be at least 200 Mbps."@en .
+    rdfs:comment "華南電機要求高雄電機總廠至台南廠、嘉義廠與屏東廠的 hub-to-all-spokes 封包遺失率在 p99 水準低於 0.02%，且保證頻寬不低於 200 Mbps。"@en .
 
 ex:tenant
     a evsla:Tenant ;
@@ -21,17 +21,17 @@ ex:tenant
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
-
-ex:tgt-packetLoss
-    a icm:Target ;
+    icm:target ex:tgt-packetLoss ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-packetLoss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss .
 
 ex:thr-packetLoss
     a quan:Quantity ;
@@ -40,16 +40,16 @@ ex:thr-packetLoss
 
 ex:exp-guaranteedBandwidth
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-guaranteedBandwidth .
-
-ex:tgt-guaranteedBandwidth
-    a icm:Target ;
+    icm:target ex:tgt-guaranteedBandwidth ;
     evsla:hasMetric evsla:guaranteedBandwidth ;
-    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth ;
     evsla:hasThreshold ex:thr-guaranteedBandwidth ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:activeMeasurement ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-guaranteedBandwidth
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-guaranteedBandwidth .
 
 ex:thr-guaranteedBandwidth
     a quan:Quantity ;
@@ -61,22 +61,22 @@ ex:cond-packetLoss
     quan:smaller ( ex:obs-packetLoss-value ex:thr-packetLoss ) .
 
 ex:obs-packetLoss
-    evsla:packetLoss evsla:packetLoss ;
-    ex:obs-packetLoss-value ex:obs-packetLoss .
+    evsla:packetLoss evsla:packetLoss .
 
 ex:obs-packetLoss-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-packetLoss ) .
 
 ex:cond-guaranteedBandwidth
     a log:Condition ;
     quan:atLeast ( ex:obs-guaranteedBandwidth-value ex:thr-guaranteedBandwidth ) .
 
 ex:obs-guaranteedBandwidth
-    evsla:guaranteedBandwidth evsla:guaranteedBandwidth ;
-    ex:obs-guaranteedBandwidth-value ex:obs-guaranteedBandwidth .
+    evsla:guaranteedBandwidth evsla:guaranteedBandwidth .
 
 ex:obs-guaranteedBandwidth-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    fun:valueOf ( ex:obs-guaranteedBandwidth ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;

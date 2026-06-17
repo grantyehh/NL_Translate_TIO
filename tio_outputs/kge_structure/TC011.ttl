@@ -13,25 +13,21 @@ ex:intent
     a icm:Intent, evsla:EnterpriseVpnService ;
     icm:intentElements ex:exp-packetLoss, ex:topology, ex:cond-packetLoss ;
     evsla:forTenant ex:tenant ;
-    rdfs:comment "Ensure packet loss between the hub and all spokes stays below 0.2% at the p99 level."@en .
-
-ex:tenant
-    a evsla:Tenant ;
-    rdfs:label "城市交通局"@zh .
+    rdfs:comment "Ensure packet loss between 城市交通局Hub and all spokes stays below 0.2% at the p99 level."@en .
 
 ex:exp-packetLoss
     a icm:PropertyExpectation, evsla:SlaExpectation ;
-    icm:target ex:tgt-packetLoss .
-
-ex:tgt-packetLoss
-    a icm:Target ;
+    icm:target ex:tgt-packetLoss ;
     evsla:hasMetric evsla:packetLoss ;
-    icm:valuesOfTargetProperty ex:thr-packetLoss ;
     evsla:hasThreshold ex:thr-packetLoss ;
     evsla:hasStatistic evsla:p99 ;
     evsla:hasScope evsla:hubToAllSpokes ;
     evsla:hasMeasurementMethod evsla:twamp ;
     evsla:hasTimeWindow evsla:fiveMinuteWindow .
+
+ex:tgt-packetLoss
+    a icm:Target ;
+    icm:valuesOfTargetProperty ex:thr-packetLoss .
 
 ex:thr-packetLoss
     a quan:Quantity ;
@@ -47,17 +43,21 @@ ex:obs-packetLoss
 
 ex:obs-packetLoss-value
     a quan:Quantity ;
-    fun:valueOf ( ex:obs-packetLoss ) .
+    rdf:value ( ex:obs-packetLoss ) .
 
 ex:topology
     a icm:Context, evsla:HubAndSpokeTopology ;
     evsla:hasHub ex:hub ;
-    evsla:hasSpoke ex:spoke1 .
+    evsla:hasSpoke ex:spoke-1 .
 
 ex:hub
     a evsla:HubSite ;
-    rdfs:label "Hub"@zh .
+    rdfs:label "城市交通局Hub"@zh .
 
-ex:spoke1
+ex:spoke-1
     a evsla:SpokeSite ;
-    rdfs:label "Spoke"@zh .
+    rdfs:label "各Spoke"@zh .
+
+ex:tenant
+    a evsla:Tenant ;
+    rdfs:label "城市交通局"@zh .

@@ -1,28 +1,28 @@
 @prefix ex: <http://example.org/tio-instance/tc005/> .
+@prefix icm: <http://example.org/icm#> .
+@prefix log: <http://example.org/log#> .
+@prefix quan: <http://example.org/quan#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix icm: <http://example.org/icm#> .
-@prefix quan: <http://example.org/quan#> .
-@prefix log: <http://example.org/log#> .
 
 ex:intent
     a icm:Intent ;
     icm:intentElements ex:exp-packet-loss, ex:topology, ex:cond-packet-loss ;
-    rdfs:comment "Ensure packet loss rate between Morningstar Retail Hub and each Spoke stays below 0.05% for 99% of the time."@en .
+    rdfs:comment "Ensure packet loss rate between Morning Star Retail hub and all spokes stays below 0.05% at the 99% level."@en .
 
 ex:exp-packet-loss
     a icm:PropertyExpectation ;
-    icm:target ex:tgt-packet-loss .
+    icm:target ex:tgt-packet-loss ;
+    ex:metricPredicate ex:packetLossRate ;
+    ex:thresholdPredicate ex:thr-packet-loss ;
+    ex:statisticPredicate ex:p99 ;
+    ex:scopePredicate ex:hubToAllSpokes ;
+    ex:methodPredicate ex:defaultMeasurementMethod ;
+    ex:windowPredicate ex:defaultTimeWindow .
 
 ex:tgt-packet-loss
     a icm:Target ;
-    ex:metricPredicate ex:packet-loss-rate ;
-    icm:valuesOfTargetProperty ex:thr-packet-loss ;
-    ex:thresholdPredicate ex:thr-packet-loss ;
-    ex:statisticPredicate ex:p99 ;
-    ex:scopePredicate ex:hub-to-all-spokes ;
-    ex:methodPredicate ex:measurement-method ;
-    ex:windowPredicate ex:time-window .
+    icm:valuesOfTargetProperty ex:thr-packet-loss .
 
 ex:thr-packet-loss
     a quan:Quantity ;
@@ -31,28 +31,22 @@ ex:thr-packet-loss
 
 ex:cond-packet-loss
     a log:Condition ;
-    ex:strictly-smallerThan ( ex:obs-packet-loss-value ex:thr-packet-loss ) .
+    ex:strictlySmallerThan ( ex:obs-packet-loss-value ex:thr-packet-loss ) .
 
 ex:obs-packet-loss
-    ex:observed-metric-predicate ex:packet-loss-rate ;
-    ex:observed-value-predicate ( ex:obs-packet-loss ) .
+    ex:observedMetricPredicate ex:packetLossRate .
 
 ex:obs-packet-loss-value
-    a quan:Quantity .
+    a quan:Quantity ;
+    ex:observedValuePredicate ( ex:obs-packet-loss ) .
 
 ex:topology
     a icm:Context ;
     ex:hubPredicate ex:hub ;
-    ex:spokePredicate ex:spoke-1, ex:spoke-2, ex:spoke-3 .
+    ex:spokePredicate ex:spoke-1 .
 
 ex:hub
     rdfs:label "晨星零售Hub"@zh .
 
 ex:spoke-1
-    rdfs:label "Spoke 1"@en .
-
-ex:spoke-2
-    rdfs:label "Spoke 2"@en .
-
-ex:spoke-3
-    rdfs:label "Spoke 3"@en .
+    rdfs:label "各Spoke"@zh .
