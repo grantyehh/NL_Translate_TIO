@@ -36,12 +36,35 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-需要設定其中一個 API key:
+預設使用 OpenAI API,需要設定其中一個 API key:
 
 ```bash
 export GRAPHRAG_API_KEY=your_key_here
 # or
 export OPENAI_API_KEY=your_key_here
+```
+
+若要改用 Azure AI Foundry / Azure OpenAI v1 endpoint:
+
+```bash
+export OPENAI_PROVIDER=azure
+export AZURE_OPENAI_ENDPOINT=https://cht-tio.services.ai.azure.com/openai/v1
+export AZURE_OPENAI_DEPLOYMENT=gpt-5.4-nano
+export AZURE_OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-3-small
+az login
+```
+
+也可改用 Azure API key:
+
+```bash
+export AZURE_OPENAI_API_KEY=your_azure_key_here
+```
+
+若 embedding 使用另一組 Azure key 或 endpoint:
+
+```bash
+export AZURE_OPENAI_EMBEDDING_API_KEY=your_embedding_key_here
+export AZURE_OPENAI_EMBEDDING_ENDPOINT=https://your-embedding-resource.openai.azure.com/openai/v1
 ```
 
 `GraphRag/` 的重設計版會用一個 **offline resource index**(完整 IRI + role 分類 + 文字 embedding)做向量 grounding。執行 structure-only 線或要向量 grounding 前,先建一次(會呼叫 embedding API):

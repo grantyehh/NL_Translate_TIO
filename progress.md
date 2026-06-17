@@ -442,20 +442,93 @@ expectation placement;scorer 因有 fallback,重跑前後分數不會倒退。
 報告:`phase1/phase1_{graphrag,kge}_structure.json`、`phase1/token_usage/token_usage_{graphrag,kge}_structure.json`。
 索引重建:`GraphRag/index/`(345→347,因 TTL 新增 2 個 property);KGE artifacts 已重訓。
 
+## Experiment Architecture 6 — Azure gpt-5.4 structure-only official rerun (2026-06-17)
+
+OpenAI/Azure provider 已統一由 repo root `.env` 載入(`OPENAI_PROVIDER=azure`,
+`AZURE_OPENAI_DEPLOYMENT=gpt-5.4`,embedding=`text-embedding-3-small`),且 `load_project_env(...,
+override=True)` 防止 shell 中殘留的舊 env 覆蓋 `.env`。`run_structure_experiments.py` 完整串起
+LLM ceiling / LLM floor / GraphRAG / KGE 四線,並記錄:
+
+- GraphRAG prep:index `resource_index_embeddings`
+- KGE prep:`text_embedding_artifacts`
+- GraphRAG/KGE query-side embedding
+- 四線 generation token
+- 最後 `evaluate_ttl.py` + structure accuracy/token summary
+
+同時加入 fail-fast guard:任何 generation line 若未產滿 test cases,直接中止,避免舊 TTL 混入新 evaluation。
+
+正式重跑條件:
+
+- test set:`test_cases_40.json`
+- model:`gpt-5.4`(Azure deployment)
+- embedding:`text-embedding-3-small`
+- evaluator:strict `semantic_eval` 11 維 graph-binding composite
+- GraphRAG index 已重建,KGE artifacts 已重訓
+- KGE 初跑 TC021/TC029 因 Turtle 局部 syntax parse fail;已單獨重跑兩題、合併 token ledger,再全量
+  `--eval-only` 更新 summary。
+
+最終品質結果(`phase1/output_quality/compare_structure_four_way.txt`):
+
+```text
+Line                       | Parse | Coverage | Composite | Avg triples | Unknown pred/type
+LLM-only strong(天花板)    | 100%  |  1.0000  |  0.9738   |   58.17     | 40 / 0
+GraphRAG-structure         | 100%  |  0.9900  |  0.9746   |   53.50     | 45 / 0
+KGE-structure(正統)       | 100%  |  0.9950  |  0.9778   |   54.20     | 38 / 0
+LLM-only-structure(地板)   |  95%  |  0.5500  |  0.0000   |   32.08     | 329 / 131
+```
+
+最終 token 結果(`phase1/token_usage/compare_token_usage_structure.txt`):
+
+```text
+Line                       | Prep total | Avg online | Online total | Avg calls | Amortized @100
+LLM-only strong(天花板)    |      0     |  5,354.25  |   214,170    |   1.00    |   5,354.25
+GraphRAG-structure         | 14,365     |  2,717.60  |   108,704    |   2.00    |   2,861.25
+KGE-structure(正統)       | 15,555     |  2,722.35  |   108,894    |   2.00    |   2,877.90
+LLM-only-structure(地板)   |      0     |  1,531.70  |    61,268    |   1.00    |   1,531.70
+```
+
+維度觀察:
+
+```text
+Dimension          | LLM ceiling | GraphRAG | KGE
+metric             |    1.00     |  1.00    | 1.00
+threshold          |    0.96     |  0.96    | 0.96
+statistic          |    0.99     |  0.92    | 0.92
+scope              |    0.88     |  0.91    | 0.96
+measurement_method |    0.97     |  0.97    | 0.97
+time_window        |    0.90     |  1.00    | 1.00
+operator           |    1.00     |  0.96    | 0.96
+tenant             |    1.00     |  1.00    | 0.97
+topology           |    1.00     |  1.00    | 1.00
+contract           |    1.00     |  1.00    | 1.00
+precision          |    1.00     |  1.00    | 1.00
+```
+
+關鍵結論:
+
+- **KGE 0.9778 > GraphRAG 0.9746 > LLM ceiling 0.9738**,兩條 retrieval 都達到/略超天花板品質。
+- **retrieval online token 約 ceiling 的 51%**:GraphRAG 2,718,KGE 2,722 vs LLM ceiling 5,354。
+- prep token 很小,攤到 @100 後 GraphRAG/KGE 仍約 2.86k/2.88k per case,明顯低於 ceiling。
+- floor parse 可達 95%,但 composite 仍 0,證明「可 parse Turtle」不等於 TIO semantic correctness。
+- KGE 的 TC021/TC029 parse fail 屬生成端局部 Turtle syntax nondeterminism,單題重跑後修復;建議後續可加
+  Turtle parse-retry/repair guard,避免手動重跑。
+
 ## Next Steps
 
-0. ✅ **已做(2026-06-16,Architecture 5)**:縮 structure-only 兩條 retrieval 對天花板的差距 ——
+0. ✅ **已做(2026-06-17,Architecture 6)**:structure-only 正式重跑完成(Azure `gpt-5.4`,
+   GraphRAG index + KGE retrain prep token 皆入 ledger,TC021/TC029 KGE 單題重跑修復 parse fail)。
+   最終 GraphRAG 0.9746、KGE 0.9778,online token 皆約天花板 51%。後續可選:加入 Turtle
+   parse-retry/repair guard;把 scorer 從寬鬆(expectation-first/target-fallback)收成嚴格(expectation-only);
+   wire KAG-structure 湊四方對照。
+1. ✅ **已做(2026-06-16,Architecture 5)**:縮 structure-only 兩條 retrieval 對天花板的差距 ——
    四維度 grounding(tenant/time_window/measurement_method/topology)+ ontology-domain scorer 對齊,
-   GraphRAG 0.79→0.98、KGE 0.75→0.98,token 維持 ~½ 天花板。**剩餘待辦**:OpenAI 配額恢復後三條
-   structure-only 正式重跑(驗證 expectation-placement 生成端效果 + 刷新乾淨 token ledger);可選把
-   scorer 從寬鬆(expectation-first/target-fallback)收成嚴格(expectation-only)。可選:wire
-   KAG-structure 湊四方對照。
-1. **(superseded by Architecture 3)** Weak-prompt 替代性實驗:已被 structure-only 設計取代 —— structure-only
+   GraphRAG 0.79→0.98、KGE 0.75→0.98,token 維持 ~½ 天花板。
+2. **(superseded by Architecture 3)** Weak-prompt 替代性實驗:已被 structure-only 設計取代 —— structure-only
    給組裝骨架、抽詞彙,比 all-or-nothing 的 weak prompt 更能量出 retrieval 的邊際價值。
    原設計:`docs/superpowers/specs/2026-06-13-weak-prompt-retrieval-substitution-design.md`(`b620a43`)。
-1. 決定是否保留目前 `KAG` 作為 native KAG 結果，並另外新增 `kag_logical_form` variant。
-2. 若要做 `kag-logical-form-grounding`，新增獨立輸出目錄與第五條 comparison line，避免和 native KAG 混在一起。
-3. 將 KAG Docker compose 改成 named volumes，避免 builder KG data 因 anonymous volume 管理不清而遺失。
-4. ✅ **已做(2026-06-14)**:嚴格語意評分器(`semantic_eval.py`,11 維度 graph-binding),
+3. 決定是否保留目前 `KAG` 作為 native KAG 結果，並另外新增 `kag_logical_form` variant。
+4. 若要做 `kag-logical-form-grounding`，新增獨立輸出目錄與第五條 comparison line，避免和 native KAG 混在一起。
+5. 將 KAG Docker compose 改成 named volumes，避免 builder KG data 因 anonymous volume 管理不清而遺失。
+6. ✅ **已做(2026-06-14)**:嚴格語意評分器(`semantic_eval.py`,11 維度 graph-binding),
    見上方「Semantic Evaluator」段。後續可加:hub/spoke 名稱與基數比對(目前 topology 只驗結構)、
    weak-prompt 條件下重跑以放大 retrieval 差異、operator 權重調校。
